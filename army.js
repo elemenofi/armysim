@@ -1,7 +1,11 @@
 //army web app
-var express = require('express');
-var army = express(); 			
+var express = require('express'),
+	army = express(), 			
+	Chance = require('chance'),
+    chance = new Chance();
 
+// Get a random zip code
+chance.zip();
 // configuration
 army.configure(function() {
 	army.use(express.static(__dirname + '/public'));
@@ -22,106 +26,108 @@ army.get('*', function(req, res) {
 army.listen(8080);
 console.log("Army started on port 8080");
 
-var day = 0;
-var maXp = 40;
-var maxCr = 3;
-var maxGr = 2;
-var maxLtGr = 1;
-var names = ["Alberti", "Cabrera", "Belgrano", "Alberti", "Roca", "Paz", "Lopez", "Malbran", "Cabrera", "Gorriti", "Gonzalez"];
-var ranks = ["Teniente", "Coronel", "General", "Teniente General"];
-var officers = [];
+var day = 0,
+	maXp = 40,
+	maxCr = 4,
+	maxGr = 2,
+	maxLtGr = 1,
+	maxLtXp = 15,
+	maxCrXp = 25,
+	maxGrXp = 35,
+	maxLtGrXp = 40,
+	unit_names = ["Army", "Division", "Brigade", "Regiment"],
+	ranks = ["Lieutenant", "Coronel", "General", "Lieutenant General"];
+	units = [
+			{
+				type: 0,
+				commander: undefined,
+				name: unit_names[0]
+			}, 
+			{
+				type: 1,
+				commander: undefined,
+				name: "1st " + unit_names[1]
+			},
+			{
+				type: 1,
+				commander: undefined,
+				name: "2nd " + unit_names[1]
+			},
+			{
+				type: 2,
+				commander: undefined,
+				name: "1st " + unit_names[2]
+			},
+			{
+				type: 2,
+				commander: undefined,
+				name: "2nd " + unit_names[2]
+			},
+			{
+				type: 2,
+				commander: undefined,
+				name: "3rd " + unit_names[2]
+			},
+			{
+				type: 2,
+				commander: undefined,
+				name: "4th " + unit_names[2]
+			},
+			{
+				type: 3,
+				commander: undefined,
+				name: "1st " + unit_names[3]
+			},
+			{
+				type: 3,
+				commander: undefined,
+				name: "2nd " + unit_names[3]
+			},
+			{
+				type: 3,
+				commander: undefined,
+				name: "3rd " + unit_names[3]
+			},
+			{
+				type: 3,
+				commander: undefined,
+				name: "4th " + unit_names[3]
+			},
+			{
+				type: 3,
+				commander: undefined,
+				name: "5th " + unit_names[3]
+			},
+			{
+				type: 3,
+				commander: undefined,
+				name: "6th " + unit_names[3]
+			},
+			{
+				type: 3,
+				commander: undefined,
+				name: "7th " + unit_names[3]
+			},
+			{
+				type: 3,
+				commander: undefined,
+				name: "8th " + unit_names[3]
+			}
+			],
+	officers = [];
 
-function populateOfficers () {
-	var randName = Math.floor(Math.random() * names.length);
-	var officer = {
-		name: names[randName], 
-		xp: Math.floor((Math.random() * 3) + 34),
-		rank: ranks[3],
-		alignment: Math.floor(Math.random() * 100)
-	}; 
-	officers.push(officer);
-	for (var i=0;i<2;i++) {
-		var randName = Math.floor(Math.random() * names.length);
-		var officer = {
-			name: names[randName], 
-			xp: Math.floor((Math.random() * 3) + 24),
-			rank: ranks[2],
-			alignment: Math.floor(Math.random() * 100)
-		}; 
-		officers.push(officer);
-	}
-	for (var i=0;i<3;i++) {
-		var randName = Math.floor(Math.random() * names.length);
-		var officer = {
-			name: names[randName], 
-			xp: Math.floor((Math.random() * 3) + 14),
-			rank: ranks[1],
-			alignment: Math.floor(Math.random() * 100)
-		}; 
-		officers.push(officer);
-	}
+function randomNumber (x) {
+	return Math.floor(Math.random() * x);
 }
 
-function newOfficer () {
-	var randName = Math.floor(Math.random() * names.length);
-	var officer = {
-		name: names[randName], 
-		xp: Math.floor(Math.random() * 10),
-		rank: ranks[0],
-		alignment: Math.floor(Math.random() * 100)
-	}; 
-	officers.push(officer);
+function compareRanks(a, b) {
+  return b.xp - a.xp;
 }
 
 function giveExperience () {
 	for (var i=0;i<officers.length;i++) {
 		officers[i].xp++;
 	}
-}
-
-function checkExperience () {
-	for (var i=0;i<officers.length;i++) {
-		var xp = officers[i].xp;
-		var rank = officers[i].rank;
-		if (xp > maXp) {
-			officers.splice(i, 1);
-		} if (xp >= 20 && ranks == ranks[0]) {
-			officers.splice(i, 1);
-		}
-	}
-}
-
-function checkOrderOfBattle () {
-	if (officers.length < 10) {
-		var recruits = 10 - officers.length;
-		for (i=0;i<recruits;i++) {
-			newOfficer();
-		}
-	}
-}
-
-function checkRank () {
-	for (var i=0;i<officers.length;i++) {
-		var officer = officers[i];
-		var xp = officer.xp;
-		if (xp > 35) {
-			if (checkRankSlots(ranks[3])<maxLtGr) {
-				officer.rank = ranks[3];
-			}
-		} else if (xp > 25) {
-			if (checkRankSlots(ranks[2])<maxGr) {
-				officer.rank = ranks[2];
-			}
-		} else if (xp > 14) {
-			if (checkRankSlots(ranks[1])<maxCr) {
-				officer.rank = ranks[1];
-			}
-		}
-	}
-}
-
-function compareRanks(a, b) {
-  return b.xp - a.xp;
 }
 
 function checkRankSlots(rank) {
@@ -135,18 +141,97 @@ function checkRankSlots(rank) {
 	return count;
 };
 
+function generateOfficer (rank, xp) {
+	var officer = {
+		name: chance.first(),
+		last: chance.last(),
+		xp: xp,
+		rank: ranks[rank],
+		alignment: randomNumber(100),
+		unit: undefined
+	}; 
+	officers.push(officer);
+}
+
+function newOfficers () {
+	generateOfficer(3, (randomNumber(4) + maxGrXp));
+	for (var i=0; i<2; i++) {
+		generateOfficer(2, (randomNumber(4) + maxCrXp));
+	}
+	for (var i=0; i<4; i++) {
+		generateOfficer(1, (randomNumber(4) + maxLtXp));
+	}
+	for (var i=0; i<8; i++) {
+		generateOfficer(0, randomNumber(10));
+	}
+}
+
+function recruitOfficers () {
+	while (officers.length < 15) {
+		generateOfficer(0, randomNumber(7));
+	}
+}
+
+function retireOfficers () {
+	for (var i=0; i<officers.length; i++) {
+		var xp = officers[i].xp,
+			rank = officers[i].rank;
+		if (rank == ranks[3] && xp >= maxLtGrXp) {
+			officers.splice(i, 1);
+		} else if (rank == ranks[2] && xp >= maxGrXp) {
+			officers.splice(i, 1);
+		} else if (rank == ranks[1] && xp >= maxCrXp) {
+			officers.splice(i, 1);
+		} else if (rank == ranks[0] && xp >= maxLtXp) {
+			officers.splice(i, 1);
+		}
+	}
+}
+
+function promoteOfficers () {
+	for (var i=0; i<officers.length; i++) {
+		var xp = officers[i].xp,
+			name = officers[i].name;
+		switch (officers[i].rank) {
+			case ranks[0]:
+				if (checkRankSlots(ranks[1]) < maxCr) {
+					officers[i].rank = ranks[1];
+					console.log(ranks[0]+ " " + name + " has been promoted to " + ranks[1]);
+				}
+			break;
+			case ranks[1]:
+				if (checkRankSlots(ranks[2]) < maxGr) {
+					officers[i].rank = ranks[2];
+					console.log(ranks[1]+ " " + name + " has been promoted to " + ranks[2]);
+				}
+			break;
+			case ranks[2]:
+				if (checkRankSlots(ranks[3]) < maxLtGr) {
+					officers[i].rank = ranks[3];
+					console.log(ranks[2]+ " " + name + " has been promoted to " + ranks[3]);
+				}
+			break;
+		}
+	}
+}
+
+function assignOfficers () {
+	for (var i=0; i<units.length; i++) {
+		officers[i].unit = units[i];
+	}
+}
+
 function passTurn () {
 	if (day == 0) {
-		populateOfficers();
+		newOfficers();
 	}
 	day++;
 	officers.sort(compareRanks);
-	checkOrderOfBattle();
+	retireOfficers();
+	promoteOfficers();
+	recruitOfficers();
+	assignOfficers();
 	giveExperience();
-	checkRank();
-	checkExperience();
-
-	// console.log(officers);
 }
 
 setInterval(function(){

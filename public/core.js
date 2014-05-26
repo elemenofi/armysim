@@ -9,6 +9,5 @@ function armyController($scope, $http) {
 			.error(function(data) {
 				console.log('Error: ' + data);
 			});
-	}, 1000 );
-	
+	}, 500 );
 }
