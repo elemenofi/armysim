@@ -50,6 +50,13 @@ div.container {
 	padding: 10px 0 0;
 	width: 320px;
 }
+@media (min-width: 1600px) {
+  div.container {
+  	margin: 0;
+  	padding: 30px 0 0 30px;
+  	width: 960px;
+  }
+}
 ul.officers li {
 	margin: 0 0 10px;
 }
