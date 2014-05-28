@@ -90,11 +90,13 @@ function generateOfficer (type, amount) {
 			case "general":
 				officer.rank = 2;
 				officer.xp = randomNumber(5) + 30;
+				officer.title = rank_names[officer.rank];
 				army.officers.generals.push(officer);
 			break;
 			case "colonel":
 				officer.rank = 1;
 				officer.xp = randomNumber(10) + 10;
+				officer.title = rank_names[officer.rank];
 				army.officers.colonels.push(officer);
 			break;
 		}
@@ -160,6 +162,7 @@ function promoteColonel (division)  {
 		var colonel = army.officers.colonels[t];
 		if (colonel.id == promoted_colonel_id) {
 			colonel.rank++;
+			colonel.title = rank_names[colonel.rank];
 			colonel.command_id = 0;
 			army.officers.colonels.splice(t, 1);
 			army.officers.generals.push(colonel);
@@ -175,6 +178,7 @@ function retireStaff () {
 			division.commander = {};
 			division.commander_id = 0;
 			promoteColonel(division);
+			generateOfficer("colonel", 1);
 		}
 	}
 	for ( var t = 0; t < army.divisions.length; t++ ) {
@@ -184,6 +188,7 @@ function retireStaff () {
 				brigade.commander.retired = true;
 				brigade.commander = {};
 				brigade.commander_id = 0;
+				generateOfficer("colonel", 1);
 			}
 		}
 	}
