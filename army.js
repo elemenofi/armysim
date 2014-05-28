@@ -3,7 +3,7 @@ var express = require('express'),
 	army = express(), 			
 	Chance = require('chance'),
     chance = new Chance();
-// configuration
+//configuration
 army.configure(function() {
 	army.use(express.static(__dirname + '/public'));						
 	army.use(express.bodyParser()); 							
@@ -11,7 +11,7 @@ army.configure(function() {
 
 //routes
 army.get('/army', function(req, res) {
-	res.json(officers);
+	res.json(army);
 });
 
 army.get('*', function(req, res) {
@@ -22,73 +22,108 @@ army.get('*', function(req, res) {
 army.listen(8080);
 console.log("Army started on port 8080");
 
-//helpers
-function randomNumber (x) {
-	return Math.floor(Math.random() * x);
-}
-
 //settings
 var day = 0,
+	officer_id = 1,
 	unit_names = ["Regiment", "Coronel", "General", "Army"],
 	rank_names = ["Lieutenant", "Coronel", "General", "Lieutenant General"],
 	army = {
-		commander: null,
+		name: "Army",
+		unit_id: 1,
+		commander_id: 0,
 		divisions: [
 			{
 				name: "1st Division",
-				commander: null
+				unit_id: 2,
+				commander_id: 0
 			},
 			{
 				name: "2nd Division",
-				commander: null
+				unit_id: 3,
+				commander_id: 0
+			}
+		],
+		brigades: [
+			{
+				name: "1st Brigade",
+				unit_id: 4,
+				commander_id: 0
+			},
+			{
+				name: "2nd Brigade",
+				unit_id: 5,
+				commander_id: 0
+			},
+			{
+				name: "3rd Brigade",
+				unit_id: 6,
+				commander_id: 0
+			},
+			{
+				name: "4th Brigade",
+				unit_id: 7,
+				commander_id: 0
 			}
 		]
+	},
+	officers = {
+		generals: [],
+		colonels: []
+	};
+//for ( var i = 0; i < 2; i++ ) {
+//mechanics
+function generateStaff () {
+	for ( var i = 0; i < 2; i++ ) {
+		var general = {
+			rank: 2,
+			id: officer_id,
+			command_id: 0
+		}
+		general.title = rank_names[general.rank];
+		officers.generals.push(general);
+		officer_id++;
 	}
-	officers = [];
-
-function assignCommand (officer) {
-	switch (officer.rank) {
-		case 3:
-			army.commander = officer;
-			officer.commands = true;
-		break;
-		case 2:
-			for (var i = 0; i < army.divisions.length; i++) {
-				if (army.divisions[i].commander == null && !officer.commands) {
-					army.divisions[i].commander = officer;
-					officer.commands = true;
-					officer.unit = divisions[i];
+	for ( var i = 0; i < 4; i++ ) {
+		var colonel = {
+			rank: 2,
+			id: officer_id,
+			command_id: 0
+		}
+		colonel.title = rank_names[colonel.rank];
+		officers.colonels.push(colonel);
+		officer_id++;
+	}
+}
+function assignStaff () {
+	for ( var i = 0; i < officers.generals.length; i++ ) {
+		var general = officers.generals[i];
+		if (general.command_id == 0) {
+			for ( var i = 0; i < army.divisions.length; i++ ) {
+				var division = army.divisions[i];
+				if (division.commander_id == 0) {
+					division.commander_id = general.officer_id;
+					general.command_id = division.unit_id;
+					console.log(general.command_id);
 				}
 			}
-		break;	
+		}
 	}
 }
 
-function generateOfficer (rank, xp) {
-	var officer = {
-		first_name: chance.first(),
-		last_name: chance.last(),
-		xp: xp,
-		rank: rank,
-		commands: false,
-		unit: null
-	};
-	assignCommand(officer);
-	officers.push(officer);
-}
+//turns
 function passTurn () {
 	if ( day == 0 ) {
-		generateOfficer(3, 1);
-		generateOfficer(2, 1);
-		generateOfficer(2, 1);
-		console.log(army.commander.last_name);
-		console.log(army.divisions[0].commander.last_name);
-		console.log(army.divisions[1].commander.last_name);
+		generateStaff();
 	};
+	assignStaff();
 	day++;
 }
-
+//tick
 setInterval(function () {
 	passTurn();
 }, 2000);
 
+//helpers
+function randomNumber (x) {
+	return Math.floor(Math.random() * x);
+}

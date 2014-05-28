@@ -12,11 +12,8 @@
 </head>
 <body ng-controller="armyController">
 	<div class="container">
-		<ul class="officers" ng-repeat="officer in officers">
-			<li>
-				{{ officer.rank }} {{ officer.name }} {{ officer.last }}<br/>
-				<span class="officers-title">commander of the {{ officer.unit.name }}</span>
-			</li>
+		<ul class="divisions" ng-repeat="division in army.divisions">
+			<li>{{ division.name }}</li>
 		</ul>
 	</div>
 </body>
