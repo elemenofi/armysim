@@ -74,28 +74,29 @@ var day = 0,
 
 //mechanics
 function generateStaff () {
-	for ( var i = 0; i < 2; i++ ) {
-		var general = {
-			rank: 2,
-			xp: randomNumber(10) + 20,
+	generateOfficer("general", 2);
+	generateOfficer("colonel", 4);
+}
+
+function generateOfficer (type, amount) {
+	for ( var i = 0; i < amount; i++ ) {
+		var officer = {
 			id: officer_id,
 			command_id: 0,
 			name: chance.first() + " " + chance.last()
 		}
-		general.title = rank_names[general.rank];
-		army.officers.generals.push(general);
-		officer_id++;
-	}
-	for ( var i = 0; i < 4; i++ ) {
-		var colonel = {
-			rank: 1,
-			xp: randomNumber(10) + 10,
-			id: officer_id,
-			command_id: 0,
-			name: chance.first() + " " + chance.last()
+		switch (type) {
+			case "general":
+				officer.rank = 2;
+				officer.xp = randomNumber(10) + 20;
+				army.officers.generals.push(officer);
+			break;
+			case "colonel":
+				officer.rank = 1;
+				officer.xp = randomNumber(10) + 10;
+				army.officers.colonels.push(officer);
+			break;
 		}
-		colonel.title = rank_names[colonel.rank];
-		army.officers.colonels.push(colonel);
 		officer_id++;
 	}
 }
@@ -126,8 +127,33 @@ function assignStaff () {
 	}
 }
 
-function retireStaff () {
+function rewardStaff () {
+	for ( var i = 0; i < army.officers.generals.length; i++ ) {
+		var general = army.officers.generals[i];
+		general.xp++;
+	}
+	for ( var o = 0; o < army.officers.colonels.length; o++ ) {
+		var colonel = army.officers.colonels[o];
+		colonel.xp++;
+	}
+}
 
+function retireStaff () {
+	for ( var i = 0; i < army.officers.generals.length; i++ ) {
+		var general = army.officers.generals[i];
+		console.log(general.xp)
+		if (general.xp > 35) {
+			army.officers.generals.splice(i, 1);
+			console.log(army.officers.generals);
+		}
+	}
+	for ( var o = 0; o < army.officers.colonels.length; o++ ) {
+		var colonel = army.officers.colonels[o];
+		if (colonel.xp > 25) {
+			army.officers.colonels.splice(i, 1);
+			console.log(army.officers.colonels);
+		}
+	}
 }
 
 //turns
@@ -136,9 +162,11 @@ function passTurn () {
 		generateStaff();
 	};
 	assignStaff();
+	rewardStaff();
 	retireStaff();
 	day++;
 }
+
 //tick
 setInterval(function () {
 	passTurn();
