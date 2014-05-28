@@ -83,12 +83,13 @@ function generateOfficer (type, amount) {
 		var officer = {
 			id: officer_id,
 			command_id: 0,
-			name: chance.first() + " " + chance.last()
+			name: chance.first() + " " + chance.last(),
+			retired: false
 		}
 		switch (type) {
 			case "general":
 				officer.rank = 2;
-				officer.xp = randomNumber(10) + 20;
+				officer.xp = randomNumber(5) + 30;
 				army.officers.generals.push(officer);
 			break;
 			case "colonel":
@@ -105,9 +106,9 @@ function assignStaff () {
 	for ( var i = 0; i < army.officers.generals.length; i++ ) {
 		var general = army.officers.generals[i];
 		for ( var t = 0; t < army.divisions.length; t++ ) {
-			var division = army.divisions[i];
-			if (division.commander_id == 0 && general.command_id == 0) {
-				division.commander_id = general.officer_id;
+			var division = army.divisions[t];
+			if (division.commander_id == 0 && general.command_id == 0 && !general.retired) {
+				division.commander_id = general.id;
 				division.commander = general;
 				general.command_id = division.unit_id;
 			}
@@ -117,8 +118,8 @@ function assignStaff () {
 		var colonel = army.officers.colonels[o];
 		for ( var t = 0; t < army.divisions.length; t++ ) {
 			for ( var i = 0; i < army.divisions[t].brigades.length; i++ ) {
-				if (army.divisions[t].brigades[i].commander_id == 0 && colonel.command_id == 0) {
-					army.divisions[t].brigades[i].commander_id = colonel.officer_id;
+				if (army.divisions[t].brigades[i].commander_id == 0 && colonel.command_id == 0 && !colonel.retired) {
+					army.divisions[t].brigades[i].commander_id = colonel.id;
 					army.divisions[t].brigades[i].commander = colonel;
 					colonel.command_id = army.divisions[t].brigades[i].unit_id;
 				}
@@ -138,20 +139,52 @@ function rewardStaff () {
 	}
 }
 
-function retireStaff () {
-	for ( var i = 0; i < army.officers.generals.length; i++ ) {
-		var general = army.officers.generals[i];
-		console.log(general.xp)
-		if (general.xp > 35) {
-			army.officers.generals.splice(i, 1);
-			console.log(army.officers.generals);
+function promoteColonel (division)  {
+	var highest_experience = 0;
+	var promoted_colonel_id = 0;
+	for ( var o = 0; o < division.brigades.length; o++ ) {
+		var brigade = division.brigades[o];
+		if (brigade.commander.xp > highest_experience) {
+			highest_experience = brigade.commander.xp;
+			promoted_colonel_id = brigade.commander.id;
 		}
 	}
-	for ( var o = 0; o < army.officers.colonels.length; o++ ) {
-		var colonel = army.officers.colonels[o];
-		if (colonel.xp > 25) {
-			army.officers.colonels.splice(i, 1);
-			console.log(army.officers.colonels);
+	for ( var o = 0; o < division.brigades.length; o++ ) {
+		var brigade = division.brigades[o];
+		if (brigade.commander.id == promoted_colonel_id) {
+			brigade.commander = {};
+			brigade.commander_id = 0;
+		}
+	}
+	for ( var t = 0; t < army.officers.colonels.length; t++ ) {
+		var colonel = army.officers.colonels[t];
+		if (colonel.id == promoted_colonel_id) {
+			colonel.rank++;
+			colonel.command_id = 0;
+			army.officers.colonels.splice(t, 1);
+			army.officers.generals.push(colonel);
+		}
+	}
+}
+
+function retireStaff () {
+	for ( var t = 0; t < army.divisions.length; t++ ) {
+		division = army.divisions[t];
+		if (division.commander.xp > 35) {
+			division.commander.retired = true;
+			division.commander = {};
+			division.commander_id = 0;
+			promoteColonel(division);
+		}
+	}
+	for ( var t = 0; t < army.divisions.length; t++ ) {
+		for ( var o = 0; o < army.divisions[t].brigades.length; o++ ) {
+			brigade = army.divisions[t].brigades[o];
+			if (brigade.commander.xp > 25) {
+				brigade.commander.retired = true;
+				brigade.commander = {};
+				brigade.commander_id = 0;
+			}
 		}
 	}
 }
@@ -170,6 +203,7 @@ function passTurn () {
 //tick
 setInterval(function () {
 	passTurn();
+	console.log("Turn");
 }, 2000);
 
 //helpers
