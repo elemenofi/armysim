@@ -64,8 +64,17 @@ ul.divisions ul.brigades {
 	font-size: 16px;
 	margin-left: 16px;
 }
-ul.logs li {
+ul.logs li.promotion {
+	color: green;
+}
+ul.logs li.retirement {
 	color: red;
+}
+ul.logs li.assignment {
+	color: blue;
+}
+ul.logs li.comission {
+	color: violet;
 }
 @media (min-width: 600px) {
   div.container {
