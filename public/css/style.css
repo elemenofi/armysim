@@ -79,6 +79,9 @@ ul.logs li.comission {
 ul.logs li.bond {
 	color: orange;
 }
+ul.logs li.bond {
+	color: pink;
+}
 @media (min-width: 600px) {
   div.container {
   	width: 640px;

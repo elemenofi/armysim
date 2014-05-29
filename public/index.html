@@ -13,10 +13,10 @@
 <body ng-controller="armyController">
 	<div class="container">
 		<ul class="divisions" ng-repeat="division in army.divisions">
-			<li>{{ division.name }}, {{ division.commander.title }} {{ division.commander.name }}</li>
+			<li>{{ division.name }}, {{ division.commander.title }} {{ division.commander.name }} {{ division.commander.alignment }}</li>
 			<li>
 				<ul class="brigades" ng-repeat="brigade in division.brigades">
-					<li>{{ brigade.name }}, {{ brigade.commander.title }} {{ brigade.commander.name }}</li>
+					<li>{{ brigade.name }}, {{ brigade.commander.title }} {{ brigade.commander.name }} {{ brigade.commander.alignment }}</li>
 				</ul>
 			</li>
 		</ul>

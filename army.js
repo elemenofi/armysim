@@ -135,21 +135,23 @@ function sameAlignment (a, b) {
 }
 
 function bondStaff () {
-	for ( var i = 0; i < army.officers.generals.length; i++ ) {
-		var general = army.officers.generals[i];
-		for ( var d = 0; d < army.officers.generals.length; d++ ) {
-			var general_b = army.officers.generals[d];
-			if (sameAlignment(general, general_b) && (general.officer_id != general_b.officer_id)) {
-				console.log("hey");
-				for (var r = 0; r < general.bonds.length; r++) {
-					var previous_bond = general.bonds[r];
-					if (previous_bond[0] === general_b.officer_id) {
-						previous_bond[1]++;
-					} else {
-						var bond = [general_b.officer_id, 0];
-						addLog(general.title + " " + general.name + " and " + general_b.title + " " + general_b.name + " established relations.", 0, log_id, "bond");
+	for ( var i = 0; i < army.officers.generals.length; i++ ) { //for each general
+		var general = army.officers.generals[i]; 
+		for ( var d = 0; d < army.officers.generals.length; d++ ) { //loop through each general
+			var general_b = army.officers.generals[d]; 
+			if (sameAlignment(general, general_b) && (general.id != general_b.id)) { //if same alignment and not self
+				var had_bond = false;
+				for (var n = 0; n < general.bonds.length; n++) {
+					var bond = general.bonds[n];
+					if (bond[0] === general_b.id) {
+						bond[1]++; //if they were already bonded, strengthen the bond
+						had_bond = true;
 					}
 				};
+				if (!had_bond) {
+					var new_bond = [general_b.id, 0];
+					general.bonds.push(new_bond); //if not create new bond
+				}
 			}
 		}
 	}
@@ -172,11 +174,12 @@ function assignStaff () {
 		var general = army.officers.generals[o];
 		for ( var t = 0; t < army.divisions.length; t++ ) {
 			for ( var i = 0; i < army.divisions[t].brigades.length; i++ ) {
-				if (army.divisions[t].brigades[i].commander_id === 0 && general.command_id === 0 && !general.retired) {
-					army.divisions[t].brigades[i].commander_id = general.id;
-					army.divisions[t].brigades[i].commander = general;
-					general.command_id = army.divisions[t].brigades[i].unit_id;
-					addLog(general.title + " " + general.name + " has been assigned to " + army.divisions[t].brigades[i].name, 0, log_id, "assignment");
+				var brigade = army.divisions[t].brigades[i];
+				if (brigade.commander_id === 0 && general.command_id === 0 && !general.retired) {
+					brigade.commander_id = general.id;
+					brigade.commander = general;
+					general.command_id = brigade.unit_id;
+					addLog(general.title + " " + general.name + " has been assigned to " + brigade.name, 0, log_id, "assignment");
 				}
 			}
 		}
@@ -249,8 +252,9 @@ function retireStaff () {
 			division.commander.retired = true;
 			division.commander = {};
 			division.commander_id = 0;
-			promoteGeneral(division);
+			
 			generateOfficer("general", 1);
+			promoteGeneral(division);
 			
 		}
 	}
