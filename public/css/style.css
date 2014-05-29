@@ -76,6 +76,9 @@ ul.logs li.assignment {
 ul.logs li.comission {
 	color: violet;
 }
+ul.logs li.bond {
+	color: orange;
+}
 @media (min-width: 600px) {
   div.container {
   	width: 640px;

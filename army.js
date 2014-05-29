@@ -88,6 +88,7 @@ function decayLogs () {
 }
 
 function addLog (message, duration, id, category) {
+	decayLogs();
 	var log = [message, 0, log_id, category];
 	log_id++;
 	army.logs.push(log);
@@ -100,7 +101,8 @@ function generateOfficer (type, amount) {
 			command_id: 0,
 			name: chance.first() + " " + chance.last(),
 			retired: false,
-			alignment: randomNumber(100)
+			alignment: randomNumber(100),
+			bonds: [[0, 0], [0, 0]]
 		}
 		switch (type) {
 			case "division_general":
@@ -119,6 +121,37 @@ function generateOfficer (type, amount) {
 			break;
 		}
 		officer_id++;
+	}
+}
+
+function sameAlignment (a, b) {
+	if (a.alignment > 50 && b.alignment > 50) {
+		return true;
+	} else if (a.alignment < 50 && b.alignment < 50) {
+		return true;
+	} else {
+		return false;
+	}
+}
+
+function bondStaff () {
+	for ( var i = 0; i < army.officers.generals.length; i++ ) {
+		var general = army.officers.generals[i];
+		for ( var d = 0; d < army.officers.generals.length; d++ ) {
+			var general_b = army.officers.generals[d];
+			if (sameAlignment(general, general_b) && (general.officer_id != general_b.officer_id)) {
+				console.log("hey");
+				for (var r = 0; r < general.bonds.length; r++) {
+					var previous_bond = general.bonds[r];
+					if (previous_bond[0] === general_b.officer_id) {
+						previous_bond[1]++;
+					} else {
+						var bond = [general_b.officer_id, 0];
+						addLog(general.title + " " + general.name + " and " + general_b.title + " " + general_b.name + " established relations.", 0, log_id, "bond");
+					}
+				};
+			}
+		}
 	}
 }
 
@@ -216,8 +249,9 @@ function retireStaff () {
 			division.commander.retired = true;
 			division.commander = {};
 			division.commander_id = 0;
-			generateOfficer("general", 1);
 			promoteGeneral(division);
+			generateOfficer("general", 1);
+			
 		}
 	}
 	for ( var t = 0; t < army.divisions.length; t++ ) {
@@ -237,14 +271,13 @@ function retireStaff () {
 
 //turns
 function passTurn () {
-	decayLogs();
 	if ( day === 0 ) {
 		generateStaff();
 	};
 	assignStaff();
+	bondStaff();
 	rewardStaff();
 	// alignStaff();
-	console.log(army.logs);
 	retireStaff();
 	day++;
 }
@@ -252,7 +285,6 @@ function passTurn () {
 //tick
 setInterval(function () {
 	passTurn();
-	console.log("Turn");
 }, 2000);
 
 //helpers
