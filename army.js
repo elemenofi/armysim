@@ -104,7 +104,7 @@ function generateOfficer (type, amount) {
 			alignment: randomNumber(100),
 			bonds: [[0, 0], [0, 0]]
 		}
-		switch (type) {
+		switch ( type ) {
 			case "division_general":
 				officer.rank = 2;
 				officer.xp = randomNumber(5) + 30;
@@ -141,14 +141,14 @@ function bondStaff () {
 			var general_b = army.officers.generals[d]; 
 			if (sameAlignment(general, general_b) && (general.id != general_b.id)) { //if same alignment and not self
 				var had_bond = false;
-				for (var n = 0; n < general.bonds.length; n++) {
+				for ( var n = 0; n < general.bonds.length; n++ ) {
 					var bond = general.bonds[n];
-					if (bond[0] === general_b.id) {
+					if ( bond[0] === general_b.id ) {
 						bond[1]++; //if they were already bonded, strengthen the bond
 						had_bond = true;
 					}
 				};
-				if (!had_bond) {
+				if ( !had_bond ) {
 					var new_bond = [general_b.id, 0];
 					general.bonds.push(new_bond); //if not create new bond
 				}
@@ -162,7 +162,7 @@ function assignStaff () {
 		var division_general = army.officers.division_generals[i];
 		for ( var t = 0; t < army.divisions.length; t++ ) {
 			var division = army.divisions[t];
-			if (division.commander_id === 0 && division_general.command_id === 0 && !division_general.retired) {
+			if ( division.commander_id === 0 && division_general.command_id === 0 && !division_general.retired ) {
 				division.commander_id = division_general.id;
 				division.commander = division_general;
 				division_general.command_id = division.unit_id;
@@ -175,7 +175,7 @@ function assignStaff () {
 		for ( var t = 0; t < army.divisions.length; t++ ) {
 			for ( var i = 0; i < army.divisions[t].brigades.length; i++ ) {
 				var brigade = army.divisions[t].brigades[i];
-				if (brigade.commander_id === 0 && general.command_id === 0 && !general.retired) {
+				if ( brigade.commander_id === 0 && general.command_id === 0 && !general.retired ) {
 					brigade.commander_id = general.id;
 					brigade.commander = general;
 					general.command_id = brigade.unit_id;
