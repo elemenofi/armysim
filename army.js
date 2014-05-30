@@ -255,10 +255,8 @@ function retireStaff () {
 			division.commander.retired = true;
 			division.commander = {};
 			division.commander_id = 0;
-			
 			generateOfficer("general", 1);
 			promoteGeneral(division);
-			
 		}
 	}
 	for ( var t = 0; t < army.divisions.length; t++ ) {
