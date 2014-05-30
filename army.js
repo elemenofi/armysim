@@ -82,7 +82,7 @@ function generateStaff () {
 }
 
 function decayLogs () {
-	while (army.logs.length > 10) {
+	while ( army.logs.length > 10 ) {
 		army.logs.shift();
 	}
 }
@@ -125,13 +125,8 @@ function generateOfficer (type, amount) {
 }
 
 function sameAlignment (a, b) {
-	if (a.alignment > 50 && b.alignment > 50) {
-		return true;
-	} else if (a.alignment < 50 && b.alignment < 50) {
-		return true;
-	} else {
-		return false;
-	}
+  return ( (a.alignment > 50 && b.alignment > 50) ||
+           (a.alignment < 50 && b.alignment < 50) );
 }
 
 function bondStaff () {
@@ -143,9 +138,17 @@ function bondStaff () {
 				var had_bond = false;
 				for ( var n = 0; n < general.bonds.length; n++ ) {
 					var bond = general.bonds[n];
-					if ( bond[0] === general_b.id ) {
+					if ( (bond[0] === general_b.id) && (bond[1] < 10) ) {
 						bond[1]++; //if they were already bonded, strengthen the bond
 						had_bond = true;
+					} else if ( bond[1] >= 10 ) {
+						addLog( 
+							general.title + " " + general.name + 
+							" and " + 
+							general_b.title + " " + general_b.name +
+							" have established relations", 
+							0, log_id, "bond"
+						);
 					}
 				};
 				if ( !had_bond ) {
