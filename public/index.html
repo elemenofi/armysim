@@ -13,34 +13,53 @@
 <body ng-controller="armyController">
 	<div class="container">
 		<div class="divisions" ng-repeat="division in army.divisions">
-			<div class="unit-data">
-				<div class="unit-meta-data">
-					<span class="stars">&#9733; &#9733; &#9733;</span>
-					<span class="xp">{{ division.commander.xp }}</span>
-					<!-- <span class="alignment">{{ division.commander.alignment }}</span> -->
+			<div class="division-data">
+				<div class="unit-data">
 					<span class="unit">{{ division.name }}</span>
+					<span class="stars">&#9733; &#9733; &#9733;</span>
 				</div>
-				<p class="officer">{{ division.commander.title }} {{ division.commander.name }}</p>
+				<div class="officer-data">
+					<p class="officer">{{ division.commander.title }} {{ division.commander.first_name }} {{ division.commander.name }}</p>
+					<span class="xp">{{ division.commander.xp }}</span>
+				</div>
 			</div>
 			<div class="brigades" ng-repeat="brigade in division.brigades">
-				<div class="unit-data">
-					<div class="unit-meta-data">
-						<span class="stars">&#9733; &#9733;</span>
-						<span class="xp">{{ brigade.commander.xp }}</span>
-						<!-- <span class="alignment">{{ brigade.commander.alignment }}</span> -->
+				<div class="brigade-data">
+					<div class="unit-data">
 						<span class="unit">{{ brigade.name }}</span>
+						<span class="stars">&#9733; &#9733;</span>
+						<!-- <span class="alignment">{{ brigade.commander.alignment }}</span> -->
 					</div>
-					<p class="officer">{{ brigade.commander.title }} {{ brigade.commander.name }}</p>	
+					<div class="officer-data">
+						<p class="officer">{{ brigade.commander.title }} {{ brigade.commander.first_name }} {{ brigade.commander.name }}</p>
+						<span class="xp">{{ brigade.commander.xp }}</span>
+					</div>
 				</div>
 				<div class="regiments" ng-repeat="regiment in brigade.regiments">
-					<div class="unit-data">
-						<div class="unit-meta-data">
-							<span class="stars">&#9733;</span>
-							<span class="xp">{{ regiment.commander.xp }}</span>
-							<!-- <span class="alignment">{{ regiment.commander.alignment }}</span> -->
+					<div class="regiment-data">
+						<div class="unit-data">
 							<span class="unit">{{ regiment.name }}</span>
+							<span class="stars">&#9733;</span>
+							<!-- <span class="alignment">{{ regiment.commander.alignment }}</span> -->
 						</div>
-						<p class="officer">{{ regiment.commander.title }} {{ regiment.commander.name }}</p>
+						<div class="officer-data">
+							<p class="officer">{{ regiment.commander.title }} {{ regiment.commander.name }}</p>
+							<span class="xp">{{ regiment.commander.xp }}</span>
+						</div>
+					</div>
+					<div class="companies" ng-repeat="company in regiment.companies">
+						<div class="company-data">
+							<div class="unit-data">
+								<span class="unit unit-company">{{ company.name_short }}</span>
+								<span class="diamonds">&diams;</span>
+								<!-- <span class="alignment">{{ company.commander.alignment }}</span> -->
+								<div class="clear"></div>
+							</div>
+							<div class="officer-data">
+								<p class="officer">{{ company.commander.name }}</p>
+								<span class="xp">{{ company.commander.xp }}</span>
+							</div>
+						</div>
 					</div>
 				</div>
 			</div>

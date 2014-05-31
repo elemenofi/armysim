@@ -1,8 +1,8 @@
-//start express app and dependencies
-var express = require('express'),
-	army = express(), 			
-	Chance = require('chance'),
-    chance = new Chance();
+//start and deps
+var express = require('express');
+var army = express();			
+var Chance = require('chance');
+var chance = new Chance();
 
 //configuration
 army.configure(function() {
@@ -29,23 +29,43 @@ var day = 0;
 var	global_officer_id = 1;
 var	global_unit_id = 2;
 var	global_log_id = 1;
-var	rank_names = 
-	["Lieutenant", "Coronel", "General",
-	"Division General", "Lieutenant General"];
-var	division_names = 
-	["1st Division", "2nd Division"];
-var	brigade_names =
-	["1st Brigade", "2nd Brigade",
-	"3rd Brigade", "4th Brigade"];
-var	regiment_names =
-	["1st Regiment", "2nd Regiment", "3rd Regiment",
+var	rank_names = [
+	"Lieutenant", "Major", "Coronel", 
+	"General", "Division General", "Lieutenant General"
+];
+var	division_names = [
+	"1st Division", "2nd Division"
+];
+var	brigade_names = [
+	"1st Brigade", "2nd Brigade",
+	"3rd Brigade", "4th Brigade"
+];
+var	regiment_names = [
+	"1st Regiment", "2nd Regiment", "3rd Regiment",
 	"4th Regiment", "5th Regiment", "6th Regiment",
-	"7th Regiment", "8th Regiment"];
+	"7th Regiment", "8th Regiment"
+];
+var	company_names = [
+	"1st Company", "2nd Company", "3rd Company",
+	"4th Company", "5th Company", "6th Company",
+	"7th Company", "8th Company", "9th Company",
+	"10th Company", "11th Company",	"12th Company", 
+	"13th Company", "14th Company",	"15th Company", 
+	"16th Company"
+];
+var	company_names_short = [
+	"1stC", "2ndC", "3rdC",
+	"4thC", "5thC", "6thC",
+	"7thC", "8thC", "9thC",
+	"10thC", "11thC",	"12thC", 
+	"13thC", "14thC",	"15thC", 
+	"16thC"
+];
 
 //mechanics	
 function generateArmy () {
-	//define army objects contemplating the army structure
-	//and 1 array for each rank of the officers object
+	//create the army object with the unit structure
+	//and and array for each rank of officers
 	army = {
 		name: "Army",
 		unit_id: 1,
@@ -54,12 +74,14 @@ function generateArmy () {
 		officers: {
 			division_generals: [],
 			generals: [],
-			coronels: []
+			coronels: [],
+			majors: []
 		},
 		logs: []
 	};
-	//generates 2 divisions whith 2 brigades with 2 regiments, etc
-	//the army structure
+	//army structure is divided in two branches
+	//each unit has two smaller units inside
+	//division > brigade > regiment > company > battalion
 	for (var i = 0; i < 2; i++) {
 		var division = {
 			name: division_names[i],
@@ -84,9 +106,24 @@ function generateArmy () {
 					// name: regiment_names[t],
 					name: findUnitName("regiment"),
 					unit_id: global_unit_id,
-					commander_id: 0
+					commander_id: 0,
+					companies: []
 				}
 				global_unit_id++;
+				var companies = [];
+				for (var r = 0; r < 2; r++) {
+					var company = {
+						// name: company_names[t],
+						name: findUnitName("company"),
+						name_short: findUnitName("company_short"),
+						unit_id: global_unit_id,
+						commander_id: 0
+					}
+					console.log(company);
+					global_unit_id++;
+					//next type of unit starts here
+					regiment.companies.push(company);
+				}
 				brigade.regiments.push(regiment);
 			}
 			division.brigades.push(brigade);
@@ -106,6 +143,14 @@ function generateArmy () {
 				new_name = regiment_names[0];
 				regiment_names.shift();
 			break;
+			case "company":
+				new_name = company_names[0];
+				company_names.shift();
+			break;
+			case "company_short":
+				new_name = company_names_short[0];
+				company_names_short.shift();
+			break;
 		}
 		return new_name;
 	}
@@ -116,15 +161,16 @@ function generateOfficerByType (type, amount) {
 		var officer = {
 			id: global_officer_id,
 			command_id: 0,
-			name: chance.first() + " " + chance.last(),
+			name: chance.last(),
+			first_name: chance.first(),
 			retired: false,
 			alignment: randomNumber(100),
 			bonds: [[0, 0], [0, 0]]
 		}
 		switch ( type ) {
 			case "division_general":
-				officer.rank = 3;
-				officer.xp = randomNumber(10) + 25;
+				officer.rank = 4;
+				officer.xp = randomNumber(10) + 35;
 				officer.title = rank_names[officer.rank];
 				army.officers.division_generals.push(officer);
 				addLog(
@@ -136,8 +182,8 @@ function generateOfficerByType (type, amount) {
 				);
 			break;
 			case "general":
-				officer.rank = 2;
-				officer.xp = randomNumber(10) + 15;
+				officer.rank = 3;
+				officer.xp = randomNumber(10) + 25;
 				officer.title = rank_names[officer.rank];
 				army.officers.generals.push(officer);
 				addLog(
@@ -149,10 +195,23 @@ function generateOfficerByType (type, amount) {
 				);
 			break;
 			case "coronel":
+				officer.rank = 2;
+				officer.xp = randomNumber(10) + 15;
+				officer.title = rank_names[officer.rank];
+				army.officers.coronels.push(officer);
+				addLog(
+					officer.title + 
+					" " + 
+					officer.name + 
+					" has been recruited.", 
+					"comission"
+				);
+			break;
+			case "major":
 				officer.rank = 1;
 				officer.xp = randomNumber(10) + 5;
 				officer.title = rank_names[officer.rank];
-				army.officers.coronels.push(officer);
+				army.officers.majors.push(officer);
 				addLog(
 					officer.title + 
 					" " + 
@@ -171,6 +230,7 @@ function generateStaff () {
 	generateOfficerByType("division_general", 2);
 	generateOfficerByType("general", 4);
 	generateOfficerByType("coronel", 8);
+	generateOfficerByType("major", 16);
 }
 
 function bondStaff () {
@@ -254,6 +314,30 @@ function bondStaff () {
 			}
 		}
 	}
+	for ( var i = 0; i < army.officers.majors.length; i++ ) { 
+		var major = army.officers.majors[i];
+		//loop through the other majors
+		for ( var d = 0; d < army.officers.majors.length; d++ ) { 
+			var major_b = army.officers.majors[d];
+			//if same alignment and not self
+			if ( sameAlignment(major, major_b) && 
+				(major.id != major_b.id) ) { 
+				var had_bond = false;
+				for ( var n = 0; n < major.bonds.length; n++ ) {
+					var bond = major.bonds[n];
+					//if they were already bonded, strengthen the bond
+					if ( (bond[0] === major_b.id) && (bond[1] < 10) ) {
+						bond[1]++; 
+						had_bond = true;
+					}
+				};
+				if ( !had_bond ) {
+					var new_bond = [major_b.id, 0];
+					major.bonds.push(new_bond); //if not create new bond
+				}
+			}
+		}
+	}
 }
 
 function assignStaff () {
@@ -328,7 +412,33 @@ function assignStaff () {
 			}
 		}
 	}
-	
+	for ( var f = 0; f < army.officers.majors.length; f++ ) {
+		var major = army.officers.majors[f];
+		for ( var u = 0; u < army.divisions.length; u++ ) {
+		for ( var y = 0; y < army.divisions[u].brigades.length; y++ ) {
+		for ( var m = 0; m < army.divisions[u].brigades[y].regiments.length; m++ ) {
+		for ( var i = 0; i < army.divisions[u].brigades[y].regiments[m].companies.length; i++) {
+			var company = army.divisions[u].brigades[y].regiments[m].companies[i];
+			if ((company.commander_id === 0) &&
+			    (major.command_id === 0) && 
+			    !major.retired ) {
+				company.commander_id = major.id;
+				company.commander = major;
+				major.command_id = company.unit_id;
+				addLog(
+					major.title + 
+					" " + 
+					major.name + 
+					" has been assigned to " + 
+					company.name, 
+					"assignment"
+				);
+			}
+		}
+		}
+		}
+		}
+	}
 }
 
 function rewardStaff () {
@@ -343,6 +453,10 @@ function rewardStaff () {
 	for ( var o = 0; o < army.officers.coronels.length; o++ ) {
 		var coronel = army.officers.coronels[o];
 		coronel.xp++;
+	}
+	for ( var o = 0; o < army.officers.majors.length; o++ ) {
+		var major = army.officers.majors[o];
+		major.xp++;
 	}
 }
 
@@ -371,6 +485,14 @@ function alignStaff () {
 			coronel.alignment++;
 		} else if (coronel.alignment < 50 && coronel.alignment > 0) {
 			coronel.alignment--;
+		}
+	}
+	for ( var i = 0; i < army.officers.majors.length; i++ ) {
+		var major = army.officers.majors[i];
+		if (major.alignment > 50 && major.alignment < 100) {
+			major.alignment++;
+		} else if (major.alignment < 50 && major.alignment > 0) {
+			major.alignment--;
 		}
 	}
 }
@@ -426,6 +548,7 @@ function promoteCoronel (brigade)  {
 		if (regiment.commander.id === promoted_coronel_id) {
 			regiment.commander = {};
 			regiment.commander_id = 0;
+			promoteMajor(regiment);
 		}
 	}
 	for ( var t = 0; t < army.officers.coronels.length; t++ ) {
@@ -446,11 +569,46 @@ function promoteCoronel (brigade)  {
 		}
 	}
 }
+function promoteMajor (regiment)  {
+	var highest_experience = 0;
+	var promoted_major_id = 0;
+	for ( var o = 0; o < regiment.companies.length; o++ ) {
+		var company = regiment.companies[o];
+		if (company.commander.xp > highest_experience) {
+			highest_experience = company.commander.xp;
+			promoted_major_id = company.commander.id;
+		}
+	}
+	for ( var e = 0; e < regiment.companies.length; e++ ) {
+		var company = regiment.companies[e];
+		if (company.commander.id === promoted_major_id) {
+			company.commander = {};
+			company.commander_id = 0;
+		}
+	}
+	for ( var t = 0; t < army.officers.majors.length; t++ ) {
+		var major = army.officers.majors[t];
+		if (major.id === promoted_major_id) {
+			addLog(
+				major.title + 
+				" " + 
+				major.name + 
+				" has been promoted to General", 
+				"promotion"
+			);
+			major.rank++;
+			major.title = rank_names[major.rank];
+			major.command_id = 0;
+			army.officers.majors.splice(t, 1);
+			army.officers.coronels.push(major);	
+		}
+	}
+}
 
 function retireStaff () {
 	for ( var t = 0; t < army.divisions.length; t++ ) {
 		var division = army.divisions[t];
-		if (division.commander.xp > 40) {
+		if (division.commander.xp > 45) {
 			addLog(
 				division.commander.title + 
 				" " + 
@@ -461,14 +619,14 @@ function retireStaff () {
 			division.commander.retired = true;
 			division.commander = {};
 			division.commander_id = 0;
-			generateOfficerByType("coronel", 1);
+			generateOfficerByType("major", 1);
 			promoteGeneral(division);
 		}
 	}
 	for ( var t = 0; t < army.divisions.length; t++ ) {
 		for ( var o = 0; o < army.divisions[t].brigades.length; o++ ) {
 			var brigade = army.divisions[t].brigades[o];
-			if (brigade.commander.xp > 30) {
+			if (brigade.commander.xp > 35) {
 				addLog(
 					brigade.commander.title + 
 					" " + 
@@ -479,7 +637,7 @@ function retireStaff () {
 				brigade.commander.retired = true;
 				brigade.commander = {};
 				brigade.commander_id = 0;
-				generateOfficerByType("coronel", 1);
+				generateOfficerByType("major", 1);
 				promoteCoronel(brigade);
 			}
 		}
@@ -490,7 +648,7 @@ function retireStaff () {
 				d < army.divisions[t].brigades[o].regiments.length;
 				d++) {
 				var regiment = army.divisions[t].brigades[o].regiments[d];
-				if (regiment.commander.xp > 20) {
+				if (regiment.commander.xp > 25) {
 					addLog(
 						regiment.commander.title + 
 						" " + 
@@ -501,7 +659,30 @@ function retireStaff () {
 					regiment.commander.retired = true;
 					regiment.commander = {};
 					regiment.commander_id = 0;
-					generateOfficerByType("coronel", 1);
+					generateOfficerByType("major", 1);
+					promoteMajor(regiment);
+				}
+			}
+		}
+	}
+	for ( var t = 0; t < army.divisions.length; t++ ) {
+		for ( var o = 0; o < army.divisions[t].brigades.length; o++ ) {
+			for (var d = 0; d < army.divisions[t].brigades[o].regiments.length;	d++) {
+				for (var b = 0; b < army.divisions[t].brigades[o].regiments[d].companies.length;	b++) {
+					var company = army.divisions[t].brigades[o].regiments[d].companies[b];
+					if (company.commander.xp > 20) {
+						addLog(
+							company.commander.title + 
+							" " + 
+							company.commander.name + 
+							" has retired", 
+							"retirement"
+						);
+						company.commander.retired = true;
+						company.commander = {};
+						company.commander_id = 0;
+						generateOfficerByType("major", 1);
+					}
 				}
 			}
 		}

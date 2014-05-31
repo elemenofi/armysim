@@ -50,39 +50,56 @@ body {
 	padding: 32px 0px;
 }
 /*16px 18px 24px 32px*/
+/*
+Blackhex: #000000
+Army Yellowhex: #FFCB05
+Whitehex: #FFFFFF
+Cool Grayhex: #3D3D3D
+Content Areahex: #F7F7F7
+Army Greenhex: #7B8738
+Left Navigation Areahex: #C2C2C2
+Hover Statehex: #B4B4B4
+Left Navigation Activehex: #4E4E4E
+*/
 /*structure*/
 div.clear {
 	clear: both;
 }
-div.container {
-	margin-left: 32px;
-}
-div.divisions {
+div.divisions, div.brigades, div.regiments, div.companies {
 	border-top: 3px double #F7F7F7;
 	padding-top: 16px;
-	width: 400px;
+	width: 48%;
+	padding: 32px 1%;
 	float:left;
-	margin-right: 80px;
 }
-div.brigades, div.regiments {
-	margin-left: 26px;
+div.brigades {
+	border-top: 1px solid #F7F7F7;
 }
-div.unit-meta-data {
-	height: 32px;
+div.regiments, div.companies {
+	font-size: 12px;
+	border-top: 1px dotted #F7F7F7;
+}	
+div.brigade-data, div.division-data, div.regiment-data {
+	height: 100px;
 }
+
+
+
 p.officer {
-	height: 32px;
 	line-height: 32px;
 	font-weight: bold;
 	margin-bottom: 13px;
 }
-span.stars, span.xp, span.alignment, span.unit {
+span.stars, span.xp, span.alignment, span.unit, span.diamonds {
 	display: inline-block;
 	background-color: #3D3D3D;
 	color: #FFCB05;
 	padding: 3px 5px 2px;
 	border: 2px solid #FFCB05;
 	margin-right: 16px;
+}
+span.unit {
+	margin-right:0px;
 }
 span.xp, span.alignment {
 	border: 0px;
@@ -92,11 +109,18 @@ span.xp, span.alignment {
 	text-align: center;
 	line-height: 16px;
 }
-
+span.diamonds {
+	color: #B4B4B4;
+	line-height: 12px;
+}
+span.unit-company {
+	float:left;
+	margin-right: 6px;
+}
 div.logs-container {
 	border-top: 3px double #F7F7F7;
 	padding-top: 16px;
-	width: 480px;
+	width: 880px;
 	line-height: 16px;
 }
 ul.logs li.promotion {
