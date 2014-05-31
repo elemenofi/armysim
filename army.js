@@ -69,6 +69,7 @@ function generateArmy () {
 	};
 	console.log(army);
 }
+
 function generateStaff () {
 	generateOfficer("division_general", 2);
 	generateOfficer("general", 4);
@@ -117,11 +118,6 @@ function generateOfficer (type, amount) {
 	}
 }
 
-function sameAlignment (a, b) {
-  return ( (a.alignment > 50 && b.alignment > 50) ||
-           (a.alignment < 50 && b.alignment < 50) );
-}
-
 function bondStaff () {
 	for ( var i = 0; i < army.officers.generals.length; i++ ) { //for each general
 		var general = army.officers.generals[i]; 
@@ -150,7 +146,9 @@ function assignStaff () {
 		var division_general = army.officers.division_generals[i];
 		for ( var t = 0; t < army.divisions.length; t++ ) {
 			var division = army.divisions[t];
-			if ( division.commander_id === 0 && division_general.command_id === 0 && !division_general.retired ) {
+			if ( division.commander_id === 0 && 
+				division_general.command_id === 0 && 
+				!division_general.retired ) {
 				division.commander_id = division_general.id;
 				division.commander = division_general;
 				division_general.command_id = division.unit_id;
@@ -194,9 +192,14 @@ function alignStaff () {
 			division_general.alignment--;
 		}
 	}
-	// for ( var o = 0; o < army.officers.generals.length; o++ ) {
-	// 	var general = army.officers.generals[o];
-	// }
+	for ( var i = 0; i < army.officers.generals.length; i++ ) {
+		var general = army.officers.generals[i];
+		if (general.alignment > 50 && general.alignment < 100) {
+			general.alignment++;
+		} else if (general.alignment < 50 && general.alignment > 0) {
+			general.alignment--;
+		}
+	}
 }
 
 function promoteGeneral (division)  {
@@ -228,8 +231,6 @@ function promoteGeneral (division)  {
 		}
 	}
 }
-
-
 
 function retireStaff () {
 	for ( var t = 0; t < army.divisions.length; t++ ) {
@@ -280,4 +281,9 @@ setInterval(function () {
 //helpers
 function randomNumber (x) {
 	return Math.floor(Math.random() * x);
+}
+
+function sameAlignment (a, b) {
+  return ( (a.alignment > 50 && b.alignment > 50) ||
+           (a.alignment < 50 && b.alignment < 50) );
 }
