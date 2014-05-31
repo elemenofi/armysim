@@ -43,67 +43,60 @@ table {
 }
 /**/
 body {
-	font-size: 16px;
-}
-
-li {
-	margin-bottom: 16px;
-}
-body {
+	background-color: #7B8738;
+	color: #F7F7F7;
 	font-family: "Courier New", Verdana, sans-serif;
+	font-size: 16px;
+	padding-top: 32px;
 }
 /*16px 18px 24px 32px*/
-
 /*structure*/
 div.clear {
 	clear: both;
 }
 div.container {
-	padding: 18px 0 0 18px;
+	margin-left: 32px;
 }
 ul.divisions {
 	float: left;
-	min-width: 320px;
-	border-top: 1px double grey;
 }
-ul.divisions, ul.brigades {
-	font-size: 16px;
-	margin-left: 16px;
-	min-height: 100px;
-}
-ul.divisions li.commander, ul.divisions li.commander-data, ul.divisions li.unit {
-	height: 32px;
+ul.divisions li, ul.brigades li, ul.regiments li {
 	line-height: 32px;
+	min-height: 32px;
 }
-ul.brigades {
-	border-top: 1px solid grey;
+ul.divisions {
+	width: 640px;
+}
+ul.brigades, ul.regiments {
+	margin-left: 16px;
+}
+ul.regiments {
 }
 span.xp {
 	background-color: black;
 	color: white;
+	padding: 0 2px;
 }
-.logs-container {
-	width: 320px;
-	float: left;
-	margin-left: 16px;
+span.stars {
+	background-color: #336600;
+	color: #FFCB05;
+	padding: 6px 3px;
+	border: 2px solid #660000;
 }
-ul.logs {
-	width: 320px;
+div.logs-container {
+	line-height: 18px;
 }
 ul.logs li.promotion {
-	color: green;
+	color: #FFCB05;
 }
 ul.logs li.retirement {
-	color: red;
+	color: #4E4E4E;
 }
 ul.logs li.assignment {
-	color: blue;
+	color: #B4B4B4;
 }
 ul.logs li.comission {
-	color: violet;
-}
-ul.logs li.bond {
-	color: orange;
+	color: #3D3D3D;
 }
 ul.logs li.bond {
 	color: pink;
