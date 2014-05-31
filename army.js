@@ -25,57 +25,50 @@ console.log("Army started on port 8080");
 
 //settings, army data structure
 var day = 0,
+	unit_global_id = 2,
 	officer_id = 1,
 	log_id = 1,
 	rank_names = ["Lieutenant", "General", "Division General", "Lieutenant General"],
+	division_names = ["1st Division", "2nd Division"],
+	brigade_names = ["1st Brigade", "2nd Brigade", "3rd Brigade", "4th Brigade"];
+	var army = {};
+
+//mechanics
+	
+function generateArmy () {
 	army = {
 		name: "Army",
 		unit_id: 1,
 		commander_id: 0,
-		divisions: [
-			{
-				name: "1st Division",
-				unit_id: 2,
-				commander_id: 0,
-				brigades: [
-					{
-						name: "1st Brigade",
-						unit_id: 4,
-						commander_id: 0
-					},
-					{
-						name: "2nd Brigade",
-						unit_id: 5,
-						commander_id: 0
-					}
-				]
-			},
-			{
-				name: "2nd Division",
-				unit_id: 3,
-				commander_id: 0,
-				brigades: [
-					{
-						name: "3rd Brigade",
-						unit_id: 6,
-						commander_id: 0
-					},
-					{
-						name: "4th Brigade",
-						unit_id: 7,
-						commander_id: 0
-					}
-				]
-			}
-		],
+		divisions: [],
 		officers: {
 			division_generals: [],
 			generals: []
 		},
 		logs: []
 	};
-
-//mechanics
+	for (var i = 0; i < 2; i++) {
+		var division = {
+			name: division_names[i],
+			unit_id: unit_global_id,
+			commander_id: 0,
+			brigades: []
+		}
+		unit_global_id++;
+		var brigades = [];
+		for (var t = 0; t < 2; t++) {
+			var brigade = {
+				name: brigade_names[t],
+				unit_id: unit_global_id,
+				commander_id: 0
+			}
+			unit_global_id++;
+			division.brigades.push(brigade);
+		}
+		army.divisions.push(division);
+	};
+	console.log(army);
+}
 function generateStaff () {
 	generateOfficer("division_general", 2);
 	generateOfficer("general", 4);
@@ -141,14 +134,6 @@ function bondStaff () {
 					if ( (bond[0] === general_b.id) && (bond[1] < 10) ) {
 						bond[1]++; //if they were already bonded, strengthen the bond
 						had_bond = true;
-					} else if ( bond[1] >= 10 ) {
-						addLog( 
-							general.title + " " + general.name + 
-							" and " + 
-							general_b.title + " " + general_b.name +
-							" have established relations", 
-							0, log_id, "bond"
-						);
 					}
 				};
 				if ( !had_bond ) {
@@ -209,10 +194,9 @@ function alignStaff () {
 			division_general.alignment--;
 		}
 	}
-	for ( var o = 0; o < army.officers.generals.length; o++ ) {
-		var general = army.officers.generals[o];
-		general.xp++;
-	}
+	// for ( var o = 0; o < army.officers.generals.length; o++ ) {
+	// 	var general = army.officers.generals[o];
+	// }
 }
 
 function promoteGeneral (division)  {
@@ -277,6 +261,7 @@ function retireStaff () {
 //turns
 function passTurn () {
 	if ( day === 0 ) {
+		generateArmy();
 		generateStaff();
 	};
 	assignStaff();

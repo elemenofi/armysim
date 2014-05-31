@@ -49,20 +49,46 @@ body {
 li {
 	margin-bottom: 16px;
 }
-
+body {
+	font-family: "Courier New", Verdana, sans-serif;
+}
 /*16px 18px 24px 32px*/
 
 /*structure*/
+div.clear {
+	clear: both;
+}
 div.container {
 	padding: 18px 0 0 18px;
-	width: 320px;
 }
 ul.divisions {
-	font-size: 18px;
+	float: left;
+	min-width: 320px;
+	border-top: 1px double grey;
 }
-ul.divisions ul.brigades {
+ul.divisions, ul.brigades {
 	font-size: 16px;
 	margin-left: 16px;
+	min-height: 100px;
+}
+ul.divisions li.commander, ul.divisions li.commander-data, ul.divisions li.unit {
+	height: 32px;
+	line-height: 32px;
+}
+ul.brigades {
+	border-top: 1px solid grey;
+}
+span.xp {
+	background-color: black;
+	color: white;
+}
+.logs-container {
+	width: 320px;
+	float: left;
+	margin-left: 16px;
+}
+ul.logs {
+	width: 320px;
 }
 ul.logs li.promotion {
 	color: green;
@@ -84,11 +110,9 @@ ul.logs li.bond {
 }
 @media (min-width: 600px) {
   div.container {
-  	width: 640px;
   }
 }
 @media (min-width: 1600px) {
   div.container {
-  	width: 960px;
   }
 }

@@ -13,16 +13,22 @@
 <body ng-controller="armyController">
 	<div class="container">
 		<ul class="divisions" ng-repeat="division in army.divisions">
-			<li>{{ division.name }}, {{ division.commander.title }} {{ division.commander.name }} {{ division.commander.alignment }}</li>
+			<li class="unit">{{ division.name }}</li> 
+			<li class="commander">{{ division.commander.title }} {{ division.commander.name }}</li>
+			<li class="commander-data"><span class="xp">{{ division.commander.xp }}</span> {{ division.commander.alignment }}</li>
 			<li>
 				<ul class="brigades" ng-repeat="brigade in division.brigades">
-					<li>{{ brigade.name }}, {{ brigade.commander.title }} {{ brigade.commander.name }} {{ brigade.commander.alignment }}</li>
+					<li class="unit">{{ brigade.name }}</li> 
+					<li class="commander">{{ brigade.commander.title }} {{ brigade.commander.name }}</li>
+					<li class="commander-data"><span class="xp">{{ brigade.commander.xp }}</span> {{ brigade.commander.alignment }}</li>
 				</ul>
 			</li>
 		</ul>
-		<ul class="logs" ng-repeat="log in army.logs">
-			<li class="{{ log[3] }}">{{ log[2] }} {{ log[0] }}</li>
-		</ul>
+		<div class="logs-container">
+			<ul class="logs" ng-repeat="log in army.logs">
+				<li class="{{ log[3] }}">{{ log[2] }} {{ log[0] }}</li>
+			</ul>
+		</div>
 	</div>
 </body>
 </html>
