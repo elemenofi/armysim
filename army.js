@@ -24,6 +24,7 @@ army.listen(8080);
 console.log("Army started on port 8080");
 
 //settings
+var army = {};
 var day = 0;
 var	global_officer_id = 1;
 var	global_unit_id = 2;
@@ -41,10 +42,10 @@ var	regiment_names =
 	"4th Regiment", "5th Regiment", "6th Regiment",
 	"7th Regiment", "8th Regiment"];
 
-var army = {};
-
 //mechanics	
 function generateArmy () {
+	//define army objects contemplating the army structure
+	//and 1 array for each rank of the officers object
 	army = {
 		name: "Army",
 		unit_id: 1,
@@ -57,6 +58,8 @@ function generateArmy () {
 		},
 		logs: []
 	};
+	//generates 2 divisions whith 2 brigades with 2 regiments, etc
+	//the army structure
 	for (var i = 0; i < 2; i++) {
 		var division = {
 			name: division_names[i],
@@ -90,43 +93,25 @@ function generateArmy () {
 		}
 		army.divisions.push(division);
 	};
-}
-
-function findUnitName ( type ) {
-	var new_name = "";
-	switch ( type ) {
-		case "brigade":
-			new_name = brigade_names[0];
-			brigade_names.shift();
-		break;
-		case "regiment":
-			new_name = regiment_names[0];
-			regiment_names.shift();
-		break;
-	}
-	return new_name;
-}
-
-function generateStaff () {
-	generateOfficer("division_general", 2);
-	generateOfficer("general", 4);
-	generateOfficer("coronel", 8);
-}
-
-function decayLogs () {
-	while ( army.logs.length > 10 ) {
-		army.logs.shift();
+	//helper function to use the name and remove it from the list
+	//of available names
+	function findUnitName ( type ) {
+		var new_name = "";
+		switch ( type ) {
+			case "brigade":
+				new_name = brigade_names[0];
+				brigade_names.shift();
+			break;
+			case "regiment":
+				new_name = regiment_names[0];
+				regiment_names.shift();
+			break;
+		}
+		return new_name;
 	}
 }
 
-function addLog (message, category) {
-	decayLogs();
-	var log = [message, 0, global_log_id, category];
-	global_log_id++;
-	army.logs.push(log);
-}
-
-function generateOfficer (type, amount) {
+function generateOfficerByType (type, amount) {
 	for ( var i = 0; i < amount; i++ ) {
 		var officer = {
 			id: global_officer_id,
@@ -181,7 +166,19 @@ function generateOfficer (type, amount) {
 	}
 }
 
+//initialize army staff
+function generateStaff () {
+	generateOfficerByType("division_general", 2);
+	generateOfficerByType("general", 4);
+	generateOfficerByType("coronel", 8);
+}
+
 function bondStaff () {
+	//helper function to check alignment parity
+	function sameAlignment (a, b) {
+	  return ( (a.alignment > 50 && b.alignment > 50) ||
+	           (a.alignment < 50 && b.alignment < 50) );
+	}
 	//for each division general
 	for ( var i = 0; i < army.officers.division_generals.length; i++ ) { 
 		var division_general = army.officers.division_generals[i];
@@ -464,7 +461,7 @@ function retireStaff () {
 			division.commander.retired = true;
 			division.commander = {};
 			division.commander_id = 0;
-			generateOfficer("coronel", 1);
+			generateOfficerByType("coronel", 1);
 			promoteGeneral(division);
 		}
 	}
@@ -482,7 +479,7 @@ function retireStaff () {
 				brigade.commander.retired = true;
 				brigade.commander = {};
 				brigade.commander_id = 0;
-				generateOfficer("coronel", 1);
+				generateOfficerByType("coronel", 1);
 				promoteCoronel(brigade);
 			}
 		}
@@ -504,11 +501,25 @@ function retireStaff () {
 					regiment.commander.retired = true;
 					regiment.commander = {};
 					regiment.commander_id = 0;
-					generateOfficer("coronel", 1);
+					generateOfficerByType("coronel", 1);
 				}
 			}
 		}
 	}
+}
+
+//logs
+function decayLogs () {
+	while ( army.logs.length > 10 ) {
+		army.logs.shift();
+	}
+}
+//creates log with category for css color display
+function addLog (message, category) {
+	decayLogs();
+	var log = [message, 0, global_log_id, category];
+	global_log_id++;
+	army.logs.push(log);
 }
 
 //turns
@@ -520,7 +531,7 @@ function passTurn () {
 	assignStaff();
 	bondStaff();
 	rewardStaff();
-	// alignStaff();
+	alignStaff();
 	retireStaff();
 	day++;
 }
@@ -533,9 +544,4 @@ setInterval(function () {
 //helpers
 function randomNumber (x) {
 	return Math.floor(Math.random() * x);
-}
-
-function sameAlignment (a, b) {
-  return ( (a.alignment > 50 && b.alignment > 50) ||
-           (a.alignment < 50 && b.alignment < 50) );
 }
