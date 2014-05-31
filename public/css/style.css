@@ -80,17 +80,18 @@ span.xp {
 span.stars {
 	background-color: #336600;
 	color: #FFCB05;
-	padding: 6px 3px;
+	padding: 3px 5px 2px;
 	border: 2px solid #660000;
 }
 div.logs-container {
+	margin-top: 32px;
 	line-height: 18px;
 }
 ul.logs li.promotion {
 	color: #FFCB05;
 }
 ul.logs li.retirement {
-	color: #4E4E4E;
+	color: #660000;
 }
 ul.logs li.assignment {
 	color: #B4B4B4;
