@@ -251,7 +251,7 @@ function bondStaff () {
 				var had_bond = false;
 				for ( var n = 0; n < division_general.bonds.length; n++ ) {
 					var bond = division_general.bonds[n];
-					//if they were already bonded, strengthen the bond
+					//if they were already bonded, strengthen the bond, max 10
 					if ( (bond[0] === division_general_b.id) && (bond[1] < 10) ) {
 						bond[1]++; 
 						had_bond = true;
@@ -442,23 +442,18 @@ function assignStaff () {
 }
 
 function rewardStaff () {
-	for ( var i = 0; i < army.officers.division_generals.length; i++ ) {
-		var division_general = army.officers.division_generals[i];
-		division_general.xp++;
+	function rewardStaffByRank ( rank ) {
+		for ( var i = 0; i < rank.length; i++ ) {
+			var officer = rank[i];
+			officer.xp++;
+		}
 	}
-	for ( var o = 0; o < army.officers.generals.length; o++ ) {
-		var general = army.officers.generals[o];
-		general.xp++;
-	}
-	for ( var o = 0; o < army.officers.coronels.length; o++ ) {
-		var coronel = army.officers.coronels[o];
-		coronel.xp++;
-	}
-	for ( var o = 0; o < army.officers.majors.length; o++ ) {
-		var major = army.officers.majors[o];
-		major.xp++;
-	}
+	rewardStaffByRank(army.officers.majors);
+	rewardStaffByRank(army.officers.coronels);
+	rewardStaffByRank(army.officers.generals);
+	rewardStaffByRank(army.officers.division_generals);
 }
+
 
 function alignStaff () {
 	for ( var i = 0; i < army.officers.division_generals.length; i++ ) {
