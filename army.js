@@ -155,6 +155,7 @@ function generateArmy () {
 		return new_name;
 	}
 }
+
 function generateOfficerByType (type, amount) {
 	for ( var i = 0; i < amount; i++ ) {
 		var officer = {
@@ -223,8 +224,8 @@ function generateOfficerByType (type, amount) {
 		global_officer_id++;
 	}
 }
+
 function generateOfficers () {
-	
 	generateOfficerByType("division_general", 2);
 	generateOfficerByType("general", 4);
 	generateOfficerByType("coronel", 8);
@@ -322,92 +323,58 @@ function assignOfficers () {
 		switch ( type ) {
 			case "division_general":
 				for ( var i = 0; i < army.officers.division_generals.length; i++ ) {
-					var officer = army.officers.division_generals[i];
-					for ( var t = 0; t < army.divisions.length; t++ ) {
-						var unit = army.divisions[t];
-						assignOfficerToUnit( officer, unit );
-					}
+				var officer = army.officers.division_generals[i];
+				for ( var t = 0; t < army.divisions.length; t++ ) {
+					var unit = army.divisions[t];
+					assignOfficerToUnit( officer, unit );
+				}
+				}
+			break;
+			case "general":
+				for ( var i = 0; i < army.officers.generals.length; i++ ) {
+				var officer = army.officers.generals[i];
+				for ( var t = 0; t < army.divisions.length; t++ ) {
+				for ( var n = 0; n < army.divisions[t].brigades.length; n++ ) {
+					var unit = army.divisions[t].brigades[n];
+					assignOfficerToUnit( officer, unit );
+				}
+				}
+				}
+			break;
+			case "coronel":
+				for ( var i = 0; i < army.officers.coronels.length; i++ ) {
+				var officer = army.officers.coronels[i];
+				for ( var t = 0; t < army.divisions.length; t++ ) {
+				for ( var n = 0; n < army.divisions[t].brigades.length; n++ ) {
+				for ( var m = 0; m < army.divisions[t].brigades[n].regiments.length; m++ ) {
+					var unit = army.divisions[t].brigades[n].regiments[m];
+					assignOfficerToUnit( officer, unit );
+				}
+				}
+				}
+				}
+			break;
+			case "major":
+				for ( var i = 0; i < army.officers.majors.length; i++ ) {
+				var officer = army.officers.majors[i];
+				for ( var t = 0; t < army.divisions.length; t++ ) {
+				for ( var n = 0; n < army.divisions[t].brigades.length; n++ ) {
+				for ( var m = 0; m < army.divisions[t].brigades[n].regiments.length; m++ ) {
+				for ( var o = 0; o < army.divisions[t].brigades[n].regiments[m].companies.length; o++) {
+					var unit = army.divisions[t].brigades[n].regiments[m].companies[o];
+					assignOfficerToUnit( officer, unit );
+				}
+				}
+				}
+				}
 				}
 			break;
 		}
 	}
 	assignOfficersByType("division_general");
-	//find brigade for generals
-	for ( var o = 0; o < army.officers.generals.length; o++ ) {
-		var general = army.officers.generals[o];
-		for ( var k = 0; k < army.divisions.length; k++ ) {
-			for ( var n = 0; n < army.divisions[k].brigades.length; n++ ) {
-				var brigade = army.divisions[k].brigades[n];
-				if (brigade.commander_id === 0 &&
-					general.command_id === 0 &&
-					!general.retired ) {
-					brigade.commander_id = general.id;
-					brigade.commander = general;
-					general.command_id = brigade.unit_id;
-					addLog(
-						general.title + 
-						" " + 
-						general.name + 
-						" has been assigned to " + 
-						brigade.name, 
-						"assignment"
-					);
-				}
-			}
-		}
-	}
-	for ( var f = 0; f < army.officers.coronels.length; f++ ) {
-		var coronel = army.officers.coronels[f];
-		for ( var u = 0; u < army.divisions.length; u++ ) {
-			for ( var y = 0; y < army.divisions[u].brigades.length; y++ ) {
-				for ( var m = 0; m < army.divisions[u].brigades[y].regiments.length; m++ ) {
-					var regiment = army.divisions[u].brigades[y].regiments[m];
-					if ((regiment.commander_id === 0) &&
-					    (coronel.command_id === 0) && 
-					    !coronel.retired ) {
-						regiment.commander_id = coronel.id;
-						regiment.commander = coronel;
-						coronel.command_id = regiment.unit_id;
-						addLog(
-							coronel.title + 
-							" " + 
-							coronel.name + 
-							" has been assigned to " + 
-							regiment.name, 
-							"assignment"
-						);
-					}
-				}
-			}
-		}
-	}
-	for ( var f = 0; f < army.officers.majors.length; f++ ) {
-		var major = army.officers.majors[f];
-		for ( var u = 0; u < army.divisions.length; u++ ) {
-		for ( var y = 0; y < army.divisions[u].brigades.length; y++ ) {
-		for ( var m = 0; m < army.divisions[u].brigades[y].regiments.length; m++ ) {
-		for ( var i = 0; i < army.divisions[u].brigades[y].regiments[m].companies.length; i++) {
-			var company = army.divisions[u].brigades[y].regiments[m].companies[i];
-			if ((company.commander_id === 0) &&
-			    (major.command_id === 0) && 
-			    !major.retired ) {
-				company.commander_id = major.id;
-				company.commander = major;
-				major.command_id = company.unit_id;
-				addLog(
-					major.title + 
-					" " + 
-					major.name + 
-					" has been assigned to " + 
-					company.name, 
-					"assignment"
-				);
-			}
-		}
-		}
-		}
-		}
-	}
+	assignOfficersByType("general");
+	assignOfficersByType("coronel");
+	assignOfficersByType("major");
 }
 
 
