@@ -94,7 +94,7 @@ function generateArmy () {
 		for (var t = 0; t < 2; t++) {
 			var brigade = {
 				// name: brigade_names[t],
-				name: findUnitName("brigade"),
+				name: assignUnitName("brigade"),
 				unit_id: global_unit_id,
 				commander_id: 0,
 				regiments: []
@@ -104,7 +104,7 @@ function generateArmy () {
 			for (var q = 0; q < 2; q++) {
 				var regiment = {
 					// name: regiment_names[t],
-					name: findUnitName("regiment"),
+					name: assignUnitName("regiment"),
 					unit_id: global_unit_id,
 					commander_id: 0,
 					companies: []
@@ -114,8 +114,8 @@ function generateArmy () {
 				for (var r = 0; r < 2; r++) {
 					var company = {
 						// name: company_names[t],
-						name: findUnitName("company"),
-						name_short: findUnitName("company_short"),
+						name: assignUnitName("company"),
+						name_short: assignUnitName("company_short"),
 						unit_id: global_unit_id,
 						commander_id: 0
 					}
@@ -132,7 +132,7 @@ function generateArmy () {
 	};
 	//helper function to use the name and remove it from the list
 	//of available names
-	function findUnitName ( type ) {
+	function assignUnitName ( type ) {
 		var new_name = "";
 		switch ( type ) {
 			case "brigade":
@@ -155,7 +155,6 @@ function generateArmy () {
 		return new_name;
 	}
 }
-
 function generateOfficerByType (type, amount) {
 	for ( var i = 0; i < amount; i++ ) {
 		var officer = {
@@ -224,145 +223,115 @@ function generateOfficerByType (type, amount) {
 		global_officer_id++;
 	}
 }
-
-//initialize army staff
-function generateStaff () {
+function generateOfficers () {
+	
 	generateOfficerByType("division_general", 2);
 	generateOfficerByType("general", 4);
 	generateOfficerByType("coronel", 8);
 	generateOfficerByType("major", 16);
 }
 
-function bondStaff () {
+function rewardOfficers () {
+	function rewardOfficersByRank ( rank ) {
+		for ( var i = 0; i < rank.length; i++ ) {
+			var officer = rank[i];
+			officer.xp++;
+		}
+	}
+	rewardOfficersByRank(army.officers.majors);
+	rewardOfficersByRank(army.officers.coronels);
+	rewardOfficersByRank(army.officers.generals);
+	rewardOfficersByRank(army.officers.division_generals);
+}
+
+function alignOfficers () {
+	function alignOfficersByRank ( rank ) {
+		for ( var i = 0; i < rank.length; i++ ) {
+			var officer = rank[i];
+			if (officer.alignment > 50 && officer.alignment < 100) {
+				officer.alignment++;
+			} else if (officer.alignment < 50 && officer.alignment > 0) {
+				officer.alignment--;
+			}
+		}
+	}
+	alignOfficersByRank(army.officers.majors);
+	alignOfficersByRank(army.officers.coronels);
+	alignOfficersByRank(army.officers.generals);
+	alignOfficersByRank(army.officers.division_generals);
+}
+
+function bondOfficers () {
 	//helper function to check alignment parity
 	function sameAlignment (a, b) {
 	  return ( (a.alignment > 50 && b.alignment > 50) ||
 	           (a.alignment < 50 && b.alignment < 50) );
 	}
-	//for each division general
-	for ( var i = 0; i < army.officers.division_generals.length; i++ ) { 
-		var division_general = army.officers.division_generals[i];
-		//loop through the other division_generals
-		for ( var d = 0; d < army.officers.division_generals.length; d++ ) { 
-			var division_general_b = army.officers.division_generals[d];
+	function bondOfficersByRank ( rank ) {
+		for ( var i = 0; i < rank.length; i++ ) { 
+			var officer = rank[i];
+			//loop through the other officers
 			//if same alignment and not self
-			if ( sameAlignment(division_general, division_general_b) && 
-				(division_general.id != division_general_b.id) ) { 
-				var had_bond = false;
-				for ( var n = 0; n < division_general.bonds.length; n++ ) {
-					var bond = division_general.bonds[n];
-					//if they were already bonded, strengthen the bond, max 10
-					if ( (bond[0] === division_general_b.id) && (bond[1] < 10) ) {
-						bond[1]++; 
-						had_bond = true;
+			//if they were already bonded, strengthen the bond, max 10
+			//if not create new bond
+			for ( var d = 0; d < rank.length; d++ ) { 
+				var officer_b = rank[d];
+				if ( sameAlignment(officer, officer_b) && 
+					(officer.id != officer_b.id) ) { 
+					var had_bond = false;
+					for ( var n = 0; n < officer.bonds.length; n++ ) {
+						var bond = officer.bonds[n];
+						if ( (bond[0] === officer_b.id) && (bond[1] < 10) ) {
+							bond[1]++; 
+							had_bond = true;
+						}
+					};
+					if ( !had_bond ) {
+						var new_bond = [officer_b.id, 0];
+						officer.bonds.push(new_bond); 
 					}
-				};
-				if ( !had_bond ) {
-					var new_bond = [division_general_b.id, 0];
-					division_general.bonds.push(new_bond); //if not create new bond
 				}
 			}
 		}
 	}
-	//for each general
-	for ( var i = 0; i < army.officers.generals.length; i++ ) { 
-		var general = army.officers.generals[i];
-		//loop through the other generals
-		for ( var d = 0; d < army.officers.generals.length; d++ ) { 
-			var general_b = army.officers.generals[d];
-			//if same alignment and not self
-			if ( sameAlignment(general, general_b) && 
-				(general.id != general_b.id) ) { 
-				var had_bond = false;
-				for ( var n = 0; n < general.bonds.length; n++ ) {
-					var bond = general.bonds[n];
-					//if they were already bonded, strengthen the bond
-					if ( (bond[0] === general_b.id) && (bond[1] < 10) ) {
-						bond[1]++; 
-						had_bond = true;
-					}
-				};
-				if ( !had_bond ) {
-					var new_bond = [general_b.id, 0];
-					general.bonds.push(new_bond); //if not create new bond
-				}
-			}
-		}
-	}
-	//for each coronel 
-	for ( var i = 0; i < army.officers.coronels.length; i++ ) { 
-		var coronel = army.officers.coronels[i];
-		//loop through the other coronels
-		for ( var d = 0; d < army.officers.coronels.length; d++ ) { 
-			var coronel_b = army.officers.coronels[d];
-			//if same alignment and not self
-			if ( sameAlignment(coronel, coronel_b) && 
-				(coronel.id != coronel_b.id) ) { 
-				var had_bond = false;
-				for ( var n = 0; n < coronel.bonds.length; n++ ) {
-					var bond = coronel.bonds[n];
-					//if they were already bonded, strengthen the bond
-					if ( (bond[0] === coronel_b.id) && (bond[1] < 10) ) {
-						bond[1]++; 
-						had_bond = true;
-					}
-				};
-				if ( !had_bond ) {
-					var new_bond = [coronel_b.id, 0];
-					coronel.bonds.push(new_bond); //if not create new bond
-				}
-			}
-		}
-	}
-	for ( var i = 0; i < army.officers.majors.length; i++ ) { 
-		var major = army.officers.majors[i];
-		//loop through the other majors
-		for ( var d = 0; d < army.officers.majors.length; d++ ) { 
-			var major_b = army.officers.majors[d];
-			//if same alignment and not self
-			if ( sameAlignment(major, major_b) && 
-				(major.id != major_b.id) ) { 
-				var had_bond = false;
-				for ( var n = 0; n < major.bonds.length; n++ ) {
-					var bond = major.bonds[n];
-					//if they were already bonded, strengthen the bond
-					if ( (bond[0] === major_b.id) && (bond[1] < 10) ) {
-						bond[1]++; 
-						had_bond = true;
-					}
-				};
-				if ( !had_bond ) {
-					var new_bond = [major_b.id, 0];
-					major.bonds.push(new_bond); //if not create new bond
-				}
-			}
-		}
-	}
+	bondOfficersByRank(army.officers.majors);
+	bondOfficersByRank(army.officers.coronels);
+	bondOfficersByRank(army.officers.generals);
+	bondOfficersByRank(army.officers.division_generals);
 }
 
-function assignStaff () {
-	//find division for division generals
-	for ( var i = 0; i < army.officers.division_generals.length; i++ ) {
-		var division_general = army.officers.division_generals[i];
-		for ( var t = 0; t < army.divisions.length; t++ ) {
-			var division = army.divisions[t];
-			if ( division.commander_id === 0 && 
-				division_general.command_id === 0 && 
-				!division_general.retired ) {
-				division.commander_id = division_general.id;
-				division.commander = division_general;
-				division_general.command_id = division.unit_id;
-				addLog(
-					division_general.title + 
-					" " + 
-					division_general.name + 
-					" has been assigned to " + 
-					division.name, 
-					"assignment"
-				);
-			}
+function assignOfficers () {
+	function assignOfficerToUnit ( officer, unit ) {
+		if ( unit.commander_id === 0 && 
+			officer.command_id === 0 && 
+			!officer.retired ) {
+			unit.commander_id = officer.id;
+			unit.commander = officer;
+			officer.command_id = unit.unit_id;
+			addLog(
+				officer.title + 
+				" " + 
+				officer.name + 
+				" has been assigned to " + 
+				unit.name, 
+				"assignment"
+			);
 		}
 	}
+	function assignOfficersByType ( type ) {
+		switch ( type ) {
+			case "division_general":
+				for ( var i = 0; i < army.officers.division_generals.length; i++ ) {
+					var officer = army.officers.division_generals[i];
+					for ( var t = 0; t < army.divisions.length; t++ ) {
+						var unit = army.divisions[t];
+						assignOfficerToUnit( officer, unit );
+					}
+				}
+			break;
+		}
+	}
+	assignOfficersByType("division_general");
 	//find brigade for generals
 	for ( var o = 0; o < army.officers.generals.length; o++ ) {
 		var general = army.officers.generals[o];
@@ -441,56 +410,6 @@ function assignStaff () {
 	}
 }
 
-function rewardStaff () {
-	function rewardStaffByRank ( rank ) {
-		for ( var i = 0; i < rank.length; i++ ) {
-			var officer = rank[i];
-			officer.xp++;
-		}
-	}
-	rewardStaffByRank(army.officers.majors);
-	rewardStaffByRank(army.officers.coronels);
-	rewardStaffByRank(army.officers.generals);
-	rewardStaffByRank(army.officers.division_generals);
-}
-
-
-function alignStaff () {
-	for ( var i = 0; i < army.officers.division_generals.length; i++ ) {
-		var division_general = army.officers.division_generals[i];
-		if ((division_general.alignment > 50) &&
-			(division_general.alignment < 100)) {
-			division_general.alignment++;
-		} else if ((division_general.alignment < 50) && 
-			(division_general.alignment > 0)) {
-			division_general.alignment--;
-		}
-	}
-	for ( var i = 0; i < army.officers.generals.length; i++ ) {
-		var general = army.officers.generals[i];
-		if (general.alignment > 50 && general.alignment < 100) {
-			general.alignment++;
-		} else if (general.alignment < 50 && general.alignment > 0) {
-			general.alignment--;
-		}
-	}
-	for ( var i = 0; i < army.officers.coronels.length; i++ ) {
-		var coronel = army.officers.coronels[i];
-		if (coronel.alignment > 50 && coronel.alignment < 100) {
-			coronel.alignment++;
-		} else if (coronel.alignment < 50 && coronel.alignment > 0) {
-			coronel.alignment--;
-		}
-	}
-	for ( var i = 0; i < army.officers.majors.length; i++ ) {
-		var major = army.officers.majors[i];
-		if (major.alignment > 50 && major.alignment < 100) {
-			major.alignment++;
-		} else if (major.alignment < 50 && major.alignment > 0) {
-			major.alignment--;
-		}
-	}
-}
 
 function promoteGeneral (division)  {
 	var highest_experience = 0;
@@ -600,7 +519,7 @@ function promoteMajor (regiment)  {
 	}
 }
 
-function retireStaff () {
+function retireOfficers () {
 	for ( var t = 0; t < army.divisions.length; t++ ) {
 		var division = army.divisions[t];
 		if (division.commander.xp > 45) {
@@ -702,13 +621,13 @@ function addLog (message, category) {
 function passTurn () {
 	if ( day === 0 ) {
 		generateArmy();
-		generateStaff();
+		generateOfficers();
 	};
-	assignStaff();
-	bondStaff();
-	rewardStaff();
-	alignStaff();
-	retireStaff();
+	assignOfficers();
+	bondOfficers();
+	rewardOfficers();
+	alignOfficers();
+	retireOfficers();
 	day++;
 }
 
