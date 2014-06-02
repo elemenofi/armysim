@@ -29,6 +29,8 @@ var day = 0;
 var	global_officer_id = 1;
 var	global_unit_id = 2;
 var	global_log_id = 1;
+var senior_officer_xp = 0;
+var senior_officer_id = 0;
 var	rank_names = [
 	"Lieutenant", "Major", "Coronel", 
 	"General", "Division General", "Lieutenant General"
@@ -196,13 +198,15 @@ function generateOfficerByType (type, amount) {
 				army.officers.majors.push(officer);
 			break;
 		}
-		addLog(
-			officer.title +
-			" " + 
-			officer.name + 
-			" has been recruited.", 
-			"comission"
-		);
+		if (!(type === "major")) {
+			addLog(
+				officer.title +
+				" " + 
+				officer.name + 
+				" recruited.", 
+				"comission"
+			);
+		}
 	}
 }
 
@@ -290,14 +294,14 @@ function assignOfficers () {
 			unit.commander_id = officer.id;
 			unit.commander = officer;
 			officer.command_id = unit.unit_id;
-			addLog(
-				officer.title + 
-				" " + 
-				officer.name + 
-				" has been assigned to " + 
-				unit.name, 
-				"assignment"
-			);
+			// addLog(
+			// 	officer.title + 
+			// 	" " + 
+			// 	officer.name + 
+			// 	" has been assigned to " + 
+			// 	unit.name, 
+			// 	"assignment"
+			// );
 		}
 	}
 	function assignOfficersByType ( type ) {
@@ -360,13 +364,17 @@ function assignOfficers () {
 
 function retireOfficers () {
 	function retireCommander ( unit ) {
-		addLog(
-			unit.commander.title + 
-			" " + 
-			unit.commander.name + 
-			" has retired", 
-			"retirement"
-		);
+		if (!(unit.type === 5)) {
+			addLog(
+				unit.commander.title +
+				" " + 
+				unit.commander.first_name +
+				" " + 
+				unit.commander.name + 
+				" retired", 
+				"retirement"
+			);
+		}
 		unit.commander.retired = true;
 		unit.commander = {};
 		unit.commander_id = 0;
@@ -440,10 +448,12 @@ function resetCommand ( officer ) {
 function promoteSenior ( officer, index ) {
 	if (officer.id === senior_officer_id) {
 		addLog(
-			officer.title + 
+			officer.title +
+			" " + 
+			officer.first_name +
 			" " + 
 			officer.name + 
-			" has been promoted", 
+			" promoted", 
 			"promotion"
 		);
 		resetCommand(officer);
@@ -511,7 +521,6 @@ function promoteOfficer ( unit ) {
 				var major = army.officers.majors[index];
 				promoteSenior(major, index);
 			}
-			generateOfficerByType("major", 1)
 		break;
 	}
 }
@@ -524,7 +533,7 @@ function decayLogs ( max_logs ) {
 }
 
 function addLog (message, category) {
-	decayLogs(10);
+	decayLogs(20);
 	var log = [message, 0, global_log_id, category];
 	global_log_id++;
 	army.logs.push(log);

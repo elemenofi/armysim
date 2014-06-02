@@ -68,9 +68,14 @@ div.clear {
 div.divisions, div.brigades, div.regiments, div.companies {
 	border-top: 3px double #F7F7F7;
 	padding-top: 16px;
+	float:left;
+}
+div.divisions {
 	width: 48%;
 	padding: 32px 1%;
-	float:left;
+}
+div.brigades, div.regiments, div.companies {
+	width: 50%;
 }
 div.brigades {
 	border-top: 1px solid #F7F7F7;
@@ -128,7 +133,7 @@ ul.logs li.promotion {
 	color: #FFCB05;
 }
 ul.logs li.retirement {
-	color: #660000;
+	color: #3D3D3D;
 }
 ul.logs li.assignment {
 	color: #B4B4B4;
