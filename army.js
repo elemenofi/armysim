@@ -31,6 +31,8 @@ var	global_unit_id = 2;
 var	global_log_id = 1;
 var senior_officer_xp = 0;
 var senior_officer_id = 0;
+var working_traits = ["Lazy", "Diligent"];
+var intelligence_traits = ["Smart", "Stupid"];
 var	rank_names = [
 	"Captain", "Major", "Coronel", 
 	"General", "Division General", "Lieutenant General"
@@ -208,6 +210,24 @@ function generateArmy () {
 }
 
 function generateOfficerByType (type, amount) {
+  // function randomTraits () {
+  //   var officer_traits = [];
+  //   var trait_number = randomNumber(traits.length);
+  //   var new_trait = traits[trait_number];
+  //   officer_traits.push(new_trait);
+  //   var trait_number_2 = randomTrait2();
+  //   function randomTrait2 () {
+  //     var result = randomNumber(traits.length);
+  //     if (result === trait_number) {
+  //       return randomTrait2();
+  //     } else {
+  //       return result;
+  //     }
+  //   }
+  //   var new_trait_2 = traits[trait_number_2];
+  //   officer_traits.push(new_trait_2);
+  //   return officer_traits;
+  // }
 	for ( var i = 0; i < amount; i++ ) {
 		var officer = {
 			id: global_officer_id,
@@ -216,7 +236,8 @@ function generateOfficerByType (type, amount) {
 			first_name: chance.first(),
 			retired: false,
 			alignment: randomNumber(100),
-			bonds: [[0, 0], [0, 0]]
+			bonds: [[0, 0], [0, 0]],
+      traits: randomTraits()
 		}
 		global_officer_id++;
 		switch ( type ) {
@@ -251,6 +272,7 @@ function generateOfficerByType (type, amount) {
         army.officers.captains.push(officer);
       break;
 		}
+    console.log(officer.traits);
 		if (!(type === "major") || !(type === "captain")) {
 			addLog(
 				officer.title +
@@ -269,7 +291,6 @@ function generateOfficers () {
 	generateOfficerByType("coronel", 8);
 	generateOfficerByType("major", 16);
   generateOfficerByType("captain", 32);
-  console.log(army.officers.captains);
 }
 
 function rewardOfficers () {
@@ -487,7 +508,6 @@ function retireOfficers () {
 
   */
 	function retireCommanderFromUnit ( unit ) {
-		console.log(unit);
     switch (unit.type) {
 			case 2:
 				if (unit.commander.xp > 55) {
