@@ -32,7 +32,7 @@ var	global_log_id = 1;
 var senior_officer_xp = 0;
 var senior_officer_id = 0;
 var	rank_names = [
-	"Lieutenant", "Major", "Coronel", 
+	"Captain", "Major", "Coronel", 
 	"General", "Division General", "Lieutenant General"
 ];
 var	division_names = [
@@ -63,8 +63,36 @@ var	company_names_short = [
 	"13thC", "14thC",	"15thC", 
 	"16thC"
 ];
+var battalion_names = [
+  "1st Battalion", "2nd Battalion", "3rd Battalion",
+  "4th Battalion", "5th Battalion", "6th Battalion",
+  "7th Battalion", "8th Battalion", "9th Battalion",
+  "10th Battalion", "11th Battalion", "12th Battalion", 
+  "13th Battalion", "14th Battalion", "15th Battalion", 
+  "16th Battalion", 
+  "17th Battalion", "18th Battalion", "19th Battalion",
+  "20th Battalion", "21th Battalion", "22th Battalion",
+  "23th Battalion", "24th Battalion", "25th Battalion",
+  "26th Battalion", "27th Battalion", "28th Battalion", 
+  "29th Battalion", "30th Battalion", "31th Battalion", 
+  "32th Battalion"
+];
+var battalion_names_short = [
+  "1stB", "2ndB", "3rdB",
+  "4thB", "5thB", "6thB",
+  "7thB", "8thB", "9thB",
+  "10thB", "11thB", "12thB", 
+  "13thB", "14thB", "15thB", 
+  "16thB",
+  "17thB", "18thB", "19thB",
+  "20thB", "21thB", "22thB",
+  "23thB", "24thB", "25thB",
+  "26thB", "27thB", "28thB", 
+  "29thB", "30thB", "31thB", 
+  "32thB"
+];
 
-//mechanics	
+//simulation functions
 function generateArmy () {
 	//create the army object with the unit structure
 	//and and array for each rank of officers
@@ -77,7 +105,8 @@ function generateArmy () {
 			division_generals: [],
 			generals: [],
 			coronels: [],
-			majors: []
+			majors: [],
+      captains: []
 		},
 		logs: []
 	};
@@ -120,11 +149,22 @@ function generateArmy () {
 						name: assignUnitName("company"),
 						name_short: assignUnitName("company_short"),
 						unit_id: global_unit_id,
-						commander_id: 0
+						commander_id: 0,
+            battalions: []
 					}
-					console.log(company);
 					global_unit_id++;
-					//next type of unit starts here
+          var battalions = [];
+          for (var n = 0; n < 2; n++) {
+            var battalion = {
+              type: 6,
+              name: assignUnitName("battalion"),
+              name_short: assignUnitName("battalion_short"),
+              unit_id: global_unit_id,
+              commander_id: 0
+            }
+            //next type of unit starts here
+            company.battalions.push(battalion);
+          }
 					regiment.companies.push(company);
 				}
 				brigade.regiments.push(regiment);
@@ -154,6 +194,14 @@ function generateArmy () {
 				new_name = company_names_short[0];
 				company_names_short.shift();
 			break;
+      case "battalion":
+        new_name = battalion_names[0];
+        battalion_names.shift();
+      break;
+      case "battalion_short":
+        new_name = battalion_names_short[0];
+        battalion_names_short.shift();
+      break;
 		}
 		return new_name;
 	}
@@ -173,32 +221,37 @@ function generateOfficerByType (type, amount) {
 		global_officer_id++;
 		switch ( type ) {
 			case "division_general":
-				officer.rank = 4;
-				officer.xp = randomNumber(10) + 35;
+				officer.rank = 5;
+				officer.xp = randomNumber(10) + 45;
 				officer.title = rank_names[officer.rank];
 				army.officers.division_generals.push(officer);
-				
 			break;
 			case "general":
-				officer.rank = 3;
-				officer.xp = randomNumber(10) + 25;
+				officer.rank = 4;
+				officer.xp = randomNumber(10) + 35;
 				officer.title = rank_names[officer.rank];
 				army.officers.generals.push(officer);
 			break;
 			case "coronel":
-				officer.rank = 2;
-				officer.xp = randomNumber(10) + 15;
+				officer.rank = 3;
+				officer.xp = randomNumber(10) + 25;
 				officer.title = rank_names[officer.rank];
 				army.officers.coronels.push(officer);
 			break;
 			case "major":
-				officer.rank = 1;
-				officer.xp = randomNumber(10) + 5;
+				officer.rank = 2;
+				officer.xp = randomNumber(10) + 15;
 				officer.title = rank_names[officer.rank];
 				army.officers.majors.push(officer);
 			break;
+      case "captain":
+        officer.rank = 1;
+        officer.xp = randomNumber(10) + 5;
+        officer.title = rank_names[officer.rank];
+        army.officers.captains.push(officer);
+      break;
 		}
-		if (!(type === "major")) {
+		if (!(type === "major") || !(type === "captain")) {
 			addLog(
 				officer.title +
 				" " + 
@@ -215,6 +268,8 @@ function generateOfficers () {
 	generateOfficerByType("general", 4);
 	generateOfficerByType("coronel", 8);
 	generateOfficerByType("major", 16);
+  generateOfficerByType("captain", 32);
+  console.log(army.officers.captains);
 }
 
 function rewardOfficers () {
@@ -224,6 +279,7 @@ function rewardOfficers () {
 			officer.xp++;
 		}
 	}
+  rewardOfficersByRank(army.officers.captains);
 	rewardOfficersByRank(army.officers.majors);
 	rewardOfficersByRank(army.officers.coronels);
 	rewardOfficersByRank(army.officers.generals);
@@ -241,6 +297,7 @@ function alignOfficers () {
 			}
 		}
 	}
+  alignOfficersByRank(army.officers.captains);
 	alignOfficersByRank(army.officers.majors);
 	alignOfficersByRank(army.officers.coronels);
 	alignOfficersByRank(army.officers.generals);
@@ -280,6 +337,7 @@ function bondOfficers () {
 			}
 		}
 	}
+  bondOfficersByRank(army.officers.captains);
 	bondOfficersByRank(army.officers.majors);
 	bondOfficersByRank(army.officers.coronels);
 	bondOfficersByRank(army.officers.generals);
@@ -354,17 +412,35 @@ function assignOfficers () {
 				}
 				}
 			break;
+      case "captain":
+        for ( var i = 0; i < army.officers.captains.length; i++ ) {
+        var officer = army.officers.captains[i];
+        for ( var t = 0; t < army.divisions.length; t++ ) {
+        for ( var n = 0; n < army.divisions[t].brigades.length; n++ ) {
+        for ( var m = 0; m < army.divisions[t].brigades[n].regiments.length; m++ ) {
+        for ( var o = 0; o < army.divisions[t].brigades[n].regiments[m].companies.length; o++) {
+        for ( var r = 0; r < army.divisions[t].brigades[n].regiments[m].companies[o].battalions.length; r++) {
+          var unit = army.divisions[t].brigades[n].regiments[m].companies[o].battalions[r];
+          assignOfficerToUnit( officer, unit );
+        }
+        }
+        }
+        }
+        }
+        }
+      break;
 		}
 	}
 	assignOfficersByType("division_general");
 	assignOfficersByType("general");
 	assignOfficersByType("coronel");
 	assignOfficersByType("major");
+  assignOfficersByType("captain");
 }
 
 function retireOfficers () {
 	function retireCommander ( unit ) {
-		if (!(unit.type === 5)) {
+		if (!(unit.type === 5) || !(unit.type === 6)) {
 			addLog(
 				unit.commander.title +
 				" " + 
@@ -378,33 +454,70 @@ function retireOfficers () {
 		unit.commander.retired = true;
 		unit.commander = {};
 		unit.commander_id = 0;
-		generateOfficerByType("major", 1);
+		generateOfficerByType("captain", 1);
 	}
+  // this function could easily refactored as such 
+  /*
+  function retireCommanderFromUnit ( unit ) {
+    var max_xp = 0;
+    switch (unit.type) {
+      case 2:
+        max_xp = 55;
+      break;
+      case 3:
+        max_xp = 45;
+      break;
+      case 4:
+        max_xp = 35;
+      break;
+      case 5:
+        max_xp = 25;
+      break;
+      case 6:
+        max_xp = 15;
+      break;
+    }
+    if ((unit.commander.xp > max_xp) && (unit.type === 6)) {
+      retireCommander(unit);
+    } else if (unit.commander.xp > max_xp) {
+      retireCommander(unit);
+      promoteOfficer(unit);
+    }
+  }
+
+  */
 	function retireCommanderFromUnit ( unit ) {
-		switch (unit.type) {
+		console.log(unit);
+    switch (unit.type) {
 			case 2:
-				if (unit.commander.xp > 45) {
+				if (unit.commander.xp > 55) {
 					retireCommander(unit);
 					promoteOfficer(unit);
 				}
 			break;
 			case 3:
-				if (unit.commander.xp > 35) {
+				if (unit.commander.xp > 45) {
 					retireCommander(unit);
 					promoteOfficer(unit);
 				}
 			break;
 			case 4:
-				if (unit.commander.xp > 25) {
+				if (unit.commander.xp > 35) {
 					retireCommander(unit);
 					promoteOfficer(unit);
 				}
 			break;
 			case 5:
-				if (unit.commander.xp > 15) {
+				if (unit.commander.xp > 25) {
 					retireCommander(unit);
+          promoteOfficer(unit);
 				}
 			break;
+      case 6:
+        if (unit.commander.xp > 15) {
+          retireCommander(unit);
+        }
+      break;
 		}
 	}
 	for ( var t = 0; t < army.divisions.length; t++ ) {
@@ -419,7 +532,11 @@ function retireOfficers () {
 	for ( var b = 0; b < army.divisions[t].brigades[o].regiments[d].companies.length; b++) {
 		var unit = army.divisions[t].brigades[o].regiments[d].companies[b];
 		retireCommanderFromUnit(unit);
-	}
+  for ( var a = 0; a < army.divisions[t].brigades[o].regiments[d].companies[b].battalions.length; a++) {
+    var unit = army.divisions[t].brigades[o].regiments[d].companies[b].battalions[a];
+    retireCommanderFromUnit(unit);
+  }
+  }
 	}
 	}
 	}
@@ -458,18 +575,22 @@ function promoteSenior ( officer, index ) {
 		);
 		resetCommand(officer);
 		switch ( officer.rank ) {
-			case 4:
+			case 5:
 				army.officers.generals.splice(index, 1);
 				army.officers.division_generals.push(officer);
 			break;
-			case 3:
+			case 4:
 				army.officers.coronels.splice(index, 1);
 				army.officers.generals.push(officer);
 			break;
-			case 2:
+			case 3:
 				army.officers.majors.splice(index, 1);
 				army.officers.coronels.push(officer);
 			break;
+      case 2:
+        army.officers.captains.splice(index, 1);
+        army.officers.majors.push(officer);
+      break;
 		}
 		senior_officer_xp = 0;
 		senior_officer_id = 0;
@@ -506,7 +627,7 @@ function promoteOfficer ( unit ) {
 				var coronel = army.officers.coronels[index];
 				promoteSenior(coronel, index);
 			}
-			promoteOfficer(regiment)
+			promoteOfficer(regiment);
 		break;
 		case 4:
 			for ( var o = 0; o < unit.companies.length; o++ ) {
@@ -521,7 +642,22 @@ function promoteOfficer ( unit ) {
 				var major = army.officers.majors[index];
 				promoteSenior(major, index);
 			}
+      promoteOfficer(company);
 		break;
+    case 5:
+      for ( var o = 0; o < unit.battalions.length; o++ ) {
+        var battalion = unit.battalions[o];
+        findSenior(battalion);
+      }
+      for ( var e = 0; e < unit.battalions.length; e++ ) {
+        var battalion = unit.battalions[e];
+        resetCommander(battalion);
+      }
+      for ( var index = 0; index < army.officers.captains.length; index++ ) {
+        var captain = army.officers.captains[index];
+        promoteSenior(captain, index);
+      }
+    break;
 	}
 }
 
