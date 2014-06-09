@@ -210,24 +210,14 @@ function generateArmy () {
 }
 
 function generateOfficerByType (type, amount) {
-  // function randomTraits () {
-  //   var officer_traits = [];
-  //   var trait_number = randomNumber(traits.length);
-  //   var new_trait = traits[trait_number];
-  //   officer_traits.push(new_trait);
-  //   var trait_number_2 = randomTrait2();
-  //   function randomTrait2 () {
-  //     var result = randomNumber(traits.length);
-  //     if (result === trait_number) {
-  //       return randomTrait2();
-  //     } else {
-  //       return result;
-  //     }
-  //   }
-  //   var new_trait_2 = traits[trait_number_2];
-  //   officer_traits.push(new_trait_2);
-  //   return officer_traits;
-  // }
+	function randomTraits () {
+		var officer_traits = [];
+		var working_trait = working_traits[randomNumber(working_traits.length)];
+		officer_traits.push(working_trait);
+		var intelligence_trait = intelligence_traits[randomNumber(intelligence_traits.length)];
+		officer_traits.push(intelligence_trait);
+		return officer_traits;
+	}
 	for ( var i = 0; i < amount; i++ ) {
 		var officer = {
 			id: global_officer_id,
@@ -237,8 +227,9 @@ function generateOfficerByType (type, amount) {
 			retired: false,
 			alignment: randomNumber(100),
 			bonds: [[0, 0], [0, 0]],
-      traits: randomTraits()
+      		traits: randomTraits()
 		}
+		console.log(officer.traits);
 		global_officer_id++;
 		switch ( type ) {
 			case "division_general":
