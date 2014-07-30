@@ -264,7 +264,7 @@ function generateOfficerByType (type, amount) {
 			break;
 		}
     	console.log(officer.traits);
-		if (!(type === "major") || !(type === "captain")) {
+		if ((type === "division_general") || (type === "general")) {
 			addLog(
 				officer.title +
 				" " + 
@@ -444,7 +444,7 @@ function assignOfficers () {
 
 function retireOfficers () {
 	function retireCommander ( unit ) {
-		if (!(unit.type === 5) || !(unit.type === 6)) {
+		if ((unit.type === 2) || (unit.type === 3)) {
 			addLog(
 				unit.commander.title +
 				" " + 
@@ -460,36 +460,7 @@ function retireOfficers () {
 		unit.commander_id = 0;
 		generateOfficerByType("captain", 1);
 	}
-    // this function could easily refactored as such 
-	/*
-	function retireCommanderFromUnit ( unit ) {
-		var max_xp = 0;
-		switch (unit.type) {
-			case 2:
-				max_xp = 55;
-			break;
-			case 3:
-				max_xp = 45;
-			break;
-			case 4:
-				max_xp = 35;
-			break;
-			case 5:
-				max_xp = 25;
-			break;
-			case 6:
-				max_xp = 15;
-			break;
-		}
-		if ((unit.commander.xp > max_xp) && (unit.type === 6)) {
-			retireCommander(unit);
-		} else if (unit.commander.xp > max_xp) {
-			retireCommander(unit);
-			promoteOfficer(unit);
-		}
-	}
 
-	*/
 	function retireCommanderFromUnit ( unit ) {
     switch (unit.type) {
 			case 2:
@@ -513,6 +484,7 @@ function retireOfficers () {
 			case 5:
 				if (unit.commander.xp > 25) {
 					retireCommander(unit);
+					console.log("retired a major");
           			promoteOfficer(unit);
 				}
 			break;
@@ -567,15 +539,17 @@ function resetCommand ( officer ) {
 
 function promoteSenior ( officer, index ) {
 	if (officer.id === senior_officer_id) {
-		addLog(
-			officer.title +
-			" " + 
-			officer.first_name +
-			" " + 
-			officer.name + 
-			" promoted", 
-			"promotion"
-		);
+		if (officer.rank === 4 || officer.rank === 5) {
+			addLog(
+				officer.title +
+				" " + 
+				officer.first_name +
+				" " + 
+				officer.name + 
+				" promoted", 
+				"promotion"
+			);
+		}
 		resetCommand(officer);
 		switch ( officer.rank ) {
 			case 5:
