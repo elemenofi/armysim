@@ -226,10 +226,9 @@ function generateOfficerByType (type, amount) {
 			first_name: chance.first(),
 			retired: false,
 			alignment: randomNumber(100),
-			bonds: [[0, 0], [0, 0]],
+			bonds: [],
       		traits: randomTraits()
 		}
-		console.log(officer.traits);
 		global_officer_id++;
 		switch ( type ) {
 			case "division_general":
@@ -263,7 +262,6 @@ function generateOfficerByType (type, amount) {
 				army.officers.captains.push(officer);
 			break;
 		}
-    	console.log(officer.traits);
 		if ((type === "division_general") || (type === "general")) {
 			addLog(
 				officer.title +
@@ -325,7 +323,7 @@ function bondOfficers () {
 	function bondOfficersByRank ( rank ) {
 		for ( var i = 0; i < rank.length; i++ ) { 
 			var officer = rank[i];
-			//loop through the other officers
+			//loop through the other officersb
 			//if same alignment and not self
 			//if they were already bonded, strengthen the bond, max 10
 			//if not create new bond
@@ -337,11 +335,14 @@ function bondOfficers () {
 					for ( var n = 0; n < officer.bonds.length; n++ ) {
 						var bond = officer.bonds[n];
 						if ( (bond[0] === officer_b.id) && (bond[1] < 10) ) {
-							bond[1]++; 
+							bond[1]++;
+							if (bond[1] > 3) {
+								console.log(officer.name + " and " + officer_b.name + " are now allies.");
+							}
 							had_bond = true;
 						}
 					};
-					if ( !had_bond ) {
+					if ( !had_bond && officer.bonds.length < 2 ) {
 						var new_bond = [officer_b.id, 0];
 						officer.bonds.push(new_bond); 
 					}
@@ -484,7 +485,6 @@ function retireOfficers () {
 			case 5:
 				if (unit.commander.xp > 25) {
 					retireCommander(unit);
-					console.log("retired a major");
           			promoteOfficer(unit);
 				}
 			break;
