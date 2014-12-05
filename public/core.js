@@ -15,6 +15,6 @@ function armyController($scope, $http, $timeout) {
       });
   }
   var timer = setInterval(function() {
-    $scope.$apply(getData);
+    $scope.$apply(getData());
   }, 1000);
 }

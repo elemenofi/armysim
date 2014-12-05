@@ -115,7 +115,10 @@ function generateArmy () {
 	//army structure is divided in two branches
 	//each unit has two smaller units inside
 	//division > brigade > regiment > company > battalion
-	for (var i = 0; i < 2; i++) {
+	//	    i       Division  		 i
+	//   i     i    Brigade
+	//  i i   i i   Regiment, etc
+ 	for (var i = 0; i < 2; i++) {
 		var division = {
 			type: 2,
 			name: division_names[i],
@@ -209,6 +212,11 @@ function generateArmy () {
 	}
 }
 
+function setName () {
+	var title = chance.prefix({gender:"male"});
+	return (title != "Mr.") ? title + " " : "";
+}
+
 function generateOfficerByType (type, amount) {
 	function randomTraits () {
 		var officer_traits = [];
@@ -223,7 +231,8 @@ function generateOfficerByType (type, amount) {
 			id: global_officer_id,
 			command_id: 0,
 			name: chance.last(),
-			first_name: chance.first(),
+			// first_name: setName() + chance.first({ gender: "male" }),
+			first_name: chance.first({ gender: "male" }),
 			retired: false,
 			alignment: randomNumber(100),
 			bonds: [],
@@ -317,8 +326,7 @@ function alignOfficers () {
 function bondOfficers () {
 	//helper function to check alignment parity
 	function sameAlignment (a, b) {
-		return ( (a.alignment > 50 && b.alignment > 50) ||
-	           (a.alignment < 50 && b.alignment < 50) );
+		return ( (a.alignment > 50 && b.alignment > 50) || (a.alignment < 50 && b.alignment < 50) );
 	}
 	function bondOfficersByRank ( rank ) {
 		for ( var i = 0; i < rank.length; i++ ) { 
@@ -326,25 +334,32 @@ function bondOfficers () {
 			//loop through the other officersb
 			//if same alignment and not self
 			//if they were already bonded, strengthen the bond, max 10
+			//if they are past 10 they are considered allied
 			//if not create new bond
 			for ( var d = 0; d < rank.length; d++ ) { 
 				var officer_b = rank[d];
-				if ( sameAlignment(officer, officer_b) && 
-					(officer.id != officer_b.id) ) { 
-					var had_bond = false;
+				// if it is same alignment and not self 
+				if ( sameAlignment(officer, officer_b) && (officer.id != officer_b.id) ) { 
+					var canBond = true;
 					for ( var n = 0; n < officer.bonds.length; n++ ) {
 						var bond = officer.bonds[n];
+						// bond[0] is the id of the bond, bond[1] is the strength of the bond 
 						if ( (bond[0] === officer_b.id) && (bond[1] < 10) ) {
+							// strengthen the bond until they are allies
 							bond[1]++;
 							if (bond[1] > 3) {
-								console.log(officer.name + " and " + officer_b.name + " are now allies.");
+								// this means they are allies
+								// send log
+								// 
+								// 
+								// console.log(officer.name + " and " + officer_b.name + " are now allies.");
 							}
-							had_bond = true;
+							canBond = false;
 						}
 					};
-					if ( !had_bond && officer.bonds.length < 2 ) {
-						var new_bond = [officer_b.id, 0];
-						officer.bonds.push(new_bond); 
+					if ( canBond && officer.bonds.length < 2 ) {
+						var newBond = [officer_b.id, 0];
+						officer.bonds.push(newBond); 
 					}
 				}
 			}
@@ -463,7 +478,7 @@ function retireOfficers () {
 	}
 
 	function retireCommanderFromUnit ( unit ) {
-    switch (unit.type) {
+    	switch (unit.type) {
 			case 2:
 				if (unit.commander.xp > 55) {
 					retireCommander(unit);
@@ -649,7 +664,7 @@ function addLog (message, category) {
 	decayLogs(20);
 	var log = [message, 0, global_log_id, category];
 	global_log_id++;
-	army.logs.push(log);
+	// army.logs.push(log);
 }
 
 //turns

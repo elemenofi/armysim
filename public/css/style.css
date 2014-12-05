@@ -71,23 +71,38 @@ div.divisions, div.brigades, div.regiments, div.companies {
 	float:left;
 }
 div.divisions {
-	width: 48%;
+	width: 46%;
 	padding: 32px 1%;
 }
-div.brigades, div.regiments, div.companies {
+div.companies {
+	width: 38%;
+	padding: 0 4% 0 4%;
+	border-right: 1px solid #3D3D3D;
+	border-top: 0;
+	margin-top: 12px;
+}
+div.brigades, div.regiments {
 	width: 50%;
 }
 div.brigades {
 	border-top: 1px solid #F7F7F7;
 }
-div.regiments, div.companies {
+div.regiments {
 	font-size: 12px;
 	border-top: 1px dotted #F7F7F7;
 }	
-div.brigade-data, div.division-data, div.regiment-data {
+div.brigade-data, div.division-data {
 	height: 100px;
 }
-
+div.regiment-data {
+	height: 80px;
+}
+div.company-data {
+	padding-bottom: 12px;
+}
+div.battalions {
+	padding-top: 12px;
+}
 
 
 p.officer {
