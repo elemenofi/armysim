@@ -6,6 +6,7 @@
   "author": "Elemenofi",
   "dependencies": {
     "chance": "^0.6.4",
-    "express": "~4"
+    "express": "~4",
+    "underscore": "^1.8.2"
   }
 }
