@@ -5,18 +5,16 @@ var Chance = require('chance');
 var chance = new Chance();
 
 //configuration
-army.configure(function() {
-	army.use(express.static(__dirname + '/public'));						
-	army.use(express.bodyParser()); 							
-});
+// army.configure(function() {
+// 	army.use(express.static(__dirname + '/public'));						
+// 	army.use(express.bodyParser()); 							
+// });
+
+army.use(express.static(__dirname + '/public'));
 
 //routes
 army.get('/army', function(req, res) {
 	res.json(army);
-});
-
-army.get('*', function(req, res) {
-	res.sendfile('./public/index.html');
 });
 
 //port
@@ -554,17 +552,6 @@ function resetCommand ( officer ) {
 
 function promoteSenior ( officer, index ) {
 	if (officer.id === senior_officer_id) {
-		if (officer.rank === 4 || officer.rank === 5) {
-			addLog(
-				officer.title +
-				" " + 
-				officer.first_name +
-				" " + 
-				officer.name + 
-				" promoted", 
-				"promotion"
-			);
-		}
 		resetCommand(officer);
 		switch ( officer.rank ) {
 			case 5:

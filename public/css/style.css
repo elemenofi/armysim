@@ -76,8 +76,6 @@ div.divisions {
 }
 div.companies {
 	width: 38%;
-	padding: 0 4% 0 4%;
-	border-right: 1px solid #3D3D3D;
 	border-top: 0;
 	margin-top: 12px;
 }
@@ -133,6 +131,7 @@ span.xp, span.alignment {
 span.diamonds {
 	color: #B4B4B4;
 	line-height: 12px;
+	margin-top: 10px;
 }
 span.unit-company {
 	float:left;
