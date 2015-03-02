@@ -31,6 +31,7 @@ function passTurn () {
     staffManager.initStaff(army);
     day++;
   } else {
+    staffManager.rewardStaff();
     day++;
   }
 }

@@ -5,6 +5,8 @@ var globalUnitDepth = 2;
 
 var names = require('./names.js');
 
+var units = [];
+
 exports.initArmy = function (army) {
 
   function generateUnit (type, quantity, parent) {
@@ -15,9 +17,11 @@ exports.initArmy = function (army) {
         var unit = {};
         unit.id = globalUnitId;
         unit.type = type;
+
         if (parent) {
           unit.parentId = parent.id;
         }
+
         globalUnitId++;
 
         switch (type) {
@@ -76,11 +80,17 @@ exports.initArmy = function (army) {
 
             generateUnit("battalion", quantity - 1, parent);
           break;
-        }
+        };
+
+        units.push(unit);
       }
     };
 
     generateUnit("division", globalUnitDepth);
 
   return army;
+};
+
+exports.units = function () {
+  return units;
 };

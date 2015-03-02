@@ -20,6 +20,7 @@
 						<span class="stars">&#9733; &#9733; &#9733;</span><br>
 					</div>
 					<span>{{division.commander.lastName}}</span>
+					<span>{{division.commander.xp}}</span>
 				</div>
 				<div class="brigades" ng-repeat="brigade in division.brigades">
 					<div class="brigade-data">
@@ -28,6 +29,7 @@
 							<span class="stars">&#9733; &#9733;</span><br>
 						</div>
 						<span>{{brigade.commander.lastName}}</span>
+						<span>{{brigade.commander.xp}}</span>
 					</div>
 					<div class="regiments" ng-repeat="regiment in brigade.regiments">
 						<div class="regiment-data">
@@ -37,6 +39,7 @@
 							</div>
 							<span class="clear"></span>
 							<span>{{regiment.commander.lastName}}</span>
+							<span>{{regiment.commander.xp}}</span>
 						</div>
 						<div class="companies" ng-repeat="company in regiment.companies">
 							<div class="company-data">
@@ -45,6 +48,7 @@
 									<span class="diamonds">&diams; &diams;</span>
 								</div>
 								<span>{{company.commander.lastName}}</span>
+								<span>{{company.commander.xp}}</span>
 							</div>
 							<div class="battalions" ng-repeat="battalion in company.battalions">
 								<div class="battalion-data">
@@ -53,6 +57,7 @@
 										<span class="diamonds">&diams;</span>
 									</div>
 									<span>{{battalion.commander.lastName}}</span>
+									<span>{{company.commander.xp}}</span>
 								</div>
 							</div>
 						</div>
