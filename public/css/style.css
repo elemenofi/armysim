@@ -49,6 +49,9 @@ body {
 	font-size: 16px;
 	padding: 32px 0px;
 }
+ul li {
+	padding: 10px 0px;
+}
 /*16px 18px 24px 32px*/
 /*
 Blackhex: #000000
@@ -71,11 +74,10 @@ div.divisions, div.brigades, div.regiments, div.companies {
 	float:left;
 }
 div.divisions {
-	width: 46%;
-	padding: 32px 1%;
+	width: 50%;
 }
 div.companies {
-	width: 38%;
+	width: 50%;
 	border-top: 0;
 	margin-top: 12px;
 }
@@ -88,7 +90,10 @@ div.brigades {
 div.regiments {
 	font-size: 12px;
 	border-top: 1px dotted #F7F7F7;
-}	
+}
+div.unit-data {
+	margin-bottom: 10px;
+}
 div.brigade-data, div.division-data {
 	height: 100px;
 }
@@ -134,13 +139,7 @@ span.diamonds {
 	margin-top: 10px;
 }
 span.unit-company {
-	float:left;
 	margin-right: 6px;
-}
-div.logs-container {
-	padding-top: 16px;
-	width: 880px;
-	line-height: 16px;
 }
 ul.logs li.promotion {
 	color: #FFCB05;

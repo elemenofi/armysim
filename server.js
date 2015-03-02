@@ -9,6 +9,6 @@ army.get('/army', function (req, res) {
   res.json(armyEngine.army());
 });
 
-army.listen(8080);
+army.listen(8000);
 console.log("Army started on port 8080");
 

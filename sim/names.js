@@ -3,10 +3,15 @@ exports.traits = {
   workEthic: ["Lazy", "Diligent"]
 };
 
-exports.ranks = [
-    "Captain", "Major", "Coronel",
-    "General", "Division General", "Lieutenant General"
-];
+exports.ranks = {
+  captain: "Captain",
+  major: "Major",
+  coronel: "Coronel",
+  general: "General",
+  bgGeneral: "Brigade General",
+  dvGeneral: "Division General",
+  ltGeneral: "Lieutenant General"
+};
 
 exports.divisions = [
     "1st Division", "2nd Division"

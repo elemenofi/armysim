@@ -1,6 +1,3 @@
-
-//angular controller loads army.json
-
 var army = angular.module('army', []);
 
 army.controller('armyController', [ '$scope', '$http', '$timeout',
@@ -12,11 +9,11 @@ army.controller('armyController', [ '$scope', '$http', '$timeout',
         $http.get(api)
           .success(function (data) {
             $scope.army = data;
-            console.log(data);
+            console.log(data.divisions);
           })
           .then(updateArmy);
-      }, 2000)
-    }
+      }, 2000);
+    };
 
     updateArmy();
   }
