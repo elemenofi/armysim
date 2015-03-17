@@ -21,7 +21,7 @@ army.get('*', function(req, res) {
 
 //port
 army.listen(8080);
-console.log("Army started on port 8080");
+// console.log("Army started on port 8080");
 
 //settings
 var army = {};
@@ -337,7 +337,7 @@ function bondOfficers () {
 						if ( (bond[0] === officer_b.id) && (bond[1] < 10) ) {
 							bond[1]++;
 							if (bond[1] > 3) {
-								console.log(officer.name + " and " + officer_b.name + " are now allies.");
+								// console.log(officer.name + " and " + officer_b.name + " are now allies.");
 							}
 							had_bond = true;
 						}

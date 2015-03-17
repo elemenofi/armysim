@@ -3,18 +3,19 @@
 
 var army = angular.module('army', []);
 
-function armyController($scope, $http, $timeout) {
-  function getData () {
-    $http
-      .get('/army')
-      .success(function(data) {
-        $scope.army = data;
-      })
-      .error(function(data) {
-        console.log('Error: ' + data);
-      });
+army.controller('armyController', ['$scope', '$http', '$timeout',
+  function armyController($scope, $http, $timeout) {
+    function getData () {
+      $http.get('/army')
+        .success(function(data) {
+          $scope.army = data;
+        })
+        .error(function(data) {
+          console.log('Error: ' + data);
+        });
+    }
+    var timer = setInterval(function() {
+      $scope.$apply(getData);
+    }, 1000);
   }
-  var timer = setInterval(function() {
-    $scope.$apply(getData);
-  }, 1000);
-}
+]);
