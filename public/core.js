@@ -3,19 +3,21 @@
 
 var army = angular.module('army', []);
 
-army.controller('armyController', ['$scope', '$http', '$timeout',
-  function armyController($scope, $http, $timeout) {
-    function getData () {
-      $http.get('/army')
-        .success(function(data) {
-          $scope.army = data;
-        })
-        .error(function(data) {
-          console.log('Error: ' + data);
-        });
+army.controller('armyController', [ '$scope', '$http', '$timeout',
+  function ($scope, $http, $timeout) {
+    var api = '/army'
+
+    function updateArmy () {
+      $timeout(function(){
+        $http.get(api)
+          .success(function (data) {
+            $scope.army = data;
+            console.log(data);
+          })
+          .then(updateArmy);
+      }, 2000)
     }
-    var timer = setInterval(function() {
-      $scope.$apply(getData);
-    }, 1000);
+
+    updateArmy();
   }
 ]);

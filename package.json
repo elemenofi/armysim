@@ -1,10 +1,11 @@
- {
-  "name"         : "army-sim",
-  "version"      : "0.0.0",
-  "description"  : "Army simulator.",
-  "main"         : "army.js",
-  "author"       : "Elemenofi",
-  "dependencies" : {
-    "express"    : "~3.4.4"
-    }
+{
+  "name": "army-sim",
+  "version": "0.0.0",
+  "description": "Army simulator.",
+  "main": "army.js",
+  "author": "Elemenofi",
+  "dependencies": {
+    "chance": "^0.6.4",
+    "express": "~4"
   }
+}
