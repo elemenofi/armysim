@@ -32,6 +32,7 @@ function passTurn () {
     day++;
   } else {
     staffManager.rewardStaff();
+    staffManager.retireStaff(army);
     day++;
   }
 }
@@ -43,4 +44,3 @@ setInterval(function () {
 exports.army = function () {
   return army;
 };
-

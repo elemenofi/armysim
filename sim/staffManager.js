@@ -1,5 +1,6 @@
 var _ = require('underscore');
 var staffRecruiter = require('./staffRecruiter');
+var unitManager = require('./unitManager');
 
 var staff = [];
 
@@ -43,9 +44,106 @@ exports.rewardStaff = function () {
 	});
 };
 
-exports.retireStaff = function () {
-
+function recruitOfficer (army, unit) {
+	var officer = staffRecruiter.newRecruit(unit);
+	army.captains.push(officer);
+	staff.push(officer);
+	return officer;
 };
+
+function promoteOfficer (rank, army, targetUnit) {
+	var seniorXP = 0;
+	function promote (officer, unit, rank, oldId)  {
+		officer.unitId = unit.id;
+		officer.oldId = oldId;
+		officer.rank = rank;
+		targetUnit.commander = officer;
+	};
+	switch (rank) {
+		case "Captain":
+			_.each(army.battalions, function(battalion) {
+				if (battalion.commander && battalion.commander.xp > seniorXP) {
+					seniorXP = battalion.commander.xp;
+				}
+			});
+			_.each(army.battalions, function(battalion) {
+				if (battalion.commander && battalion.commander.xp === seniorXP) {
+					promote(battalion.commander, targetUnit, "Major", battalion.id);
+					recruitOfficer(army);
+				}
+			});
+		break;
+	};
+};
+
+function retireOfficer (officer, army) {
+	switch (officer.rank) {
+		case "Captain":
+			_.each(army.battalions, function (battalion) {
+				if (battalion.commander && battalion.commander.id === officer.id) {
+					battalion.commander = undefined;
+				}
+			});
+		break;
+		case "Major":
+			_.each(army.companies, function (company) {
+				if (company.commander.id = officer.id) {
+					company.commander = undefined;
+					promoteOfficer("Captain", army, company);
+				}
+			});
+		break;
+		case "Coronel":
+			_.each(army.regiments, function (regiment) {
+				regiment.commander = undefined;
+			});
+		break;
+		case "Brigade General":
+			_.each(army.brigades, function (brigade) {
+				brigade.commander = undefined;
+			});
+		break;
+		case "Division General":
+			_.each(army.divisions, function (division) {
+				division.commander = undefined;
+			});
+		break;
+	};
+	officer.retired = true;
+};
+
+exports.retireStaff = function (army) {
+	_.each(staff, function(officer) {
+		switch (officer.rank) {
+			case "Captain":
+				if (officer.xp > 20) {
+					console.log(officer);
+					retireOfficer(officer, army);
+				};
+			break;
+			case "Major":
+				if (officer.xp > 30) {
+					retireOfficer(officer, army);
+				};
+			break;
+			case "Coronel":
+				if (officer.xp > 35) {
+					retireOfficer(officer, army);
+				};
+			break;
+			case "Brigade General":
+				if (officer.xp > 45) {
+					retireOfficer(officer, army);
+				};
+			break;
+			case "Division General":
+				if (officer.xp > 55) {
+					retireOfficer(officer, army);
+				};
+			break;
+		}
+	});
+}
 
 exports.staff = function () {
 	return staff;
