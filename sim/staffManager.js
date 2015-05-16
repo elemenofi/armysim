@@ -53,23 +53,33 @@ function recruitOfficer (army, unit) {
 
 function promoteOfficer (rank, army, targetUnit) {
 	var seniorXP = 0;
-	function promote (officer, unit, rank, oldId)  {
-		officer.unitId = unit.id;
-		officer.oldId = oldId;
-		officer.rank = rank;
-		targetUnit.commander = officer;
+
+	function promote (oldUnit, rank)  {
+		oldUnit.commander.unitId = targetUnit.id;
+		oldUnit.commander.rank = rank;
+		targetUnit.commander = oldUnit.commander;
+		oldUnit.commander = undefined;
+		if (oldUnit.type === "battalion") {
+			oldUnit.commander = recruitOfficer(army, oldUnit);
+		};
 	};
+
 	switch (rank) {
 		case "Captain":
 			_.each(army.battalions, function(battalion) {
-				if (battalion.commander && battalion.commander.xp > seniorXP) {
-					seniorXP = battalion.commander.xp;
+				if (battalion.parentId === targetUnit.id) {
+					if (battalion.commander && battalion.commander.xp > seniorXP) {
+						seniorXP = battalion.commander.xp;
+					}
 				}
 			});
 			_.each(army.battalions, function(battalion) {
-				if (battalion.commander && battalion.commander.xp === seniorXP) {
-					promote(battalion.commander, targetUnit, "Major", battalion.id);
-					recruitOfficer(army);
+				if (battalion.parentId === targetUnit.id) {
+					if (battalion.commander && battalion.commander.xp === seniorXP) {
+						army.captains.slice(army.captains.indexOf(battalion.commander), 1);
+						army.majors.push(battalion.commander);
+						promote(battalion, "Major");
+					}
 				}
 			});
 		break;
@@ -82,12 +92,13 @@ function retireOfficer (officer, army) {
 			_.each(army.battalions, function (battalion) {
 				if (battalion.commander && battalion.commander.id === officer.id) {
 					battalion.commander = undefined;
+					battalion.commander = recruitOfficer(army, battalion);
 				}
 			});
 		break;
 		case "Major":
 			_.each(army.companies, function (company) {
-				if (company.commander.id = officer.id) {
+				if (company.commander && company.commander.id === officer.id) {
 					company.commander = undefined;
 					promoteOfficer("Captain", army, company);
 				}
@@ -117,7 +128,6 @@ exports.retireStaff = function (army) {
 		switch (officer.rank) {
 			case "Captain":
 				if (officer.xp > 20) {
-					console.log(officer);
 					retireOfficer(officer, army);
 				};
 			break;

@@ -47,7 +47,7 @@
 									<span class="unit unit-company">{{ company.name }}</span>
 									<span class="diamonds">&diams; &diams;</span>
 								</div>
-								<span>{{company.commander.lastName}}</span>
+								<span>{{company.commander.lastName}}</span><br>
 								<span>{{company.commander.xp}}</span>
 							</div>
 							<div class="battalions" ng-repeat="battalion in company.battalions">
@@ -56,8 +56,8 @@
 										<span class="unit unit-battalion">{{ battalion.name }}</span>
 										<span class="diamonds">&diams;</span>
 									</div>
-									<span>{{battalion.commander.lastName}}</span>
-									<span>{{company.commander.xp}}</span>
+									<span>{{battalion.commander.lastName}}</span><br>
+									<span>{{battalion.commander.xp}}</span>
 								</div>
 							</div>
 						</div>

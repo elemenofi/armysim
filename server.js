@@ -7,7 +7,7 @@ var armyEngine = require('./sim/armyEngine.js')
 army.use(express.static(__dirname + '/public'));
 
 army.get('/army', function (req, res) {
-  res.json(armyEngine.army().companies);
+  res.json(armyEngine.army());
 });
 
 army.listen(8000);

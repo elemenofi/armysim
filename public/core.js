@@ -9,7 +9,6 @@ army.controller('armyController', [ '$scope', '$http', '$timeout',
         $http.get(api)
           .success(function (data) {
             $scope.army = data;
-            console.log(data.divisions);
           })
           .then(updateArmy);
       }, 2000);

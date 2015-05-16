@@ -34,13 +34,6 @@ exports.newRecruit = function (unit) {
 	officer.firstName = setFirstName();
 	officer.id = globalOfficerId;
 	globalOfficerId++;
-	if (unit === undefined) {
-		officer.xp = helpers.randomNumber(10) + 5;
-		officer.rank = names.ranks.captain;
-		return officer;
-	} else {
-		officer.unitId = unit.id;
-	};
 	switch (unit.type) {
 		case "division":
 			officer.xp = helpers.randomNumber(10) + 45;
