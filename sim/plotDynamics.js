@@ -3,7 +3,7 @@ var staffManager = require('./staffManager.js');
 
 function updatePlots(army) {
 
-  function applyPlot (plotters, plotLeader, target, message, targetBonds) {
+  function applyPlot (plotters, plotLeader, target, message) {
     if (plotters.length >= 2) {
 
       var targetImmune = false;
@@ -12,24 +12,16 @@ function updatePlots(army) {
       var plotPrestige = 0;
 
       // check for immunities
-      _.each(targetBonds, function (bond) {
+      if (army.commander.drift > 500 && target.drift > 500 || army.commander.drift < 500 && target.drift < 500) {
 
-        if (bond[0] === undefined) {
-          bond[0] = {};
-        };
+        _.each(plotters, function (plotter) {
 
-        if (army.commander.id === bond[0].id) {
+          var message = "dishonorably discharged";
+          staffManager.retireSpecificOfficer(plotter, army, message);
 
-          _.each(plotters, function (plotter) {
+        });
 
-            var message = "dishonorably discharged"
-            staffManager.retireSpecificOfficer(plotter, army, message);
-
-          });
-
-        };
-
-      });
+      };
 
       if (!targetImmune) {
           // plot strength computation
