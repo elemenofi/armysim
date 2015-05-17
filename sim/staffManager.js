@@ -279,7 +279,7 @@ exports.rewardStaff = function (army) {
 };
 
 exports.retireStaff = function (army) {
-	var message = "Forced retirement due to time in post";
+	var message = "retired";
 
 	_.each(army.staff, function(officer) {
 		switch (officer.rank) {
