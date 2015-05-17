@@ -4,53 +4,7 @@ var unitManager = require('./unitManager');
 
 var staff = [];
 
-exports.initStaff = function (army) {
-
-	var officer = staffRecruiter.newRecruit(army);
-	army.ltGenerals.push(officer);
-	staff.push(officer);
-	army.commander = officer;
-
-	_.each(army.divisions, function (division) {
-		var officer = staffRecruiter.newRecruit(division);
-		army.dvGenerals.push(officer);
-		division.commander = officer;
-		staff.push(officer);
-	});
-	_.each(army.brigades, function (brigade) {
-		var officer = staffRecruiter.newRecruit(brigade);
-		army.bgGenerals.push(officer);
-		brigade.commander = officer;
-		staff.push(officer);
-	});
-	_.each(army.regiments, function (regiment) {
-		var officer = staffRecruiter.newRecruit(regiment);
-		army.coronels.push(officer);
-		regiment.commander = officer;
-		staff.push(officer);
-	});
-	_.each(army.companies, function (company) {
-		var officer = staffRecruiter.newRecruit(company);
-		army.majors.push(officer);
-		company.commander = officer;
-		staff.push(officer);
-	});
-	_.each(army.battalions, function (battalion) {
-		var officer = staffRecruiter.newRecruit(battalion);
-		army.captains.push(officer);
-		battalion.commander = officer;
-		staff.push(officer);
-	});
-	return army;
-};
-
-exports.rewardStaff = function () {
-	_.each(staff, function (officer) {
-		officer.xp++;
-	});
-};
-
-function recruitOfficer (army, unit) {
+function recruitCaptain (army, unit) {
 	var officer = staffRecruiter.newRecruit(unit);
 	army.captains.push(officer);
 	staff.push(officer);
@@ -74,7 +28,7 @@ function promoteOfficer (rank, army, targetUnit) {
 
 		switch (oldUnit.type) {
 			case "battalion":
-				oldUnit.commander = recruitOfficer(army, oldUnit);
+				oldUnit.commander = recruitCaptain(army, oldUnit);
 			break;
 			case "company":
 				promoteOfficer("Captain", army, oldUnit);
@@ -191,7 +145,7 @@ function retireOfficer (officer, army) {
 			_.each(army.battalions, function (battalion) {
 				if (battalion.commander && battalion.commander.id === officer.id) {
 					battalion.commander = undefined;
-					battalion.commander = recruitOfficer(army, battalion);
+					battalion.commander = recruitCaptain(army, battalion);
 				}
 			});
 		break;
@@ -237,7 +191,54 @@ function retireOfficer (officer, army) {
 
 };
 
+exports.initStaff = function (army) {
+
+	var officer = staffRecruiter.newRecruit(army);
+	army.ltGenerals.push(officer);
+	staff.push(officer);
+	army.commander = officer;
+
+	_.each(army.divisions, function (division) {
+		var officer = staffRecruiter.newRecruit(division);
+		army.dvGenerals.push(officer);
+		division.commander = officer;
+		staff.push(officer);
+	});
+	_.each(army.brigades, function (brigade) {
+		var officer = staffRecruiter.newRecruit(brigade);
+		army.bgGenerals.push(officer);
+		brigade.commander = officer;
+		staff.push(officer);
+	});
+	_.each(army.regiments, function (regiment) {
+		var officer = staffRecruiter.newRecruit(regiment);
+		army.coronels.push(officer);
+		regiment.commander = officer;
+		staff.push(officer);
+	});
+	_.each(army.companies, function (company) {
+		var officer = staffRecruiter.newRecruit(company);
+		army.majors.push(officer);
+		company.commander = officer;
+		staff.push(officer);
+	});
+	_.each(army.battalions, function (battalion) {
+		var officer = staffRecruiter.newRecruit(battalion);
+		army.captains.push(officer);
+		battalion.commander = officer;
+		staff.push(officer);
+	});
+	return army;
+};
+
+exports.rewardStaff = function () {
+	_.each(staff, function (officer) {
+		officer.xp++;
+	});
+};
+
 exports.retireStaff = function (army) {
+
 	_.each(staff, function(officer) {
 		switch (officer.rank) {
 			case "Captain":
@@ -270,9 +271,10 @@ exports.retireStaff = function (army) {
 					retireOfficer(officer, army);
 				};
 			break;
-		}
+		};
 	});
-}
+
+};
 
 exports.staff = function () {
 	return staff;

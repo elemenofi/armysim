@@ -3,8 +3,6 @@ var names = require('./names.js');
 var Chance = require('chance');
 var chance = new Chance();
 
-var globalOfficerId = 1;
-
 function setLastName () {
 	var name = "";
 	if (helpers.randomNumber(100) >= 85) {
@@ -28,12 +26,17 @@ function setFirstName () {
 	return name;
 };
 
+var globalOfficerId = 1;
+
 exports.newRecruit = function (unit) {
+
 	var officer = {}
+
 	officer.lastName = setLastName();
 	officer.firstName = setFirstName();
 	officer.id = globalOfficerId;
 	globalOfficerId++;
+
 	switch (unit.type) {
 		case "army":
 			officer.xp = helpers.randomNumber(10) + 55;
@@ -60,5 +63,6 @@ exports.newRecruit = function (unit) {
 			officer.rank = names.ranks.captain;
 		break;
 	}
- 	return officer;
+
+	return officer;
 };
