@@ -97,7 +97,6 @@ function updatePlots(army) {
 
         } else {
           brigade.commander.plotting = false;
-
         };
       });
 
@@ -106,6 +105,7 @@ function updatePlots(army) {
 
   function planRegimentPlots () {
     var bgGeneralBonds = [];
+
     _.each(army.brigades, function (brigade) {
 
       var plotters = [];
@@ -121,7 +121,7 @@ function updatePlots(army) {
           regiment.commander.plotting = false;
         };
       });
-      
+
     });
 
   };
