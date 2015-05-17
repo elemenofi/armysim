@@ -150,6 +150,7 @@ function updateDrifts (army) {
   updateCoronels();
   updateBgGenerals();
   updateDvGenerals();
+
 };
 
 exports.update = function (army) {

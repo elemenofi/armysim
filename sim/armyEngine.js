@@ -1,6 +1,6 @@
 var unitManager = require('./unitManager.js');
 var staffManager = require('./staffManager.js');
-var staffDynamics = require('./staffDynamics.js');
+var staffDynamics = require('./driftDynamics.js');
 
 var day = 0;
 var globalOfficerId = 1;
