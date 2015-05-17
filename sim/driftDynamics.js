@@ -18,11 +18,13 @@ function updateDrifts (army) {
 
     _.each(army[rank], function(commander) {
 
-      if (commander.drifting === "right") {
-        commander.drift = commander.drift + 1;
-      } else if (commander.drifting === "left") {
-        commander.drift = commander.drift - 1;
-      };
+      if (commander.retired === false) {
+        if (commander.drifting === "right") {
+          commander.drift = commander.drift + 1;
+        } else if (commander.drifting === "left") {
+          commander.drift = commander.drift - 1;
+        };
+      }
 
     });
 

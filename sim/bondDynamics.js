@@ -11,13 +11,15 @@ function updateBonds(army) {
         var hadBond = false;
 
         _.each(commander.bonds, function(bond) {
-          if (bond.friendId === otherCommander.id) {
+          if (bond.id === otherCommander.id) {
             hadBond = true;
+            bond.strength++;
           };
         });
 
         if (!hadBond) {
-          commander.bonds.push({friendId: otherCommander.id, strength: 0});
+          var newBond = otherCommander;
+          commander.bonds.push({id: newBond.id, name: newBond.lastName, strength: 0});
         };
 
       };

@@ -22,5 +22,20 @@ army.controller('armyController', [ '$scope', '$http', '$timeout',
           console.log(data);
         });
     };
+
+    $scope.getBondName = function (bond) {
+      $http.get(api + "bondname", {id: bond})
+        .success(function(data) {
+          console.log(data);
+        });
+    };
+
+    $scope.riftDirection = function (rift) {
+      if (rift > 500) {
+        return ">>>";
+      } else {
+        return "<<<";
+      }
+    };
   }
 ]);

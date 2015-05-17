@@ -98,10 +98,12 @@ div.unit-data {
 	margin-bottom: 10px;
 }
 div.brigade-data, div.division-data {
-	height: 100px;
+	min-height: 100px;
+	height: auto;
 }
 div.regiment-data {
-	height: 80px;
+	min-height: 40px;
+	height: auto;
 }
 div.company-data {
 	padding-bottom: 12px;
