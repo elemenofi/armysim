@@ -1,3 +1,4 @@
+var helpers = require('./helpers.js');
 var _ = require('underscore');
 var staffManager = require('./staffManager.js');
 
@@ -7,46 +8,57 @@ function updatePlots(army) {
     if (plotters.length >= 2) {
 
       var targetImmune = false;
-      var prestigeHit = 0;
-      var plotIntelligence = 0;
-      var plotPrestige = 0;
 
-      // check for immunities
-      if (army.commander.drift > 500 && target.drift > 500 || army.commander.drift < 500 && target.drift < 500) {
+      if ((army.commander.drift > 500 && target.drift > 500 ) || (army.commander.drift < 500 && target.drift < 500)) {
+
+        targetImmune = true;
 
         _.each(plotters, function (plotter) {
 
-          var message = "dishonorably discharged";
-          staffManager.retireSpecificOfficer(plotter, army, message);
+          var plotterIntRoll = plotter.intelligence + helpers.randomNumber(100);
+          var armyCommanderIntRoll = army.commander.intelligence + helpers.randomNumber(25);
 
+          console.log(plotterIntRoll, armyCommanderIntRoll, "rolling discharge discharge: " + plotter.lastName);
+
+          if (plotterIntRoll < armyCommanderIntRoll) {
+
+            console.log("discharging ", plotter.lastName);
+            var message = "dishonorably discharged by " + army.commander.rank + " " + army.commander.lastName;
+            staffManager.retireSpecificOfficer(plotter, army, message);
+
+          };
+          
         });
 
       };
 
-      if (!targetImmune) {
-          // plot strength computation
-        _.each(plotters, function(plotter) {
+      var prestigeHit = 0;
+      var plotIntelligence = 0;
+      var plotPrestige = 0;
 
-          plotter.plotting = true;
-          plotIntelligence += Math.round(plotter.intelligence / 2);
-          plotPrestige += Math.round(plotter.prestige / 2);
-          prestigeHit += Math.round(plotter.prestige / 10);
+      _.each(plotters, function(plotter) {
 
-        });
+        plotter.plotting = true;
+        plotIntelligence += Math.round(plotter.intelligence / 2);
+        plotPrestige += Math.round(plotter.prestige / 2);
+        prestigeHit += Math.round(plotter.prestige / 10);
 
+      });
+
+      if (targetImmune === false) {
         // actual application of the plot damage to the targets prestige
         target.prestige -= prestigeHit;
+      };
 
-        // retirement of plotTarget
-        if ((target.prestige + target.intelligence / 2) <= plotPrestige) {
+      // retirement of plotTarget
+      if ((target.prestige + target.intelligence / 2) <= plotPrestige) {
 
-          staffManager.retireSpecificOfficer(target, army, message);
+        staffManager.retireSpecificOfficer(target, army, message);
 
-          _.each(plotters, function(plotter) {
-            plotter.plotting = false;
-          });
+        _.each(plotters, function(plotter) {
+          plotter.plotting = false;
+        });
 
-        };
       };
 
     } else {
@@ -74,18 +86,16 @@ function updatePlots(army) {
   };
 
   function planBrigadePlots () {
-    var dvGeneralBonds = [];
 
     _.each(army.divisions, function (division) {
 
       var plotters = [];
-      dvGeneralBonds.push(division.commander.bonds);
 
       _.each(division.brigades, function(brigade) {
         if ((brigade.commander.drift > 500 && division.commander.drift < 500) || (brigade.commander.drift < 500 && division.commander.drift > 500)) {
 
           plotters.push(brigade.commander);
-          applyPlot(plotters, brigade.commander, division.commander, "forced to retire", dvGeneralBonds);
+          applyPlot(plotters, brigade.commander, division.commander, "forced to retire");
 
         } else {
           brigade.commander.plotting = false;
@@ -96,18 +106,16 @@ function updatePlots(army) {
   };
 
   function planRegimentPlots () {
-    var bgGeneralBonds = [];
 
     _.each(army.brigades, function (brigade) {
 
       var plotters = [];
-      bgGeneralBonds.push(brigade.commander.bonds);
 
       _.each(brigade.regiments, function(regiment) {
         if ((regiment.commander.drift > 500 && brigade.commander.drift < 500) || (regiment.commander.drift < 500 && brigade.commander.drift > 500)) {
 
           plotters.push(regiment.commander);
-          applyPlot(plotters, regiment.commander, brigade.commander, "forced to retire", bgGeneralBonds);
+          applyPlot(plotters, regiment.commander, brigade.commander, "forced to retire");
 
         } else {
           regiment.commander.plotting = false;

@@ -34,7 +34,7 @@ function updateBonds(army) {
       _.each(army[units], function(otherUnit) {
         if (unit.parentId === otherUnit.parentId) {
           tryBond(unit.commander, otherUnit.commander);
-        }
+        };
       });
     });
 

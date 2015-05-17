@@ -128,10 +128,10 @@ span.stars, span.xp, span.alignment, span.unit, span.diamonds {
 }
 span.stars-inspect {
 	color: red;
-	text-align: center;
 }
 span.stars-plot {
 	color: black;
+	font-size: 5px;
 }
 span.unit {
 	margin-right:0px;
@@ -149,6 +149,9 @@ span.diamonds {
 	color: #B4B4B4;
 	line-height: 12px;
 	margin-top: 10px;
+	min-height: 48px;
+	width: 50%;
+	font-size: 9px;
 }
 span.unit-company {
 	margin-right: 6px;
