@@ -22,7 +22,6 @@
 				</div>
 				<span>{{army.commander.rank}} {{army.commander.firstName}} {{army.commander.lastName}}</span><br>
 				<span ng-if="army.commander.inspecting">
-					<span>Drift: {{army.commander.drift}}</span><br>
 					<ul>
 						<li ng-repeat="bond in army.commander.bonds">
 							<span>{{bond.name + ' ' + bond.strength}}</span>
@@ -40,7 +39,6 @@
 					</div>
 					<span>{{division.commander.rank}} {{division.commander.firstName}} {{division.commander.lastName}}</span><br>
 					<span ng-if="division.commander.inspecting">
-						<span>Drift: {{division.commander.drift}}</span><br>
 						<ul>
 							<li ng-repeat="bond in division.commander.bonds">
 								<span>{{bond.name + ' ' + bond.strength}}</span>
@@ -58,8 +56,6 @@
 						</div>
 						<span>{{brigade.commander.rank}} {{brigade.commander.firstName}} {{brigade.commander.lastName}}</span><br>
 						<span ng-if="brigade.commander.inspecting">
-
-							<span>Drift: {{brigade.commander.drift}}</span><br>
 							<ul>
 								<li ng-repeat="bond in brigade.commander.bonds">
 									<span>{{bond.name + ' ' + bond.strength}}</span>
@@ -78,7 +74,6 @@
 							<span class="clear"></span>
 							<span>{{regiment.commander.rank}} {{regiment.commander.lastName}}</span><br>
 							<span ng-if="regiment.commander.inspecting">
-								<span>Drift: {{regiment.commander.drift}}</span><br>
 								<ul>
 									<li ng-repeat="bond in regiment.commander.bonds">
 										<span>{{bond.name + ' ' + bond.strength}}</span>
@@ -96,7 +91,6 @@
 								</div>
 								<span style="min-height: 32px; display: block;">{{company.commander.lastName}}</span><br>
 								<span ng-if="company.commander.inspecting">
-									<span>Drift: {{company.commander.drift}}</span><br>
 									<ul>
 										<li ng-repeat="bond in company.commander.bonds">
 											<span>{{bond.name + ' ' + bond.strength}}</span>
@@ -114,7 +108,6 @@
 									</div>
 									<span style="min-height: 32px; display: block;">{{battalion.commander.lastName}}</span><br>
 									<span ng-if="battalion.commander.inspecting">
-										<span>Drift: {{battalion.commander.drift}}</span><br>
 										<ul>
 											<li ng-repeat="bond in battalion.commander.bonds">
 												<span>{{bond.name + ' ' + bond.strength}}</span>
@@ -130,29 +123,53 @@
 			<div class="clear"></div>
 			<div class="history">
 				<ul>
-					<li ng-repeat="officer in army.ltGenerals">
+					<li ng-repeat="officer in army.retired.ltGenerals">
 						<span ng-if="officer.retired === true">
 							<span>{{officer.rank}} {{officer.firstName}} {{officer.lastName}}</span><br>
-							<span>{{officer.drift}}, {{officer.retiredMessage}}</span>
+							<span>{{officer.prestige}}, {{officer.drift}}, {{officer.retiredMessage}}, {{officer.xp}}</span>
 						</span>
 					</li>
 				</ul>
 				<ul>
-					<li ng-repeat="officer in army.dvGenerals">
+					<li ng-repeat="officer in army.retired.dvGenerals">
 						<span ng-if="officer.retired === true">
 							<span>{{officer.rank}} {{officer.firstName}} {{officer.lastName}}</span><br>
-							<span>{{officer.drift}}, {{officer.retiredMessage}}</span>
+							<span>{{officer.prestige}}, {{officer.drift}}, {{officer.retiredMessage}}, {{officer.xp}}</span>
 						</span>
 					</li>
 				</ul>
 				<ul>
-					<li ng-repeat="officer in army.bgGenerals">
+					<li ng-repeat="officer in army.retired.bgGenerals">
 						<span ng-if="officer.retired === true">
 							<span>{{officer.rank}} {{officer.firstName}} {{officer.lastName}}</span><br>
-							<span>{{officer.drift}}, {{officer.retiredMessage}}</span>
+							<span>{{officer.prestige}}, {{officer.drift}}, {{officer.retiredMessage}}, {{officer.xp}}</span>
 						</span>
 					</li>
 				</ul>
+				<ul>
+					<li ng-repeat="officer in army.retired.coronels">
+						<span ng-if="officer.retired === true">
+							<span>{{officer.rank}} {{officer.firstName}} {{officer.lastName}}</span><br>
+							<span>{{officer.prestige}}, {{officer.drift}}, {{officer.retiredMessage}}, {{officer.xp}}</span>
+						</span>
+					</li>
+				</ul>
+				<ul>
+					<li ng-repeat="officer in army.retired.majors">
+						<span ng-if="officer.retired === true">
+							<span>{{officer.rank}} {{officer.firstName}} {{officer.lastName}}</span><br>
+							<span>{{officer.prestige}}, {{officer.drift}}, {{officer.retiredMessage}}, {{officer.xp}}</span>
+						</span>
+					</li>
+				</ul>
+				<!-- <ul>
+					<li ng-repeat="officer in army.retired.captains">
+						<span ng-if="officer.retired === true">
+							<span>{{officer.rank}} {{officer.firstName}} {{officer.lastName}}</span><br>
+							<span>{{officer.prestige}}, {{officer.drift}}, {{officer.retiredMessage}}, {{officer.xp}}</span>
+						</span>
+					</li>
+				</ul> -->
 			</div>
 	</div>
 </body>

@@ -13,7 +13,15 @@ var army = {
   bgGenerals: [],
   coronels: [],
   majors: [],
-  captains: []
+  captains: [],
+  retired: {
+    ltGenerals: [],
+    dvGenerals: [],
+    bgGenerals: [],
+    coronels: [],
+    majors: [],
+    captains: []
+  }
 };
 
 exports.army = function () {

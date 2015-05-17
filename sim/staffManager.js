@@ -87,8 +87,8 @@ function promoteOfficer (rank, army, targetUnit) {
 				if (regiment.parentId === targetUnit.id) {
 					if (regiment.commander && regiment.commander.xp > seniorXP) {
 						seniorXP = regiment.commander.xp;
-					}
-				}
+					};
+				};
 			});
 
 			_.each(army.regiments, function(regiment) {
@@ -97,8 +97,8 @@ function promoteOfficer (rank, army, targetUnit) {
 						army.coronels.splice(army.coronels.indexOf(regiment.commander), 1);
 						army.bgGenerals.push(regiment.commander);
 						promote(regiment, "Brigade General");
-					}
-				}
+					};
+				};
 			});
 		break;
 		case "Brigade General":
@@ -106,8 +106,8 @@ function promoteOfficer (rank, army, targetUnit) {
 				if (brigade.parentId === targetUnit.id) {
 					if (brigade.commander && brigade.commander.xp > seniorXP) {
 						seniorXP = brigade.commander.xp;
-					}
-				}
+					};
+				};
 			});
 
 			_.each(army.brigades, function(brigade) {
@@ -116,15 +116,15 @@ function promoteOfficer (rank, army, targetUnit) {
 						army.bgGenerals.splice(army.bgGenerals.indexOf(brigade.commander), 1);
 						army.dvGenerals.push(brigade.commander);
 						promote(brigade, "Division General");
-					}
-				}
+					};
+				};
 			});
 		break;
 		case "Division General":
 			_.each(army.divisions, function(division) {
 				if (division.commander && division.commander.xp > seniorXP) {
 					seniorXP = division.commander.xp;
-				}
+				};
 			});
 
 			_.each(army.divisions, function(division) {
@@ -132,7 +132,7 @@ function promoteOfficer (rank, army, targetUnit) {
 					army.dvGenerals.splice(army.dvGenerals.indexOf(division.commander), 1);
 					army.ltGenerals.push(division.commander);
 					promote(division, "Lieutenant General");
-				}
+				};
 			});
 		break;
 	};
@@ -147,14 +147,16 @@ function retireOfficer (officer, army, message) {
 		case "Captain":
 			_.each(army.battalions, function (battalion) {
 				if (battalion.commander && battalion.commander.id === officer.id) {
+					army.retired.captains.push(battalion.commander);
 					battalion.commander = undefined;
 					battalion.commander = recruitCaptain(battalion);
-				}
+				};
 			});
 		break;
 		case "Major":
 			_.each(army.companies, function (company) {
 				if (company.commander && company.commander.id === officer.id) {
+					army.retired.majors.push(company.commander);
 					company.commander = undefined;
 					promoteOfficer("Captain", army, company);
 				}
@@ -163,6 +165,7 @@ function retireOfficer (officer, army, message) {
 		case "Coronel":
 			_.each(army.regiments, function (regiment) {
 				if (regiment.commander && regiment.commander.id === officer.id) {
+					army.retired.coronels.push(regiment.commander);
 					regiment.commander = undefined;
 					promoteOfficer("Major", army, regiment);
 				}
@@ -171,6 +174,7 @@ function retireOfficer (officer, army, message) {
 		case "Brigade General":
 			_.each(army.brigades, function (brigade) {
 				if (brigade.commander && brigade.commander.id === officer.id) {
+					army.retired.bgGenerals.push(brigade.commander);
 					brigade.commander = undefined;
 					promoteOfficer("Coronel", army, brigade);
 				}
@@ -179,6 +183,7 @@ function retireOfficer (officer, army, message) {
 		case "Division General":
 			_.each(army.divisions, function (division) {
 				if (division.commander && division.commander.id === officer.id) {
+					army.retired.dvGenerals.push(division.commander);
 					division.commander = undefined;
 					promoteOfficer("Brigade General", army, division);
 				}
@@ -186,9 +191,10 @@ function retireOfficer (officer, army, message) {
 		break;
 		case "Lieutenant General":
 			if (army.commander && army.commander.id === officer.id) {
+				army.retired.ltGenerals.push(army.commander);
 				army.commander = undefined;
 				promoteOfficer("Division General", army);
-		}
+			};
 		break;
 	};
 
@@ -262,8 +268,10 @@ exports.rewardStaff = function (army) {
 
 	};
 	_.each(army.staff, function (officer) {
-		officer.xp++;
-		officer.prestige = givePrestige(officer);
+		if (officer.retired === false) {
+			officer.xp++;
+			officer.prestige = givePrestige(officer);
+		};
 	});
 
 	return army.staff;
