@@ -144,6 +144,11 @@ span.diamonds {
 span.unit-company {
 	margin-right: 6px;
 }
+
+div.history {
+	padding-top: 32px;
+}
+
 ul.logs li.promotion {
 	color: #FFCB05;
 }

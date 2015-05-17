@@ -58,7 +58,7 @@ function promoteOfficer (rank, army, targetUnit) {
 			_.each(army.battalions, function(battalion) {
 				if (battalion.parentId === targetUnit.id) {
 					if (battalion.commander && battalion.commander.xp === seniorXP) {
-						army.captains.slice(army.captains.indexOf(battalion.commander), 1);
+						army.captains.splice(army.captains.indexOf(battalion.commander), 1);
 						army.majors.push(battalion.commander);
 						promote(battalion, "Major");
 					}
@@ -76,7 +76,7 @@ function promoteOfficer (rank, army, targetUnit) {
 			_.each(army.companies, function(company) {
 				if (company.parentId === targetUnit.id) {
 					if (company.commander && company.commander.xp === seniorXP) {
-						army.majors.slice(army.captains.indexOf(company.commander), 1);
+						army.majors.splice(army.majors.indexOf(company.commander), 1);
 						army.coronels.push(company.commander);
 						promote(company, "Coronel");
 					}
@@ -94,7 +94,7 @@ function promoteOfficer (rank, army, targetUnit) {
 			_.each(army.regiments, function(regiment) {
 				if (regiment.parentId === targetUnit.id) {
 					if (regiment.commander && regiment.commander.xp === seniorXP) {
-						army.coronels.slice(army.coronels.indexOf(regiment.commander), 1);
+						army.coronels.splice(army.coronels.indexOf(regiment.commander), 1);
 						army.bgGenerals.push(regiment.commander);
 						promote(regiment, "Brigade General");
 					}
@@ -112,7 +112,7 @@ function promoteOfficer (rank, army, targetUnit) {
 			_.each(army.brigades, function(brigade) {
 				if (brigade.parentId === targetUnit.id) {
 					if (brigade.commander && brigade.commander.xp === seniorXP) {
-						army.bgGenerals.slice(army.bgGenerals.indexOf(brigade.commander), 1);
+						army.bgGenerals.splice(army.bgGenerals.indexOf(brigade.commander), 1);
 						army.dvGenerals.push(brigade.commander);
 						promote(brigade, "Division General");
 					}
@@ -127,7 +127,7 @@ function promoteOfficer (rank, army, targetUnit) {
 			});
 			_.each(army.divisions, function(division) {
 				if (division.commander && division.commander.xp === seniorXP) {
-					army.dvGenerals.slice(army.dvGenerals.indexOf(division.commander), 1);
+					army.dvGenerals.splice(army.dvGenerals.indexOf(division.commander), 1);
 					army.ltGenerals.push(division.commander);
 					promote(division, "Lieutenant General");
 				}
@@ -235,6 +235,8 @@ exports.rewardStaff = function () {
 	_.each(staff, function (officer) {
 		officer.xp++;
 	});
+
+	return staff;
 };
 
 exports.retireStaff = function (army) {
