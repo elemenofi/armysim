@@ -2,6 +2,8 @@ var _ = require('underscore');
 var staffRecruiter = require('./staffRecruiter');
 var unitManager = require('./unitManager');
 
+var test = "";
+
 var staff = [];
 
 function recruitCaptain (army, unit) {
