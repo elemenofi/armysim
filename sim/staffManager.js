@@ -5,6 +5,12 @@ var unitManager = require('./unitManager');
 var staff = [];
 
 exports.initStaff = function (army) {
+
+	var officer = staffRecruiter.newRecruit(army);
+	army.ltGenerals.push(officer);
+	staff.push(officer);
+	army.commander = officer;
+
 	_.each(army.divisions, function (division) {
 		var officer = staffRecruiter.newRecruit(division);
 		army.dvGenerals.push(officer);
@@ -56,9 +62,14 @@ function promoteOfficer (rank, army, targetUnit) {
 
 	function promote (oldUnit, rank)  {
 
-		oldUnit.commander.unitId = targetUnit.id;
+		if (targetUnit) {
+			oldUnit.commander.unitId = targetUnit.id;
+			targetUnit.commander = oldUnit.commander;
+		} else {
+			army.commander = oldUnit.commander;
+		}
+
 		oldUnit.commander.rank = rank;
-		targetUnit.commander = oldUnit.commander;
 		oldUnit.commander = undefined;
 
 		switch (oldUnit.type) {
@@ -129,7 +140,7 @@ function promoteOfficer (rank, army, targetUnit) {
 			_.each(army.regiments, function(regiment) {
 				if (regiment.parentId === targetUnit.id) {
 					if (regiment.commander && regiment.commander.xp === seniorXP) {
-						army.coronels.slice(army.captains.indexOf(regiment.commander), 1);
+						army.coronels.slice(army.coronels.indexOf(regiment.commander), 1);
 						army.bgGenerals.push(regiment.commander);
 						promote(regiment, "Brigade General");
 					}
@@ -147,10 +158,24 @@ function promoteOfficer (rank, army, targetUnit) {
 			_.each(army.brigades, function(brigade) {
 				if (brigade.parentId === targetUnit.id) {
 					if (brigade.commander && brigade.commander.xp === seniorXP) {
-						army.bgGenerals.slice(army.captains.indexOf(brigade.commander), 1);
+						army.bgGenerals.slice(army.bgGenerals.indexOf(brigade.commander), 1);
 						army.dvGenerals.push(brigade.commander);
 						promote(brigade, "Division General");
 					}
+				}
+			});
+		break;
+		case "Division General":
+			_.each(army.divisions, function(division) {
+				if (division.commander && division.commander.xp > seniorXP) {
+					seniorXP = division.commander.xp;
+				}
+			});
+			_.each(army.divisions, function(division) {
+				if (division.commander && division.commander.xp === seniorXP) {
+					army.dvGenerals.slice(army.dvGenerals.indexOf(division.commander), 1);
+					army.ltGenerals.push(division.commander);
+					promote(division, "Lieutenant General");
 				}
 			});
 		break;
@@ -158,6 +183,9 @@ function promoteOfficer (rank, army, targetUnit) {
 };
 
 function retireOfficer (officer, army) {
+
+	officer.retired = true;
+
 	switch (officer.rank) {
 		case "Captain":
 			_.each(army.battalions, function (battalion) {
@@ -199,8 +227,14 @@ function retireOfficer (officer, army) {
 				}
 			});
 		break;
+		case "Lieutenant General":
+			if (army.commander && army.commander.id === officer.id) {
+				army.commander = undefined;
+				promoteOfficer("Division General", army);
+		}
+		break;
 	};
-	officer.retired = true;
+
 };
 
 exports.retireStaff = function (army) {
@@ -228,6 +262,11 @@ exports.retireStaff = function (army) {
 			break;
 			case "Division General":
 				if (officer.xp > 55) {
+					retireOfficer(officer, army);
+				};
+			break;
+			case "Lieutenant General":
+				if (officer.xp > 75) {
 					retireOfficer(officer, army);
 				};
 			break;

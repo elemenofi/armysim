@@ -13,13 +13,21 @@
 <body ng-controller="armyController">
 	<div>
 		<div class="container">
+			<div class="commanderInChief">
+				<div class="unit-data">
+					<span class="unit">Commander in Chief</span>
+					<span class="stars">&#9733; &#9733; &#9733; &#9733;</span><br>
+				</div>
+				<span>{{army.commander.rank}} {{army.commander.firstName}} {{army.commander.lastName}}</span>
+				<span>{{army.commander.xp}}</span>
+			</div>
 			<div class="divisions" ng-repeat="division in army.divisions">
 				<div class="division-data">
 					<div class="unit-data">
 						<span class="unit">{{ division.name }}</span>
 						<span class="stars">&#9733; &#9733; &#9733;</span><br>
 					</div>
-					<span>{{division.commander.lastName}}</span>
+					<span>{{division.commander.rank}} {{division.commander.firstName}} {{division.commander.lastName}}</span>
 					<span>{{division.commander.xp}}</span>
 				</div>
 				<div class="brigades" ng-repeat="brigade in division.brigades">
@@ -28,7 +36,7 @@
 							<span class="unit">{{ brigade.name }}</span>
 							<span class="stars">&#9733; &#9733;</span><br>
 						</div>
-						<span>{{brigade.commander.lastName}}</span>
+						<span>{{brigade.commander.rank}} {{brigade.commander.firstName}} {{brigade.commander.lastName}}</span>
 						<span>{{brigade.commander.xp}}</span>
 					</div>
 					<div class="regiments" ng-repeat="regiment in brigade.regiments">
@@ -38,7 +46,7 @@
 								<span class="stars">&#9733;</span>
 							</div>
 							<span class="clear"></span>
-							<span>{{regiment.commander.lastName}}</span>
+							<span>{{regiment.commander.rank}} {{regiment.commander.lastName}}</span>
 							<span>{{regiment.commander.xp}}</span>
 						</div>
 						<div class="companies" ng-repeat="company in regiment.companies">
@@ -63,6 +71,13 @@
 						</div>
 					</div>
 				</div>
+			</div>
+			<div class="history">
+				<ul>
+					<li ng-repeat="retired in army.ltGenerals">
+						<span ng-if="retired.retired === true">{{retired.lastName}}</span>
+					</li>
+				</ul>
 			</div>
 	</div>
 </body>

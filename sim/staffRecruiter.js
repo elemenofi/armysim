@@ -35,6 +35,10 @@ exports.newRecruit = function (unit) {
 	officer.id = globalOfficerId;
 	globalOfficerId++;
 	switch (unit.type) {
+		case "army":
+			officer.xp = helpers.randomNumber(10) + 55;
+			officer.rank = names.ranks.ltGeneral;
+		break;
 		case "division":
 			officer.xp = helpers.randomNumber(10) + 45;
 			officer.rank = names.ranks.dvGeneral;

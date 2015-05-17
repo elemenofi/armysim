@@ -7,6 +7,7 @@ var globalLogId = 1;
 
 var army = {
   id: 1,
+  type: "army",
   commander: {},
   divisions: [],
   brigades: [],
