@@ -1,5 +1,6 @@
 var unitManager = require('./unitManager.js');
 var staffManager = require('./staffManager.js');
+var staffDynamics = require('./staffDynamics.js');
 
 var day = 0;
 var globalOfficerId = 1;
@@ -34,6 +35,7 @@ function passTurn () {
   } else {
     staffManager.rewardStaff();
     staffManager.retireStaff(army);
+    staffDynamics.update(army);
     day++;
   }
 }
