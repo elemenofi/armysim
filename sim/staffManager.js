@@ -21,6 +21,7 @@ function promoteOfficer (rank, army, targetUnit) {
 		};
 
 		oldUnit.commander.rank = rank;
+		oldUnit.commander.plotting = false;
 		oldUnit.commander = undefined;
 
 		switch (oldUnit.type) {

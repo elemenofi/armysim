@@ -35,6 +35,7 @@
 						<span class="unit">{{ division.name }}</span>
 						<span class="stars">&#9733; &#9733; &#9733; {{division.commander.prestige}} {{division.commander.xp}}</span>
 						<span ng-if="division.commander.inspecting" class="stars stars-inspect">&#9733;</span><br>
+						<span ng-if="division.commander.plotting" class="stars stars-plot">&#9733;</span><br>
 						<span style="margin-top: 15px; display: block;">{{riftDirection(division.commander.drift)}}</span>
 					</div>
 					<span>{{division.commander.rank}} {{division.commander.firstName}} {{division.commander.lastName}}</span><br>
@@ -52,6 +53,7 @@
 							<span class="unit">{{ brigade.name }}</span>
 							<span class="stars">&#9733; &#9733; {{brigade.commander.prestige}} {{brigade.commander.xp}}</span>
 							<span ng-if="brigade.commander.inspecting" class="stars stars-inspect">&#9733;</span><br>
+							<span ng-if="brigade.commander.plotting" class="stars stars-plot">&#9733;</span><br>
 							<span style="margin-top: 15px; display: block;">{{riftDirection(brigade.commander.drift)}}</span>
 						</div>
 						<span>{{brigade.commander.rank}} {{brigade.commander.firstName}} {{brigade.commander.lastName}}</span><br>
@@ -69,6 +71,7 @@
 								<span class="unit">{{ regiment.name }}</span>
 								<span class="stars">&#9733; {{regiment.commander.prestige}} {{regiment.commander.xp}}</span>
 								<span ng-if="regiment.commander.inspecting" class="stars stars-inspect">&#9733;</span><br>
+								<span ng-if="regiment.commander.plotting" class="stars stars-plot">&#9733;</span><br>
 								<span style="margin-top: 15px; display: block;">{{riftDirection(regiment.commander.drift)}}</span>
 							</div>
 							<span class="clear"></span>
@@ -87,6 +90,7 @@
 									<span  class="unit unit-company">{{ company.name }}</span>
 									<span class="diamonds">&diams; &diams; {{company.commander.prestige}} {{company.commander.xp}}</span><br>
 									<span ng-if="company.commander.inspecting" class="stars stars-inspect">&#9733;</span><br>
+									<span ng-if="company.commander.plotting" class="stars stars-plot">&#9733;</span><br>
 									<span style="margin-top: 15px; display: block;">{{riftDirection(company.commander.drift)}}</span>
 								</div>
 								<span style="min-height: 32px; display: block;">{{company.commander.lastName}}</span><br>
@@ -104,6 +108,7 @@
 										<span class="unit unit-battalion">{{ battalion.name }}</span>
 										<span class="diamonds">&diams; {{battalion.commander.prestige}} {{battalion.commander.xp}}</span><br>
 										<span ng-if="battalion.commander.inspecting" class="stars stars-inspect">&#9733;</span><br>
+										<span ng-if="battalion.commander.plotting" class="stars stars-plot">&#9733;</span><br>
 										<span style="margin-top: 15px; display: block;">{{riftDirection(battalion.commander.drift)}}</span>
 									</div>
 									<span style="min-height: 32px; display: block;">{{battalion.commander.lastName}}</span><br>

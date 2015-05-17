@@ -38,6 +38,7 @@ exports.newRecruit = function (unit) {
 
 	officer.inspecting = false;
 	officer.retired = false;
+	officer.plotting = false;
 	officer.bonds = [];
 	officer.drift = helpers.randomNumber(1000);
 	officer.lastName = setLastName();

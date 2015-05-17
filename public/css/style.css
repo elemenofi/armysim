@@ -130,6 +130,9 @@ span.stars-inspect {
 	color: red;
 	text-align: center;
 }
+span.stars-plot {
+	color: black;
+}
 span.unit {
 	margin-right:0px;
 }
