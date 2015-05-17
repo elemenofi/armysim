@@ -19,7 +19,7 @@
 					<span class="stars">&#9733; &#9733; &#9733; &#9733;</span><br>
 				</div>
 				<span>{{army.commander.rank}} {{army.commander.firstName}} {{army.commander.lastName}}</span><br>
-				<span>{{army.commander.xp}}, {{army.commander.drift}}</span>
+				<span>{{army.commander.xp}}, {{army.commander.drift}}</span><br>
 			</div>
 			<div class="divisions" ng-repeat="division in army.divisions">
 				<div class="division-data">
@@ -28,7 +28,7 @@
 						<span class="stars">&#9733; &#9733; &#9733;</span><br>
 					</div>
 					<span>{{division.commander.rank}} {{division.commander.firstName}} {{division.commander.lastName}}</span><br>
-					<span>{{division.commander.xp}}, {{division.commander.drift}}</span>
+					<span>{{division.commander.xp}}, {{division.commander.drift}}</span><br>
 				</div>
 				<div class="brigades" ng-repeat="brigade in division.brigades">
 					<div class="brigade-data">
@@ -37,7 +37,7 @@
 							<span class="stars">&#9733; &#9733;</span><br>
 						</div>
 						<span>{{brigade.commander.rank}} {{brigade.commander.firstName}} {{brigade.commander.lastName}}</span><br>
-						<span>{{brigade.commander.xp}}, {{brigade.commander.drift}}</span>
+						<span>{{brigade.commander.xp}}, {{brigade.commander.drift}}</span><br>
 					</div>
 					<div class="regiments" ng-repeat="regiment in brigade.regiments">
 						<div class="regiment-data">
@@ -47,7 +47,7 @@
 							</div>
 							<span class="clear"></span>
 							<span>{{regiment.commander.rank}} {{regiment.commander.lastName}}</span><br>
-							<span>{{regiment.commander.xp}}, {{regiment.commander.drift}}</span>
+							<span>{{regiment.commander.xp}}, {{regiment.commander.drift}}</span><br>
 						</div>
 						<div class="companies" ng-repeat="company in regiment.companies">
 							<div class="company-data">
@@ -57,7 +57,6 @@
 								</div>
 								<span>{{company.commander.lastName}}</span><br>
 								<span>{{company.commander.xp}}, {{company.commander.drift}}</span><br>
-								<span>{{company.commander.drifting}}</span>
 							</div>
 							<div class="battalions" ng-repeat="battalion in company.battalions">
 								<div class="battalion-data">
@@ -66,7 +65,7 @@
 										<span class="diamonds">&diams;</span>
 									</div>
 									<span>{{battalion.commander.lastName}}</span><br>
-									<span>{{battalion.commander.xp}}, {{battalion.commander.drift}}</span>
+									<span>{{battalion.commander.xp}}, {{battalion.commander.drift}}</span><br>
 								</div>
 							</div>
 						</div>
@@ -79,6 +78,7 @@
 					<li ng-repeat="officer in army.ltGenerals">
 						<span ng-if="officer.retired === true">
 							<span>{{officer.rank}} {{officer.firstName}} {{officer.lastName}}</span><br>
+							<span>{{officer.drift}}</span>
 						</span>
 					</li>
 				</ul>
