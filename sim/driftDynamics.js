@@ -1,4 +1,3 @@
-var staffManager = require('./staffManager.js');
 var _ = require('underscore');
 
 function updateDrifts (army) {

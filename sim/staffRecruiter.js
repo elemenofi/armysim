@@ -32,6 +32,8 @@ exports.newRecruit = function (unit) {
 
 	var officer = {}
 
+	officer.inspecting = false;
+	officer.bonds = [];
 	officer.drift = helpers.randomNumber(1000);
 	officer.lastName = setLastName();
 	officer.firstName = setFirstName();

@@ -124,6 +124,10 @@ span.stars, span.xp, span.alignment, span.unit, span.diamonds {
 	border: 2px solid #FFCB05;
 	margin-right: 16px;
 }
+span.stars-inspect {
+	color: red;
+	text-align: center;
+}
 span.unit {
 	margin-right:0px;
 }

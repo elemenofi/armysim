@@ -136,9 +136,10 @@ function promoteOfficer (rank, army, targetUnit) {
 	};
 };
 
-function retireOfficer (officer, army) {
+function retireOfficer (officer, army, message) {
 
 	officer.retired = true;
+	officer.retiredMessage = message;
 
 	switch (officer.rank) {
 		case "Captain":
@@ -240,42 +241,55 @@ exports.rewardStaff = function () {
 };
 
 exports.retireStaff = function (army) {
+	var message = "Forced retirement due to time in post";
 
 	_.each(staff, function(officer) {
 		switch (officer.rank) {
 			case "Captain":
 				if (officer.xp > 20) {
-					retireOfficer(officer, army);
+					retireOfficer(officer, army, message);
 				};
 			break;
 			case "Major":
 				if (officer.xp > 30) {
-					retireOfficer(officer, army);
+					retireOfficer(officer, army, message);
 				};
 			break;
 			case "Coronel":
 				if (officer.xp > 35) {
-					retireOfficer(officer, army);
+					retireOfficer(officer, army, message);
 				};
 			break;
 			case "Brigade General":
 				if (officer.xp > 45) {
-					retireOfficer(officer, army);
+					retireOfficer(officer, army, message);
 				};
 			break;
 			case "Division General":
 				if (officer.xp > 55) {
-					retireOfficer(officer, army);
+					retireOfficer(officer, army, message);
 				};
 			break;
 			case "Lieutenant General":
-				if (officer.xp > 75) {
-					retireOfficer(officer, army);
+				if (officer.xp > 75 && army.commander === officer) {
+					retireOfficer(officer, army, message);
 				};
 			break;
 		};
 	});
 
+};
+
+exports.retireSpecificOfficer = function (officer, army, message) {
+	retireOfficer(officer, army, message);
+};
+
+exports.inspectToggle = function (officer) {
+	_.each(staff, function (targetOfficer) {
+		if (targetOfficer.id === officer.id) {
+			targetOfficer.inspecting = !targetOfficer.inspecting;
+		};
+	});
 };
 
 exports.staff = function () {

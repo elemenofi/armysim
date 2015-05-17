@@ -4,7 +4,7 @@
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<title>Army</title>
-	<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script><!-- load jquery -->
+	<script src="node_modules\jquery\dist\jquery.js"></script><!-- load jquery -->
 	<script src="node_modules/angular/angular.min.js"></script><!-- load angular -->
 	<script src="core.js"></script>
 	<link type="text/css" rel="stylesheet" href="css/style.css" />
@@ -17,55 +17,78 @@
 				<div class="unit-data">
 					<span class="unit">Commander in Chief</span>
 					<span class="stars">&#9733; &#9733; &#9733; &#9733;</span><br>
+					<span ng-if="army.commander.inspecting" class="stars stars-inspect">&#9733;</span><br>
 				</div>
 				<span>{{army.commander.rank}} {{army.commander.firstName}} {{army.commander.lastName}}</span><br>
 				<span>{{army.commander.xp}}, {{army.commander.drift}}</span><br>
+				<span>{{army.commander.bonds.length}}</span>
 			</div>
 			<div class="divisions" ng-repeat="division in army.divisions">
 				<div class="division-data">
 					<div class="unit-data">
 						<span class="unit">{{ division.name }}</span>
 						<span class="stars">&#9733; &#9733; &#9733;</span><br>
+						<span ng-if="division.commander.inspecting" class="stars stars-inspect">&#9733;</span><br>
 					</div>
 					<span>{{division.commander.rank}} {{division.commander.firstName}} {{division.commander.lastName}}</span><br>
 					<span>{{division.commander.xp}}, {{division.commander.drift}}</span><br>
+					<span>{{division.commander.bonds.length}}</span>
 				</div>
 				<div class="brigades" ng-repeat="brigade in division.brigades">
 					<div class="brigade-data">
 						<div class="unit-data">
 							<span class="unit">{{ brigade.name }}</span>
 							<span class="stars">&#9733; &#9733;</span><br>
+							<span ng-if="brigade.commander.inspecting" class="stars stars-inspect">&#9733;</span><br>
 						</div>
 						<span>{{brigade.commander.rank}} {{brigade.commander.firstName}} {{brigade.commander.lastName}}</span><br>
 						<span>{{brigade.commander.xp}}, {{brigade.commander.drift}}</span><br>
+						<span>{{brigade.commander.bonds.length}}</span>
 					</div>
 					<div class="regiments" ng-repeat="regiment in brigade.regiments">
 						<div class="regiment-data">
 							<div class="unit-data">
 								<span class="unit">{{ regiment.name }}</span>
-								<span class="stars">&#9733;</span>
+								<span class="stars">&#9733;</span><br>
+								<span>{{regiment.commander.id}}</span><br>
+								<span ng-if="regiment.commander.inspecting" class="stars stars-inspect">&#9733;</span><br>
 							</div>
 							<span class="clear"></span>
 							<span>{{regiment.commander.rank}} {{regiment.commander.lastName}}</span><br>
 							<span>{{regiment.commander.xp}}, {{regiment.commander.drift}}</span><br>
+							<span>{{regiment.commander.bonds.length}}</span>
 						</div>
 						<div class="companies" ng-repeat="company in regiment.companies">
-							<div class="company-data">
+							<div ng-click="inspectToggle(company.commander);" class="company-data">
 								<div class="unit-data">
-									<span class="unit unit-company">{{ company.name }}</span>
-									<span class="diamonds">&diams; &diams;</span>
+									<span  class="unit unit-company">{{ company.name }}</span>
+									<span class="diamonds">&diams; &diams;</span><span>{{company.commander.id}}</span><br>
+									<span ng-if="company.commander.inspecting" class="stars stars-inspect">&#9733;</span><br>
 								</div>
-								<span>{{company.commander.lastName}}</span><br>
+								<span style="min-height: 32px; display: block;">{{company.commander.lastName}}</span><br>
 								<span>{{company.commander.xp}}, {{company.commander.drift}}</span><br>
+								<span>{{company.commander.bonds.length}}</span>
+								<span ng-if="company.commander.inspecting">
+									<ul>
+										<li ng-repeat="bond in company.commander.bonds">{{bond.friendId}}</li>
+									</ul>
+								</span>
 							</div>
 							<div class="battalions" ng-repeat="battalion in company.battalions">
-								<div class="battalion-data">
+								<div ng-click="inspectToggle(battalion.commander)" class="battalion-data">
 									<div class="unit-data">
 										<span class="unit unit-battalion">{{ battalion.name }}</span>
-										<span class="diamonds">&diams;</span>
+										<span class="diamonds">&diams;</span><span>{{battalion.commander.id}}</span><br>
+										<span ng-if="battalion.commander.inspecting" class="stars stars-inspect">&#9733;</span><br>
 									</div>
-									<span>{{battalion.commander.lastName}}</span><br>
+									<span style="min-height: 32px; display: block;">{{battalion.commander.lastName}}</span><br>
 									<span>{{battalion.commander.xp}}, {{battalion.commander.drift}}</span><br>
+									<span>{{battalion.commander.bonds.length}}</span>
+									<span ng-if="battalion.commander.inspecting">
+										<ul>
+											<li ng-repeat="bond in battalion.commander.bonds">{{bond.friendId}}</li>
+										</ul>
+									</span>
 								</div>
 							</div>
 						</div>
@@ -78,7 +101,7 @@
 					<li ng-repeat="officer in army.ltGenerals">
 						<span ng-if="officer.retired === true">
 							<span>{{officer.rank}} {{officer.firstName}} {{officer.lastName}}</span><br>
-							<span>{{officer.drift}}</span>
+							<span>{{officer.drift}}, {{officer.retiredMessage}}</span>
 						</span>
 					</li>
 				</ul>
@@ -86,6 +109,7 @@
 					<li ng-repeat="officer in army.dvGenerals">
 						<span ng-if="officer.retired === true">
 							<span>{{officer.rank}} {{officer.firstName}} {{officer.lastName}}</span><br>
+							<span>{{officer.drift}}, {{officer.retiredMessage}}</span>
 						</span>
 					</li>
 				</ul>
@@ -93,6 +117,7 @@
 					<li ng-repeat="officer in army.bgGenerals">
 						<span ng-if="officer.retired === true">
 							<span>{{officer.rank}} {{officer.firstName}} {{officer.lastName}}</span><br>
+							<span>{{officer.drift}}, {{officer.retiredMessage}}</span>
 						</span>
 					</li>
 				</ul>

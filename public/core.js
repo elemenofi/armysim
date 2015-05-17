@@ -15,5 +15,12 @@ army.controller('armyController', [ '$scope', '$http', '$timeout',
     };
 
     updateArmy();
+
+    $scope.inspectToggle = function (officer) {
+      $http.post(api + "/inspect", officer)
+        .success(function(data) {
+          console.log(data);
+        });
+    };
   }
 ]);
