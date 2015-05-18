@@ -58,7 +58,7 @@ function passTurn () {
 
 setInterval(function () {
     passTurn();
-}, 2000);
+}, 500);
 
 exports.inspectToggle = function (officer) {
   staffManager.inspectToggle(army, officer);

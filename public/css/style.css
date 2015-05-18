@@ -125,6 +125,7 @@ span.stars, span.xp, span.alignment, span.unit, span.diamonds {
 	padding: 3px 5px 2px;
 	border: 2px solid #FFCB05;
 	margin-right: 16px;
+	margin-top:8px;
 }
 span.stars-inspect {
 	color: red;
@@ -165,6 +166,7 @@ span.unit-company {
 
 div.history {
 	padding-top: 32px;
+	font-size: 13px;
 }
 
 ul.logs li.promotion {

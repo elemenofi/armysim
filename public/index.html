@@ -15,7 +15,7 @@
 		<div class="container">
 			<div ng-click="inspectToggle(army.commander);" class="commanderInChief">
 				<div class="unit-data">
-					<span class="unit">Commander in Chief</span>
+					<span class="unit">Commander in Chief</span><br>
 					<span class="stars">&#9733; &#9733; &#9733; &#9733;</span>
 					<span ng-if="army.commander.inspecting" class="stars stars-inspect">&#9733;</span><br>
 					<br>
@@ -27,7 +27,7 @@
 			<div class="divisions" ng-repeat="division in army.divisions">
 				<div ng-click="inspectToggle(division.commander);" class="division-data">
 					<div class="unit-data">
-						<span class="unit">{{ division.name }}</span>
+						<span class="unit">{{ division.name }}</span><br>
 						<span class="stars">&#9733; &#9733; &#9733;</span>
 						<span ng-if="division.commander.plotting" class="stars stars-plot">&#9733;</span>
 						<span ng-if="division.commander.inspecting" class="stars stars-inspect">&#9733;</span>
@@ -40,7 +40,7 @@
 				<div class="brigades" ng-repeat="brigade in division.brigades">
 					<div ng-click="inspectToggle(brigade.commander);" class="brigade-data">
 						<div class="unit-data">
-							<span class="unit">{{ brigade.name }}</span>
+							<span class="unit">{{ brigade.name }}</span><br>
 							<span class="stars">&#9733; &#9733;</span>
 							<span ng-if="brigade.commander.plotting" class="stars stars-plot">&#9733;</span>
 							<span ng-if="brigade.commander.inspecting" class="stars stars-inspect">&#9733;</span><br>
@@ -54,7 +54,7 @@
 					<div class="regiments" ng-repeat="regiment in brigade.regiments">
 						<div ng-click="inspectToggle(regiment.commander);" class="regiment-data">
 							<div class="unit-data">
-								<span class="unit">{{ regiment.name }}</span>
+								<span class="unit">{{ regiment.name }}</span><br>
 								<span class="stars">&#9733;</span>
 								<span ng-if="regiment.commander.plotting" class="stars stars-plot">&#9733;</span>
 								<span ng-if="regiment.commander.inspecting" class="stars stars-inspect">&#9733;</span><br>

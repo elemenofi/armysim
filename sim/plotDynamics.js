@@ -16,7 +16,7 @@ function updatePlots(army) {
 
         _.each(plotters, function (plotter) {
 
-          var plotterIntRoll = plotter.intelligence;
+          var plotterIntRoll = plotter.intelligence + 60;
           var armyCommanderIntRoll = army.commander.intelligence;
 
           console.log(plotterIntRoll, armyCommanderIntRoll, "rolling discharge discharge: " + plotter.lastName);

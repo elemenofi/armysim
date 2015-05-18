@@ -238,32 +238,34 @@ exports.initStaff = function (army) {
 
 exports.rewardStaff = function (army) {
 	function givePrestige (officer) {
+		
 		var bonusPrestige = 0;
 		bonusPrestige += officer.prestige;
-		switch (officer.rank) {
-			case "Captain":
-				bonusPrestige += helpers.randomNumber(10);
-			break;
-			case "Major":
-				bonusPrestige += helpers.randomNumber(12);
-			break;
-			case "Coronel":
-				bonusPrestige += helpers.randomNumber(15);
-			break;
-			case "Brigade General":
-				bonusPrestige += helpers.randomNumber(17);
-			break;
-			case "Division General":
-				bonusPrestige += helpers.randomNumber(20);
-			break;
-			case "Lieutenant General":
-				bonusPrestige += helpers.randomNumber(25);
-			break;
-		}
+		bonusPrestige += helpers.randomNumber(25);
+		// switch (officer.rank) {
+		// 	case "Captain":
+		// 		bonusPrestige += helpers.randomNumber(10);
+		// 	break;
+		// 	case "Major":
+		// 		bonusPrestige += helpers.randomNumber(12);
+		// 	break;
+		// 	case "Coronel":
+		// 		bonusPrestige += helpers.randomNumber(15);
+		// 	break;
+		// 	case "Brigade General":
+		// 		bonusPrestige += helpers.randomNumber(17);
+		// 	break;
+		// 	case "Division General":
+		// 		bonusPrestige += helpers.randomNumber(20);
+		// 	break;
+		// 	case "Lieutenant General":
+		// 		bonusPrestige += helpers.randomNumber(25);
+		// 	break;
+		// }
 
-		if (officer.bonds.length > 0) {
-			bonusPrestige += officer.bonds[officer.bonds.length - 1].strength;
-		};
+		// if (officer.bonds.length > 0) {
+		// 	bonusPrestige += officer.bonds[officer.bonds.length - 1].strength;
+		// };
 
 		return bonusPrestige;
 
