@@ -14,7 +14,6 @@ army.get('/army', function (req, res) {
 });
 
 army.post('/army/inspect', function (req, res) {
-  console.log("inspection required");
   armyEngine.inspectToggle(req.body);
   res.json(req.body.lastName);
 });

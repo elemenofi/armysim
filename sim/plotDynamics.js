@@ -8,30 +8,34 @@ function updatePlots(army) {
     
     if (plotters.length >= 2) {
 
-      var targetImmune = false;
+    //   var targetImmune = false;
 
-      if ((army.commander.drift > 500 && target.drift > 500 ) || (army.commander.drift < 500 && target.drift < 500)) {
+    //   if (target != army.commander) {
 
-        targetImmune = true;
+    //     if ((army.commander.drift > 500 && target.drift > 500 ) || (army.commander.drift < 500 && target.drift < 500)) {
 
-        _.each(plotters, function (plotter) {
+    //       targetImmune = true;
 
-          var plotterIntRoll = plotter.intelligence + 60;
-          var armyCommanderIntRoll = army.commander.intelligence;
+    //       _.each(plotters, function (plotter) {
 
-          console.log(plotterIntRoll, armyCommanderIntRoll, "rolling discharge discharge: " + plotter.lastName);
+    //         var plotterIntRoll = plotter.intelligence + helpers.randomNumber(100);
+    //         var armyCommanderIntRoll = army.commander.intelligence;
 
-          if (plotterIntRoll < armyCommanderIntRoll) {
+    //         console.log(plotterIntRoll, armyCommanderIntRoll, "rolling discharge discharge: " + plotter.lastName);
 
-            console.log("discharging ", plotter.lastName);
-            var message = "dishonorable discharge ordered by " + army.commander.rank + " " + army.commander.lastName;
-            staffManager.retireSpecificOfficer(plotter, army, message);
+    //         if ((plotterIntRoll < armyCommanderIntRoll) && (plotter.rank != "Captain")) {
 
-          };
-          
-        });
+    //           console.log("discharging ", plotter.lastName);
+    //           var message = "dishonorable discharge ordered by " + army.commander.rank + " " + army.commander.lastName;
+    //           staffManager.retireSpecificOfficer(plotter, army, message);
 
-      };
+    //         };
+            
+    //       });
+
+    //     };
+
+    //   };
 
       var prestigeHit = 0;
       var plotPrestige = 0;
@@ -44,9 +48,9 @@ function updatePlots(army) {
 
       });
 
-      if (targetImmune === false) {
+      // if (targetImmune === false) {
         target.prestige -= prestigeHit;
-      };
+      // };
 
       if (target.prestige <= plotPrestige) {
 
@@ -124,6 +128,7 @@ function updatePlots(army) {
       });
 
     });
+    
   };
 
   function planRegimentPlots () {

@@ -8,46 +8,46 @@ function recruitCaptain (unit) {
 	return officer;
 };
 
+function promotion (rank, army, oldUnit, targetUnit)  {
+
+	if (targetUnit) {
+
+		oldUnit.commander.unitId = targetUnit.id;
+		targetUnit.commander = oldUnit.commander;
+
+	} else {
+
+		army.commander = oldUnit.commander;
+
+	};
+
+	oldUnit.commander.rank = rank;
+	oldUnit.commander.plotting = false;
+	oldUnit.commander = undefined;
+
+	switch (oldUnit.type) {
+		case "battalion":
+			oldUnit.commander = recruitCaptain(oldUnit);
+		break;
+		case "company":
+			promoteOfficer("Captain", army, oldUnit);
+		break;
+		case "regiment":
+			promoteOfficer("Major", army, oldUnit);
+		break;
+		case "brigade":
+			promoteOfficer("Coronel", army, oldUnit);
+		break;
+		case "division":
+			promoteOfficer("Brigade General", army, oldUnit);
+		break;
+	};
+
+};
+
 function promoteOfficer (rank, army, targetUnit) {
 
 	var seniorXP = 0;
-
-	function promote (oldUnit, rank)  {
-
-		if (targetUnit) {
-
-			oldUnit.commander.unitId = targetUnit.id;
-			targetUnit.commander = oldUnit.commander;
-
-		} else {
-
-			army.commander = oldUnit.commander;
-			
-		};
-
-		oldUnit.commander.rank = rank;
-		oldUnit.commander.plotting = false;
-		oldUnit.commander = undefined;
-
-		switch (oldUnit.type) {
-			case "battalion":
-				oldUnit.commander = recruitCaptain(oldUnit);
-			break;
-			case "company":
-				promoteOfficer("Captain", army, oldUnit);
-			break;
-			case "regiment":
-				promoteOfficer("Major", army, oldUnit);
-			break;
-			case "brigade":
-				promoteOfficer("Coronel", army, oldUnit);
-			break;
-			case "division":
-				promoteOfficer("Brigade General", army, oldUnit);
-			break;
-		};
-
-	};
 
 	switch (rank) {
 		case "Captain":
@@ -64,7 +64,7 @@ function promoteOfficer (rank, army, targetUnit) {
 					if (battalion.commander && battalion.commander.xp === seniorXP) {
 						army.captains.splice(army.captains.indexOf(battalion.commander), 1);
 						army.majors.push(battalion.commander);
-						promote(battalion, "Major");
+						promotion("Major", army, battalion, targetUnit);
 					}
 				}
 			});
@@ -83,7 +83,7 @@ function promoteOfficer (rank, army, targetUnit) {
 					if (company.commander && company.commander.xp === seniorXP) {
 						army.majors.splice(army.majors.indexOf(company.commander), 1);
 						army.coronels.push(company.commander);
-						promote(company, "Coronel");
+						promotion("Coronel", army, company, targetUnit);
 					}
 				}
 			});
@@ -102,7 +102,7 @@ function promoteOfficer (rank, army, targetUnit) {
 					if (regiment.commander && regiment.commander.xp === seniorXP) {
 						army.coronels.splice(army.coronels.indexOf(regiment.commander), 1);
 						army.bgGenerals.push(regiment.commander);
-						promote(regiment, "Brigade General");
+						promotion("Brigade General", army, regiment, targetUnit);
 					};
 				};
 			});
@@ -121,7 +121,7 @@ function promoteOfficer (rank, army, targetUnit) {
 					if (brigade.commander && brigade.commander.xp === seniorXP) {
 						army.bgGenerals.splice(army.bgGenerals.indexOf(brigade.commander), 1);
 						army.dvGenerals.push(brigade.commander);
-						promote(brigade, "Division General");
+						promotion("Division General", army, brigade, targetUnit);
 					};
 				};
 			});
@@ -137,11 +137,12 @@ function promoteOfficer (rank, army, targetUnit) {
 				if (division.commander && division.commander.xp === seniorXP) {
 					army.dvGenerals.splice(army.dvGenerals.indexOf(division.commander), 1);
 					army.ltGenerals.push(division.commander);
-					promote(division, "Lieutenant General");
+					promotion("Lieutenant General", army, division, targetUnit);
 				};
 			});
 		break;
 	};
+
 };
 
 function retireOfficer (officer, army, message) {
@@ -206,6 +207,40 @@ function retireOfficer (officer, army, message) {
 
 };
 
+function givePrestige (officer) {
+	
+	var bonusPrestige = 0;
+	bonusPrestige += officer.prestige;
+	bonusPrestige += helpers.randomNumber(25);
+	// switch (officer.rank) {
+	// 	case "Captain":
+	// 		bonusPrestige += helpers.randomNumber(10);
+	// 	break;
+	// 	case "Major":
+	// 		bonusPrestige += helpers.randomNumber(12);
+	// 	break;
+	// 	case "Coronel":
+	// 		bonusPrestige += helpers.randomNumber(15);
+	// 	break;
+	// 	case "Brigade General":
+	// 		bonusPrestige += helpers.randomNumber(17);
+	// 	break;
+	// 	case "Division General":
+	// 		bonusPrestige += helpers.randomNumber(20);
+	// 	break;
+	// 	case "Lieutenant General":
+	// 		bonusPrestige += helpers.randomNumber(25);
+	// 	break;
+	// }
+
+	// if (officer.bonds.length > 0) {
+	// 	bonusPrestige += officer.bonds[officer.bonds.length - 1].strength;
+	// };
+
+	return bonusPrestige;
+
+};
+
 exports.initStaff = function (army) {
 
 	var officer = staffRecruiter.newRecruit(army);
@@ -239,42 +274,11 @@ exports.initStaff = function (army) {
 	});
 
 	return army.staff;
+
 };
 
 exports.rewardStaff = function (army) {
-	function givePrestige (officer) {
-		
-		var bonusPrestige = 0;
-		bonusPrestige += officer.prestige;
-		bonusPrestige += helpers.randomNumber(25);
-		// switch (officer.rank) {
-		// 	case "Captain":
-		// 		bonusPrestige += helpers.randomNumber(10);
-		// 	break;
-		// 	case "Major":
-		// 		bonusPrestige += helpers.randomNumber(12);
-		// 	break;
-		// 	case "Coronel":
-		// 		bonusPrestige += helpers.randomNumber(15);
-		// 	break;
-		// 	case "Brigade General":
-		// 		bonusPrestige += helpers.randomNumber(17);
-		// 	break;
-		// 	case "Division General":
-		// 		bonusPrestige += helpers.randomNumber(20);
-		// 	break;
-		// 	case "Lieutenant General":
-		// 		bonusPrestige += helpers.randomNumber(25);
-		// 	break;
-		// }
 
-		// if (officer.bonds.length > 0) {
-		// 	bonusPrestige += officer.bonds[officer.bonds.length - 1].strength;
-		// };
-
-		return bonusPrestige;
-
-	};
 	_.each(army.staff, function (officer) {
 		if (officer.retired === false) {
 			officer.xp++;
@@ -301,22 +305,22 @@ exports.retireStaff = function (army) {
 				};
 			break;
 			case "Coronel":
-				if (officer.xp > 35 && officer.retired === false) {
+				if (officer.xp > 40 && officer.retired === false) {
 					retireOfficer(officer, army, message);
 				};
 			break;
 			case "Brigade General":
-				if (officer.xp > 45 && officer.retired === false) {
+				if (officer.xp > 50 && officer.retired === false) {
 					retireOfficer(officer, army, message);
 				};
 			break;
 			case "Division General":
-				if (officer.xp > 55 && officer.retired === false) {
+				if (officer.xp > 60 && officer.retired === false) {
 					retireOfficer(officer, army, message);
 				};
 			break;
 			case "Lieutenant General":
-				if (officer.xp > 75 && army.commander === officer) {
+				if (officer.xp > 70 && army.commander === officer) {
 					retireOfficer(officer, army, message);
 				};
 			break;
