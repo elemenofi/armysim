@@ -16,7 +16,7 @@ function updatePlots(army) {
 
         _.each(plotters, function (plotter) {
 
-          var plotterIntRoll = plotter.intelligence + helpers.randomNumber(100);
+          var plotterIntRoll = plotter.intelligence;
           var armyCommanderIntRoll = army.commander.intelligence;
 
           console.log(plotterIntRoll, armyCommanderIntRoll, "rolling discharge discharge: " + plotter.lastName);
@@ -24,7 +24,7 @@ function updatePlots(army) {
           if (plotterIntRoll < armyCommanderIntRoll) {
 
             console.log("discharging ", plotter.lastName);
-            var message = "dishonorably discharged by " + army.commander.rank + " " + army.commander.lastName;
+            var message = "dishonorable discharge ordered by " + army.commander.rank + " " + army.commander.lastName;
             staffManager.retireSpecificOfficer(plotter, army, message);
 
           };
@@ -40,7 +40,7 @@ function updatePlots(army) {
 
         plotter.plotting = true;
         plotPrestige += Math.round(plotter.prestige / 2);
-        prestigeHit += Math.round(plotter.prestige / 4);
+        prestigeHit += Math.round(plotter.prestige / 2);
 
       });
 
@@ -48,39 +48,58 @@ function updatePlots(army) {
         target.prestige -= prestigeHit;
       };
 
-      // retirement of plotTarget
-      if ((target.prestige + target.intelligence / 2) <= plotPrestige) {
+      if (target.prestige <= plotPrestige) {
 
-        staffManager.retireSpecificOfficer(target, army, message);
+        var plottersNames = '';
+
+        _.each(plotters, function (plotter) {
+
+          plottersNames += ' ' + plotter.rank + ' ' + plotter.lastName;
+
+        });
+
+        staffManager.retireSpecificOfficer(target, army, message + " by " + plottersNames);
 
         _.each(plotters, function(plotter) {
+
           plotter.plotting = false;
+
         });
 
       };
 
     } else {
 
-      //reset plotters
+      //reset plotter
       _.each(plotters, function(plotter) {
+      
         plotter.plotting = false;
+      
       });
 
     };
   };
 
   function planDivisionPlots () {
+
     var target = army.commander;
     var plotters = [];
 
     _.each(army.divisions, function (division) {
+    
       if ((division.commander.drift > 500 && target.drift < 500) || (division.commander.drift < 500 && target.drift > 500)) {
+    
         plotters.push(division.commander);
         applyPlot(plotters, division.commander, target, "forced to retire");
+    
       } else {
+    
         division.commander.plotting = false;
+    
       };
+    
     });
+  
   };
 
   function planBrigadePlots () {
@@ -90,14 +109,18 @@ function updatePlots(army) {
       var plotters = [];
 
       _.each(division.brigades, function(brigade) {
+  
         if ((brigade.commander.drift > 500 && division.commander.drift < 500) || (brigade.commander.drift < 500 && division.commander.drift > 500)) {
 
           plotters.push(brigade.commander);
           applyPlot(plotters, brigade.commander, division.commander, "forced to retire");
 
+  
         } else {
           brigade.commander.plotting = false;
+  
         };
+  
       });
 
     });
@@ -125,31 +148,52 @@ function updatePlots(army) {
   };
 
   function planCompanyPlots () {
+  
     _.each(army.regiments, function (regiment) {
+  
       var plotters = [];
+  
       _.each(regiment.companies, function(company) {
+  
         if ((company.commander.drift > 500 && regiment.commander.drift < 500) || (company.commander.drift < 500 && regiment.commander.drift > 500)) {
           plotters.push(company.commander);
           applyPlot(plotters, company.commander, regiment.commander, "forced to retire");
+  
         } else {
+  
           company.commander.plotting = false;
+  
         };
+  
       });
+  
     });
+  
   };
 
   function planBattalionPlots () {
+    
     _.each(army.companies, function (company) {
+    
       var plotters = [];
+      
       _.each(company.battalions, function(battalion) {
+      
         if ((battalion.commander.drift > 500 && company.commander.drift < 500) || (battalion.commander.drift < 500 && company.commander.drift > 500)) {
+      
           plotters.push(battalion.commander);
           applyPlot(plotters, battalion.commander, company.commander, "forced to retire");
+      
         } else {
+      
           battalion.commander.plotting = false;
+      
         };
+      
       });
+    
     });
+  
   };
 
   planDivisionPlots();

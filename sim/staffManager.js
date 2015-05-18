@@ -242,22 +242,22 @@ exports.rewardStaff = function (army) {
 		bonusPrestige += officer.prestige;
 		switch (officer.rank) {
 			case "Captain":
-				bonusPrestige += helpers.randomNumber(5);
+				bonusPrestige += helpers.randomNumber(10);
 			break;
 			case "Major":
-				bonusPrestige += helpers.randomNumber(10);
+				bonusPrestige += helpers.randomNumber(12);
 			break;
 			case "Coronel":
 				bonusPrestige += helpers.randomNumber(15);
 			break;
 			case "Brigade General":
-				bonusPrestige += helpers.randomNumber(20);
+				bonusPrestige += helpers.randomNumber(17);
 			break;
 			case "Division General":
-				bonusPrestige += helpers.randomNumber(25);
+				bonusPrestige += helpers.randomNumber(20);
 			break;
 			case "Lieutenant General":
-				bonusPrestige += helpers.randomNumber(30);
+				bonusPrestige += helpers.randomNumber(25);
 			break;
 		}
 
