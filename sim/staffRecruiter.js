@@ -5,8 +5,6 @@ var Chance = require('chance');
 var chance = new Chance();
 var armyEngine = require('./armyEngine.js');
 
-console.log(armyEngine.army());
-
 function setLastName () {
 	var name = "";
 	if (helpers.randomNumber(100) >= 85) {
@@ -36,30 +34,30 @@ exports.newRecruit = function (unit) {
 
 	var officer = {}
 
+	officer.id = globalOfficerId;
+	globalOfficerId++;
+	officer.lastName = setLastName();
+	officer.firstName = setFirstName();
 	officer.inspecting = false;
 	officer.retired = false;
 	officer.plotting = false;
 	officer.bonds = [];
 	officer.intelligence = helpers.randomNumber(100);
 	officer.drift = helpers.randomNumber(1000);
-	officer.lastName = setLastName();
-	officer.firstName = setFirstName();
-	officer.id = globalOfficerId;
-	globalOfficerId++;
-
+	
 	switch (unit.type) {
 		case "army":
-			officer.prestige = helpers.randomNumber(70);
+			officer.prestige = helpers.randomNumber(60);
 			officer.xp = helpers.randomNumber(10) + 55;
 			officer.rank = names.ranks.ltGeneral;
 		break;
 		case "division":
-			officer.prestige = helpers.randomNumber(60);
+			officer.prestige = helpers.randomNumber(50);
 			officer.xp = helpers.randomNumber(10) + 45;
 			officer.rank = names.ranks.dvGeneral;
 		break;
 		case "brigade":
-			officer.prestige = helpers.randomNumber(50);
+			officer.prestige = helpers.randomNumber(40);
 			officer.xp = helpers.randomNumber(10) + 35;
 			officer.rank = names.ranks.bgGeneral;
 		break;

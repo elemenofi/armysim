@@ -1,17 +1,18 @@
 var _ = require('underscore');
-
-var globalUnitId = 2;
-var globalUnitDepth = 2;
-
 var names = require('./names.js');
-
-var units = [];
 
 exports.initArmy = function (army) {
 
+  var globalUnitId = 2;
+  var globalUnitDepth = 2;
+  var units = [];
+
   function generateUnit (type, quantity, parent) {
+
       if (quantity === 0) {
+      
         return;
+      
       } else {
 
         var unit = {};
@@ -20,11 +21,12 @@ exports.initArmy = function (army) {
 
         if (parent) {
           unit.parentId = parent.id;
-        }
+        };
 
         globalUnitId++;
 
         switch (type) {
+
           case "division":
             unit.brigades = [];
             unit.name = names.divisions[0];
@@ -80,17 +82,17 @@ exports.initArmy = function (army) {
 
             generateUnit("battalion", quantity - 1, parent);
           break;
+
         };
 
         units.push(unit);
-      }
+
+      };
+
     };
 
     generateUnit("division", globalUnitDepth);
 
   return army;
-};
 
-exports.units = function () {
-  return units;
 };

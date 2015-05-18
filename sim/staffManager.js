@@ -9,15 +9,20 @@ function recruitCaptain (unit) {
 };
 
 function promoteOfficer (rank, army, targetUnit) {
+
 	var seniorXP = 0;
 
 	function promote (oldUnit, rank)  {
 
 		if (targetUnit) {
+
 			oldUnit.commander.unitId = targetUnit.id;
 			targetUnit.commander = oldUnit.commander;
+
 		} else {
+
 			army.commander = oldUnit.commander;
+			
 		};
 
 		oldUnit.commander.rank = rank;

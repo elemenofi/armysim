@@ -46,7 +46,6 @@ function updateBonds(army) {
   createBondsByUnits("brigades");
   createBondsByUnits("divisions");
 
-
 };
 
 exports.update = function (army) {

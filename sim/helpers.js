@@ -1,3 +1,6 @@
+var MersenneTwister = require('mersenne-twister');
+var randomNumberGenerator = new MersenneTwister();
+
 exports.randomNumber = function (range) {
-	return Math.floor(Math.random() * range);
+	return  Math.round(randomNumberGenerator.random() * range);
 };
