@@ -129,9 +129,14 @@ span.stars, span.xp, span.alignment, span.unit, span.diamonds {
 span.stars-inspect {
 	color: red;
 }
+span.stars-inspect-battalion {
+	font-size: 6px;
+	display: inline-block;
+}
 span.stars-plot {
 	color: black;
 	font-size: 5px;
+	margin-right: 0px;
 }
 span.unit {
 	margin-right:0px;
@@ -149,9 +154,10 @@ span.diamonds {
 	color: #B4B4B4;
 	line-height: 12px;
 	margin-top: 10px;
-	min-height: 24px;
-	width: 50%;
-	font-size: 9px;
+	min-height: 12px;
+	width: 22px;
+	text-align: center;
+	margin-right: 0px;
 }
 span.unit-company {
 	margin-right: 6px;

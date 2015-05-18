@@ -5,6 +5,7 @@ var staffManager = require('./staffManager.js');
 function updatePlots(army) {
 
   function applyPlot (plotters, plotLeader, target, message) {
+    
     if (plotters.length >= 2) {
 
       var targetImmune = false;
@@ -16,7 +17,7 @@ function updatePlots(army) {
         _.each(plotters, function (plotter) {
 
           var plotterIntRoll = plotter.intelligence + helpers.randomNumber(100);
-          var armyCommanderIntRoll = army.commander.intelligence + helpers.randomNumber(25);
+          var armyCommanderIntRoll = army.commander.intelligence;
 
           console.log(plotterIntRoll, armyCommanderIntRoll, "rolling discharge discharge: " + plotter.lastName);
 
@@ -33,20 +34,17 @@ function updatePlots(army) {
       };
 
       var prestigeHit = 0;
-      var plotIntelligence = 0;
       var plotPrestige = 0;
 
       _.each(plotters, function(plotter) {
 
         plotter.plotting = true;
-        plotIntelligence += Math.round(plotter.intelligence / 2);
         plotPrestige += Math.round(plotter.prestige / 2);
-        prestigeHit += Math.round(plotter.prestige / 10);
+        prestigeHit += Math.round(plotter.prestige / 4);
 
       });
 
       if (targetImmune === false) {
-        // actual application of the plot damage to the targets prestige
         target.prestige -= prestigeHit;
       };
 

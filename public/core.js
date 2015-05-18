@@ -11,7 +11,7 @@ army.controller('armyController', [ '$scope', '$http', '$timeout',
             $scope.army = data;
           })
           .then(updateArmy);
-      }, 1000);
+      }, 2000);
     };
 
     updateArmy();

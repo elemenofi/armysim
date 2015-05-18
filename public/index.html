@@ -16,78 +16,53 @@
 			<div ng-click="inspectToggle(army.commander);" class="commanderInChief">
 				<div class="unit-data">
 					<span class="unit">Commander in Chief</span>
-					<span class="stars">&#9733; &#9733; &#9733; &#9733; {{army.commander.prestige}}, {{army.commander.xp}}</span>
+					<span class="stars">&#9733; &#9733; &#9733; &#9733;</span>
 					<span ng-if="army.commander.inspecting" class="stars stars-inspect">&#9733;</span><br>
-					<!-- <span style="margin-top: 15px; display: block;">{{riftDirection(army.commander.drift)}}</span> -->
-					<span style="margin-top: 15px; display: block;">{{army.commander.drift}}</span>
-
+					<br>
 				</div>
 				<span>{{army.commander.rank}} {{army.commander.firstName}} {{army.commander.lastName}}</span><br>
-				<span ng-if="army.commander.inspecting">
-					<ul>
-						<li ng-repeat="bond in army.commander.bonds">
-							<span>{{bond.name + ' ' + bond.strength}}</span>
-						</li>
-					</ul>
-				</span>
+				<br>
+				<span>P:{{army.commander.prestige}} <br> XP:{{army.commander.xp}} <br> D:{{army.commander.drift}} <br></span>
 			</div>
 			<div class="divisions" ng-repeat="division in army.divisions">
 				<div ng-click="inspectToggle(division.commander);" class="division-data">
 					<div class="unit-data">
 						<span class="unit">{{ division.name }}</span>
-						<span class="stars">&#9733; &#9733; &#9733; {{division.commander.prestige}} {{division.commander.xp}}</span><br>
-						 <span ng-if="division.commander.plotting" class="stars-plot">&#9733;</span>
-						<span ng-if="division.commander.inspecting" class="stars stars-inspect">&#9733;</span><br>
-						<!-- <span style="margin-top: 15px; display: block;">{{riftDirection(division.commander.drift)}}</span> -->
-						<span style="margin-top: 15px; display: block;">{{division.commander.drift}}</span>
+						<span class="stars">&#9733; &#9733; &#9733;</span><br>
+						<span ng-if="division.commander.plotting" class="stars-plot">&#9733;</span>
+						<span ng-if="division.commander.inspecting" class="stars stars-inspect">&#9733;</span>
 					</div>
 					<span>{{division.commander.rank}} {{division.commander.firstName}} {{division.commander.lastName}}</span><br>
-					<span ng-if="division.commander.inspecting">
-						<ul>
-							<li ng-repeat="bond in division.commander.bonds">
-								<span>{{bond.name + ' ' + bond.strength}}</span>
-							</li>
-						</ul>
-					</span>
+					<br>
+					<span>P:{{division.commander.prestige}} <br> XP:{{division.commander.xp}} <br> D:{{division.commander.drift}} <br></span>
+					<br>
 				</div>
 				<div class="brigades" ng-repeat="brigade in division.brigades">
 					<div ng-click="inspectToggle(brigade.commander);" class="brigade-data">
 						<div class="unit-data">
 							<span class="unit">{{ brigade.name }}</span>
-							<span class="stars">&#9733; &#9733; {{brigade.commander.prestige}} {{brigade.commander.xp}} <span ng-if="brigade.commander.plotting" class="stars-plot">&#9733;</span><br></span>
-							<span ng-if="brigade.commander.inspecting" class="stars-inspect">&#9733;</span><br>
-							<!-- <span style="margin-top: 15px; display: block;">{{riftDirection(brigade.commander.drift)}}</span> -->
-							<span style="margin-top: 15px; display: block;">{{brigade.commander.drift}}</span>
+							<span class="stars">&#9733; &#9733;</span>
+							<span ng-if="brigade.commander.plotting" class="stars-plot">&#9733;</span>
+							<span ng-if="brigade.commander.inspecting" class="stars stars-inspect">&#9733;</span><br>
 						</div>
+						<br>
 						<span>{{brigade.commander.rank}} {{brigade.commander.firstName}} {{brigade.commander.lastName}}</span><br>
-						<span ng-if="brigade.commander.inspecting">
-							<ul>
-								<li ng-repeat="bond in brigade.commander.bonds">
-									<span>{{bond.name + ' ' + bond.strength}}</span>
-								</li>
-							</ul>
-						</span>
+						<br>
+						<span>P:{{brigade.commander.prestige}} <br> XP:{{brigade.commander.xp}} <br> D:{{brigade.commander.drift}} <br></span>
+						<br>
 					</div>
 					<div class="regiments" ng-repeat="regiment in brigade.regiments">
 						<div ng-click="inspectToggle(regiment.commander);" class="regiment-data">
 							<div class="unit-data">
 								<span class="unit">{{ regiment.name }}</span>
-								<span class="stars">&#9733;</span><br>
-								<span>P:{{regiment.commander.prestige}} XP:{{regiment.commander.xp}} D:{{regiment.commander.drift}}</span>
+								<span class="stars">&#9733;</span>
 								<span ng-if="regiment.commander.plotting" class="stars stars-plot">&#9733;</span>
-								<span ng-if="regiment.commander.inspecting" class="stars-inspect">&#9733;</span><br>
-								<span style="margin-top: 15px; display: block;">{{regiment.commander.drift}}</span>
-
+								<span ng-if="regiment.commander.inspecting" class="stars stars-inspect">&#9733;</span><br>
 							</div>
 							<span class="clear"></span>
 							<span>{{regiment.commander.rank}} {{regiment.commander.lastName}}</span><br>
-							<span ng-if="regiment.commander.inspecting">
-								<ul>
-									<li ng-repeat="bond in regiment.commander.bonds">
-										<span>{{bond.name + ' ' + bond.strength}}</span>
-									</li>
-								</ul>
-							</span>
+							<br>
+							<span>P:{{regiment.commander.prestige}} <br> XP:{{regiment.commander.xp}} <br> D:{{regiment.commander.drift}} <br></span>	
 						</div>
 						<div class="companies" ng-repeat="company in regiment.companies">
 							<div ng-click="inspectToggle(company.commander);" class="company-data">
@@ -95,19 +70,13 @@
 									<span class="unit unit-company">{{ company.name }}</span>
 									<span class="diamonds">
 										<span>&diams; &diams;</span> 
-										<span ng-if="company.commander.plotting" class="stars stars-plot">&#9733;</span>
-										<span ng-if="company.commander.inspecting" class="stars stars-inspect">&#9733;</span>
 									</span>
+									<span ng-if="company.commander.plotting" class="stars stars-plot">&#9733;</span>
+									<span ng-if="company.commander.inspecting" class="stars stars-inspect">&#9733;</span>
 								</div>
 								<span style="min-height: 32px; display: block;">{{company.commander.lastName}}</span><br>
-								<span>P:{{company.commander.prestige}} XP:{{company.commander.xp}} D:{{company.commander.drift}}</span>
-								<span ng-if="company.commander.inspecting">
-									<ul>
-										<li ng-repeat="bond in company.commander.bonds">
-											<span>{{bond.name + ' ' + bond.strength}}</span>
-										</li>
-									</ul>
-								</span>
+								<span>P:{{company.commander.prestige}} <br> XP:{{company.commander.xp}} <br> D:{{company.commander.drift}}</span>
+								
 							</div>
 							<div class="battalions" ng-repeat="battalion in company.battalions">
 								<div ng-click="inspectToggle(battalion.commander)" class="battalion-data">
@@ -115,19 +84,13 @@
 										<span class="unit unit-battalion">{{ battalion.name }}</span>
 										<span class="diamonds">
 											<span>&diams;</span>
-											<span ng-if="battalion.commander.plotting" class="stars stars-plot">&#9733;</span>
-											<span ng-if="battalion.commander.inspecting" class="stars stars-inspect">&#9733;</span>
 										</span>
+										<span ng-if="battalion.commander.plotting" class="stars stars-plot">&#9733;</span>
+										<span ng-if="battalion.commander.inspecting" class="stars stars-inspect stars-inspect-battalion">&#9733;</span>
 									</div>
 									<span style="min-height: 32px; display: block;">{{battalion.commander.lastName}}</span><br>
-									<span>P:{{battalion.commander.prestige}} XP:{{battalion.commander.xp}} D:{{battalion.commander.drift}}</span>
-									<span ng-if="battalion.commander.inspecting">
-										<ul>
-											<li ng-repeat="bond in battalion.commander.bonds">
-												<span>{{bond.name + ' ' + bond.strength}}</span>
-											</li>
-										</ul>
-									</span>
+									<span>P:{{battalion.commander.prestige}} <br> XP:{{battalion.commander.xp}} <br> D:{{battalion.commander.drift}}</span>
+									
 								</div>
 							</div>
 						</div>
