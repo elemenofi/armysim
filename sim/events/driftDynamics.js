@@ -38,22 +38,39 @@ function updateDrifts (army) {
 
   };
 
+  function updateUnitsDriftStatus (unit, subUnits) {
+
+    unit.drift = 0;
+  
+    if (unit.commander.drift > 500) {
+      
+      unit.drift = 1;
+
+    } else {
+
+      unit.drift = -1;
+
+    };
+
+    _.each(unit[subUnits], function (subUnit) {
+
+      updateCommanderDriftStatus(unit, subUnit);
+
+    });
+  
+  };
+
   function updateDriftsByRank (rank, units, subUnits) {
+
+    if (units === army) {
+
+      updateUnitsDriftStatus(army, subUnits);
+
+    };
+    
     _.each(army[units], function (unit) {
 
-      unit.drift = 0;
-
-      if (unit.commander.drift > 500) {
-        unit.drift = 1;
-      } else {
-        unit.drift = -1;
-      };
-
-      _.each(unit[subUnits], function (subUnit) {
-
-        updateCommanderDriftStatus(unit, subUnit);
-
-      });
+      updateUnitsDriftStatus(unit, subUnits);
 
     });
 
@@ -61,31 +78,11 @@ function updateDrifts (army) {
 
   };
 
-  function updateDvGenerals () {
-
-    army.drift = 0;
-
-    if (army.commander.drift > 500) {
-      army.drift = 1;
-    } else {
-      army.drift = -1;
-    };
-
-    _.each(army.divisions, function (division) {
-
-      updateCommanderDriftStatus(army, division);
-
-    });
-
-    driftCommander("dvGenerals");
-
-  };
-
   updateDriftsByRank("captains", "companies", "battalions");
   updateDriftsByRank("majors", "regiments", "companies");
   updateDriftsByRank("coronels", "brigades", "regiments");
-  updateDriftsByRank("bgGenerals", "brigades", "divisions");
-  updateDvGenerals();
+  updateDriftsByRank("bgGenerals", "divisions", "brigades");
+  updateDriftsByRank("dvGenerals", army, "divisions");
 
 };
 
