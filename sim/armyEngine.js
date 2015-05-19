@@ -30,6 +30,7 @@ exports.army = function () {
 
 var unitManager = require('./unitManager.js');
 var staffManager = require('./staffManager.js');
+var rewardManager = require('./rewardManager.js');
 var driftDynamics = require('./driftDynamics.js');
 var bondDynamics = require('./bondDynamics.js');
 var plotDynamics = require('./plotDynamics.js');
@@ -47,7 +48,7 @@ function passTurn () {
     staffManager.initStaff(army);
     day++;
   } else {
-    staffManager.rewardStaff(army);
+    rewardManager.rewardStaff(army);
     staffManager.retireStaff(army);
     driftDynamics.update(army);
     bondDynamics.update(army);
