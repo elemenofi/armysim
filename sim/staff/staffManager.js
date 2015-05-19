@@ -207,35 +207,36 @@ function retireOfficer (officer, army, message) {
 
 exports.initStaff = function (army) {
 
-	var officer = staffRecruiter.newRecruit(army);
-	army.ltGenerals.push(officer);
-	army.commander = officer;
+	function assignNewOfficer (rank, unit) {
 
-	_.each(army.divisions, function (division) {
-		var officer = staffRecruiter.newRecruit(division);
-		army.dvGenerals.push(officer);
-		division.commander = officer;
-	});
-	_.each(army.brigades, function (brigade) {
-		var officer = staffRecruiter.newRecruit(brigade);
-		army.bgGenerals.push(officer);
-		brigade.commander = officer;
-	});
-	_.each(army.regiments, function (regiment) {
-		var officer = staffRecruiter.newRecruit(regiment);
-		army.coronels.push(officer);
-		regiment.commander = officer;
-	});
-	_.each(army.companies, function (company) {
-		var officer = staffRecruiter.newRecruit(company);
-		army.majors.push(officer);
-		company.commander = officer;
-	});
-	_.each(army.battalions, function (battalion) {
-		var officer = staffRecruiter.newRecruit(battalion);
-		army.captains.push(officer);
-		battalion.commander = officer;
-	});
+		var officer = staffRecruiter.newRecruit(unit);
+		army[rank].push(officer);
+		unit.commander = officer;
+
+	};
+
+	function initStaffByUnits (rank, units) {
+
+		if (units === army) {
+
+			assignNewOfficer(rank, units);
+			
+		} else {
+
+			_.each(army[units], function (unit) {
+				assignNewOfficer(rank, unit);
+			});
+
+		};
+
+	};
+
+	initStaffByUnits("ltGenerals", army);
+	initStaffByUnits("dvGenerals", "divisions");
+	initStaffByUnits("bgGenerals", "brigades");
+	initStaffByUnits("coronels", "regiments");
+	initStaffByUnits("majors", "companies");
+	initStaffByUnits("captains", "battalions");
 
 	return army.staff;
 

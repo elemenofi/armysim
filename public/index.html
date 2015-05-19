@@ -77,7 +77,6 @@
 								</div>
 								<span style="min-height: 32px; display: block;">{{company.commander.lastName}}</span><br>
 								<span>P:{{company.commander.prestige}} <br> XP:{{company.commander.xp}} <br> D:{{company.commander.drift}}</span>
-								
 							</div>
 							<div class="battalions" ng-repeat="battalion in company.battalions">
 								<div ng-click="inspectToggle(battalion.commander)" class="battalion-data">
@@ -110,7 +109,7 @@
 					<hr>
 				</ul>
 				<ul>
-					<li ng-repeat="officer in army.retired.ltGenerals | orderBy: '-id' | limitTo: 5">
+					<li ng-repeat="officer in army.retired.ltGenerals | orderBy: '-id' | limitTo: 3">
 						<span ng-if="officer.retired === true">
 							<span>{{officer.rank}} {{officer.firstName}} {{officer.lastName}}</span><br>
 							<br>
@@ -120,7 +119,7 @@
 					<hr>
 				</ul>
 				<ul>
-					<li ng-repeat="officer in army.retired.dvGenerals | orderBy: '-id' | limitTo: 5">
+					<li ng-repeat="officer in army.retired.dvGenerals | orderBy: '-id' | limitTo: 3">
 						<span ng-if="officer.retired === true">
 							<span>{{officer.rank}} {{officer.firstName}} {{officer.lastName}}</span><br>
 							<br>
@@ -130,7 +129,7 @@
 					<hr>
 				</ul>
 				<ul>
-					<li ng-repeat="officer in army.retired.bgGenerals | orderBy: '-id' | limitTo: 5">
+					<li ng-repeat="officer in army.retired.bgGenerals | orderBy: '-id' | limitTo: 3">
 						<span ng-if="officer.retired === true">
 							<span>{{officer.rank}} {{officer.firstName}} {{officer.lastName}}</span><br>
 							<br>
@@ -140,7 +139,7 @@
 					<hr>
 				</ul>
 				<ul>
-					<li ng-repeat="officer in army.retired.coronels | orderBy: '-id' | limitTo: 5">
+					<li ng-repeat="officer in army.retired.coronels | orderBy: '-id' | limitTo: 3">
 						<span ng-if="officer.retired === true">
 							<span>{{officer.rank}} {{officer.firstName}} {{officer.lastName}}</span><br>
 							<br>
@@ -150,7 +149,7 @@
 					<hr>
 				</ul>
 				<ul>
-					<li ng-repeat="officer in army.retired.majors | orderBy: '-id' | limitTo: 5">
+					<li ng-repeat="officer in army.retired.majors | orderBy: '-id' | limitTo: 3">
 						<span ng-if="officer.retired === true">
 							<span>{{officer.rank}} {{officer.firstName}} {{officer.lastName}}</span><br>
 							<br>
@@ -160,7 +159,7 @@
 					<hr>
 				</ul>
 				<ul>
-					<li ng-repeat="officer in army.retired.captains | orderBy: '-id' | limitTo: 5">
+					<li ng-repeat="officer in army.retired.captains | orderBy: '-id' | limitTo: 3">
 						<span ng-if="officer.retired === true">
 							<span>{{officer.rank}} {{officer.firstName}} {{officer.lastName}}</span><br>
 							<br>
@@ -172,7 +171,7 @@
 			</div>
 			<div class="inspectedHistory">
 				<ul>
-					<li ng-repeat="officer in army.inspecting">
+					<li ng-repeat="officer in army.inspecting | orderBy: '-prestige'">
 						<span>{{officer.rank}} {{officer.firstName}} {{officer.lastName}}</span><br>
 						<br>
 						<span>PRESTIGE: {{officer.prestige}} <br> DRIFT: {{officer.drift}} <br> XP: {{officer.xp}}, <br> STATUS: {{officer.retiredMessage}}</span>
@@ -180,6 +179,7 @@
 					<hr>
 				</ul>
 			</div>
+		<div>
 	</div>
 </body>
 </html>

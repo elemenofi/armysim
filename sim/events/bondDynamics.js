@@ -1,6 +1,6 @@
 var _ = require('underscore');
 
-function updateBonds(army) {
+function updateBonds (army) {
 
   function checkIfBondExisted (commander, otherCommander) {
 
@@ -29,7 +29,7 @@ function updateBonds(army) {
 
   };
 
-  function tryToBond(commander, otherCommander) {
+  function tryToBond (commander, otherCommander) {
 
     if (commander.drift > 500 && otherCommander.drift > 500 || commander.drift < 500 && otherCommander.drift < 500) {
 
