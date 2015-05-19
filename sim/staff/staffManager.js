@@ -23,6 +23,7 @@ function promotion (rank, army, oldUnit, targetUnit)  {
 	switch (oldUnit.type) {
 		case "battalion":
 			oldUnit.commander = staffRecruiter.newRecruit(oldUnit);
+			army.captains.push(oldUnit.commander);
 		break;
 		case "company":
 			promoteOfficer("Captain", army, oldUnit);
@@ -152,6 +153,7 @@ function retireOfficer (officer, army, message) {
 					army.retired.captains.push(battalion.commander);
 					battalion.commander = undefined;
 					battalion.commander = staffRecruiter.newRecruit(battalion);
+					army.captains.push(battalion.commander);
 				};
 			});
 		break;
