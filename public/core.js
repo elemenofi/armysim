@@ -24,6 +24,13 @@ army.controller('armyController', [ '$scope', '$http', '$timeout',
         });
     };
 
+    $scope.turnsToggle = function () {
+      $http.get(api + "/turns", null)
+        .success(function(data) {
+          console.log(data);
+        });
+    };
+
     $scope.getBondName = function (bond) {
       $http.get(api + "bondname", {id: bond})
         .success(function(data) {

@@ -32,7 +32,7 @@ var globalOfficerId = 1;
 
 exports.newRecruit = function (unit) {
 
-	var officer = {}
+	var officer = {};
 
 	officer.id = globalOfficerId;
 	globalOfficerId++;

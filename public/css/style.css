@@ -171,6 +171,10 @@ div.history, div.inspectedHistory {
 	font-size: 13px;
 }
 
+div.history li, div.inspectedHistory li {
+	margin-bottom: 32px;
+}
+
 div.inspectedHistory {
 	width: 48%;
 	float: right;

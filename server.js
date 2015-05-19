@@ -13,6 +13,11 @@ army.get('/army', function (req, res) {
   res.json(armyEngine.army());
 });
 
+army.get('/army/turns', function (req, res) {
+  armyEngine.actions().turnsToggle(armyEngine.army());
+  res.json(armyEngine.army());
+});
+
 army.post('/army/inspect', function (req, res) {
   armyEngine.actions().inspectToggle(armyEngine.army(), req.body);
   res.json(req.body.lastName);
