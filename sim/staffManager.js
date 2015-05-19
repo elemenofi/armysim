@@ -202,39 +202,6 @@ function retireOfficer (officer, army, message) {
 
 };
 
-// function givePrestige (officer) {
-	
-// 	var bonusPrestige = 0;
-// 	bonusPrestige += officer.prestige;
-// 	bonusPrestige += helpers.randomNumber(25);
-// 	// switch (officer.rank) {
-// 	// 	case "Captain":
-// 	// 		bonusPrestige += helpers.randomNumber(10);
-// 	// 	break;
-// 	// 	case "Major":
-// 	// 		bonusPrestige += helpers.randomNumber(12);
-// 	// 	break;
-// 	// 	case "Coronel":
-// 	// 		bonusPrestige += helpers.randomNumber(15);
-// 	// 	break;
-// 	// 	case "Brigade General":
-// 	// 		bonusPrestige += helpers.randomNumber(17);
-// 	// 	break;
-// 	// 	case "Division General":
-// 	// 		bonusPrestige += helpers.randomNumber(20);
-// 	// 	break;
-// 	// 	case "Lieutenant General":
-// 	// 		bonusPrestige += helpers.randomNumber(25);
-// 	// 	break;
-// 	// }
-
-// 	// if (officer.bonds.length > 0) {
-// 	// 	bonusPrestige += officer.bonds[officer.bonds.length - 1].strength;
-// 	// };
-
-// 	return bonusPrestige;
-
-// };
 
 exports.initStaff = function (army) {
 
@@ -272,54 +239,38 @@ exports.initStaff = function (army) {
 
 };
 
-// exports.rewardStaff = function (army) {
-
-// 	_.each(army.staff, function (officer) {
-// 		if (officer.retired === false) {
-// 			officer.xp++;
-// 			officer.prestige = givePrestige(officer);
-// 		};
-// 	});
-
-// 	return army.staff;
-// };
-
 exports.retireStaff = function (army) {
 	var message = "retired";
 
 	_.each(army.staff, function(officer) {
+
+		var threshold = 0;
+		
 		switch (officer.rank) {
 			case "Captain":
-				if (officer.xp > 20 && officer.retired === false) {
-					retireOfficer(officer, army, message);
-				};
+				threshold = 20;
 			break;
 			case "Major":
-				if (officer.xp > 30 && officer.retired === false) {
-					retireOfficer(officer, army, message);
-				};
+				threshold = 30;
 			break;
 			case "Coronel":
-				if (officer.xp > 40 && officer.retired === false) {
-					retireOfficer(officer, army, message);
-				};
+				threshold = 40;
 			break;
 			case "Brigade General":
-				if (officer.xp > 50 && officer.retired === false) {
-					retireOfficer(officer, army, message);
-				};
+				threshold = 50;
 			break;
 			case "Division General":
-				if (officer.xp > 60 && officer.retired === false) {
-					retireOfficer(officer, army, message);
-				};
+				threshold = 60;
 			break;
 			case "Lieutenant General":
-				if (officer.xp > 70 && army.commander === officer) {
-					retireOfficer(officer, army, message);
-				};
+				threshold = 70;
 			break;
 		};
+
+		if (officer.xp > threshold && officer.retired === false) {
+			retireOfficer(officer, army, message);
+		};
+
 	});
 
 };

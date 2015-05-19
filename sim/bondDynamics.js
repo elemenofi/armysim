@@ -4,7 +4,7 @@ function updateBonds(army) {
 
   function tryBond(commander, otherCommander) {
 
-    if (commander.drift > 500 && otherCommander.drift > 500 || commander.drift < 500 && otherCommander.drift < 500 ) {
+    if (commander.drift > 500 && otherCommander.drift > 500 || commander.drift < 500 && otherCommander.drift < 500) {
 
       if (commander.id !== otherCommander.id) {
 

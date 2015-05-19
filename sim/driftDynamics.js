@@ -5,11 +5,17 @@ function updateDrifts (army) {
   function updateCommanderDriftStatus (parentUnit, unit) {
 
     if (parentUnit.drift === 1) {
+
       unit.commander.drifting = "right";
+
     } else if (parentUnit.drift === -1) {
+
       unit.commander.drifting = "left";
+
     } else {
+
       unit.commander.drifting = "center";
+
     };
 
   };
@@ -19,10 +25,15 @@ function updateDrifts (army) {
     _.each(army[rank], function(commander) {
 
       if (commander.retired === false) {
+        
         if (commander.drifting === "right") {
+          
           commander.drift = commander.drift + 1;
+          
         } else if (commander.drifting === "left") {
+          
           commander.drift = commander.drift - 1;
+          
         };
       }
 
