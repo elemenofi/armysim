@@ -3,7 +3,7 @@ var express = require('express');
 var _ = require('underscore');
 var bodyParser = require('body-parser');
 var army = express();
-var armyEngine = require('./sim/armyEngine.js');
+var armyEngine = require('./sim/armyEngine');
 
 army.use(express.static(__dirname + '/public'));
 army.use(bodyParser.json());
@@ -14,7 +14,7 @@ army.get('/army', function (req, res) {
 });
 
 army.post('/army/inspect', function (req, res) {
-  armyEngine.inspectToggle(req.body);
+  armyEngine.actions().inspectToggle(armyEngine.army(), req.body);
   res.json(req.body.lastName);
 });
 

@@ -11,7 +11,6 @@
 
 </head>
 <body ng-controller="armyController">
-	{{army.staff.length}}
 	<div>
 		<div class="container">
 			<div ng-click="inspectToggle(army.commander);" class="commanderInChief">
@@ -91,7 +90,6 @@
 									</div>
 									<span style="min-height: 32px; display: block;">{{battalion.commander.lastName}}</span><br>
 									<span>P:{{battalion.commander.prestige}} <br> XP:{{battalion.commander.xp}} <br> D:{{battalion.commander.drift}}</span>
-									
 								</div>
 							</div>
 						</div>
@@ -111,7 +109,7 @@
 					<hr>
 				</ul>
 				<ul>
-					<li ng-repeat="officer in army.retired.ltGenerals | orderBy: '-id' | limitTo: 100">
+					<li ng-repeat="officer in army.retired.ltGenerals | orderBy: '-id' | limitTo: 5">
 						<span ng-if="officer.retired === true">
 							<span>{{officer.rank}} {{officer.firstName}} {{officer.lastName}}</span><br>
 							<br>
@@ -167,6 +165,16 @@
 							<br>
 							<span>PRESTIGE: {{officer.prestige}} <br> DRIFT: {{officer.drift}} <br> XP: {{officer.xp}}, <br> STATUS: {{officer.retiredMessage}}</span>
 						</span>
+					</li>
+					<hr>
+				</ul>
+			</div>
+			<div class="inspectedHistory">
+				<ul>
+					<li ng-repeat="officer in army.inspecting">
+						<span>{{officer.rank}} {{officer.firstName}} {{officer.lastName}}</span><br>
+						<br>
+						<span>PRESTIGE: {{officer.prestige}} <br> DRIFT: {{officer.drift}} <br> XP: {{officer.xp}}, <br> STATUS: {{officer.retiredMessage}}</span>
 					</li>
 					<hr>
 				</ul>

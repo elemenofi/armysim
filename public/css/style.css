@@ -164,9 +164,16 @@ span.unit-company {
 	margin-right: 6px;
 }
 
-div.history {
+div.history, div.inspectedHistory {
+	width: 50%;
+	float: left;
 	padding-top: 32px;
 	font-size: 13px;
+}
+
+div.inspectedHistory {
+	width: 48%;
+	float: right;
 }
 
 ul.logs li.promotion {

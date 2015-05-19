@@ -1,66 +1,41 @@
-var army = {
-  id: 1,
-  type: "army",
-  commander: {},
-  staff: [],
-  divisions: [],
-  brigades: [],
-  regiments: [],
-  companies: [],
-  battalions: [],
-  ltGenerals: [],
-  dvGenerals: [],
-  bgGenerals: [],
-  coronels: [],
-  majors: [],
-  captains: [],
-  retired: {
-    ltGenerals: [],
-    dvGenerals: [],
-    bgGenerals: [],
-    coronels: [],
-    majors: [],
-    captains: []
-  }
-};
+var templates = require('./data/templates');
+var staffInterface = require('./interface/staff');
+
+var army = templates.army;
 
 exports.army = function () {
   return army;
 };
 
-var unitManager = require('./unitManager.js');
-var staffManager = require('./staffManager.js');
-var rewardManager = require('./rewardManager.js');
-var driftDynamics = require('./driftDynamics.js');
-var bondDynamics = require('./bondDynamics.js');
-var plotDynamics = require('./plotDynamics.js');
+exports.actions = function () {
+  return staffInterface;
+};
+
+var unitManager = require('./units/unitManager');
+var staffManager = require('./staff/staffManager');
+var staffRewards = require('./staff/staffRewards');
+var driftDynamics = require('./events/driftDynamics');
+var bondDynamics = require('./events/bondDynamics');
+var plotDynamics = require('./events/plotDynamics');
 
 var day = 0;
-var globalLog = '';
-
-function randomNumber (range) {
-    return Math.floor(Math.random() * range);
-};
 
 function passTurn () {
   if ( day === 0 ) {
-    unitManager.initArmy(army);
+    unitManager.initUnits(army);
     staffManager.initStaff(army);
-    day++;
   } else {
-    rewardManager.rewardStaff(army);
+    staffRewards.rewardStaff(army);
     staffManager.retireStaff(army);
     driftDynamics.update(army);
     bondDynamics.update(army);
     plotDynamics.update(army);
-    day++;
   };
+  day++;
 };
 
 setInterval(function () {
     passTurn();
-}, 500);
+}, 2000);
 
-exports.inspectToggle = function (officer) {
-  staffManager.inspectToggle(army, officer);
-};
+
