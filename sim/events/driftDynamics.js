@@ -2,24 +2,6 @@ var _ = require('underscore');
 
 function updateDrifts (army) {
 
-  function updateCommanderDriftStatus (unit, subUnit) {
-
-    if (unit.drift === 1) {
-
-      subUnit.commander.drifting = "right";
-
-    } else if (unit.drift === -1) {
-
-      subUnit.commander.drifting = "left";
-
-    } else {
-
-      subUnit.commander.drifting = "center";
-
-    };
-
-  };
-
   function driftCommander (rank) {
 
     _.each(army[rank], function(commander) {
@@ -35,6 +17,24 @@ function updateDrifts (army) {
       };
 
     });
+
+  };
+
+  function updateCommanderDriftStatus (unit, subUnit) {
+
+    if (unit.drift === 1) {
+
+      subUnit.commander.drifting = "right";
+
+    } else if (unit.drift === -1) {
+
+      subUnit.commander.drifting = "left";
+
+    } else {
+
+      subUnit.commander.drifting = "center";
+
+    };
 
   };
 
