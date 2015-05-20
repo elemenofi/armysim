@@ -1,3 +1,4 @@
+var values = require('../data/values');
 var helpers = require('../utils/helpers');
 var staffHistory = require('./staffHistory');
 var _ = require('underscore')
@@ -7,7 +8,7 @@ function givePrestige (officer, army) {
 	var bonusPrestige = 0;
 
 	bonusPrestige += officer.prestige;
-	bonusPrestige += helpers.randomNumber(25);
+	bonusPrestige += helpers.randomNumber(values.prestigeTurnBonus);
 	bonusPrestige += staffHistory.checkLastNamesRepeat(officer, army.lastNames);
 	
 	if (officer.bonds.length > 0) {
@@ -40,29 +41,39 @@ function givePrestige (officer, army) {
 };
 
 var giveBadges = function (officer) {
+
 	var badge = helpers.createBadge();
 	officer.badges.push(badge);
+	
 };
 
 exports.rewardStaff = function (army) {
 	_.each(army.staff, function (officer) {
 
-		var oldBadges = Math.round(officer.prestige / 10);
+		var oldBadges = values.badgesPerPrestige(officer);
 
 		if (officer.badges.length === 0) {
+
 			for (var i = 0; i < oldBadges; i++) {
-				giveBadges(officer);				
+
+				giveBadges(officer);
+
 			};
 		};
 
 		if (officer.retired === false) {
+
 			officer.xp++;
 			officer.prestige = givePrestige(officer, army);
-			var newBadges = Math.round(officer.prestige / 10);
+
+			var newBadges = values.badgesPerPrestige(officer);
+
 			for (var i = 0; i < (newBadges - oldBadges); i++) {
 				giveBadges(officer);				
 			};
+
 		};
+
 	});
 
 	return army.staff;

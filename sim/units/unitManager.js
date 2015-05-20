@@ -1,10 +1,11 @@
 var _ = require('underscore');
 var names = require('../data/names');
+var values = require('../data/values');
 
 exports.initUnits = function (army) {
 
-  var globalUnitId = 2;
-  var globalUnitDepth = 2;
+  var unitId = 2;
+  var unitDepth = values.unitDepth;
   var units = [];
 
   function generateUnit (type, quantity, parent) {
@@ -16,7 +17,7 @@ exports.initUnits = function (army) {
       } else {
 
         var unit = {};
-        unit.id = globalUnitId;
+        unit.id = unitId;
         unit.type = type;
 
         if (parent) {
@@ -25,7 +26,7 @@ exports.initUnits = function (army) {
           unit.parentId = 1; //army id
         };
 
-        globalUnitId++;
+        unitId++;
 
         switch (type) {
 
@@ -35,7 +36,7 @@ exports.initUnits = function (army) {
 
             names.divisions.shift();
             army.divisions.push(unit);
-            generateUnit("brigade", globalUnitDepth, unit);
+            generateUnit("brigade", unitDepth, unit);
             generateUnit("division", quantity - 1, parent);
           break;
 
@@ -47,7 +48,7 @@ exports.initUnits = function (army) {
             parent.brigades.push(unit);
             army.brigades.push(unit);
 
-            generateUnit("regiment", globalUnitDepth, unit);
+            generateUnit("regiment", unitDepth, unit);
             generateUnit("brigade", quantity - 1, parent);
           break;
 
@@ -59,7 +60,7 @@ exports.initUnits = function (army) {
             parent.regiments.push(unit);
             army.regiments.push(unit);
 
-            generateUnit("company", globalUnitDepth, unit);
+            generateUnit("company", unitDepth, unit);
             generateUnit("regiment", quantity - 1, parent);
           break;
 
@@ -71,7 +72,7 @@ exports.initUnits = function (army) {
             parent.companies.push(unit);
             army.companies.push(unit);
 
-            generateUnit("battalion", globalUnitDepth, unit);
+            generateUnit("battalion", unitDepth, unit);
             generateUnit("company", quantity - 1, parent);
           break;
 
@@ -93,7 +94,7 @@ exports.initUnits = function (army) {
 
     };
 
-    generateUnit("division", globalUnitDepth);
+    generateUnit("division", unitDepth);
 
   return army;
 

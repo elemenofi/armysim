@@ -1,4 +1,5 @@
 var _ = require('underscore');
+var values = require('../data/values');
 
 function updateBonds (army) {
 
@@ -31,7 +32,10 @@ function updateBonds (army) {
 
   function tryToBond (commander, otherCommander) {
 
-    if (commander.drift > 500 && otherCommander.drift > 500 || commander.drift < 500 && otherCommander.drift < 500) {
+    var bothRightDrift = commander.drift > values.centerDrift && otherCommander.drift > values.centerDrift;
+    var bothLeftDrift = commander.drift < values.centerDrift && otherCommander.drift < values.centerDrift;
+
+    if ( bothRightDrift || bothLeftDrift ) {
 
       var hadBond = false;
 

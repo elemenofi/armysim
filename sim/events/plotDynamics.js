@@ -39,8 +39,8 @@ function updatePlots(army) {
       _.each(plotters, function(plotter) {
 
         plotter.plotting = true;
-        plotPrestige += Math.round(plotter.prestige / 2);
-        prestigeHit += Math.round(plotter.prestige / 10);
+        plotPrestige += values.plotPrestige(plotter);
+        prestigeHit += values.prestigeHit(plotter);
 
       });
 
@@ -67,8 +67,13 @@ function updatePlots(army) {
   function checkPlottingSubUnits (unit, subUnits, plotters) {
 
     _.each(unit[subUnits], function (subUnit) {
-  
-      if ((subUnit.commander.drift > 500 && unit.commander.drift < 500) || (subUnit.commander.drift < 500 && unit.commander.drift > 500)) {
+
+      var differentDriftsA = (subUnit.commander.drift > values.centerDrift 
+                              && unit.commander.drift < values.centerDrift);
+      var differentDriftsB = (subUnit.commander.drift < values.centerDrift 
+                              && unit.commander.drift > values.centerDrift);
+      
+      if ( differentDriftsA || differentDriftsB ) {
   
         plotters.push(subUnit.commander);
         applyPlot(plotters, unit.commander);
