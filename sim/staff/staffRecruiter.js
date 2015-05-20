@@ -1,32 +1,7 @@
 var helpers = require('../utils/helpers');
 var names = require('../data/names');
 var staffManager = require('./staffManager')
-var Chance = require('chance');
-var chance = new Chance();
 var armyEngine = require('../armyEngine');
-
-function setLastName () {
-	var name = "";
-	if (helpers.randomNumber(100) >= 85) {
-		name = chance.last() + " " + chance.last();
-	} else {
-		name = chance.last();
-	};
-	return name;
-};
-
-function setFirstName () {
-	var name = "";
-	if (helpers.randomNumber(100) >= 90) {
-		name =
-			chance.first({ gender: "male" }) +
-			" " +
-			chance.first({ gender: "male" });
-	} else {
-		name = chance.first({ gender: "male" });
-	}
-	return name;
-};
 
 var globalOfficerId = 1;
 
@@ -36,8 +11,8 @@ exports.newRecruit = function (unit) {
 
 	officer.id = globalOfficerId;
 	globalOfficerId++;
-	officer.lastName = setLastName();
-	officer.firstName = setFirstName();
+	officer.lastName = helpers.setLastName();
+	officer.firstName = helpers.setFirstName();
 	officer.retiredMessage = "in duty";
 	officer.inspecting = false;
 	officer.retired = false;

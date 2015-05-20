@@ -1,6 +1,6 @@
 var helpers = require('../utils/helpers');
 var _ = require('underscore');
-var staffManager = require('../staff/staffManager');
+var staffRetire = require('../staff/staffRetire');
 
 function updatePlots(army) {
 
@@ -16,7 +16,7 @@ function updatePlots(army) {
 
     });
 
-    staffManager.retireSpecificOfficer(target, army, message + " by " + plottersNames);
+    staffRetire.retireSpecificOfficer(target, army, message + " by " + plottersNames);
 
   };
 

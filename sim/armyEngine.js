@@ -3,6 +3,7 @@ var armyInterface = require('./interface/interface');
 var unitManager = require('./units/unitManager');
 var staffManager = require('./staff/staffManager');
 var staffRewards = require('./staff/staffRewards');
+var staffRetire = require('./staff/staffRetire');
 var driftDynamics = require('./events/driftDynamics');
 var bondDynamics = require('./events/bondDynamics');
 var plotDynamics = require('./events/plotDynamics');
@@ -22,7 +23,7 @@ function passTurn () {
     } else {
 
       staffRewards.rewardStaff(army);
-      staffManager.retireStaff(army);
+      staffRetire.retireStaff(army);
       driftDynamics.update(army);
       bondDynamics.update(army);
       plotDynamics.update(army);
