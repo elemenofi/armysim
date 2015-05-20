@@ -1,5 +1,6 @@
 var helpers = require('../utils/helpers');
 var names = require('../data/names');
+var values = require('../data/values')
 var staffManager = require('./staffManager')
 var armyEngine = require('../armyEngine');
 
@@ -24,33 +25,33 @@ exports.newRecruit = function (unit) {
 	
 	switch (unit.type) {
 		case "army":
-			officer.prestige = helpers.randomNumber(60);
-			officer.xp = helpers.randomNumber(10) + 60;
+			officer.prestige = helpers.randomNumber(10) + 60;
+			officer.xp = helpers.randomNumber(10) + 50;
 			officer.rank = names.ranks.ltGeneral;
 		break;
 		case "division":
-			officer.prestige = helpers.randomNumber(50);
-			officer.xp = helpers.randomNumber(10) + 50;
+			officer.prestige = helpers.randomNumber(10) + 50;
+			officer.xp = helpers.randomNumber(10) + 40;
 			officer.rank = names.ranks.dvGeneral;
 		break;
 		case "brigade":
-			officer.prestige = helpers.randomNumber(40);
-			officer.xp = helpers.randomNumber(10) + 40;
+			officer.prestige = helpers.randomNumber(10) + 40;
+			officer.xp = helpers.randomNumber(10) + 30;
 			officer.rank = names.ranks.bgGeneral;
 		break;
 		case "regiment":
-			officer.prestige = helpers.randomNumber(30);
-			officer.xp = helpers.randomNumber(10) + 30;
+			officer.prestige = helpers.randomNumber(10) + 30;
+			officer.xp = helpers.randomNumber(10) + 20;
 			officer.rank = names.ranks.coronel;
 		break;
 		case "company":
-			officer.prestige = helpers.randomNumber(20);
-			officer.xp = helpers.randomNumber(10) + 20;
+			officer.prestige = helpers.randomNumber(10) + 20;
+			officer.xp = helpers.randomNumber(10) + 10;
 			officer.rank = names.ranks.major;
 		break;
 		case "battalion":
-			officer.prestige = helpers.randomNumber(10);
-			officer.xp = helpers.randomNumber(10) + 10;
+			officer.prestige = helpers.randomNumber(10) + 10;
+			officer.xp = helpers.randomNumber(10);
 			officer.rank = names.ranks.captain;
 		break;
 	};

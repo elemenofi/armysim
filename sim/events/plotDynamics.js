@@ -1,26 +1,35 @@
 var helpers = require('../utils/helpers');
 var _ = require('underscore');
+var values = require('../data/values');
 var staffRetire = require('../staff/staffRetire');
 
 function updatePlots(army) {
 
-  function forceRetire (target, message, plotters) {
-    
-    var plottersNames = '';
+  function plottersNames (plotters) {
+
+    var plottersNames = [];
 
     _.each(plotters, function (plotter) {
 
       plotter.plotting = false;
 
-      plottersNames += ' ' + plotter.rank + ' ' + plotter.lastName;
+      plottersNames.push(plotter.rank + ' ' + plotter.lastName);
 
     });
 
-    staffRetire.retireSpecificOfficer(target, army, message + " by " + plottersNames);
+    return plottersNames;
+  
+  };
+
+  function forceRetire (target, plotters) {
+
+    var message = values.statusMessages.forcedRetire(plottersNames(plotters))
+    
+    staffRetire.retireSpecificOfficer(target, army, message);
 
   };
 
-  function applyPlot (plotters, target, message) {
+  function applyPlot (plotters, target) {
     
     if (plotters.length >= 2) {
 
@@ -39,7 +48,7 @@ function updatePlots(army) {
 
       if (target.prestige <= plotPrestige) {
 
-        forceRetire(target, message, plotters);
+        forceRetire(target, plotters);
 
       };
 
@@ -62,7 +71,7 @@ function updatePlots(army) {
       if ((subUnit.commander.drift > 500 && unit.commander.drift < 500) || (subUnit.commander.drift < 500 && unit.commander.drift > 500)) {
   
         plotters.push(subUnit.commander);
-        applyPlot(plotters, unit.commander, "forced to retire");
+        applyPlot(plotters, unit.commander);
       
       } else {
   
