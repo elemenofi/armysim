@@ -13,7 +13,7 @@ exports.newRecruit = function (unit) {
 	globalOfficerId++;
 	officer.lastName = helpers.setLastName();
 	officer.firstName = helpers.setFirstName();
-	officer.retiredMessage = "in duty";
+	officer.statusMessage = "in duty";
 	officer.inspecting = false;
 	officer.retired = false;
 	officer.plotting = false;
@@ -53,7 +53,7 @@ exports.newRecruit = function (unit) {
 			officer.xp = helpers.randomNumber(10) + 10;
 			officer.rank = names.ranks.captain;
 		break;
-	}
+	};
 
 	var staff = staffManager.staff(armyEngine.army());
 	staff.push(officer);

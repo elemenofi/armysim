@@ -23,7 +23,7 @@ var retirement = function (army, units, officer, retiredRank, promoteRank) {
 var retireOfficer = function (officer, army, message) {
 
 	officer.retired = true;
-	officer.retiredMessage = message;
+	officer.statusMessage = message;
 
 	switch (officer.rank) {
 		
