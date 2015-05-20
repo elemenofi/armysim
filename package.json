@@ -1,12 +1,16 @@
 {
   "name": "army-sim",
-  "version": "0.0.0",
-  "description": "Army simulator.",
-  "main": "army.js",
+  "version": "0.0.1",
+  "description": "Army simulator",
+  "main": "server.js",
   "author": "Elemenofi",
   "dependencies": {
     "chance": "^0.6.4",
     "express": "~4",
-    "underscore": "^1.8.2"
+    "underscore": "^1.8.2",
+    "depd": "1.0.1",
+    "latest": "0.2.0",
+    "mersenne-twister": "1.0.1",
+    "body-parser": "1.12.4"
   }
 }

@@ -1,0 +1,11 @@
+{
+  "name": "army-sim-client",
+  "version": "0.0.1",
+  "description": "Army simulator client",
+  "main": "index.html",
+  "author": "Elemenofi",
+  "dependencies": {
+    "jquery": "2.1.1",
+    "angular": "1.3.14"
+  }
+}

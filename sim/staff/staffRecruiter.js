@@ -18,6 +18,7 @@ exports.newRecruit = function (unit) {
 	officer.retired = false;
 	officer.plotting = false;
 	officer.bonds = [];
+	officer.badges = [];
 	officer.intelligence = helpers.randomNumber(100);
 	officer.drift = helpers.randomNumber(1000);
 	

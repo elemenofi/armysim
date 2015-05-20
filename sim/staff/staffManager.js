@@ -57,6 +57,13 @@ exports.inspectToggle = function (army, officer) {
 
 };
 
+exports.inspectReset = function (army) {
+	
+	army.inspecting = [];
+
+};
+
+
 exports.staff = function (army) {
 	return army.staff;
 };

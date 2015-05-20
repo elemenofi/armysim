@@ -118,6 +118,17 @@ p.officer {
 	font-weight: bold;
 	min-height: 32px;
 }
+span.badge-holder {
+	width: 50px;
+	display: block;
+	margin-top: 3px;
+}
+span.badge {
+	display: block;
+	width: 2px;
+	height: 2px;
+	float: left;
+}
 span.stars, span.xp, span.alignment, span.unit, span.diamonds {
 	display: inline-block;
 	background-color: #3D3D3D;
@@ -126,6 +137,7 @@ span.stars, span.xp, span.alignment, span.unit, span.diamonds {
 	border: 2px solid #FFCB05;
 	margin-right: 16px;
 	margin-top:8px;
+	min-width: 50px;
 }
 span.stars-inspect {
 	color: red;
@@ -138,6 +150,8 @@ span.stars-plot {
 	color: black;
 	font-size: 5px;
 	margin-right: 0px;
+	max-width: 10px;
+	min-width: 0;
 }
 span.unit {
 	margin-right:0px;
