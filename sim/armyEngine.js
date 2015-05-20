@@ -7,9 +7,16 @@ var staffRetire = require('./staff/staffRetire');
 var driftDynamics = require('./events/driftDynamics');
 var bondDynamics = require('./events/bondDynamics');
 var plotDynamics = require('./events/plotDynamics');
+require('date-utils');
 
 var army = templates.army;
 var day = 0;
+
+army.date = new Date();
+
+function formatDate (date) {
+  army.formatedDate = army.date.toFormat("DDDD the D of MMMM, YYYY");
+};
 
 function passTurn () {
 
@@ -22,6 +29,8 @@ function passTurn () {
 
     } else {
 
+      army.date = army.date.addDays(1);
+      formatDate(army.date);
       staffRewards.rewardStaff(army);
       staffRetire.retireStaff(army);
       driftDynamics.update(army);
