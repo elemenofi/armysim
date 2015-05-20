@@ -4,6 +4,21 @@ var staffRecruiter = require('./staffRecruiter');
 var staffPromote = require('./staffPromote');
 var unitManager = require('../units/unitManager');
 
+var retirement = function (army, units, officer, retiredRank, promoteRank) {
+
+	_.each(army.companies, function (company) {
+
+		if (company.commander && company.commander.id === officer.id) {
+
+			army.retired.majors.push(company.commander);
+			company.commander = undefined;
+			staffPromote.promoteOfficer("Captain", army, company);
+
+		};
+
+	});
+
+};
 
 var retireOfficer = function (officer, army, message) {
 
@@ -22,13 +37,14 @@ var retireOfficer = function (officer, army, message) {
 			});
 		break;
 		case "Major":
-			_.each(army.companies, function (company) {
-				if (company.commander && company.commander.id === officer.id) {
-					army.retired.majors.push(company.commander);
-					company.commander = undefined;
-					staffPromote.promoteOfficer("Captain", army, company);
-				}
-			});
+			retirement(army, "companies", officer, "majors", "Captain");
+			// _.each(army.companies, function (company) {
+			// 	if (company.commander && company.commander.id === officer.id) {
+			// 		army.retired.majors.push(company.commander);
+			// 		company.commander = undefined;
+			// 		staffPromote.promoteOfficer("Captain", army, company);
+			// 	}
+			// });
 		break;
 		case "Coronel":
 			_.each(army.regiments, function (regiment) {
