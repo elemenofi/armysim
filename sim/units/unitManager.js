@@ -21,6 +21,8 @@ exports.initUnits = function (army) {
 
         if (parent) {
           unit.parentId = parent.id;
+        } else if (type === "division") {
+          unit.parentId = 1; //army id
         };
 
         globalUnitId++;

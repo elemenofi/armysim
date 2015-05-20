@@ -60,7 +60,7 @@ function updateDrifts (army) {
   
   };
 
-  function updateDriftsByRank (rank, units, subUnits) {
+  function updateDriftsByRank (rank, units, subUnits) {1
 
     if (units === army) {
 

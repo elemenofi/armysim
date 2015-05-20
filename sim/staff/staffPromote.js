@@ -47,101 +47,63 @@ var promotion = function (rank, army, oldUnit, targetUnit)  {
 
 };
 
-var promoteOfficer = function (rank, army, targetUnit) {
+var promotSeniorOfficer = function (army, units, targetUnit, oldRanks, newRanks, newRank) {
+	
+	var seniorXP = 0;
 
+	_.each(army[units], function(unit) {
+
+		if (unit.parentId === targetUnit.id) {
+
+			if (unit.commander && unit.commander.xp > seniorXP) {
+
+				seniorXP = unit.commander.xp;
+
+			};
+
+		};
+
+	});
+
+	_.each(army[units], function(unit) {
+
+		if (unit.parentId === targetUnit.id) {
+
+			if (unit.commander && unit.commander.xp === seniorXP) {
+
+				army[oldRanks].splice(army[oldRanks].indexOf(unit.commander), 1);
+
+				army[newRanks].push(unit.commander);
+
+				promotion(newRank, army, unit, targetUnit);
+
+			};
+
+		};
+
+	});
+
+};
+
+var promoteOfficer = function (rank, army, targetUnit) {
+	
 	var seniorXP = 0;
 
 	switch (rank) {
 		case "Captain":
-			_.each(army.battalions, function(battalion) {
-				if (battalion.parentId === targetUnit.id) {
-					if (battalion.commander && battalion.commander.xp > seniorXP) {
-						seniorXP = battalion.commander.xp;
-					}
-				}
-			});
-
-			_.each(army.battalions, function(battalion) {
-				if (battalion.parentId === targetUnit.id) {
-					if (battalion.commander && battalion.commander.xp === seniorXP) {
-						army.captains.splice(army.captains.indexOf(battalion.commander), 1);
-						army.majors.push(battalion.commander);
-						promotion("Major", army, battalion, targetUnit);
-					}
-				}
-			});
+			promotSeniorOfficer(army, "battalions", targetUnit, "captains", "majors", "Major");
 		break;
 		case "Major":
-			_.each(army.companies, function(company) {
-				if (company.parentId === targetUnit.id) {
-					if (company.commander && company.commander.xp > seniorXP) {
-						seniorXP = company.commander.xp;
-					}
-				}
-			});
-
-			_.each(army.companies, function(company) {
-				if (company.parentId === targetUnit.id) {
-					if (company.commander && company.commander.xp === seniorXP) {
-						army.majors.splice(army.majors.indexOf(company.commander), 1);
-						army.coronels.push(company.commander);
-						promotion("Coronel", army, company, targetUnit);
-					}
-				}
-			});
+			promotSeniorOfficer(army, "companies", targetUnit, "majors", "coronels", "Coronel");
 		break;
 		case "Coronel":
-			_.each(army.regiments, function(regiment) {
-				if (regiment.parentId === targetUnit.id) {
-					if (regiment.commander && regiment.commander.xp > seniorXP) {
-						seniorXP = regiment.commander.xp;
-					};
-				};
-			});
-
-			_.each(army.regiments, function(regiment) {
-				if (regiment.parentId === targetUnit.id) {
-					if (regiment.commander && regiment.commander.xp === seniorXP) {
-						army.coronels.splice(army.coronels.indexOf(regiment.commander), 1);
-						army.bgGenerals.push(regiment.commander);
-						promotion("Brigade General", army, regiment, targetUnit);
-					};
-				};
-			});
+			promotSeniorOfficer(army, "regiments", targetUnit, "coronels", "bgGenerals", "Brigade General");
 		break;
 		case "Brigade General":
-			_.each(army.brigades, function(brigade) {
-				if (brigade.parentId === targetUnit.id) {
-					if (brigade.commander && brigade.commander.xp > seniorXP) {
-						seniorXP = brigade.commander.xp;
-					};
-				};
-			});
-
-			_.each(army.brigades, function(brigade) {
-				if (brigade.parentId === targetUnit.id) {
-					if (brigade.commander && brigade.commander.xp === seniorXP) {
-						army.bgGenerals.splice(army.bgGenerals.indexOf(brigade.commander), 1);
-						army.dvGenerals.push(brigade.commander);
-						promotion("Division General", army, brigade, targetUnit);
-					};
-				};
-			});
+			promotSeniorOfficer(army, "brigades", targetUnit, "bgGenerals", "dvGenerals", "Division General");
 		break;
 		case "Division General":
-			_.each(army.divisions, function(division) {
-				if (division.commander && division.commander.xp > seniorXP) {
-					seniorXP = division.commander.xp;
-				};
-			});
-
-			_.each(army.divisions, function(division) {
-				if (division.commander && division.commander.xp === seniorXP) {
-					army.dvGenerals.splice(army.dvGenerals.indexOf(division.commander), 1);
-					army.ltGenerals.push(division.commander);
-					promotion("Lieutenant General", army, division, targetUnit);
-				};
-			});
+			promotSeniorOfficer(army, "divisions", army, "dvGenerals", "ltGenerals", "Lieutenant General");
 		break;
 	};
 

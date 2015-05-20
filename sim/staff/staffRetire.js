@@ -6,13 +6,13 @@ var unitManager = require('../units/unitManager');
 
 var retirement = function (army, units, officer, retiredRank, promoteRank) {
 
-	_.each(army.companies, function (company) {
+	_.each(army[units], function (unit) {
 
-		if (company.commander && company.commander.id === officer.id) {
+		if (unit.commander && unit.commander.id === officer.id) {
 
-			army.retired.majors.push(company.commander);
-			company.commander = undefined;
-			staffPromote.promoteOfficer("Captain", army, company);
+			army.retired[retiredRank].push(unit.commander);
+			unit.commander = undefined;
+			staffPromote.promoteOfficer(promoteRank, army, unit);
 
 		};
 
@@ -26,6 +26,7 @@ var retireOfficer = function (officer, army, message) {
 	officer.retiredMessage = message;
 
 	switch (officer.rank) {
+		
 		case "Captain":
 			_.each(army.battalions, function (battalion) {
 				if (battalion.commander && battalion.commander.id === officer.id) {
@@ -36,50 +37,33 @@ var retireOfficer = function (officer, army, message) {
 				};
 			});
 		break;
+		
 		case "Major":
 			retirement(army, "companies", officer, "majors", "Captain");
-			// _.each(army.companies, function (company) {
-			// 	if (company.commander && company.commander.id === officer.id) {
-			// 		army.retired.majors.push(company.commander);
-			// 		company.commander = undefined;
-			// 		staffPromote.promoteOfficer("Captain", army, company);
-			// 	}
-			// });
 		break;
+		
 		case "Coronel":
-			_.each(army.regiments, function (regiment) {
-				if (regiment.commander && regiment.commander.id === officer.id) {
-					army.retired.coronels.push(regiment.commander);
-					regiment.commander = undefined;
-					staffPromote.promoteOfficer("Major", army, regiment);
-				}
-			});
+			retirement(army, "regiments", officer, "coronels", "Major");
 		break;
+		
 		case "Brigade General":
-			_.each(army.brigades, function (brigade) {
-				if (brigade.commander && brigade.commander.id === officer.id) {
-					army.retired.bgGenerals.push(brigade.commander);
-					brigade.commander = undefined;
-					staffPromote.promoteOfficer("Coronel", army, brigade);
-				}
-			});
+			retirement(army, "brigades", officer, "bgGenerals", "Coronel");
 		break;
+		
 		case "Division General":
-			_.each(army.divisions, function (division) {
-				if (division.commander && division.commander.id === officer.id) {
-					army.retired.dvGenerals.push(division.commander);
-					division.commander = undefined;
-					staffPromote.promoteOfficer("Brigade General", army, division);
-				}
-			});
+			retirement(army, "divisions", officer, "dvGenerals", "Brigade General");
 		break;
+		
 		case "Lieutenant General":
+
 			if (army.commander && army.commander.id === officer.id) {
 				army.retired.ltGenerals.push(army.commander);
 				army.commander = undefined;
 				staffPromote.promoteOfficer("Division General", army);
 			};
+
 		break;
+
 	};
 
 };
