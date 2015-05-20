@@ -9,7 +9,7 @@ army.controller('armyController', [ '$scope', '$http', '$timeout', '$filter', '$
         $http.get(api)
           .success(function (data) {
             $scope.army = data;
-            console.log(data);
+            // console.log(data);
           })
           .then(updateArmy);
       }, 2000);
@@ -20,36 +20,23 @@ army.controller('armyController', [ '$scope', '$http', '$timeout', '$filter', '$
     $scope.inspectToggle = function (officer) {
       $http.post(api + "/inspect", officer)
         .success(function(data) {
-          console.log(data);
+          // console.log(data);
         });
     };
 
     $scope.inspectReset = function () {
       $http.get(api + "/inspectReset")
         .success(function(data) {
-          console.log(data);
+          // console.log(data);
         });
     };
 
     $scope.turnsToggle = function () {
       $http.get(api + "/turns", null)
         .success(function(data) {
-          console.log(data);
+          // console.log(data);
+          console.log("turns");
         });
-    };
-
-    $scope.randomColor = function () {
-      
-      return 'blue';
-
-    };
-
-    $scope.randomSeed = $filter('number')($window.Math.round($window.Math.random() * 15), 0);
-
-
-    $scope.randomBadgeSize = function () {
-      // return Math.round(Math.random()*6 + 2);
-      return 20;
     };
 
   }

@@ -17,6 +17,7 @@ exports.initUnits = function (army) {
       } else {
 
         var unit = {};
+        
         unit.id = unitId;
         unit.type = type;
 
