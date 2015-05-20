@@ -96,6 +96,7 @@ div.regiments {
 }
 div.unit-data {
 	margin-bottom: 10px;
+	min-height: 100px;
 }
 div.brigade-data, div.division-data {
 	min-height: 100px;
@@ -111,8 +112,6 @@ div.company-data {
 div.battalions {
 	padding-top: 12px;
 }
-
-
 p.officer {
 	line-height: 32px;
 	font-weight: bold;

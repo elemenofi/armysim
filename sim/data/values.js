@@ -42,10 +42,14 @@ exports.prestigeHit = function (plotter) {
   return Math.round(plotter.prestige / 2);
 };
 
-exports.prestigeTurnBonus = 25;
+exports.prestigeTurn = 25;
+
+exports.prestigePromotion = function (officer) {
+  return Math.round(officer.prestige / 20);
+};
 
 exports.badgesPerPrestige = function (officer) {
-  return Math.round(officer.prestige / 10)
+  return Math.round(officer.prestige / 10);
 };
 
 exports.statusMessages = {

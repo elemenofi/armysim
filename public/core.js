@@ -35,7 +35,6 @@ army.controller('armyController', [ '$scope', '$http', '$timeout', '$filter', '$
       $http.get(api + "/turns", null)
         .success(function(data) {
           // console.log(data);
-          console.log("turns");
         });
     };
 

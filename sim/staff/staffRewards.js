@@ -8,8 +8,8 @@ function givePrestige (officer, army) {
 	var bonusPrestige = 0;
 
 	bonusPrestige += officer.prestige;
-	bonusPrestige += helpers.randomNumber(values.prestigeTurnBonus);
-	bonusPrestige += staffHistory.checkLastNamesRepeat(officer, army.lastNames);
+	bonusPrestige += helpers.randomNumber(values.prestigeTurn);
+	bonusPrestige += staffHistory.checkFamily(officer, army.lastNames);
 	
 	if (officer.bonds.length > 0) {
 		bonusPrestige += officer.bonds[officer.bonds.length - 1].strength;

@@ -1,7 +1,7 @@
 var armyEngine = require('../armyEngine');
 var _ = require('underscore');
 
-var checkLastNamesRepeat = function (officer, lastNames) {
+var checkFamily = function (officer, lastNames) {
   
   var repeats = 0;
 
@@ -17,4 +17,4 @@ var checkLastNamesRepeat = function (officer, lastNames) {
 
 };
 
-exports.checkLastNamesRepeat = checkLastNamesRepeat;
+exports.checkFamily = checkFamily;
