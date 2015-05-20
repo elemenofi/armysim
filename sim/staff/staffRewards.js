@@ -15,28 +15,25 @@ function givePrestige (officer, army) {
 		bonusPrestige += officer.bonds[officer.bonds.length - 1].strength;
 	};
 
-	// switch (officer.rank) {
-	// 	case "Captain":
-	// 		bonusPrestige += helpers.randomNumber(10);
-	// 	break;
-	// 	case "Major":
-	// 		bonusPrestige += helpers.randomNumber(12);
-	// 	break;
-	// 	case "Coronel":
-	// 		bonusPrestige += helpers.randomNumber(15);
-	// 	break;
-	// 	case "Brigade General":
-	// 		bonusPrestige += helpers.randomNumber(17);
-	// 	break;
-	// 	case "Division General":
-	// 		bonusPrestige += helpers.randomNumber(20);
-	// 	break;
-	// 	case "Lieutenant General":
-	// 		bonusPrestige += helpers.randomNumber(25);
-	// 	break;
-	// }
-
 	return bonusPrestige;
+
+};
+
+var calculateBadges = function (officer) {
+
+	var badges = values.badgesPerPrestige(officer);
+
+	if (officer.badges.length === 0) {
+
+		for (var i = 0; i < badges; i++) {
+
+			giveBadges(officer);
+
+		};
+
+	};
+
+	return badges;
 
 };
 
@@ -47,30 +44,29 @@ var giveBadges = function (officer) {
 	
 };
 
+var giveNewBadges = function (officer, badges) {
+
+	var newBadges = calculateBadges(officer);
+
+	for (var i = 0; i < (newBadges - badges); i++) {
+		giveBadges(officer);				
+	};
+
+};
+
 exports.rewardStaff = function (army) {
+
 	_.each(army.staff, function (officer) {
 
-		var oldBadges = values.badgesPerPrestige(officer);
-
-		if (officer.badges.length === 0) {
-
-			for (var i = 0; i < oldBadges; i++) {
-
-				giveBadges(officer);
-
-			};
-		};
+		var badges = calculateBadges(officer);
 
 		if (officer.retired === false) {
 
 			officer.xp++;
+
 			officer.prestige = givePrestige(officer, army);
 
-			var newBadges = values.badgesPerPrestige(officer);
-
-			for (var i = 0; i < (newBadges - oldBadges); i++) {
-				giveBadges(officer);				
-			};
+			giveNewBadges(officer, badges);					
 
 		};
 
