@@ -55,6 +55,9 @@ exports.newRecruit = function (unit) {
 		break;
 	};
 
+	var lastNameRecord = {id: officer.id, lastName: officer.lastName};
+	armyEngine.army().lastNames.push(lastNameRecord);
+
 	var staff = staffManager.staff(armyEngine.army());
 	staff.push(officer);
 
