@@ -15,6 +15,7 @@
 		<div class="container">
 			
 			<div ng-click="inspectToggle(army.commander);" class="commanderInChief">
+				
 				<div class="unit-data">
 					<span class="unit">Commander in Chief</span><br>
 					<span class="stars">&#9733; &#9733; &#9733; &#9733;</span>
@@ -25,12 +26,14 @@
 					<span ng-if="army.commander.inspecting" class="stars stars-inspect">&#9733;</span><br>
 					<br>
 				</div>
-
 				<span>{{army.commander.rank}} {{army.commander.firstName}} {{army.commander.lastName}}</span><br>
 				<br>
 				<span>P:{{army.commander.prestige}} <br> XP:{{army.commander.xp}} <br> D:{{army.commander.drift}} <br> INT:{{army.commander.intelligence}}</span>
-			</div>
+			
+			</div> <!-- commander in chief -->
+			
 			<div class="divisions" ng-repeat="division in army.divisions">
+
 				<div ng-click="inspectToggle(division.commander);" class="division-data">
 					<div class="unit-data">
 						<span class="unit">{{ division.name }}</span><br>
@@ -47,7 +50,9 @@
 					<span>P:{{division.commander.prestige}} <br> XP:{{division.commander.xp}} <br> D:{{division.commander.drift}} <br></span>
 					<br>
 				</div>
+		
 				<div class="brigades" ng-repeat="brigade in division.brigades">
+
 					<div ng-click="inspectToggle(brigade.commander);" class="brigade-data">
 						<div class="unit-data">
 							<span class="unit">{{ brigade.name }}</span><br>
@@ -65,7 +70,9 @@
 						<span>P:{{brigade.commander.prestige}} <br> XP:{{brigade.commander.xp}} <br> D:{{brigade.commander.drift}} <br></span>
 						<br>
 					</div>
+
 					<div class="regiments" ng-repeat="regiment in brigade.regiments">
+
 						<div ng-click="inspectToggle(regiment.commander);" class="regiment-data">
 							<div class="unit-data">
 								<span class="unit">{{ regiment.name }}</span><br>
@@ -82,7 +89,9 @@
 							<br>
 							<span>P:{{regiment.commander.prestige}} <br> XP:{{regiment.commander.xp}} <br> D:{{regiment.commander.drift}} <br></span>	
 						</div>
+
 						<div class="companies" ng-repeat="company in regiment.companies">
+
 							<div ng-click="inspectToggle(company.commander);" class="company-data">
 								<div class="unit-data">
 									<span class="unit unit-company">{{ company.name }}</span>
@@ -99,7 +108,9 @@
 								<span style="min-height: 32px; display: block;">{{company.commander.lastName}}</span><br>
 								<span>P:{{company.commander.prestige}} <br> XP:{{company.commander.xp}} <br> D:{{company.commander.drift}}</span>
 							</div>
+
 							<div class="battalions" ng-repeat="battalion in company.battalions">
+
 								<div ng-click="inspectToggle(battalion.commander)" class="battalion-data">
 									<div class="unit-data">
 										<span class="unit unit-battalion">{{ battalion.name }}</span>
@@ -116,12 +127,19 @@
 									<span style="min-height: 32px; display: block;">{{battalion.commander.lastName}}</span><br>
 									<span>P:{{battalion.commander.prestige}} <br> XP:{{battalion.commander.xp}} <br> D:{{battalion.commander.drift}}</span>
 								</div>
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
+
+							</div> <!-- battalions -->
+
+						</div> <!-- companies -->
+
+					</div> <!-- regiments -->
+
+				</div> <!-- brigades-->
+
+			</div> <!-- divisions -->
+
 			<div class="clear"></div>
+
 			<div class="history">
 				<ul>
 					<li ng-repeat="officer in army.retired.ltGenerals | orderBy: '-prestige' | limitTo: 1">
