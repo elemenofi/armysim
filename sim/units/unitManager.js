@@ -35,12 +35,9 @@ exports.initUnits = function (army) {
             unit.divisions = [];
             unit.name = names.corps[0];
 
-
-
             names.corps.shift();
             army.corps.push(unit);
             
-
             generateUnit("division", unitDepth, unit);
             generateUnit("corp", quantity - 1, parent);
           break;
@@ -48,11 +45,11 @@ exports.initUnits = function (army) {
           case "division":
             unit.brigades = [];
             unit.name = names.divisions[0];
-
-
+            
             names.divisions.shift();
             parent.divisions.push(unit);
             army.divisions.push(unit);
+
             generateUnit("brigade", unitDepth, unit);
             generateUnit("division", quantity - 1, parent);
           break;

@@ -31,7 +31,7 @@
 				</div>
 			</div> <!-- commander in chief -->
 			
-			<div class="corps" ng-repeat="corp in army.corps">
+			<div class="corps" ng-repeat="corp in army.corps track by corp.id">
 
 				<div ng-click="inspectToggle(corp.commander);" class="corp-data">
 						<div class="unit-data">
@@ -51,7 +51,7 @@
 
 				<div class="clear"></div>
 
-				<div class="divisions" ng-repeat="division in corp.divisions">
+				<div class="divisions" ng-repeat="division in corp.divisions track by division.id">
 
 					<div ng-click="inspectToggle(division.commander);" class="division-data">
 						<div class="unit-data">
@@ -68,7 +68,7 @@
 						</div>
 					</div>
 			
-					<div class="brigades" ng-repeat="brigade in division.brigades">
+					<div class="brigades" ng-repeat="brigade in division.brigades track by brigade.id">
 
 						<div ng-click="inspectToggle(brigade.commander);" class="brigade-data">
 							<div class="unit-data">
@@ -85,7 +85,7 @@
 							</div>
 						</div>
 
-						<div class="regiments" ng-repeat="regiment in brigade.regiments">
+						<div class="regiments" ng-repeat="regiment in brigade.regiments track by regiment.id">
 
 							<div ng-click="inspectToggle(regiment.commander);" class="regiment-data">
 								<div class="unit-data">
@@ -104,7 +104,7 @@
 								
 							</div>
 
-							<div class="companies" ng-repeat="company in regiment.companies">
+							<div class="companies" ng-repeat="company in regiment.companies track by company.id">
 
 								<div ng-click="inspectToggle(company.commander);" class="company-data">
 									<div class="unit-data">
@@ -123,7 +123,7 @@
 									<br>
 								</div>
 
-								<div class="battalions" ng-repeat="battalion in company.battalions">
+								<div class="battalions" ng-repeat="battalion in company.battalions track by battalion.id">
 
 									<div ng-click="inspectToggle(battalion.commander)" class="battalion-data">
 										<div class="unit-data">
@@ -141,7 +141,7 @@
 										</div>
 									</div>
 
-									<div class="platoons" ng-repeat="platoon in battalion.platoons">
+									<div class="platoons" ng-repeat="platoon in battalion.platoons track by platoon.id">
 
 										<div ng-click="inspectToggle(platoon.commander)" class="platoon-data">
 											<div class="unit-data">
