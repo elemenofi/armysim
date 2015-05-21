@@ -25,7 +25,6 @@ var retireOfficer = function (officer, army, message) {
 
 	officer.retired = true;
 	officer.statusMessage = message;
-
 	switch (officer.rank) {
 		
 		case "Captain":
@@ -73,6 +72,7 @@ var retireOfficer = function (officer, army, message) {
 
 	};
 
+
 };
 
 var retireStaff = function (army) {
@@ -81,47 +81,53 @@ var retireStaff = function (army) {
 
 	_.each(army.staff, function(officer) {
 
-		var threshold = 0;
-		
-		switch (officer.rank) {
-			
-			case "Captain":
-				threshold = values.maxExperience.captain;
-			break;
-			
-			case "Major":
-				threshold = values.maxExperience.major;
-			break;
-			
-			case "Coronel":
-				threshold = values.maxExperience.coronel;
-			break;
+		if (officer) {
 
-			case "Lieutenant Coronel":
-				threshold = values.maxExperience.coronel;
-			break;
-			
-			case "Brigade General":
-				threshold = values.maxExperience.bgGeneral;
-			break;
-			
-			case "Division General":
-				threshold = values.maxExperience.dvGeneral;
-			break;
-			
-			case "Lieutenant General":
-				threshold = values.maxExperience.ltGeneral;
-			break;
 
-			case "General":
-				threshold = values.maxExperience.ltGeneral;
-			break;
+			var threshold = 0;
 			
+			switch (officer.rank) {
+				
+				case "Captain":
+					threshold = values.maxExperience.captain;
+				break;
+				
+				case "Major":
+					threshold = values.maxExperience.major;
+				break;
+				
+				case "Coronel":
+					threshold = values.maxExperience.coronel;
+				break;
+
+				case "Lieutenant Coronel":
+					threshold = values.maxExperience.coronel;
+				break;
+				
+				case "Brigade General":
+					threshold = values.maxExperience.bgGeneral;
+				break;
+				
+				case "Division General":
+					threshold = values.maxExperience.dvGeneral;
+				break;
+				
+				case "Lieutenant General":
+					threshold = values.maxExperience.ltGeneral;
+				break;
+
+				case "General":
+					threshold = values.maxExperience.ltGeneral;
+				break;
+				
+			};
+
+			if (officer.xp > threshold && officer.retired === false) {
+				retireOfficer(officer, army, message);
+				army.staff.splice(army.staff.indexOf(officer), 1);
+			};
 		};
 
-		if (officer.xp > threshold && officer.retired === false) {
-			retireOfficer(officer, army, message);
-		};
 
 	});
 
