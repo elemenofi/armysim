@@ -69,11 +69,13 @@ function updateBonds (army) {
 
   };
 
+  createBondsByUnits("platoons");
   createBondsByUnits("battalions");
   createBondsByUnits("companies");
   createBondsByUnits("regiments");
   createBondsByUnits("brigades");
   createBondsByUnits("divisions");
+  createBondsByUnits("corps");
 
 };
 

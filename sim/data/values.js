@@ -9,27 +9,33 @@ exports.baseDrift = 1000;
 exports.centerDrift = 500;
 
 exports.maxExperience = {
-  ltGeneral: 70,
-  dvGeneral: 60,
-  bgGeneral: 50,
-  coronel: 40,
+  general: 90,
+  ltGeneral: 80,
+  dvGeneral: 70,
+  bgGeneral: 60,
+  coronel: 50,
+  ltCoronel: 40,
   major: 30,
   captain: 20
 };
 
 exports.startingExperience = {
-  ltGeneral: 50,
-  dvGeneral: 40,
-  bgGeneral: 30,
-  coronel: 20,
-  major: 10
-};
-
-exports.startingPrestige = {
+  general: 70,
   ltGeneral: 60,
   dvGeneral: 50,
   bgGeneral: 40,
   coronel: 30,
+  ltCoronel: 20,
+  major: 10
+};
+
+exports.startingPrestige = {
+  general: 80,
+  ltGeneral: 70,
+  dvGeneral: 60,
+  bgGeneral: 50,
+  coronel: 40,
+  ltCoronel: 30,
   major: 20,
   captain: 10
 };

@@ -71,6 +71,18 @@ div.clear {
 div.commanderInChief {
 	margin-bottom: 10px
 }
+div.centered, .main-stars {
+	text-align: center;
+}
+.main-stars {
+	position: relative;
+	float: none!important;
+	display: block;
+	margin: 10px auto 0 !important;
+}
+div.corps {
+	margin-top: 50px;
+}
 div.divisions, div.brigades, div.regiments, div.companies {
 	border-top: 3px double #F7F7F7;
 	padding-top: 16px;

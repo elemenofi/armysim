@@ -23,7 +23,7 @@ exports.initUnits = function (army) {
 
         if (parent) {
           unit.parentId = parent.id;
-        } else if (type === "division") {
+        } else if (type === "corp") {
           unit.parentId = 1; //army id
         };
 
@@ -31,11 +31,27 @@ exports.initUnits = function (army) {
 
         switch (type) {
 
+          case "corp":
+            unit.divisions = [];
+            unit.name = names.corps[0];
+
+
+
+            names.corps.shift();
+            army.corps.push(unit);
+            
+
+            generateUnit("division", unitDepth, unit);
+            generateUnit("corp", quantity - 1, parent);
+          break;
+
           case "division":
             unit.brigades = [];
             unit.name = names.divisions[0];
 
+
             names.divisions.shift();
+            parent.divisions.push(unit);
             army.divisions.push(unit);
             generateUnit("brigade", unitDepth, unit);
             generateUnit("division", quantity - 1, parent);
@@ -78,13 +94,25 @@ exports.initUnits = function (army) {
           break;
 
           case "battalion":
+            unit.platoons = [];
             unit.name = names.battalions[0];
 
             names.battalions.shift();
             parent.battalions.push(unit);
             army.battalions.push(unit);
 
+            generateUnit("platoon", unitDepth, unit);
             generateUnit("battalion", quantity - 1, parent);
+          break;
+
+          case "platoon":
+            unit.name = names.platoons[0];
+
+            names.platoons.shift();
+            parent.platoons.push(unit);
+            army.platoons.push(unit);
+
+            generateUnit("platoon", quantity - 1, parent);
           break;
 
         };
@@ -95,7 +123,7 @@ exports.initUnits = function (army) {
 
     };
 
-    generateUnit("division", unitDepth);
+    generateUnit("corp", unitDepth);
 
   return army;
 

@@ -31,12 +31,14 @@ exports.initStaff = function (army) {
 
 	};
 
-	initStaffByUnits("ltGenerals", army);
+	initStaffByUnits("generals", army);
+	initStaffByUnits("ltGenerals", "corps");
 	initStaffByUnits("dvGenerals", "divisions");
 	initStaffByUnits("bgGenerals", "brigades");
 	initStaffByUnits("coronels", "regiments");
-	initStaffByUnits("majors", "companies");
-	initStaffByUnits("captains", "battalions");
+	initStaffByUnits("ltCoronels", "companies");
+	initStaffByUnits("majors", "battalions");
+	initStaffByUnits("captains", "platoons");
 
 	return army.staff;
 

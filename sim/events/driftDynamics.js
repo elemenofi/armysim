@@ -79,11 +79,19 @@ function updateDrifts (army) {
 
   };
 
-  updateDriftsByRank("captains", "companies", "battalions");
-  updateDriftsByRank("majors", "regiments", "companies");
+  // updateDriftsByRank("captains", "companies", "battalions");
+  // updateDriftsByRank("majors", "regiments", "companies");
+  // updateDriftsByRank("coronels", "brigades", "regiments");
+  // updateDriftsByRank("bgGenerals", "divisions", "brigades");
+  // updateDriftsByRank("dvGenerals", army, "divisions");
+
+  updateDriftsByRank("captains", "battalions", "platoons");
+  updateDriftsByRank("majors", "companies", "battalions");
+  updateDriftsByRank("ltCoronels", "regiments", "companies");
   updateDriftsByRank("coronels", "brigades", "regiments");
   updateDriftsByRank("bgGenerals", "divisions", "brigades");
-  updateDriftsByRank("dvGenerals", army, "divisions");
+  updateDriftsByRank("dvGenerals", "corps", "divisions");
+  updateDriftsByRank("ltGenerals", army, "corps");
 
 };
 

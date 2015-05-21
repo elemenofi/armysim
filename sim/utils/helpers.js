@@ -53,7 +53,7 @@ var randomColor = function () {
 var createBadge = function  () {
 	var badge = {};
 	badge.x = randomNumber(6) + 2;
-	badge.y = randomNumber(2) + 2;
+	badge.y = 2;
 	badge.bg = randomColor();
 	return badge;
 };

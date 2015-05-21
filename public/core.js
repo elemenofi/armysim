@@ -20,7 +20,7 @@ army.controller('armyController', [ '$rootScope', '$scope', '$http', '$timeout',
     };
 
     
-
+    
     updateArmy();
 
     $scope.inspectToggle = function (officer) {

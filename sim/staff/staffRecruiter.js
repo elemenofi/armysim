@@ -25,6 +25,11 @@ exports.newRecruit = function (unit) {
 	
 	switch (unit.type) {
 		case "army":
+			officer.prestige = helpers.randomNumber(10) + values.startingPrestige.general;
+			officer.xp = helpers.randomNumber(10) + values.startingExperience.general;
+			officer.rank = names.ranks.general;
+		break;
+		case "corp":
 			officer.prestige = helpers.randomNumber(10) + values.startingPrestige.ltGeneral;
 			officer.xp = helpers.randomNumber(10) + values.startingExperience.ltGeneral;
 			officer.rank = names.ranks.ltGeneral;
@@ -45,13 +50,18 @@ exports.newRecruit = function (unit) {
 			officer.rank = names.ranks.coronel;
 		break;
 		case "company":
+			officer.prestige = helpers.randomNumber(10) + values.startingPrestige.ltCoronel;
+			officer.xp = helpers.randomNumber(10) + values.startingExperience.ltCoronel;;
+			officer.rank = names.ranks.ltCoronel;
+		break;
+		case "battalion":
 			officer.prestige = helpers.randomNumber(10) + values.startingPrestige.major;
 			officer.xp = helpers.randomNumber(10) + values.startingExperience.major;
 			officer.rank = names.ranks.major;
 		break;
-		case "battalion":
+		case "platoon":
 			officer.prestige = helpers.randomNumber(10) + values.startingPrestige.captain;
-			officer.xp = helpers.randomNumber(10);
+			officer.xp = 10;
 			officer.rank = names.ranks.captain;
 		break;
 	};

@@ -29,22 +29,26 @@ var retireOfficer = function (officer, army, message) {
 	switch (officer.rank) {
 		
 		case "Captain":
-			_.each(army.battalions, function (battalion) {
-				if (battalion.commander && battalion.commander.id === officer.id) {
-					army.retired.captains.push(battalion.commander);
-					battalion.commander = undefined;
-					battalion.commander = staffRecruiter.newRecruit(battalion);
-					army.captains.push(battalion.commander);
+			_.each(army.platoons, function (platoon) {
+				if (platoon.commander && platoon.commander.id === officer.id) {
+					army.retired.captains.push(platoon.commander);
+					platoon.commander = undefined;
+					platoon.commander = staffRecruiter.newRecruit(platoon);
+					army.captains.push(platoon.commander);
 				};
 			});
 		break;
 		
 		case "Major":
-			retirement(army, "companies", officer, "majors", "Captain");
+			retirement(army, "battalions", officer, "majors", "Captain");
+		break;
+
+		case "Lieutenant Coronel":
+			retirement(army, "companies", officer, "ltCoronels", "Major");
 		break;
 		
 		case "Coronel":
-			retirement(army, "regiments", officer, "coronels", "Major");
+			retirement(army, "regiments", officer, "coronels", "Lieutenant Coronel");
 		break;
 		
 		case "Brigade General":
@@ -56,13 +60,15 @@ var retireOfficer = function (officer, army, message) {
 		break;
 		
 		case "Lieutenant General":
+			retirement(army, "corps", officer, "ltGenerals", "Division General");
+		break;
 
+		case "General":
 			if (army.commander && army.commander.id === officer.id) {
-				army.retired.ltGenerals.push(army.commander);
+				army.retired.generals.push(army.commander);
 				army.commander = undefined;
-				staffPromote.promoteOfficer("Division General", army);
+				staffPromote.promoteOfficer("Lieutenant General", army);
 			};
-
 		break;
 
 	};
@@ -90,6 +96,10 @@ var retireStaff = function (army) {
 			case "Coronel":
 				threshold = values.maxExperience.coronel;
 			break;
+
+			case "Lieutenant Coronel":
+				threshold = values.maxExperience.coronel;
+			break;
 			
 			case "Brigade General":
 				threshold = values.maxExperience.bgGeneral;
@@ -100,6 +110,10 @@ var retireStaff = function (army) {
 			break;
 			
 			case "Lieutenant General":
+				threshold = values.maxExperience.ltGeneral;
+			break;
+
+			case "General":
 				threshold = values.maxExperience.ltGeneral;
 			break;
 			

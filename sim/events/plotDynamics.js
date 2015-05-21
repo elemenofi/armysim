@@ -110,11 +110,13 @@ function updatePlots(army) {
     
   };
 
-  planPlots("army", "divisions");
+  planPlots("army", "corps");
+  planPlots("corps", "divisions");
   planPlots("divisions", "brigades");
   planPlots("brigades", "regiments");
   planPlots("regiments", "companies");
   planPlots("companies", "battalions");
+  planPlots("battalions", "platoons");
 
 };
 
