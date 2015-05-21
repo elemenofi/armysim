@@ -60,9 +60,8 @@ exports.inspectToggle = function (army, officer) {
 };
 
 exports.inspectReset = function (army) {
-	
+	army.oldInspected = army.oldInspected.concat(army.inspecting);
 	army.inspecting = [];
-
 };
 
 

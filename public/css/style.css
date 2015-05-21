@@ -246,6 +246,14 @@ div.history li, div.inspectedHistory li {
 	margin-bottom: 32px;
 }
 
+div.history li, div.inspectedHistory li {
+	margin-bottom: 32px;
+}
+
+div.history li ul.officer-history li, div.inspectedHistory li ul.officer-history li {
+	margin-bottom: 16px;
+}
+
 div.inspectedHistory {
 	width: 48%;
 	float: right;

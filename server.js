@@ -31,8 +31,10 @@ army.post('/army/inspect', function (req, res) {
 
 });
 
-army.get('/army/inspectReset', function (req, res) {
+army.post('/army/inspectReset', function (req, res) {
 
+  console.log("resetInpesct");
+  
   armyEngine.actions().inspectReset(armyEngine.army());
 
 });

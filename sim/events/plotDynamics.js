@@ -35,12 +35,24 @@ function updatePlots(army) {
 
       var prestigeHit = 0;
       var plotPrestige = 0;
+      var accomplice = '';
 
-      _.each(plotters, function(plotter) {
+      _.each(plotters, function (plotter) {
+
+        _.each(plotters, function (thisPlotter) {
+
+          if (thisPlotter.id != plotter.id && thisPlotter.plotting === false) {
+            accomplice = thisPlotter.rank + " " + thisPlotter.lastName;
+            // console.log(accomplice);
+          };
+
+        });
 
         plotter.plotting = true;
         plotPrestige += values.plotPrestige(plotter);
         prestigeHit += values.prestigeHit(plotter);
+
+        plotter.history.push(values.plotMessage.start(accomplice, target.rank + " " + target.lastName, army.formatedDate));
 
       });
 
@@ -54,7 +66,7 @@ function updatePlots(army) {
 
     } else {
 
-      _.each(plotters, function(plotter) {
+      _.each(plotters, function (plotter) {
       
         plotter.plotting = false;
       

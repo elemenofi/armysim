@@ -10,8 +10,8 @@ army.controller('armyController', [ '$rootScope', '$scope', '$http', '$timeout',
         $scope.$apply(function() {
           $http.get(api)
           .success(function (data) {
-            $rootScope.army = data;
-            console.log(data);
+            $scope.army = data;
+            console.log(data.inspecting);
           })
           .then(updateArmy);
         });
@@ -24,6 +24,7 @@ army.controller('armyController', [ '$rootScope', '$scope', '$http', '$timeout',
     updateArmy();
 
     $scope.inspectToggle = function (officer) {
+      console.log("inspect");
       $http.post(api + "/inspect", officer)
         .success(function(data) {
           // console.log(data);
@@ -31,7 +32,8 @@ army.controller('armyController', [ '$rootScope', '$scope', '$http', '$timeout',
     };
 
     $scope.inspectReset = function () {
-      $http.get(api + "/inspectReset")
+      console.log("inspectReset");
+      $http.post(api + "/inspectReset", null)
         .success(function(data) {
           // console.log(data);
         });

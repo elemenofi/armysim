@@ -79,3 +79,9 @@ exports.promotionMessage = {
     return "Promoted to " + rank + " as commander of the " + unit + " on " + date;
   }
 };
+
+exports.plotMessage = {
+  start: function (accomplice, target, date) {
+    return "Started a plot with " + accomplice + " against " + target + " on " + date;
+  }
+};

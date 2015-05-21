@@ -6,6 +6,7 @@ exports.army = {
   commander: {},
   staff: [],
   inspecting: [],
+  oldInspected: [],
   corps: [],
   divisions: [],
   brigades: [],

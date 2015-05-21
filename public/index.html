@@ -182,6 +182,9 @@
 							<span>{{officer.rank}} {{officer.firstName}} {{officer.lastName}}</span><br>
 							<br>
 							<span>PRESTIGE: {{officer.prestige}} <br> DRIFT: {{officer.drift}} <br> XP: {{officer.xp}}, <br> STATUS: {{officer.statusMessage}}</span>
+							<ul class="officer-history">
+								<li ng-repeat="story in officer.history">{{story}}</li>
+							</ul>
 						</span>
 					</li>
 					<hr>
@@ -196,6 +199,9 @@
 						<span>{{officer.rank}} {{officer.firstName}} {{officer.lastName}}</span><br>
 						<br>
 						<span>PRESTIGE: {{officer.prestige}} <br> DRIFT: {{officer.drift}} <br> XP: {{officer.xp}}, <br> STATUS: {{officer.statusMessage}}</span>
+						<ul class="officer-history">
+							<li ng-repeat="story in officer.history">{{story}}</li>
+						</ul>
 					</li>
 					<hr>
 				</ul>
