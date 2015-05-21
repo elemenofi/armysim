@@ -174,7 +174,8 @@
 			</div> <!-- corps -->
 
 			<div class="clear"></div>
-
+			<button ng-click="turnsToggle()">Pause game</button>
+			<button ng-click="inspectReset()">Reset inspected officers</button>
 			<div class="history">
 				<ul>
 					<li ng-repeat="officer in army.retired.generals | orderBy: '-prestige' | limitTo: 1">
@@ -190,10 +191,9 @@
 					<hr>
 				</ul>
 			</div>
-
+		
 			<div class="inspectedHistory">
-				<button ng-click="turnsToggle()">Pause game</button>
-				<button ng-click="inspectReset()">Reset inspected officers</button>
+				
 				<ul>
 					<li ng-repeat="officer in army.inspecting | orderBy: '-prestige'">
 						<span>{{officer.rank}} {{officer.firstName}} {{officer.lastName}}</span><br>

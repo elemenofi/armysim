@@ -21,6 +21,8 @@ army.get('/army/turns', function (req, res) {
 
   res.json(armyEngine.army().day);
 
+  res.end();
+
 });
 
 army.post('/army/inspect', function (req, res) {
@@ -29,13 +31,17 @@ army.post('/army/inspect', function (req, res) {
 
   res.json(req.body.lastName);
 
+  res.end();
+
 });
 
 army.post('/army/inspectReset', function (req, res) {
 
   console.log("resetInpesct");
-  
+
   armyEngine.actions().inspectReset(armyEngine.army());
+
+  res.end();
 
 });
 

@@ -4,16 +4,24 @@ army.controller('armyController', [ '$rootScope', '$scope', '$http', '$timeout',
   function ($rootScope, $scope, $http, $timeout, $filter, $window) {
     var api = '/army'
 
+    $scope.playing = true;
+
     function updateArmy () {
       $timeout(function(){
         
         $scope.$apply(function() {
-          $http.get(api)
-          .success(function (data) {
-            $scope.army = data;
-            console.log(data.inspecting);
-          })
-          .then(updateArmy);
+          
+          if ($scope.playing) {
+          
+            $http.get(api)
+            .success(function (data) {
+              $scope.army = data;
+              console.log(data);
+            })
+            .then(updateArmy);  
+          
+          };
+        
         });
 
       }, 2000);
@@ -40,6 +48,12 @@ army.controller('armyController', [ '$rootScope', '$scope', '$http', '$timeout',
     };
 
     $scope.turnsToggle = function () {
+      $scope.playing = !$scope.playing;
+
+      if ($scope.playing) {
+        updateArmy();
+      };
+
       $http.get(api + "/turns", null)
         .success(function(data) {
           // console.log(data);
