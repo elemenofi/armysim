@@ -1,19 +1,25 @@
 var army = angular.module('army', []);
 
-army.controller('armyController', [ '$scope', '$http', '$timeout', '$filter', '$window',
-  function ($scope, $http, $timeout, $filter, $window) {
+army.controller('armyController', [ '$rootScope', '$scope', '$http', '$timeout', '$filter', '$window',
+  function ($rootScope, $scope, $http, $timeout, $filter, $window) {
     var api = '/army'
 
     function updateArmy () {
       $timeout(function(){
-        $http.get(api)
+        
+        $scope.$apply(function() {
+          $http.get(api)
           .success(function (data) {
-            $scope.army = data;
+            $rootScope.army = data;
             console.log(data);
           })
           .then(updateArmy);
+        });
+
       }, 2000);
     };
+
+    
 
     updateArmy();
 

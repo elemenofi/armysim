@@ -84,7 +84,10 @@ div.companies {
 	border-top: 0;
 	margin-top: 12px;
 }
-div.brigades, div.regiments {
+div.brigades {
+	width: 50%;
+}
+div.regiments {
 	width: 50%;
 }
 div.brigades {
@@ -94,11 +97,18 @@ div.regiments {
 	font-size: 12px;
 	border-top: 1px dotted #F7F7F7;
 }
+
 div.unit-data {
 	margin-bottom: 10px;
 	min-height: 100px;
 }
-div.brigade-data, div.division-data {
+
+div.division-data {
+	min-height: 100px;
+	height: auto;
+}
+
+div.brigade-data {
 	min-height: 100px;
 	height: auto;
 }
@@ -117,15 +127,42 @@ p.officer {
 	font-weight: bold;
 	min-height: 32px;
 }
+span.decorations {
+	margin-top: 10px;
+	display: block;
+	max-width: 175px;
+}
+span.officer-name {
+	margin-top: 10px;
+	display: block;
+}
+div.divisions span.decorations {
+	max-width: 150px;
+}
+div.brigades span.decorations {
+	max-width: 130px;
+}
+div.regiments span.decorations {
+	max-width: 130px;
+}
 span.badge-holder {
 	width: 50px;
 	display: block;
-	margin-top: 3px;
+	float: right;
+}
+
+div.companies span.badge-holder, div.battalions span.badge-holder {
+	float: none;
+	margin-top: 10px;
+	min-height: 30px;
 }
 span.badge {
 	display: block;
 	width: 2px;
 	height: 2px;
+	float: left;
+}
+span.stars {
 	float: left;
 }
 span.stars, span.xp, span.alignment, span.unit, span.diamonds {
@@ -135,7 +172,6 @@ span.stars, span.xp, span.alignment, span.unit, span.diamonds {
 	padding: 3px 5px 2px;
 	border: 2px solid #FFCB05;
 	margin-right: 16px;
-	margin-top:8px;
 	min-width: 50px;
 }
 span.stars {
