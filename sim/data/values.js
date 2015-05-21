@@ -4,6 +4,8 @@ exports.doubleNameChance = 10;
 
 exports.baseIntelligence = 100;
 
+exports.baseLeadership = 100;
+
 exports.baseDrift = 1000;
 
 exports.centerDrift = 500;
@@ -58,10 +60,22 @@ exports.badgesPerPrestige = function (officer) {
   return Math.round(officer.prestige / 10);
 };
 
-exports.statusMessages = {
+exports.statusMessage = {
   duty: "in duty",
   retire: "retired",
   forcedRetire: function (plottersNames) {
     return "forced to retire by " + plottersNames.splice(" ").join(" and ");
+  }
+};
+
+exports.comissionMessage = {
+  comission: function (unit, date) {
+    return "Comissioned into " + unit.name + " on " + date;
+  }
+};
+
+exports.promotionMessage = {
+  promotion: function (rank, unit, date) {
+    return "Promoted to " + rank + " as commander of the " + unit + " on " + date;
   }
 };

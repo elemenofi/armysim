@@ -4,24 +4,7 @@ var helpers = require('../utils/helpers')
 var staffRecruiter = require('./staffRecruiter');
 var unitManager = require('../units/unitManager');
 
-var promotion = function (rank, army, oldUnit, targetUnit)  {
-
-	if (targetUnit) {
-
-		oldUnit.commander.unitId = targetUnit.id;
-		targetUnit.commander = oldUnit.commander;
-
-	} else {
-
-		army.commander = oldUnit.commander;
-
-	};
-
-	oldUnit.commander.prestige += values.prestigePromotion(oldUnit.commander); 
-	oldUnit.commander.rank = rank;
-	oldUnit.commander.plotting = false;
-	oldUnit.commander = undefined;
-
+var promoteOldUnitCommander = function (oldUnit, army) {
 	switch (oldUnit.type) {
 		
 		case "platoon":
@@ -54,6 +37,34 @@ var promotion = function (rank, army, oldUnit, targetUnit)  {
 		break;
 
 	};
+};
+
+var promotion = function (rank, army, oldUnit, targetUnit)  {
+
+	var targetUnitName = '';
+
+	if (targetUnit) {
+
+		oldUnit.commander.unitId = targetUnit.id;
+		targetUnit.commander = oldUnit.commander;
+		targetUnitName = targetUnit.name;
+
+	} else {
+
+		army.commander = oldUnit.commander;
+		targetUnitName = army.name;
+	};
+
+	oldUnit.commander.prestige += values.prestigePromotion(oldUnit.commander); 
+	oldUnit.commander.rank = rank;
+	oldUnit.commander.plotting = false;
+
+	oldUnit.commander.history.push(
+		values.promotionMessage.promotion(rank, targetUnitName, army.formatedDate)
+	);
+
+	oldUnit.commander = undefined;
+	promoteOldUnitCommander(oldUnit, army);
 
 };
 

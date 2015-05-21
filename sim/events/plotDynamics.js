@@ -23,7 +23,7 @@ function updatePlots(army) {
 
   function forceRetire (target, plotters) {
 
-    var message = values.statusMessages.forcedRetire(plottersNames(plotters))
+    var message = values.statusMessage.forcedRetire(plottersNames(plotters))
     
     staffRetire.retireSpecificOfficer(target, army, message);
 

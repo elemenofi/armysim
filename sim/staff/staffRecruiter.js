@@ -12,15 +12,17 @@ exports.newRecruit = function (unit) {
 
 	officer.id = globalOfficerId;
 	globalOfficerId++;
+	officer.history = [];
 	officer.lastName = helpers.setLastName();
 	officer.firstName = helpers.setFirstName();
-	officer.statusMessage = values.statusMessages.duty;
+	officer.statusMessage = values.statusMessage.duty;
 	officer.inspecting = false;
 	officer.retired = false;
 	officer.plotting = false;
 	officer.bonds = [];
 	officer.badges = [];
 	officer.intelligence = helpers.randomNumber(values.baseIntelligence);
+	officer.leadership = helpers.randomNumber(values.baseLeadership);
 	officer.drift = helpers.randomNumber(values.baseDrift);
 	
 	switch (unit.type) {
@@ -63,6 +65,7 @@ exports.newRecruit = function (unit) {
 			officer.prestige = helpers.randomNumber(10) + values.startingPrestige.captain;
 			officer.xp = 10;
 			officer.rank = names.ranks.captain;
+			officer.history.push(values.comissionMessage.comission(unit, armyEngine.army().formatedDate));
 		break;
 	};
 

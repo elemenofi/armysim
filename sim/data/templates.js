@@ -1,6 +1,7 @@
 exports.army = {
   id: 1,
   type: "army",
+  name: "Army",
   turns: true,
   commander: {},
   staff: [],

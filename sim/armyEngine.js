@@ -15,8 +15,11 @@ var day = 0;
 army.date = new Date();
 
 function formatDate (date) {
-  army.formatedDate = army.date.toFormat("DDDD the D of MMMM, YYYY");
+  army.formatedDate = army.date.toFormat("MMMM, YYYY");
+  // army.formatedDate = army.date.toFormat("DDDD the D of MMMM, YYYY");
 };
+
+formatDate(army.date);
 
 function passTurn () {
 
@@ -29,7 +32,7 @@ function passTurn () {
 
     } else {
 
-      army.date = army.date.addDays(1);
+      army.date = army.date.addMonths(1);
       formatDate(army.date);
       staffRewards.rewardStaff(army);
       staffRetire.retireStaff(army);

@@ -77,7 +77,7 @@ var retireOfficer = function (officer, army, message) {
 
 var retireStaff = function (army) {
 
-	var message = values.statusMessages.retire;
+	var message = values.statusMessage.retire;
 
 	_.each(army.staff, function(officer) {
 
