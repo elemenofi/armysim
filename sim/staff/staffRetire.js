@@ -1,5 +1,6 @@
 var _ = require('underscore');
-var helpers = require('../utils/helpers')
+var helpers = require('../utils/helpers');
+var values = require('../data/values');
 var staffRecruiter = require('./staffRecruiter');
 var staffPromote = require('./staffPromote');
 var unitManager = require('../units/unitManager');
@@ -23,7 +24,7 @@ var retirement = function (army, units, officer, retiredRank, promoteRank) {
 var retireOfficer = function (officer, army, message) {
 
 	officer.retired = true;
-	officer.retiredMessage = message;
+	officer.statusMessage = message;
 
 	switch (officer.rank) {
 		
@@ -69,31 +70,39 @@ var retireOfficer = function (officer, army, message) {
 };
 
 var retireStaff = function (army) {
-	var message = "retired";
+
+	var message = values.statusMessages.retire;
 
 	_.each(army.staff, function(officer) {
 
 		var threshold = 0;
 		
 		switch (officer.rank) {
+			
 			case "Captain":
-				threshold = 20;
+				threshold = values.maxExperience.captain;
 			break;
+			
 			case "Major":
-				threshold = 30;
+				threshold = values.maxExperience.major;
 			break;
+			
 			case "Coronel":
-				threshold = 40;
+				threshold = values.maxExperience.coronel;
 			break;
+			
 			case "Brigade General":
-				threshold = 50;
+				threshold = values.maxExperience.bgGeneral;
 			break;
+			
 			case "Division General":
-				threshold = 60;
+				threshold = values.maxExperience.dvGeneral;
 			break;
+			
 			case "Lieutenant General":
-				threshold = 70;
+				threshold = values.maxExperience.ltGeneral;
 			break;
+			
 		};
 
 		if (officer.xp > threshold && officer.retired === false) {

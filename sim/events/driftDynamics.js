@@ -1,4 +1,5 @@
 var _ = require('underscore');
+var values = require('../data/values');
 
 function updateDrifts (army) {
 
@@ -42,7 +43,7 @@ function updateDrifts (army) {
 
     unit.drift = 0;
   
-    if (unit.commander.drift > 500) {
+    if (unit.commander.drift > values.centerDrift) {
       
       unit.drift = 1;
 

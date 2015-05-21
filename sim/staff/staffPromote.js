@@ -1,4 +1,5 @@
 var _ = require('underscore');
+var values = require('../data/values');
 var helpers = require('../utils/helpers')
 var staffRecruiter = require('./staffRecruiter');
 var unitManager = require('../units/unitManager');
@@ -16,6 +17,7 @@ var promotion = function (rank, army, oldUnit, targetUnit)  {
 
 	};
 
+	oldUnit.commander.prestige += values.prestigePromotion(oldUnit.commander); 
 	oldUnit.commander.rank = rank;
 	oldUnit.commander.plotting = false;
 	oldUnit.commander = undefined;

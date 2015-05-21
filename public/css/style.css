@@ -96,6 +96,7 @@ div.regiments {
 }
 div.unit-data {
 	margin-bottom: 10px;
+	min-height: 100px;
 }
 div.brigade-data, div.division-data {
 	min-height: 100px;
@@ -111,8 +112,6 @@ div.company-data {
 div.battalions {
 	padding-top: 12px;
 }
-
-
 p.officer {
 	line-height: 32px;
 	font-weight: bold;
@@ -139,19 +138,29 @@ span.stars, span.xp, span.alignment, span.unit, span.diamonds {
 	margin-top:8px;
 	min-width: 50px;
 }
+span.stars {
+	text-align: center;
+}
 span.stars-inspect {
 	color: red;
+	min-width: 25px;
+	max-width: 25px;
 }
 span.stars-inspect-battalion {
 	font-size: 6px;
 	display: inline-block;
+	height: 8px;
+	min-width: 25px;
 }
 span.stars-plot {
 	color: black;
-	font-size: 5px;
+	display: inline-block;
+	font-size: 6px;
 	margin-right: 0px;
-	max-width: 10px;
-	min-width: 0;
+	height: 8px;
+	min-width: 25px;
+	max-width: 25px;
+	float: left;
 }
 span.unit {
 	margin-right:0px;
@@ -170,9 +179,9 @@ span.diamonds {
 	line-height: 12px;
 	margin-top: 10px;
 	min-height: 12px;
-	width: 22px;
 	text-align: center;
 	margin-right: 0px;
+	min-width: 50px;
 }
 span.unit-company {
 	margin-right: 6px;

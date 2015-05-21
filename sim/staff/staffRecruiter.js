@@ -1,5 +1,6 @@
 var helpers = require('../utils/helpers');
 var names = require('../data/names');
+var values = require('../data/values')
 var staffManager = require('./staffManager')
 var armyEngine = require('../armyEngine');
 
@@ -13,47 +14,50 @@ exports.newRecruit = function (unit) {
 	globalOfficerId++;
 	officer.lastName = helpers.setLastName();
 	officer.firstName = helpers.setFirstName();
-	officer.retiredMessage = "in duty";
+	officer.statusMessage = values.statusMessages.duty;
 	officer.inspecting = false;
 	officer.retired = false;
 	officer.plotting = false;
 	officer.bonds = [];
 	officer.badges = [];
-	officer.intelligence = helpers.randomNumber(100);
-	officer.drift = helpers.randomNumber(1000);
+	officer.intelligence = helpers.randomNumber(values.baseIntelligence);
+	officer.drift = helpers.randomNumber(values.baseDrift);
 	
 	switch (unit.type) {
 		case "army":
-			officer.prestige = helpers.randomNumber(60);
-			officer.xp = helpers.randomNumber(10) + 60;
+			officer.prestige = helpers.randomNumber(10) + values.startingPrestige.ltGeneral;
+			officer.xp = helpers.randomNumber(10) + values.startingExperience.ltGeneral;
 			officer.rank = names.ranks.ltGeneral;
 		break;
 		case "division":
-			officer.prestige = helpers.randomNumber(50);
-			officer.xp = helpers.randomNumber(10) + 50;
+			officer.prestige = helpers.randomNumber(10) + values.startingPrestige.dvGeneral;
+			officer.xp = helpers.randomNumber(10) + values.startingExperience.dvGeneral;;
 			officer.rank = names.ranks.dvGeneral;
 		break;
 		case "brigade":
-			officer.prestige = helpers.randomNumber(40);
-			officer.xp = helpers.randomNumber(10) + 40;
+			officer.prestige = helpers.randomNumber(10) + values.startingPrestige.bgGeneral;
+			officer.xp = helpers.randomNumber(10) + values.startingExperience.bgGeneral;;
 			officer.rank = names.ranks.bgGeneral;
 		break;
 		case "regiment":
-			officer.prestige = helpers.randomNumber(30);
-			officer.xp = helpers.randomNumber(10) + 30;
+			officer.prestige = helpers.randomNumber(10) + values.startingPrestige.coronel;
+			officer.xp = helpers.randomNumber(10) + values.startingExperience.coronel;;
 			officer.rank = names.ranks.coronel;
 		break;
 		case "company":
-			officer.prestige = helpers.randomNumber(20);
-			officer.xp = helpers.randomNumber(10) + 20;
+			officer.prestige = helpers.randomNumber(10) + values.startingPrestige.major;
+			officer.xp = helpers.randomNumber(10) + values.startingExperience.major;
 			officer.rank = names.ranks.major;
 		break;
 		case "battalion":
-			officer.prestige = helpers.randomNumber(10);
-			officer.xp = helpers.randomNumber(10) + 10;
+			officer.prestige = helpers.randomNumber(10) + values.startingPrestige.captain;
+			officer.xp = helpers.randomNumber(10);
 			officer.rank = names.ranks.captain;
 		break;
-	}
+	};
+
+	var lastNameRecord = {id: officer.id, lastName: officer.lastName};
+	armyEngine.army().lastNames.push(lastNameRecord);
 
 	var staff = staffManager.staff(armyEngine.army());
 	staff.push(officer);

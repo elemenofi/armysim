@@ -23,5 +23,6 @@ exports.army = {
     coronels: [],
     majors: [],
     captains: []
-  }
+  },
+  lastNames: []
 };

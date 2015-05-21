@@ -10,25 +10,33 @@ army.use(bodyParser.json());
 army.use(bodyParser.urlencoded({ extended: true}));
 
 army.get('/army', function (req, res) {
+
   res.json(armyEngine.army());
+
 });
 
 army.get('/army/turns', function (req, res) {
+
   armyEngine.actions().turnsToggle(armyEngine.army());
+
   res.json(armyEngine.army().day);
+
 });
 
 army.post('/army/inspect', function (req, res) {
+
   armyEngine.actions().inspectToggle(armyEngine.army(), req.body);
-	console.log("reset");
 
   res.json(req.body.lastName);
+
 });
 
 army.get('/army/inspectReset', function (req, res) {
-	console.log("reset");
+
   armyEngine.actions().inspectReset(armyEngine.army());
+
 });
 
 army.listen(8000);
+
 console.log("Army started on port 8000");
