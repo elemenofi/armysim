@@ -52,8 +52,8 @@ var randomColor = function () {
 
 var createBadge = function  () {
 	var badge = {};
-	badge.x = randomNumber(6) + 2;
-	badge.y = 2;
+	badge.x = 6;
+	badge.y = 3;
 	badge.bg = randomColor();
 	return badge;
 };
