@@ -205,7 +205,7 @@
 			<div class="inspectedHistory">
 				
 				<ul>
-					<li ng-repeat="officer in army.inspecting track by officer.id | orderBy: '-prestige'">
+					<li ng-repeat="officer in army.inspecting | orderBy: '-prestige'">
 						<span>{{officer.rank}} {{officer.firstName}} {{officer.lastName}}</span><br>
 						<br>
 						<span>PRESTIGE: {{officer.prestige}} <br> DRIFT: {{officer.drift}} <br> XP: {{officer.xp}}, <br> STATUS: {{officer.statusMessage}}</span>
