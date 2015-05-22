@@ -5,7 +5,7 @@ var bodyParser = require('body-parser');
 var army = express();
 var armyEngine = require('./sim/armyEngine');
 
-army.use(express.static(__dirname + '/public'));
+army.use(express.static(__dirname + '/public2'));
 army.use(bodyParser.json());
 army.use(bodyParser.urlencoded({ extended: true}));
 
