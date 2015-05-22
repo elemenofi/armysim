@@ -25,6 +25,7 @@ var retireOfficer = function (officer, army, message) {
 
 	officer.retired = true;
 	officer.statusMessage = message;
+	officer.history.push(message + " on " + army.formatedDate);
 	switch (officer.rank) {
 		
 		case "Captain":

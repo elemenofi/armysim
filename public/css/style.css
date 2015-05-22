@@ -170,8 +170,8 @@ div.companies span.badge-holder, div.battalions span.badge-holder {
 }
 span.badge {
 	display: block;
-	width: 2px;
-	height: 2px;
+	width: 10px;
+	height: 3px;
 	float: left;
 }
 span.stars {
@@ -251,7 +251,7 @@ div.history li, div.inspectedHistory li {
 }
 
 div.history li ul.officer-history li, div.inspectedHistory li ul.officer-history li {
-	margin-bottom: 16px;
+	margin-bottom: 0px;
 }
 
 div.inspectedHistory {

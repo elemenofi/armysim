@@ -52,8 +52,10 @@ function updatePlots(army) {
         plotPrestige += values.plotPrestige(plotter);
         prestigeHit += values.prestigeHit(plotter);
 
-        plotter.history.push(values.plotMessage.start(accomplice, target.rank + " " + target.lastName, army.formatedDate));
-
+        if (accomplice) {
+          plotter.history.push(values.plotMessage.start(accomplice, target.rank + " " + target.lastName, army.formatedDate));
+        };
+        
       });
 
       target.prestige -= prestigeHit;

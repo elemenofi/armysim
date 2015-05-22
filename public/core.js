@@ -24,7 +24,7 @@ army.controller('armyController', [ '$rootScope', '$scope', '$http', '$timeout',
         
         });
 
-      }, 2000);
+      }, 500);
     };
 
     

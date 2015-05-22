@@ -11,14 +11,14 @@ exports.baseDrift = 1000;
 exports.centerDrift = 500;
 
 exports.maxExperience = {
-  general: 90,
-  ltGeneral: 80,
-  dvGeneral: 70,
-  bgGeneral: 60,
-  coronel: 50,
-  ltCoronel: 40,
-  major: 30,
-  captain: 20
+  general: 370,
+  ltGeneral: 320,
+  dvGeneral: 280,
+  bgGeneral: 240,
+  coronel: 200,
+  ltCoronel: 160,
+  major: 120,
+  captain: 80
 };
 
 exports.startingExperience = {
@@ -57,14 +57,14 @@ exports.prestigePromotion = function (officer) {
 };
 
 exports.badgesPerPrestige = function (officer) {
-  return Math.round(officer.prestige / 10);
+  return Math.round(officer.prestige / 50);
 };
 
 exports.statusMessage = {
-  duty: "in duty",
-  retire: "retired",
+  duty: "In duty",
+  retire: "Retired",
   forcedRetire: function (plottersNames) {
-    return "forced to retire by " + plottersNames.splice(" ").join(" and ");
+    return "Forced to retire by " + plottersNames.splice(" ").join(" and ");
   }
 };
 

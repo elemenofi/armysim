@@ -50,7 +50,7 @@ function passTurn () {
 
 setInterval(function () {
     passTurn();
-}, 2000);
+}, 500);
 
 exports.army = function () {
   return army;
