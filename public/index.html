@@ -1,5 +1,6 @@
 <!doctype html>
 <html ng-app="army">
+
 <head>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
@@ -9,6 +10,7 @@
 	<script src="core.js"></script>
 	<link type="text/css" rel="stylesheet" href="css/style.css" />
 </head>
+
 <body ng-controller="armyController">
 	<div>
 
@@ -17,6 +19,8 @@
 			<span class="date">{{army.formatedDate}}</span>
 			<br>
 			<br>
+			<br>
+
 			<div ng-click="inspectToggle(army.commander);" class="commanderInChief">
 				
 				<div class="unit-data centered">
@@ -24,7 +28,7 @@
 					
 					<span class="unit">Commander in Chief</span><span class="stars main-stars">&#9733; &#9733; &#9733; &#9733; &#9733;</span><br><span class="officer-name">{{army.commander.rank}} {{army.commander.firstName}} {{army.commander.lastName}}</span> 
 						<span class="badge-holder" style="margin: 10px auto; float: none;">
-							<span ng-repeat="badge in army.commander.badges" class="badge" ng-style="{ 'width' : badge.x, 'height' : badge.y, 'background-color': badge.bg }"></span>
+							<span ng-repeat="badge in army.commander.badges track by badge.bg" class="badge" ng-style="{ 'width' : badge.x, 'height' : badge.y, 'background-color': badge.bg }"></span>
 							<div class="clear"></div>
 						</span>
 					<br>
@@ -39,7 +43,7 @@
 							<span class="decorations">
 							<span class="stars">&#9733; &#9733; &#9733; &#9733;</span>
 							<span class="badge-holder">
-								<span ng-repeat="badge in corp.commander.badges" class="badge" ng-style="{ 'width' : badge.x, 'height' : badge.y, 'background-color': badge.bg }"></span>
+								<span ng-repeat="badge in corp.commander.badges track by badge.bg" class="badge" ng-style="{ 'width' : badge.x, 'height' : badge.y, 'background-color': badge.bg }"></span>
 								<div class="clear"></div>
 							</span>
 						</span>
@@ -59,7 +63,7 @@
 							<span class="decorations">
 							<span class="stars">&#9733; &#9733; &#9733; </span>
 							<span class="badge-holder">
-								<span ng-repeat="badge in division.commander.badges" class="badge" ng-style="{ 'width' : badge.x, 'height' : badge.y, 'background-color': badge.bg }"></span>
+								<span ng-repeat="badge in division.commander.badges track by badge.bg" class="badge" ng-style="{ 'width' : badge.x, 'height' : badge.y, 'background-color': badge.bg }"></span>
 								<div class="clear"></div>
 							</span>
 						</span>
@@ -76,7 +80,7 @@
 								<span class="decorations">
 								<span class="stars">&#9733; &#9733;</span>
 								<span class="badge-holder">
-									<span ng-repeat="badge in brigade.commander.badges" class="badge" ng-style="{ 'width' : badge.x, 'height' : badge.y, 'background-color': badge.bg }"></span>
+									<span ng-repeat="badge in brigade.commander.badges track by badge.bg" class="badge" ng-style="{ 'width' : badge.x, 'height' : badge.y, 'background-color': badge.bg }"></span>
 									<div class="clear"></div>
 								</span>
 								</span>
@@ -93,7 +97,7 @@
 									<span class="decorations">
 										<span class="stars">&#9733;</span>
 										<span class="badge-holder">
-											<span ng-repeat="badge in regiment.commander.badges" class="badge" ng-style="{ 'width' : badge.x, 'height' : badge.y, 'background-color': badge.bg }"></span>
+											<span ng-repeat="badge in regiment.commander.badges track by badge.bg" class="badge" ng-style="{ 'width' : badge.x, 'height' : badge.y, 'background-color': badge.bg }"></span>
 											<div class="clear"></div>
 										</span>	
 									</span>
@@ -114,7 +118,7 @@
 											<span>&diams; &diams;</span>
 										</span>
 										<span class="badge-holder">
-											<span ng-repeat="badge in company.commander.badges" class="badge" ng-style="{ 'width' : badge.x, 'height' : badge.y, 'background-color': badge.bg }"></span>
+											<span ng-repeat="badge in company.commander.badges track by badge.bg" class="badge" ng-style="{ 'width' : badge.x, 'height' : badge.y, 'background-color': badge.bg }"></span>
 											<div class="clear"></div>
 										</span><br>
 										<span ng-if="company.commander.plotting" class="stars stars-plot">&#9733;</span>
@@ -133,7 +137,7 @@
 												<span>&diams;</span>
 											</span><br>
 											<span class="badge-holder">
-												<span ng-repeat="badge in battalion.commander.badges" class="badge" ng-style="{ 'width' : badge.x, 'height' : badge.y, 'background-color': badge.bg }"></span>
+												<span ng-repeat="badge in battalion.commander.badges track by badge.bg" class="badge" ng-style="{ 'width' : badge.x, 'height' : badge.y, 'background-color': badge.bg }"></span>
 												<div class="clear"></div>
 											</span>
 											<span ng-if="battalion.commander.plotting" class="stars stars-plot">&#9733;</span>
@@ -151,7 +155,7 @@
 													<span>&diams;</span>
 												</span><br>
 												<span class="badge-holder">
-													<span ng-repeat="badge in platoon.commander.badges" class="badge" ng-style="{ 'width' : badge.x, 'height' : badge.y, 'background-color': badge.bg }"></span>
+													<span ng-repeat="badge in platoon.commander.badges track by badge.bg" class="badge" ng-style="{ 'width' : badge.x, 'height' : badge.y, 'background-color': badge.bg }"></span>
 													<div class="clear"></div>
 												</span>
 												<span ng-if="platoon.commander.plotting" class="stars stars-plot">&#9733;</span>
@@ -170,15 +174,20 @@
 					</div> <!-- brigades-->
 
 				</div> <!-- divisions -->
+
 			<div class="clear"></div>
+
 			</div> <!-- corps -->
 
 			<div class="clear"></div>
+
 			<button ng-click="turnsToggle()">Pause game</button>
 			<button ng-click="inspectReset()">Reset inspected officers</button>
+
 			<div class="history">
-				<ul>
-					<li ng-repeat="officer in army.retired.generals | orderBy: '-prestige' | limitTo: 1">
+
+				<!-- <ul>
+					<li ng-repeat="officer in army.retired.generals track by officer.id| orderBy: '-prestige' | limitTo: 1">
 						<span ng-if="officer.retired === true">
 							<span>{{officer.rank}} {{officer.firstName}} {{officer.lastName}}</span><br>
 							<br>
@@ -189,7 +198,8 @@
 						</span>
 					</li>
 					<hr>
-				</ul>
+				</ul> -->
+
 			</div>
 		
 			<div class="inspectedHistory">
@@ -200,13 +210,17 @@
 						<br>
 						<span>PRESTIGE: {{officer.prestige}} <br> DRIFT: {{officer.drift}} <br> XP: {{officer.xp}}, <br> STATUS: {{officer.statusMessage}}</span>
 						<ul class="officer-history">
-							<li ng-repeat="story in officer.history">{{story}}</li>
+							<li ng-repeat="story in officer.history track by $index">{{story}}</li>
 						</ul>
 					</li>
 					<hr>
 				</ul>
+
 			</div>
+
 		<div>
+
 	</div>
+
 </body>
 </html>

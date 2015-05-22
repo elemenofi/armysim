@@ -1,6 +1,7 @@
 var values = require('../data/values');
 var helpers = require('../utils/helpers');
 var staffHistory = require('./staffHistory');
+var armyEngine = require('../armyEngine');
 var _ = require('underscore')
 
 function givePrestige (officer, army) {
@@ -9,7 +10,7 @@ function givePrestige (officer, army) {
 
 	bonusPrestige += officer.prestige;
 	bonusPrestige += helpers.randomNumber(values.prestigeTurn);
-	bonusPrestige += staffHistory.checkFamily(officer, army.lastNames);
+	bonusPrestige += staffHistory.checkFamily(officer, armyEngine.lastNames());
 	
 	if (officer.bonds.length > 0) {
 		bonusPrestige += officer.bonds[officer.bonds.length - 1].strength;

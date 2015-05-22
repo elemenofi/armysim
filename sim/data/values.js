@@ -50,7 +50,7 @@ exports.prestigeHit = function (plotter) {
   return Math.round(plotter.prestige / 2);
 };
 
-exports.prestigeTurn = 25;
+exports.prestigeTurn = 10;
 
 exports.prestigePromotion = function (officer) {
   return Math.round(officer.prestige / 20);

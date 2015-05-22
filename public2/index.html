@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Army React</title>
+  <script src="node_modules/react/dist/JSXTransformer.js"></script>
+  <script src="node_modules/react/dist/react.js"></script>
+  <script src="node_modules/jquery/dist/jquery.js"></script>
+  
+  <style>
+  body {
+    background-color:lightgray;
+    font-size: 9px;
+  }
+  h1 {
+    color:blue
+  }
+  p {
+    color:green
+  }
+  div.half {
+    width: 50%;
+    float: left;
+  }
+  </style>
+
+
+</head>
+<body>
+  
+  <script type="text/jsx">
+    var army;
+    var message;
+
+    $(document).ready(function () {
+
+      function getArmy () {
+
+        $.get('army').success(function (data) {
+          
+          army = data;
+
+          renderArmy(army);           
+
+        });
+
+      };
+
+      function renderArmy (army) {
+
+        rendered = true;
+
+        React.render(
+          <Army army={army} />,
+          document.body
+        );
+      
+      };  
+
+      function drawArmyStructure (army) {
+        
+        var corps = [];
+
+        for (var i=0; i < army.corps.length; i++) {
+            corps.push(<Corp corp={army.corps[i]} />);
+        }
+
+        return (
+          <div>
+            <UnitName unit={army} />
+            <UnitCommander commander={army.commander} />
+            <div>{corps}</div>
+          </div>
+        );
+
+      };
+
+      function drawCorpStructure (corp) {
+        
+        var divisions = [];
+
+        for (var i=0; i < corp.divisions.length; i++) {
+            divisions.push(<Division division={corp.divisions[i]} />);
+        }
+
+        return (
+          <div className="corp half">
+            <UnitName unit={corp} />
+            <UnitCommander commander={corp.commander} />
+            <div>{divisions}</div>
+          </div>
+        );
+
+      };
+
+      function drawDivisionStructure (division) {
+        
+        var brigades = [];
+
+        for (var i=0; i < division.brigades.length; i++) {
+            brigades.push(<Brigade brigade={division.brigades[i]} />);
+        }
+
+        return (
+          <div className="division half">
+            <UnitName unit={division} />
+            <UnitCommander commander={division.commander} />
+            <div>{brigades}</div>
+          </div>
+        );
+
+      };
+
+      function drawBrigadeStructure (brigade) {
+        
+        var regiments = [];
+
+        for (var i=0; i < brigade.regiments.length; i++) {
+            regiments.push(<Regiment regiment={brigade.regiments[i]} />);
+        }
+
+        return (
+          <div className="brigade half">
+            <UnitName unit={brigade} />
+            <UnitCommander commander={brigade.commander} />
+            <div>{regiments}</div>
+          </div>
+        );
+
+      };
+
+      function drawRegimentStructure (regiment) {
+        
+        var companies = [];
+
+        for (var i=0; i < regiment.companies.length; i++) {
+            companies.push(<Company company={regiment.companies[i]} />);
+        }
+
+        return (
+          <div className="regiment half">
+            <UnitName unit={regiment} />
+            <UnitCommander commander={regiment.commander} />
+            <div>{companies}</div>
+          </div>
+        );
+
+      };
+
+      function drawCompanyStructure (company) {
+        
+        var battalions = [];
+
+        for (var i=0; i < company.battalions.length; i++) {
+            battalions.push(<Battalion battalion={company.battalions[i]} />);
+        }
+
+        return (
+          <div>
+            <UnitName unit={company} />
+            <UnitCommander commander={company.commander} />
+            <div>{battalions}</div>
+          </div>
+        );
+
+      };
+
+      function drawBattalionStructure (battalion) {
+        
+        var platoons = [];
+
+        for (var i=0; i < battalion.platoons.length; i++) {
+            platoons.push(<Platoon platoon={battalion.platoons[i]} />);
+        }
+
+        return (
+          <div>
+            <UnitName unit={battalion} />
+            <UnitCommander commander={battalion.commander} />
+            <div>{platoons}</div>
+          </div>
+        );
+
+      };
+
+      function drawPlatoonStructure (platoon) {
+        
+        return (
+          <div>
+            <UnitName unit={platoon} />
+            <UnitCommander commander={platoon.commander} />
+          </div>
+        );
+
+      };
+
+      var Army = React.createClass({
+        render: function () {
+          return drawArmyStructure (this.props.army);
+        }
+      });
+
+      var Corp = React.createClass({
+        render: function() {
+          return drawCorpStructure (this.props.corp);
+        }
+      });
+
+      var Division = React.createClass({
+        render: function() {
+          return drawDivisionStructure (this.props.division);
+        }
+      });
+
+      var Brigade = React.createClass({
+        render: function() {
+          return drawBrigadeStructure (this.props.brigade);
+        }
+      });
+
+      var Regiment = React.createClass({
+        render: function() {
+          return drawRegimentStructure (this.props.regiment);
+        }
+      });
+
+      var Company = React.createClass({
+        render: function() {
+          return drawCompanyStructure (this.props.company);
+        }
+      });
+
+      var Battalion = React.createClass({
+        render: function() {
+          return drawBattalionStructure (this.props.battalion);
+        }
+      });
+
+      var Platoon = React.createClass({
+        render: function() {
+          return drawPlatoonStructure (this.props.platoon);
+        }
+      });
+
+      var UnitName = React.createClass({
+        render: function() {
+          return (
+            <p>{this.props.unit.name}</p>
+          );
+        }
+      });
+
+      // var UnitCommander = React.createClass({
+      //   render: function() {
+      //     return (
+      //       <p>{this.props.commander.rank} {this.props.commander.firstName} {this.props.commander.lastName}</p>
+      //     );
+      //   }
+      // });
+      function drawNames (commander) {
+        switch (commander.rank) {
+          case "Captain":
+            return (<p>{commander.lastName}</p>);
+          break;
+          case "Major":
+            return (<p>Mj. {commander.lastName}</p>);
+          break;
+          case "Lieutenant Coronel":
+            return (<p>Lt. Coronel {commander.lastName}</p>);
+          break;
+          case "Coronel":
+            return (<p>{commander.rank} {commander.lastName}</p>);
+          break;
+          case "Brigade General":
+            return (<p>{commander.rank} {commander.lastName}</p>);
+          break;
+          default:
+            return (<p>{commander.rank} {commander.firstName} {commander.lastName}</p>);
+        }
+      } 
+
+      var UnitCommander = React.createClass({
+        render: function() {
+          return drawNames(this.props.commander);
+        }
+      });     
+
+      setInterval(function(){
+        getArmy();        
+      }, 2000);
+
+    });
+  </script>
+
+</body>
+</html>

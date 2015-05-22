@@ -7,47 +7,47 @@ army.controller('armyController', [ '$rootScope', '$scope', '$http', '$timeout',
     $scope.playing = true;
 
     function updateArmy () {
-      $timeout(function(){
-        
+
+      setTimeout(function(){
+
         $scope.$apply(function() {
-          
+
           if ($scope.playing) {
-          
+
             $http.get(api)
             .success(function (data) {
               $scope.army = data;
-              console.log(data);
             })
-            .then(updateArmy);  
-          
+
+
           };
-        
+
         });
 
       }, 500);
+
     };
 
-    
-    
     updateArmy();
 
     $scope.inspectToggle = function (officer) {
-      console.log("inspect");
+
       $http.post(api + "/inspect", officer)
         .success(function(data) {
-          // console.log(data);
         });
+
     };
 
     $scope.inspectReset = function () {
-      console.log("inspectReset");
+
       $http.post(api + "/inspectReset", null)
         .success(function(data) {
-          // console.log(data);
         });
+
     };
 
     $scope.turnsToggle = function () {
+
       $scope.playing = !$scope.playing;
 
       if ($scope.playing) {
@@ -56,8 +56,8 @@ army.controller('armyController', [ '$rootScope', '$scope', '$http', '$timeout',
 
       $http.get(api + "/turns", null)
         .success(function(data) {
-          // console.log(data);
         });
+
     };
 
   }
