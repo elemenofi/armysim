@@ -1,11 +1,10 @@
-//start and deps
 var express = require('express');
 var _ = require('underscore');
 var bodyParser = require('body-parser');
 var army = express();
 var armyEngine = require('./sim/armyEngine');
 
-army.use(express.static(__dirname + '/public2'));
+army.use(express.static(__dirname + '/public'));
 army.use(bodyParser.json());
 army.use(bodyParser.urlencoded({ extended: true}));
 

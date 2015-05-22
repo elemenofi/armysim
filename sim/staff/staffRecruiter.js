@@ -70,7 +70,7 @@ exports.newRecruit = function (unit) {
 	};
 
 	var lastNameRecord = {id: officer.id, lastName: officer.lastName};
-	armyEngine.army().lastNames.push(lastNameRecord);
+	armyEngine.lastNames().push(lastNameRecord);
 
 	var staff = staffManager.staff(armyEngine.army());
 	staff.push(officer);

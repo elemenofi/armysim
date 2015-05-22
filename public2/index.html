@@ -263,9 +263,15 @@
             return (<p>{commander.lastName}</p>);
           break;
           case "Major":
-            return (<p>{commander.rank} {commander.lastName}</p>);
+            return (<p>Mj. {commander.lastName}</p>);
           break;
           case "Lieutenant Coronel":
+            return (<p>Lt. Coronel {commander.lastName}</p>);
+          break;
+          case "Coronel":
+            return (<p>{commander.rank} {commander.lastName}</p>);
+          break;
+          case "Brigade General":
             return (<p>{commander.rank} {commander.lastName}</p>);
           break;
           default:

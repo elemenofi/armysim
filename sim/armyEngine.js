@@ -11,6 +11,7 @@ require('date-utils');
 
 var army = templates.army;
 var day = 0;
+var lastNames = [];
 
 army.date = new Date();
 
@@ -60,5 +61,8 @@ exports.actions = function () {
   return armyInterface;
 };
 
+exports.lastNames = function () {
+  return lastNames;
+}
 
 
