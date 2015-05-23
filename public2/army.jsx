@@ -34,167 +34,54 @@ var army;
 
       function drawUnit(unit, subUnit) {
         var subUnits = [];
-        
+        var className = '';
+
         var componentType = function () {
         
           switch (subUnit) {
             case "corps":
+              className = 'army';
               return <Corp corp={unit[subUnit][i]} />
+            break;
+            case "divisions":
+              className = 'corp';
+              return <Division division={unit[subUnit][i]} />
+            break;
+            case "brigades":
+              className = 'division';
+              return <Brigade brigade={unit[subUnit][i]} />
+            break;
+            case "regiments":
+              className = 'brigade';
+              return <Regiment regiment={unit[subUnit][i]} />
+            break;
+            case "companies":
+              className = 'regiment';
+              return <Company company={unit[subUnit][i]} />
+            break;
+            case "battalions":
+              className = 'company';
+              return <Battalion battalion={unit[subUnit][i]} />
+            break;
+            case "platoons":
+              className = 'battalion';
+              return <Platoon platoon={unit[subUnit][i]} />
             break;
           }
         }
+        
 
         for (var i=0; i < unit[subUnit].length; i++) {
-            subUnits.push(componentType());
+          subUnits.push(componentType());
         }
 
         return (
-          <div>
+          <div className={className}>
             <UnitName unit={unit} />
-            &#9733; &#9733; &#9733; &#9733; <UnitCommander commander={unit.commander} />
+            <Rank commander={unit.commander} /> <UnitCommander commander={unit.commander} />
             <Badges officer={unit.commander} />
             <div style={clearStyle}></div>
-            <div>{subUnits}</div>
-          </div>
-        );
-
-      };
-
-      function drawArmyStructure (army) {
-        
-        var corps = [];
-
-        for (var i=0; i < army.corps.length; i++) {
-            corps.push(<Corp corp={army.corps[i]} />);
-        }
-
-        return (
-          <div>
-            <UnitName unit={army} />
-            &#9733; &#9733; &#9733; &#9733; <UnitCommander commander={army.commander} />
-            <Badges officer={army.commander} />
-            <div style={clearStyle}></div>
-            <div>{corps}</div>
-          </div>
-        );
-
-      };
-
-      function drawCorpStructure (corp) {
-        
-        var divisions = [];
-
-        for (var i=0; i < corp.divisions.length; i++) {
-            divisions.push(<Division division={corp.divisions[i]} />);
-        }
-
-        return (
-          <div className="corp half">
-            <UnitName unit={corp} />
-            &#9733; &#9733; &#9733; <UnitCommander commander={corp.commander} />
-            <Badges officer={corp.commander} />
-            <div style={clearStyle}></div>
-            <div>{divisions}</div>
-          </div>
-        );
-
-      };
-
-      function drawDivisionStructure (division) {
-        
-        var brigades = [];
-
-        for (var i=0; i < division.brigades.length; i++) {
-            brigades.push(<Brigade brigade={division.brigades[i]} />);
-        }
-
-        return (
-          <div className="division half">
-            <UnitName unit={division} />
-            &#9733; &#9733; <UnitCommander commander={division.commander} />
-            <Badges officer={division.commander} />
-            <div style={clearStyle}></div>
-            <div>{brigades}</div>
-          </div>
-        );
-
-      };
-
-      function drawBrigadeStructure (brigade) {
-        
-        var regiments = [];
-
-        for (var i=0; i < brigade.regiments.length; i++) {
-            regiments.push(<Regiment regiment={brigade.regiments[i]} />);
-        }
-
-        return (
-          <div className="brigade half">
-            <UnitName unit={brigade} />
-            &#9733; <UnitCommander commander={brigade.commander} />
-            <Badges officer={brigade.commander} />
-            <div style={clearStyle}></div>
-            <div>{regiments}</div>
-          </div>
-        );
-
-      };
-
-      function drawRegimentStructure (regiment) {
-        
-        var companies = [];
-
-        for (var i=0; i < regiment.companies.length; i++) {
-            companies.push(<Company company={regiment.companies[i]} />);
-        }
-
-        return (
-          <div className="regiment half">
-            <UnitName unit={regiment} />
-            &diams; &diams; &diams; &diams; <UnitCommander commander={regiment.commander} />
-            <Badges officer={regiment.commander} />
-            <div style={clearStyle}></div>
-            <div>{companies}</div>
-          </div>
-        );
-
-      };
-
-      function drawCompanyStructure (company) {
-        
-        var battalions = [];
-
-        for (var i=0; i < company.battalions.length; i++) {
-            battalions.push(<Battalion battalion={company.battalions[i]} />);
-        }
-
-        return (
-          <div className="company">
-            <UnitName unit={company} />
-            &diams; &diams; &diams; <UnitCommander commander={company.commander} />
-            <Badges officer={company.commander} />
-            <div style={clearStyle}></div>
-            <div>{battalions}</div>
-          </div>
-        );
-
-      };
-
-      function drawBattalionStructure (battalion) {
-        
-        var platoons = [];
-
-        for (var i=0; i < battalion.platoons.length; i++) {
-            platoons.push(<Platoon platoon={battalion.platoons[i]} />);
-        }
-
-        return (
-          <div>
-            <UnitName unit={battalion} />
-            &diams; &diams; <UnitCommander commander={battalion.commander} />
-            <Badges officer={battalion.commander} />
-            <div style={clearStyle}></div>
-            <div>{platoons}</div>
+            {subUnits}
           </div>
         );
 
@@ -220,37 +107,37 @@ var army;
 
       var Corp = React.createClass({
         render: function() {
-          return drawCorpStructure (this.props.corp);
+          return drawUnit (this.props.corp, "divisions");
         }
       });
 
       var Division = React.createClass({
         render: function() {
-          return drawDivisionStructure (this.props.division);
+          return drawUnit (this.props.division, "brigades");
         }
       });
 
       var Brigade = React.createClass({
         render: function() {
-          return drawBrigadeStructure (this.props.brigade);
+          return drawUnit (this.props.brigade, "regiments");
         }
       });
 
       var Regiment = React.createClass({
         render: function() {
-          return drawRegimentStructure (this.props.regiment);
+          return drawUnit (this.props.regiment, "companies");
         }
       });
 
       var Company = React.createClass({
         render: function() {
-          return drawCompanyStructure (this.props.company);
+          return drawUnit (this.props.company, "battalions");
         }
       });
 
       var Battalion = React.createClass({
         render: function() {
-          return drawBattalionStructure (this.props.battalion);
+          return drawUnit (this.props.battalion, "platoons");
         }
       });
 
@@ -265,6 +152,39 @@ var army;
           return (
             <p>{this.props.unit.name}</p>
           );
+        }
+      });
+
+      var Rank = React.createClass({
+        render: function() {
+          switch (this.props.commander.rank) {
+            case "Captain":
+              return (<p>&diams;</p>);
+            break;
+            case "Major":
+              return (<p>&diams; &diams;</p>);
+            break;
+            case "Lieutenant Coronel":
+              return (<p>&diams; &diams; &diams;</p>);
+            break;
+            case "Coronel":
+              return (<p>&diams; &diams; &diams; &diams;</p>);
+            break;
+            case "Brigade General":
+              return (<p>&#9733;</p>);
+            break;
+            case "Division General":
+              return (<p>&#9733; &#9733;</p>);
+            break;
+            case "Lieutenant General":
+              return (<p>&#9733; &#9733; &#9733;</p>);
+            break;
+            case "General":
+              return (<p>&#9733; &#9733; &#9733; &#9733;</p>);
+            break;
+            default:
+              return (<p>{commander.rank} {commander.firstName} {commander.lastName}</p>);
+          }
         }
       });
 
@@ -304,8 +224,6 @@ var army;
         }
       });
 
-
-
       function drawBadges (badges) {
       
         var badgeHolder = [];
@@ -322,8 +240,6 @@ var army;
         
         };
 
-        
-
         return (
         
           <div className="badgeHolder">
@@ -334,9 +250,6 @@ var army;
         );
 
       };
-
-      
-
 
       setInterval(function(){
         getArmy();        
