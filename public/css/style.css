@@ -251,7 +251,8 @@ div.history li, div.inspectedHistory li {
 }
 
 div.history li ul.officer-history li, div.inspectedHistory li ul.officer-history li {
-	margin-bottom: 16px;
+	margin-bottom: 0px;
+	padding: 5px 0;
 }
 
 div.inspectedHistory {

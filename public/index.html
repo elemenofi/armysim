@@ -186,8 +186,8 @@
 
 			<div class="history">
 
-				<ul>
-					<li ng-repeat="officer in army.retired.generals | orderBy: '-prestige' | limitTo: 1">
+				<!-- <ul>
+					<li ng-repeat="officer in army.retired.generals track by officer.id| orderBy: '-prestige' | limitTo: 1">
 						<span ng-if="officer.retired === true">
 							<span>{{officer.rank}} {{officer.firstName}} {{officer.lastName}}</span><br>
 							<br>
@@ -198,7 +198,7 @@
 						</span>
 					</li>
 					<hr>
-				</ul>
+				</ul> -->
 
 			</div>
 		
