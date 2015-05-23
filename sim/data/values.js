@@ -45,11 +45,11 @@ exports.startingPrestige = {
 };
 
 exports.plotPrestige = function (plotter) {
-  return Math.round(plotter.prestige / 2);
+  return Math.round(plotter.prestige / 100);
 };
 
 exports.prestigeHit = function (plotter) {
-  return Math.round(plotter.prestige / 2);
+  return Math.round(plotter.prestige / 100);
 };
 
 exports.prestigeTurn = 10;

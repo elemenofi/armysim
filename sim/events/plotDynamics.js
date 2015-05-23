@@ -42,7 +42,7 @@ function updatePlots(army) {
         _.each(plotters, function (thisPlotter) {
 
           if (thisPlotter.id != plotter.id && thisPlotter.plotting === false) {
-            accomplice = thisPlotter.rank + " " + thisPlotter.lastName;
+            accomplice = plotter.rank + " " + plotter.lastName;
             // console.log(accomplice);
           };
 
