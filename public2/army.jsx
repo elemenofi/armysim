@@ -9,8 +9,6 @@ var army;
           
           army = data;
 
-          console.log(data);
-
           renderArmy(army);           
 
         });
@@ -32,7 +30,7 @@ var army;
         clear: 'both'
       };
 
-      function drawUnit(unit, subUnit) {
+      function drawUnit(unit, subUnit, that) {
         var subUnits = [];
         var className = '';
 
@@ -41,10 +39,12 @@ var army;
           switch (subUnit) {
             case "corps":
               className = 'army';
+              headerName = 'armyHeader';
               return <Corp corp={unit[subUnit][i]} />
             break;
             case "divisions":
               className = 'corp';
+              headerName = 'corpHeader';
               return <Division division={unit[subUnit][i]} />
             break;
             case "brigades":
@@ -70,17 +70,33 @@ var army;
           }
         }
         
-
         for (var i=0; i < unit[subUnit].length; i++) {
           subUnits.push(componentType());
         }
 
+        if (that && that.state.historied) {
+          return (
+            <div className={className}>
+              <div className={headerName} onClick={that.onClick}>
+                <UnitName unit={unit} />
+                <Rank commander={unit.commander} /> <UnitCommander commander={unit.commander} />
+                <Badges officer={unit.commander} />
+                <History officer={unit.commander} />
+                <div style={clearStyle}></div>
+              </div>
+              {subUnits}
+            </div>
+          );
+        }
+        
         return (
           <div className={className}>
-            <UnitName unit={unit} />
-            <Rank commander={unit.commander} /> <UnitCommander commander={unit.commander} />
-            <Badges officer={unit.commander} />
-            <div style={clearStyle}></div>
+            <div className={headerName} onClick={that.onClick}>
+              <UnitName unit={unit} />
+              <Rank commander={unit.commander} /> <UnitCommander commander={unit.commander} />
+              <Badges officer={unit.commander} />
+              <div style={clearStyle}></div>
+            </div>
             {subUnits}
           </div>
         );
@@ -100,44 +116,86 @@ var army;
       };
 
       var Army = React.createClass({
+        getInitialState: function() {
+          return {historied: false};
+        },
+        onClick: function () {
+          this.setState({historied: !this.state.historied});
+        },
         render: function () {
-          return drawUnit (this.props.army, "corps");
+          return drawUnit (this.props.army, "corps", this);
         }
       });
 
       var Corp = React.createClass({
+        getInitialState: function() {
+          return {historied: false};
+        },
+        onClick: function () {
+          this.setState({historied: !this.state.historied});
+        },
         render: function() {
-          return drawUnit (this.props.corp, "divisions");
+          return drawUnit (this.props.corp, "divisions", this);
         }
       });
 
       var Division = React.createClass({
+        getInitialState: function() {
+          return {historied: false};
+        },
+        onClick: function () {
+          this.setState({historied: !this.state.historied});
+        },
         render: function() {
-          return drawUnit (this.props.division, "brigades");
+          return drawUnit (this.props.division, "brigades", this);
         }
       });
 
       var Brigade = React.createClass({
+        getInitialState: function() {
+          return {historied: false};
+        },
+        onClick: function () {
+          this.setState({historied: !this.state.historied});
+        },
         render: function() {
-          return drawUnit (this.props.brigade, "regiments");
+          return drawUnit (this.props.brigade, "regiments", this);
         }
       });
 
       var Regiment = React.createClass({
+        getInitialState: function() {
+          return {historied: false};
+        },
+        onClick: function () {
+          this.setState({historied: !this.state.historied});
+        },
         render: function() {
-          return drawUnit (this.props.regiment, "companies");
+          return drawUnit (this.props.regiment, "companies", this);
         }
       });
 
       var Company = React.createClass({
+        getInitialState: function() {
+          return {historied: false};
+        },
+        onClick: function () {
+          this.setState({historied: !this.state.historied});
+        },
         render: function() {
-          return drawUnit (this.props.company, "battalions");
+          return drawUnit (this.props.company, "battalions", this);
         }
       });
 
       var Battalion = React.createClass({
+        getInitialState: function() {
+          return {historied: false};
+        },
+        onClick: function () {
+          this.setState({historied: !this.state.historied});
+        },
         render: function() {
-          return drawUnit (this.props.battalion, "platoons");
+          return drawUnit (this.props.battalion, "platoons", this);
         }
       });
 
@@ -211,7 +269,7 @@ var army;
       } 
 
       var UnitCommander = React.createClass({
-      
+        
         render: function() {
           return drawNames(this.props.commander);
         }
@@ -250,6 +308,34 @@ var army;
         );
 
       };
+
+      function drawHistories (officer) {
+      
+        var history = [];
+
+        for (var i = 1; i < officer.history.length; i++) {
+
+          history.push(<div>{officer.history[i]}</div>)
+        
+        };
+
+        return (
+        
+          <div className="history">
+            <p>{officer.rank} {officer.firstName} {officer.lastName}</p>
+            <div className="histories">{history}</div>
+            <div style={clearStyle}></div>
+          </div>
+        
+        );
+
+      };
+
+      var History = React.createClass({
+        render: function() {
+          return drawHistories(this.props.officer);
+        }
+      });
 
       setInterval(function(){
         getArmy();        
