@@ -3,17 +3,22 @@ var message;
 
 $(document).ready(function () {
 
-  function getArmy () {
+  // function getArmy () {
 
-    $.get('army').success(function (data) {
+  //   $.get('army').success(function (data) {
       
-      army = data;
+  //     army = data;
 
-      renderArmy(army);           
+  //     renderArmy(army);           
 
-    });
+  //   });
 
-  };
+  // };
+  var socket = io();
+  socket.on('army', function(armyData) {
+    army = armyData;
+    renderArmy(army);   
+  });
 
   function renderArmy (army) {
 
@@ -339,8 +344,8 @@ $(document).ready(function () {
     }
   });
 
-  setInterval(function(){
-    getArmy();        
-  }, 2000);
+  // setInterval(function(){
+  //   getArmy();        
+  // }, 2000);
 
 });

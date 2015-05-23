@@ -1,22 +1,21 @@
 var express = require('express');
+var army = require('express')();
+
+var http = require('http').Server(army);
+var io = require('socket.io')(http);
 var _ = require('underscore');
 var bodyParser = require('body-parser');
-var army = express();
+// var army = express();
 var armyEngine = require('./sim/armyEngine');
+
 
 army.use(express.static(__dirname + '/public2'));
 army.use(bodyParser.json());
 army.use(bodyParser.urlencoded({ extended: true}));
 
-army.get('/army', function (req, res) {
+var armyDTO = {};
 
-	var armyDTO = {
-		corps: armyEngine.army().corps,
-		turns: armyEngine.army().turns,
-		commander: armyEngine.army().commander,
-		name: armyEngine.army().name,
-		date: armyEngine.army().formatedDate
-	};
+army.get('/army', function (req, res) {
 
   res.json(armyDTO);
 
@@ -50,6 +49,21 @@ army.post('/army/inspectReset', function (req, res) {
 
 });
 
-army.listen(8000);
+io.on('connection', function(socket){
+	setInterval(function(){
+		var armyDTO = {
+			corps: armyEngine.army().corps,
+			turns: armyEngine.army().turns,
+			commander: armyEngine.army().commander,
+			name: armyEngine.army().name,
+			date: armyEngine.army().formatedDate
+		};
+		io.emit('army', armyDTO);
+	}, 2000)
+  
+});
 
-console.log("Army started on port 8000");
+http.listen(8000, function(){
+  console.log('listening on *:8000');
+});
+

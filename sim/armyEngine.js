@@ -18,7 +18,32 @@ army.date = new Date();
 function formatDate (date) {
   // army.formatedDate = army.date.toFormat("MMMM, YYYY");
   army.formatedDate = army.date.toFormat("DDDD the D of MMMM, YYYY");
+  army.formatedDate = army.formatedDate;
+  army.formatedDate = army.formatedDate.split(" ");
+  army.formatedDate[2] = army.date.toFormat("D") + ordinal_suffix_of(army.date.toFormat("D"));
+  army.formatedDate = army.formatedDate.join(" ");
+
+  console.log(army.formatedDate);
+
+
+
 };
+
+function ordinal_suffix_of(i) {
+    var j = i % 10,
+        k = i % 100;
+    if (j == 1 && k != 11) {
+        return "st";
+    }
+    if (j == 2 && k != 12) {
+        return "nd";
+    }
+    if (j == 3 && k != 13) {
+        return "rd";
+    }
+    return "th";
+}
+
 
 setInterval(function(){
   army.date = army.date.addDays(1);
