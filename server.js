@@ -4,13 +4,21 @@ var bodyParser = require('body-parser');
 var army = express();
 var armyEngine = require('./sim/armyEngine');
 
-army.use(express.static(__dirname + '/public'));
+army.use(express.static(__dirname + '/public2'));
 army.use(bodyParser.json());
 army.use(bodyParser.urlencoded({ extended: true}));
 
 army.get('/army', function (req, res) {
 
-  res.json(armyEngine.army());
+	var armyDTO = {
+		corps: armyEngine.army().corps,
+		turns: armyEngine.army().turns,
+		commander: armyEngine.army().commander,
+		name: armyEngine.army().name,
+		date: armyEngine.army().formatedDate
+	};
+
+  res.json(armyDTO);
 
   res.end();
 

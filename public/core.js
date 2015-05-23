@@ -8,7 +8,7 @@ army.controller('armyController', [ '$rootScope', '$scope', '$http', '$timeout',
 
     function updateArmy () {
 
-      setTimeout(function(){
+      setInterval(function(){
 
         $scope.$apply(function() {
 

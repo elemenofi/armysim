@@ -1,3 +1,5 @@
+var helpers = require('../utils/helpers');
+
 exports.unitDepth = 2;
 
 exports.doubleNameChance = 10;
@@ -57,7 +59,7 @@ exports.prestigePromotion = function (officer) {
 };
 
 exports.badgesPerPrestige = function (officer) {
-  return Math.round(officer.prestige / 50);
+  return Math.round(officer.prestige / 100);
 };
 
 exports.statusMessage = {

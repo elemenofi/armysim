@@ -47,16 +47,31 @@ var setFirstName = function () {
 };
 
 var randomColor = function () {
-		return '#' + Math.floor(Math.random()*16777215).toString(16);
+	var colors = [
+		"#000000",
+		"#FFCB05",
+		"#FFFFFF",
+		"#3D3D3D",
+		"#F7F7F7",
+		'#722F37',
+		"#C2C2C2",
+		"#B4B4B4",
+		"#4E4E4E"
+	];
+	
+	return colors[Math.floor(Math.random()*colors.length)];
 };
-
+var badgeId = 1;
 var createBadge = function  () {
 	var badge = {};
 
+	badge.id = badgeId;
 	badge.x = 6;
 	badge.y = 3;
 	badge.bg = randomColor();
 
+	badgeId++;
+	
 	return badge;
 };
 
