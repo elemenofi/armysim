@@ -5,14 +5,36 @@ var staffManager = require('./staffManager')
 var armyEngine = require('../armyEngine');
 
 var globalOfficerId = 1;
+var generation = 2015;
+var generationBatch = []; 
+
+function valedictorian (batch)	{
+	function compare(a,b) {
+	  if (a.intelligence < b.intelligence)
+	    return -1;
+	  if (a.intelligence > b.intelligence)
+	    return 1;
+	  return 0;
+	}
+
+	batch.sort(compare);
+	batch[0].history.push("Graduated valedictorian from the class of " + generation );
+}
 
 exports.newRecruit = function (unit) {
 
 	var officer = {};
 
+	if (generationBatch.length >= 20) {
+		valedictorian(generationBatch);
+		generation++;
+		generationBatch = [];
+	};
+
 	officer.id = globalOfficerId;
 	globalOfficerId++;
-	officer.history = [];
+	officer.generation = generation;
+	officer.history = [].concat(officer.history);
 	officer.lastName = helpers.setLastName();
 	officer.firstName = helpers.setFirstName();
 	officer.statusMessage = values.statusMessage.duty;
@@ -74,6 +96,8 @@ exports.newRecruit = function (unit) {
 
 	var staff = staffManager.staff(armyEngine.army());
 	staff.push(officer);
+
+	generationBatch.push(officer);
 
 	return officer;
 };

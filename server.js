@@ -59,8 +59,7 @@ io.on('connection', function(socket){
 			date: armyEngine.army().formatedDate
 		};
 		io.emit('army', armyDTO);
-	}, 2000)
-  
+	}, 6000);  
 });
 
 http.listen(8000, function(){

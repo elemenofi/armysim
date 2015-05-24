@@ -3,21 +3,11 @@ var message;
 
 $(document).ready(function () {
 
-  // function getArmy () {
-
-  //   $.get('army').success(function (data) {
-      
-  //     army = data;
-
-  //     renderArmy(army);           
-
-  //   });
-
-  // };
   var socket = io();
   socket.on('army', function(armyData) {
     army = armyData;
-    renderArmy(army);   
+    renderArmy(army);
+    // console.log(army); 
   });
 
   function renderArmy (army) {
@@ -26,6 +16,7 @@ $(document).ready(function () {
 
     React.render(
       <div>
+      <Pause />
       <p>{army.date}</p>
       <Army army={army} /></div>,
       document.body
@@ -56,10 +47,13 @@ $(document).ready(function () {
         break;
         case "brigades":
           className = 'division';
+          headerName = 'brigadeHeader';
+
           return <Brigade brigade={unit[subUnit][i]} />
         break;
         case "regiments":
           className = 'brigade';
+
           return <Regiment regiment={unit[subUnit][i]} />
         break;
         case "companies":
@@ -79,9 +73,9 @@ $(document).ready(function () {
     
     for (var i=0; i < unit[subUnit].length; i++) {
       subUnits.push(componentType());
-    }
+    };
 
-    if (that && that.state.historied) {
+    if ((that && that.state.historied)) {
       return (
         <div className={className}>
           <div className={headerName} onClick={that.onClick}>
@@ -94,7 +88,7 @@ $(document).ready(function () {
           {subUnits}
         </div>
       );
-    }
+    };
     
     return (
       <div className={className}>
@@ -122,12 +116,28 @@ $(document).ready(function () {
 
   };
 
+  var Pause = React.createClass({
+    onClick: function () {
+      $.get('/army/turns').success(function (data) {
+    
+        console.log(data);           
+
+      });
+    },
+    render: function () {
+      return (<p onClick={this.onClick}>Pause the game</p>);
+    }
+  })
+
   var Army = React.createClass({
+
     getInitialState: function() {
       return {historied: false};
     },
+
     onClick: function () {
       this.setState({historied: !this.state.historied});
+
     },
     render: function () {
       return drawUnit (this.props.army, "corps", this);
@@ -199,7 +209,7 @@ $(document).ready(function () {
       return {historied: false};
     },
     onClick: function () {
-      this.setState({historied: !this.state.historied});
+      this.setState({historied: !this.state.historied);
     },
     render: function() {
       return drawUnit (this.props.battalion, "platoons", this);
@@ -276,7 +286,13 @@ $(document).ready(function () {
   } 
 
   var UnitCommander = React.createClass({
+    onClick: function () {
+      $.post('/army/inspect', this.props.commander).success(function (data) {
     
+        console.log(data);      
+
+      });
+    },
     render: function() {
       return drawNames(this.props.commander);
     }
@@ -343,9 +359,5 @@ $(document).ready(function () {
       return drawHistories(this.props.officer);
     }
   });
-
-  // setInterval(function(){
-  //   getArmy();        
-  // }, 2000);
-
+  
 });

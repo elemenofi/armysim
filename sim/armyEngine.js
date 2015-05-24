@@ -16,17 +16,11 @@ var lastNames = [];
 army.date = new Date();
 
 function formatDate (date) {
-  // army.formatedDate = army.date.toFormat("MMMM, YYYY");
   army.formatedDate = army.date.toFormat("DDDD the D of MMMM, YYYY");
   army.formatedDate = army.formatedDate;
   army.formatedDate = army.formatedDate.split(" ");
   army.formatedDate[2] = army.date.toFormat("D") + ordinal_suffix_of(army.date.toFormat("D"));
   army.formatedDate = army.formatedDate.join(" ");
-
-  console.log(army.formatedDate);
-
-
-
 };
 
 function ordinal_suffix_of(i) {
@@ -47,7 +41,6 @@ function ordinal_suffix_of(i) {
 
 setInterval(function(){
   army.date = army.date.addDays(1);
-
 }, 10)
 
 function passTurn () {
