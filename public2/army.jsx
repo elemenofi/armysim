@@ -137,7 +137,6 @@ $(document).ready(function () {
 
     onClick: function () {
       this.setState({historied: !this.state.historied});
-
     },
     render: function () {
       return drawUnit (this.props.army, "corps", this);
@@ -209,7 +208,7 @@ $(document).ready(function () {
       return {historied: false};
     },
     onClick: function () {
-      this.setState({historied: !this.state.historied);
+      this.setState({historied: !this.state.historied});
     },
     render: function() {
       return drawUnit (this.props.battalion, "platoons", this);

@@ -1,23 +1,16 @@
 var express = require('express');
 var army = require('express')();
-
 var http = require('http').Server(army);
 var io = require('socket.io')(http);
 var _ = require('underscore');
 var bodyParser = require('body-parser');
-// var army = express();
 var armyEngine = require('./sim/armyEngine');
-
 
 army.use(express.static(__dirname + '/public2'));
 army.use(bodyParser.json());
 army.use(bodyParser.urlencoded({ extended: true}));
 
-var armyDTO = {};
-
 army.get('/army', function (req, res) {
-
-  res.json(armyDTO);
 
   res.end();
 
@@ -59,7 +52,7 @@ io.on('connection', function(socket){
 			date: armyEngine.army().formatedDate
 		};
 		io.emit('army', armyDTO);
-	}, 6000);  
+	}, 2000);  
 });
 
 http.listen(8000, function(){
