@@ -5,8 +5,9 @@
   <title>Army React</title>
   <script src="node_modules/react/dist/JSXTransformer.js"></script>
   <script src="node_modules/react/dist/react.js"></script>
-  <script src="node_modules/jquery/dist/jquery.js"></script>
+  <!-- // <script src="node_modules/jquery/dist/jquery.js"></script> -->
   <script type="text/jsx" src="army.jsx"></script> 
+  
   <style>
   body {
     background-color:#7B8738;
@@ -21,13 +22,14 @@
   }
 
   div.corp, div.division, div.brigade, div.regiment, div.companies {
-    width: 50%;
+    width: 49%;
     float: left;
+    padding-right: 1%;
   }
 
-  div.companies {
-    padding-right: 10px;
-  }
+  div.armyHeader, div.brigadeHeader, div.divisionHeader {
+    min-height: 100px;
+  } 
 
   div.badgeHolder {
     max-width: 30px;
@@ -48,13 +50,9 @@
   }
   </style>
 
-
 </head>
 <body>
 
 </body>
 <script src="node_modules/socket.io-client/socket.io.js"></script>
-<script>
-  
-</script>
 </html>

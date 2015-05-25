@@ -59,7 +59,7 @@ exports.prestigePromotion = function (officer) {
 };
 
 exports.badgesPerPrestige = function (officer) {
-  return Math.round(officer.prestige / 100);
+  return Math.round(officer.prestige / 200);
 };
 
 exports.statusMessage = {
