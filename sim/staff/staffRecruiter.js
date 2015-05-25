@@ -5,10 +5,10 @@ var staffManager = require('./staffManager')
 var armyEngine = require('../armyEngine');
 
 var globalOfficerId = 1;
-var generation = 2015;
 var generationBatch = []; 
 
 function valedictorian (batch)	{
+
 	function compare(a,b) {
 	  if (a.intelligence < b.intelligence)
 	    return -1;
@@ -18,22 +18,19 @@ function valedictorian (batch)	{
 	}
 
 	batch.sort(compare);
-	batch[0].history.push("Graduated valedictorian from the class of " + generation );
-}
+ 	batch[0].history.push("Graduated valedictorian from the class of " + (armyEngine.army().date.toFormat("YYYY") - 1) );
+	batch[0].valedictorian = true;
+};
+
+var lastBatch = '';
 
 exports.newRecruit = function (unit) {
 
 	var officer = {};
 
-	if (generationBatch.length >= 20) {
-		valedictorian(generationBatch);
-		generation++;
-		generationBatch = [];
-	};
-
 	officer.id = globalOfficerId;
 	globalOfficerId++;
-	officer.generation = generation;
+	officer.generation = armyEngine.army().date.getYear();
 	officer.history = [].concat(officer.history);
 	officer.lastName = helpers.setLastName();
 	officer.firstName = helpers.setFirstName();
@@ -47,6 +44,16 @@ exports.newRecruit = function (unit) {
 	officer.leadership = helpers.randomNumber(values.baseLeadership);
 	officer.drift = helpers.randomNumber(values.baseDrift);
 	
+	generationBatch.push(officer);
+
+	if ((generationBatch.length >= 20) && (armyEngine.army().date.toFormat("YYYY") !== lastBatch)) {
+		
+		lastBatch = armyEngine.army().date.toFormat("YYYY");
+		valedictorian(generationBatch);
+		generationBatch = [];
+	
+	};
+
 	switch (unit.type) {
 		case "army":
 			officer.prestige = helpers.randomNumber(10) + values.startingPrestige.general;
@@ -86,7 +93,7 @@ exports.newRecruit = function (unit) {
 		case "platoon":
 			officer.prestige = helpers.randomNumber(10) + values.startingPrestige.captain;
 			officer.xp = 10;
-			officer.rank = names.ranks.captain;
+			officer.rank = names.ranks.captain;	
 			officer.history.push(values.comissionMessage.comission(unit, armyEngine.army().formatedDate));
 		break;
 	};
@@ -96,8 +103,6 @@ exports.newRecruit = function (unit) {
 
 	var staff = staffManager.staff(armyEngine.army());
 	staff.push(officer);
-
-	generationBatch.push(officer);
 
 	return officer;
 };

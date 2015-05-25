@@ -9,8 +9,8 @@ function updateBonds (army) {
 
       if (bond.id === otherCommander.id) {
 
-        hadBond = true;
         bond.strength++;
+        return true;
 
       };
 
@@ -39,7 +39,7 @@ function updateBonds (army) {
 
       var hadBond = false;
 
-      checkIfBondExisted(commander, otherCommander);
+      hadBond = checkIfBondExisted(commander, otherCommander);
 
       if (!hadBond) {
 

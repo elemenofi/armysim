@@ -48,10 +48,6 @@ function passTurn () {
 
 };
 
-setInterval(function () {
-    passTurn();
-}, 500);
-
 exports.army = function () {
   return army;
 };
@@ -64,4 +60,7 @@ exports.lastNames = function () {
   return lastNames;
 };
 
+setInterval(function () {
+    passTurn();
+}, 500);
 

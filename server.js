@@ -6,7 +6,7 @@ var _ = require('underscore');
 var bodyParser = require('body-parser');
 var armyEngine = require('./sim/armyEngine');
 
-army.use(express.static(__dirname + '/public2'));
+army.use(express.static(__dirname + '/public'));
 army.use(bodyParser.json());
 army.use(bodyParser.urlencoded({ extended: true}));
 
@@ -19,7 +19,8 @@ io.sockets.on('connection', function(socket){
 			turns: armyEngine.army().turns,
 			commander: armyEngine.army().commander,
 			name: armyEngine.army().name,
-			date: armyEngine.army().formatedDate
+			date: armyEngine.army().formatedDate,
+			inspecting: armyEngine.army().inspecting
 		};
 
 		socket.emit('army', armyDTO);
@@ -32,6 +33,10 @@ io.sockets.on('connection', function(socket){
 
   socket.on('pause', function (data) {
   	armyEngine.actions().turnsToggle(armyEngine.army());
+  });
+
+  socket.on('clear', function () {
+  	armyEngine.actions().inspectReset(armyEngine.army());
   });
 	
 });
