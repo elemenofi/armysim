@@ -17,8 +17,10 @@ var lastNames = [];
 army.date = new Date();
 
 setInterval(function(){
-  army.date = army.date.addDays(1);
-}, 10)
+  if (army.turns) {
+    army.date = army.date.addDays(1);
+  };
+}, 10);
 
 function passTurn () {
 
@@ -60,6 +62,6 @@ exports.actions = function () {
 
 exports.lastNames = function () {
   return lastNames;
-}
+};
 
 

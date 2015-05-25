@@ -1,11 +1,11 @@
 var army;
 var message;
 
-var socket = io();
+var socket = io('http://localhost:8000');
+
 socket.on('army', function(armyData) {
   army = armyData;
-  renderArmy(army);
-  // console.log(army); 
+  renderArmy(army); 
 });
 
 function renderArmy (army) {
@@ -16,66 +16,112 @@ function renderArmy (army) {
     <div>
     <Pause />
     <p>{army.date}</p>
-    <Army army={army} /></div>,
+    <Army unit={army} /></div>,
     document.body
   );
 
 };
 
 var clearStyle = {
+
   clear: 'both'
+
 };
 
+var generateUnitClass = function (unit, subUnit) {
+  
+  var newClass = React.createClass({
+    
+    getInitialState: function() {
+        return {inspected: this.props.unit.commander.inspecting};
+    },
+    
+    componentWillReceiveProps: function () {
+      this.setState({inspected: false});
+      this.setState({inspected: this.props.unit.commander.inspecting});    
+    },
+    
+    onClick: function () {
+      this.setState({inspected: !this.state.inspected});
+      this.props.unit.commander.inspecting = true;
+      socket.emit('inspect', { officer: this.props.unit.commander });
+    },
+    
+    render: function () {
+      return drawUnit (this.props.unit, subUnit, this);
+    }
+  
+  });  
+
+  return newClass;
+      
+};
+
+
 function drawUnit(unit, subUnit, that) {
+
   var subUnits = [];
   var className = '';
 
   var componentType = function () {
   
     switch (subUnit) {
+
       case "corps":
         className = 'army';
         headerName = 'armyHeader';
-        return <Corp corp={unit[subUnit][i]} />
+        return <Corp unit={unit[subUnit][i]} key={unit[subUnit][i].id} />
       break;
+
       case "divisions":
         className = 'corp';
         headerName = 'corpHeader';
-        return <Division division={unit[subUnit][i]} />
+        return <Division unit={unit[subUnit][i]} key={unit[subUnit][i].id} />
       break;
+
       case "brigades":
         className = 'division';
         headerName = 'brigadeHeader';
 
-        return <Brigade brigade={unit[subUnit][i]} />
+        return <Brigade unit={unit[subUnit][i]} key={unit[subUnit][i].id} />
       break;
+
       case "regiments":
         className = 'brigade';
 
-        return <Regiment regiment={unit[subUnit][i]} />
+        return <Regiment unit={unit[subUnit][i]} key={unit[subUnit][i].id} />
       break;
+
       case "companies":
         className = 'regiment';
-        return <Company company={unit[subUnit][i]} />
+        return <Company unit={unit[subUnit][i]} key={unit[subUnit][i].id} />
       break;
+
       case "battalions":
         className = 'company';
-        return <Battalion battalion={unit[subUnit][i]} />
+        return <Battalion unit={unit[subUnit][i]} key={unit[subUnit][i].id} />
       break;
+
       case "platoons":
         className = 'battalion';
-        return <Platoon platoon={unit[subUnit][i]} />
+        return <Platoon unit={unit[subUnit][i]} key={unit[subUnit][i].id} />
       break;
+
     }
+
   }
-  
-  for (var i=0; i < unit[subUnit].length; i++) {
-    subUnits.push(componentType());
+
+  if (subUnit) {
+
+    for (var i=0; i < unit[subUnit].length; i++) {
+      subUnits.push(componentType());
+    };
+
   };
 
   var history;
 
-  if (that && that.state.historied) {
+  if (that && that.state.inspected) {
     history = <History officer={unit.commander} />;
   };
   
@@ -95,121 +141,32 @@ function drawUnit(unit, subUnit, that) {
 
 };
 
-function drawPlatoonStructure (platoon) {
-  
-  return (
-    <div>
-      <UnitName unit={platoon} />
-      &diams; <UnitCommander commander={platoon.commander} />
-      <Badges officer={platoon.commander} />
-    </div>
-  );
-
-};
-
 var Pause = React.createClass({
+  
   onClick: function () {
+    socket.emit('pause');
   },
+  
   render: function () {
     return (<p onClick={this.onClick}>Pause the game</p>);
   }
-})
 
-var Army = React.createClass({
-  getInitialState: function() {
-    return {historied: false};
-  },
-  onClick: function () {
-    this.setState({historied: !this.state.historied});
-  },
-  render: function () {
-    return drawUnit (this.props.army, "corps", this);
-  }
 });
 
-var Corp = React.createClass({
-  getInitialState: function() {
-    return {historied: false};
-  },
-  onClick: function () {
-    this.setState({historied: !this.state.historied});
-    this.setProp({})
-  },
-  render: function() {
-    return drawUnit (this.props.corp, "divisions", this);
-  }
-});
-
-var Division = React.createClass({
-  getInitialState: function() {
-    return {historied: false};
-  },
-  onClick: function () {
-    this.setState({historied: !this.state.historied});
-  },
-  render: function() {
-    return drawUnit (this.props.division, "brigades", this);
-  }
-});
-
-var Brigade = React.createClass({
-  getInitialState: function() {
-    return {historied: false};
-  },
-  onClick: function () {
-    this.setState({historied: !this.state.historied});
-  },
-  render: function() {
-    return drawUnit (this.props.brigade, "regiments", this);
-  }
-});
-
-var Regiment = React.createClass({
-  getInitialState: function() {
-    return {historied: false};
-  },
-  onClick: function () {
-    this.setState({historied: !this.state.historied});
-  },
-  render: function() {
-    return drawUnit (this.props.regiment, "companies", this);
-  }
-});
-
-var Company = React.createClass({
-  getInitialState: function() {
-    return {historied: false};
-  },
-  onClick: function () {
-    this.setState({historied: !this.state.historied});
-  },
-  render: function() {
-    return drawUnit (this.props.company, "battalions", this);
-  }
-});
-
-var Battalion = React.createClass({
-  getInitialState: function() {
-    return {historied: false};
-  },
-  onClick: function () {
-    this.setState({historied: !this.state.historied});
-  },
-  render: function() {
-    return drawUnit (this.props.battalion, "platoons", this);
-  }
-});
-
-var Platoon = React.createClass({
-  render: function() {
-    return drawPlatoonStructure (this.props.platoon);
-  }
-});
+var Army = generateUnitClass("army", "corps");
+var Corp = generateUnitClass("corps", "divisions");
+var Division = generateUnitClass("divisions", "brigades");
+var Brigade = generateUnitClass("brigades", "regiments");
+var Regiment = generateUnitClass("regiments", "companies");
+var Company = generateUnitClass("companies", "battalions");
+var Battalion = generateUnitClass("battalions", "platoons");
+var Platoon = generateUnitClass("platoons");
 
 var UnitName = React.createClass({
   render: function() {
     return (
       <p>{this.props.unit.name}</p>
+
     );
   }
 });
@@ -247,40 +204,10 @@ var Rank = React.createClass({
   }
 });
 
-function drawNames (commander) {
-  switch (commander.rank) {
-    case "Captain":
-      return (<p>{commander.lastName}</p>);
-    break;
-    case "Major":
-      return (<p>Mj. {commander.lastName}</p>);
-    break;
-    case "Lieutenant Coronel":
-      return (<p>Lt. Coronel {commander.lastName}</p>);
-    break;
-    case "Coronel":
-      return (<p>{commander.rank} {commander.lastName}</p>);
-    break;
-    case "Brigade General":
-      return (<p>{commander.rank} {commander.lastName}</p>);
-    break;
-    default:
-      return (<p>{commander.rank} {commander.firstName} {commander.lastName}</p>);
-  }
-} 
-
 var UnitCommander = React.createClass({
-  onClick: function () {
-    $.post('/army/inspect', this.props.commander).success(function (data) {
-  
-      console.log(data);      
-
-    });
-  },
   render: function() {
     return drawNames(this.props.commander);
   }
-
 });
 
 var Badges = React.createClass({
@@ -289,6 +216,46 @@ var Badges = React.createClass({
   }
 });
 
+var History = React.createClass({
+
+  render: function() {
+
+    return drawHistories(this.props.officer);
+
+  }
+
+});
+
+function drawNames (commander) {
+
+  switch (commander.rank) {
+
+    case "Captain":
+      return (<p>{commander.lastName}</p>);
+    break;
+
+    case "Major":
+      return (<p>Mj. {commander.lastName}</p>);
+    break;
+
+    case "Lieutenant Coronel":
+      return (<p>Lt. Coronel {commander.lastName}</p>);
+    break;
+
+    case "Coronel":
+      return (<p>{commander.rank} {commander.lastName}</p>);
+    break;
+
+    case "Brigade General":
+      return (<p>{commander.rank} {commander.lastName}</p>);
+    break;
+
+    default:
+      return (<p>{commander.rank} {commander.firstName} {commander.lastName}</p>);
+  }
+
+} 
+
 function drawBadges (badges) {
 
   var badgeHolder = [];
@@ -296,12 +263,14 @@ function drawBadges (badges) {
   for (var i = 1; i < badges.length; i++) {
     
     var divStyle = {
+
       backgroundColor: badges[i].bg,
       width: badges[i].x,
       height: badges[i].y
+
     };
 
-    badgeHolder.push(<div style={divStyle}></div>)
+    badgeHolder.push(<div style={divStyle} key={badges[i].id}></div>)
   
   };
 
@@ -338,8 +307,4 @@ function drawHistories (officer) {
 
 };
 
-var History = React.createClass({
-  render: function() {
-    return drawHistories(this.props.officer);
-  }
-});
+  

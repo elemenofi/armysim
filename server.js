@@ -10,40 +10,10 @@ army.use(express.static(__dirname + '/public2'));
 army.use(bodyParser.json());
 army.use(bodyParser.urlencoded({ extended: true}));
 
-army.get('/army', function (req, res) {
-
-  res.end();
-
-});
-
-army.get('/army/turns', function (req, res) {
-
-  armyEngine.actions().turnsToggle(armyEngine.army());
-
-  res.end();
-
-});
-
-army.post('/army/inspect', function (req, res) {
-
-  var officer = req.body;
-
-  armyEngine.actions().inspectToggle(armyEngine.army(), officer);
-
-  res.end();
-
-});
-
-army.post('/army/inspectReset', function (req, res) {
-
-  armyEngine.actions().inspectReset(armyEngine.army());
-
-  res.end();
-
-});
-
-io.on('connection', function(socket){
+io.sockets.on('connection', function(socket){
+	
 	setInterval(function(){
+		
 		var armyDTO = {
 			corps: armyEngine.army().corps,
 			turns: armyEngine.army().turns,
@@ -51,8 +21,19 @@ io.on('connection', function(socket){
 			name: armyEngine.army().name,
 			date: armyEngine.army().formatedDate
 		};
-		io.emit('army', armyDTO);
-	}, 2000);  
+
+		socket.emit('army', armyDTO);
+
+	}, 1000);  
+
+	socket.on('inspect', function (data) {
+		armyEngine.actions().inspectToggle(armyEngine.army(), data.officer);
+	});
+
+  socket.on('pause', function (data) {
+  	armyEngine.actions().turnsToggle(armyEngine.army());
+  });
+	
 });
 
 http.listen(8000, function(){

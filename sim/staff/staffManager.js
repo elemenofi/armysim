@@ -51,6 +51,7 @@ exports.inspectToggle = function (army, officer) {
 		if (targetOfficer.id === officer.id) {
 
 			targetOfficer.inspecting = !targetOfficer.inspecting;
+
 			army.inspecting.push(targetOfficer);
 
 		};
