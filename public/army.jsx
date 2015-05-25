@@ -50,8 +50,6 @@ var Inspecting = React.createClass({
     
         inspecting.push(
           <div className="inspecting" key={army.inspecting[i].id}>
-            <div>{army.inspecting[i].rank} {army.inspecting[i].firstName} {army.inspecting[i].lastName}</div>
-            <Badges officer={army.inspecting[i]} />
             <History officer={army.inspecting[i]} />
           </div>      
         );
@@ -177,7 +175,6 @@ function drawUnit(unit, subUnit, that) {
         <UnitCommander commander={unit.commander} />
         <Badges officer={unit.commander} />
         {valedictorian}
-        {history}
         <div style={clearStyle}></div>
       </div>
       {subUnits}
@@ -355,7 +352,8 @@ function drawHistories (officer) {
   return (
   
     <div className="history">
-      <p>{officer.rank} {officer.firstName} {officer.lastName}</p>
+      <div><Rank commander={officer} />  {officer.rank} {officer.firstName} {officer.lastName}</div>
+      <Badges officer={officer} />
       <div className="histories">{history}</div>
       <div style={clearStyle}></div>
     </div>

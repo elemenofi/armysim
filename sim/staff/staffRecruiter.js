@@ -6,22 +6,6 @@ var armyEngine = require('../armyEngine');
 
 var globalOfficerId = 1;
 var generationBatch = []; 
-
-function valedictorian (batch)	{
-
-	function compare(a,b) {
-	  if (a.intelligence < b.intelligence)
-	    return -1;
-	  if (a.intelligence > b.intelligence)
-	    return 1;
-	  return 0;
-	}
-
-	batch.sort(compare);
- 	batch[0].history.push("Graduated valedictorian from the class of " + (armyEngine.army().date.toFormat("YYYY") - 1) );
-	batch[0].valedictorian = true;
-};
-
 var lastBatch = '';
 
 exports.newRecruit = function (unit) {
@@ -30,28 +14,47 @@ exports.newRecruit = function (unit) {
 
 	officer.id = globalOfficerId;
 	globalOfficerId++;
+
 	officer.generation = armyEngine.army().date.getYear();
 	officer.history = [].concat(officer.history);
+
 	officer.lastName = helpers.setLastName();
 	officer.firstName = helpers.setFirstName();
 	officer.statusMessage = values.statusMessage.duty;
+
 	officer.inspecting = false;
 	officer.retired = false;
 	officer.plotting = false;
+
 	officer.bonds = [];
 	officer.badges = [];
+
 	officer.intelligence = helpers.randomNumber(values.baseIntelligence);
 	officer.leadership = helpers.randomNumber(values.baseLeadership);
 	officer.drift = helpers.randomNumber(values.baseDrift);
-	
+
 	generationBatch.push(officer);
 
-	if ((generationBatch.length >= 20) && (armyEngine.army().date.toFormat("YYYY") !== lastBatch)) {
-		
+	if ((unit.type === "platoon") && (generationBatch.length >= 20) && (armyEngine.army().date.toFormat("YYYY") !== lastBatch)) {
+
+		function compare(a,b) {
+		  if (a.intelligence < b.intelligence)
+		    return -1;
+		  if (a.intelligence > b.intelligence)
+		    return 1;
+		  return 0;
+		}
+
+		generationBatch.sort(compare);
+
+	 	generationBatch[generationBatch.indexOf(officer)].history.push(values.valedictorianMessage.valedictorian(armyEngine.army().date.toFormat("YYYY")-1));
+		generationBatch[generationBatch.indexOf(officer)].history.push(values.comissionMessage.comission(unit, armyEngine.army().formatedDate));
+		generationBatch[generationBatch.indexOf(officer)].valedictorian = true;
+
 		lastBatch = armyEngine.army().date.toFormat("YYYY");
-		valedictorian(generationBatch);
 		generationBatch = [];
-	
+	} else if (unit.type === "platoon") {
+		officer.history.push(values.comissionMessage.comission(unit, armyEngine.army().formatedDate));
 	};
 
 	switch (unit.type) {
@@ -94,7 +97,6 @@ exports.newRecruit = function (unit) {
 			officer.prestige = helpers.randomNumber(10) + values.startingPrestige.captain;
 			officer.xp = 10;
 			officer.rank = names.ranks.captain;	
-			officer.history.push(values.comissionMessage.comission(unit, armyEngine.army().formatedDate));
 		break;
 	};
 

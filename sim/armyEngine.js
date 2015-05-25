@@ -16,18 +16,13 @@ var lastNames = [];
 
 army.date = new Date();
 
-setInterval(function(){
-  if (army.turns) {
-    army.date = army.date.addDays(1);
-  };
-}, 10);
-
 function passTurn () {
 
   if (army.turns) {
 
     if ( day === 0 ) {
-
+      
+      helpers.formatDate(army.date);
       unitManager.initUnits(army);
       staffManager.initStaff(army);
 
@@ -59,6 +54,12 @@ exports.actions = function () {
 exports.lastNames = function () {
   return lastNames;
 };
+
+setInterval(function(){
+  if (army.turns) {
+    army.date = army.date.addDays(1);
+  };
+}, 10);
 
 setInterval(function () {
     passTurn();

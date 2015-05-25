@@ -70,6 +70,12 @@ exports.statusMessage = {
   }
 };
 
+exports.valedictorianMessage = {
+  valedictorian: function (date) {
+    return "Graduated valedictorian from the class of " + date;
+  }
+};
+
 exports.comissionMessage = {
   comission: function (unit, date) {
     return "Comissioned into " + unit.name + " on " + date;
