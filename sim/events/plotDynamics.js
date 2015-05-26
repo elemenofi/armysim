@@ -42,11 +42,12 @@ function updatePlots(army) {
         _.each(plotters, function (thisPlotter) {
 
           if (thisPlotter.id != plotter.id && thisPlotter.plotting === false) {
+
             accomplice = thisPlotter.rank + " " + thisPlotter.lastName;
             accompliceB = plotter.rank + " " + plotter.lastName;
             plotter.history.push(values.plotMessage.start(accomplice, target.rank + " " + target.lastName, army.formatedDate));
             thisPlotter.history.push(values.plotMessage.start(accompliceB, target.rank + " " + target.lastName, army.formatedDate));
-            // console.log(accomplice);
+            
           };
 
         });
