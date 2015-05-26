@@ -12,9 +12,9 @@ exports.baseDrift = 1000;
 
 exports.centerDrift = 500;
 
-exports.radicalThreshold = 5;
+exports.radicalThreshold = 100;
 
-exports.conservativeThreshold = 995;
+exports.conservativeThreshold = 900;
 
 exports.baseTerror = 100;
 
@@ -104,7 +104,25 @@ exports.plotMessage = {
 
 exports.terrorMessage = {
   murder: function (target, faction) {
-    console.log(target.lastName + " Murdered by " + faction + " extremists");
     return "Murdered by " + faction + " extremists "; 
+  },
+  survived: function (target, date) {
+    return "Survived an assasination attempt on " + date;
+  },
+  execute: function (target, date) {
+    console.log("execute ", target.lastName);
+    return "Executed for high treason on the ";
+  },
+  suspect: function (suspect, target, date) {
+    console.log("suspect ", suspect.lastName);
+    return "Suspected of participating in the assasination of " + target.rank + " " + target.lastName + " on the " + date;
+  }
+
+};
+
+exports.suicideMessage = {
+  suicide: function (officer, date) {
+    console.log(officer.lastName + " has comitted suicide");
+    return "Comitted suicide on " + date;
   }
 };

@@ -8,6 +8,7 @@ var driftDynamics = require('./events/driftDynamics');
 var bondDynamics = require('./events/bondDynamics');
 var plotDynamics = require('./events/plotDynamics');
 var terrorDynamics = require('./events/terrorDynamics');
+var suicideDynamics = require('./events/suicideDynamics');
 var helpers = require('./utils/helpers');
 require('date-utils');
 
@@ -36,6 +37,7 @@ function passTurn () {
       bondDynamics.update(army);
       plotDynamics.update(army);
       terrorDynamics.update(army);
+      suicideDynamics.update(army);
 
     };
 

@@ -16,6 +16,8 @@ function updateBonds (army) {
 
     });
 
+    return false;
+
   };
 
   function addNewBond (commander, otherCommander) {
