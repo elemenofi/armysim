@@ -4,8 +4,10 @@ var message;
 var socket = io('http://localhost:8000');
 
 socket.on('army', function(armyData) {
+
   army = armyData;
-  renderArmy(army); 
+  renderArmy(army);
+
 });
 
 function renderArmy (army) {
@@ -29,6 +31,7 @@ var clearStyle = {
   clear: 'both'
 
 };
+
 var Inspecting = React.createClass({
 
   
@@ -49,9 +52,11 @@ var Inspecting = React.createClass({
       for (var i = 0; i < army.inspecting.length; i++) {
     
         inspecting.push(
+
           <div className="inspecting" key={army.inspecting[i].id}>
             <History officer={army.inspecting[i]} />
-          </div>      
+          </div>
+
         );
     
       };
@@ -69,22 +74,30 @@ var generateUnitClass = function (unit, subUnit) {
   var newClass = React.createClass({
     
     getInitialState: function() {
+        
         return {inspected: this.props.unit.commander.inspecting};
+    
     },
     
     componentWillReceiveProps: function () {
+      
       this.setState({inspected: false});
       this.setState({inspected: this.props.unit.commander.inspecting});    
+    
     },
     
     onClick: function () {
+      
       this.setState({inspected: !this.state.inspected});
       this.props.unit.commander.inspecting = true;
       socket.emit('inspect', { officer: this.props.unit.commander });
+    
     },
     
     render: function () {
+      
       return drawUnit (this.props.unit, subUnit, this);
+    
     }
   
   });  
@@ -150,7 +163,9 @@ function drawUnit(unit, subUnit, that) {
   if (subUnit) {
 
     for (var i=0; i < unit[subUnit].length; i++) {
+
       subUnits.push(componentType());
+
     };
 
   };
@@ -158,13 +173,17 @@ function drawUnit(unit, subUnit, that) {
   var history;
 
   if (that && that.state.inspected) {
+
     history = <History officer={unit.commander} />;
+
   };
 
   var valedictorian;
 
   if (that && unit.commander.valedictorian) {
+
     valedictorian = <div className="valedictorian">&curren;</div>;
+
   };
   
   return (
@@ -173,8 +192,8 @@ function drawUnit(unit, subUnit, that) {
         <Rank commander={unit.commander} /> 
         <UnitName unit={unit} />
         <UnitCommander commander={unit.commander} />
-        <Badges officer={unit.commander} />
         {valedictorian}
+        <Badges officer={unit.commander} />
         <div style={clearStyle}></div>
       </div>
       {subUnits}
@@ -259,15 +278,23 @@ var Rank = React.createClass({
 });
 
 var UnitCommander = React.createClass({
+  
   render: function() {
+    
     return drawNames(this.props.commander);
+    
   }
+  
 });
 
 var Badges = React.createClass({
+  
   render: function() {
+    
     return drawBadges(this.props.officer.badges);
+    
   }
+  
 });
 
 var History = React.createClass({
@@ -349,10 +376,20 @@ function drawHistories (officer) {
   
   };
 
+  var valedictorian;
+
+  if (officer.valedictorian) {
+
+    valedictorian = <div className="valedictorian">&curren;</div>;
+
+  };
+
   return (
   
     <div className="history">
       <div><Rank commander={officer} />  {officer.rank} {officer.firstName} {officer.lastName}</div>
+      <br/>
+      {valedictorian}
       <Badges officer={officer} />
       <div className="histories">{history}</div>
       <div style={clearStyle}></div>

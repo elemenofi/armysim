@@ -12,6 +12,12 @@ exports.baseDrift = 1000;
 
 exports.centerDrift = 500;
 
+exports.radicalThreshold = 5;
+
+exports.conservativeThreshold = 995;
+
+exports.baseTerror = 100;
+
 exports.maxExperience = {
   general: 370,
   ltGeneral: 320,
@@ -49,14 +55,16 @@ exports.plotPrestige = function (plotter) {
 };
 
 exports.prestigeHit = function (plotter) {
-  return Math.round(plotter.prestige / 100);
+  return Math.round(plotter.prestige / 50);
 };
 
 exports.prestigeTurn = 10;
+exports.prestigeValedictorian = 10;
 
 exports.prestigePromotion = function (officer) {
   return Math.round(officer.prestige / 20);
 };
+
 
 exports.badgesPerPrestige = function (officer) {
   return Math.round(officer.prestige / 200);
@@ -91,5 +99,12 @@ exports.promotionMessage = {
 exports.plotMessage = {
   start: function (accomplice, target, date) {
     return "Started a plot with " + accomplice + " against " + target + " on " + date;
+  }
+};
+
+exports.terrorMessage = {
+  murder: function (target, faction) {
+    console.log(target.lastName + " Murdered by " + faction + " extremists");
+    return "Murdered by " + faction + " extremists "; 
   }
 };

@@ -12,8 +12,16 @@ function givePrestige (officer, army) {
 	bonusPrestige += helpers.randomNumber(values.prestigeTurn);
 	bonusPrestige += staffHistory.checkFamily(officer, armyEngine.lastNames());
 	
+	if (officer.valedictorian) {
+		
+		bonusPrestige += helpers.randomNumber(values.prestigeValedictorian);
+
+	};
+
 	if (officer.bonds.length > 0) {
+	
 		bonusPrestige += officer.bonds[officer.bonds.length - 1].strength;
+	
 	};
 
 	return bonusPrestige;

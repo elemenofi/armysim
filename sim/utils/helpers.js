@@ -44,9 +44,11 @@ var setFirstName = function () {
 	};
 
 	return name;
+
 };
 
 var randomColor = function () {
+	
 	var colors = [
 		"#000000",
 		"#FFCB05",
@@ -60,11 +62,13 @@ var randomColor = function () {
 	];
 	
 	return colors[Math.floor(Math.random()*colors.length)];
+
 };
 
 var badgeId = 1;
 
 var createBadge = function  () {
+	
 	var badge = {};
 
 	badge.id = badgeId;
@@ -75,13 +79,16 @@ var createBadge = function  () {
 	badgeId++;
 	
 	return badge;
+
 };
 
 var formatDate = function (date) {
+  
   armyEngine.army().formatedDate = date.toFormat("DDDD the D of MMMM, YYYY");
   armyEngine.army().formatedDate = armyEngine.army().formatedDate.split(" ");
   armyEngine.army().formatedDate[2] = date.toFormat("D") + dateSuffix(date.toFormat("D"));
   armyEngine.army().formatedDate = armyEngine.army().formatedDate.join(" ");
+
 };
 
 var dateSuffix = function (i) {

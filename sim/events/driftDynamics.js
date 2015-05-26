@@ -1,21 +1,57 @@
 var _ = require('underscore');
+var terrorDynamics = require('./terrorDynamics');
 var values = require('../data/values');
 
 function updateDrifts (army) {
+
+  function checkExtremes (commander) {
+
+    if (!commander.retired) {
+    
+      if (commander.drift < values.radicalThreshold) {
+  
+        terrorDynamics.radicals.push(commander);
+  
+      } else if (commander.drift > values.conservativeThreshold) {
+  
+        terrorDynamics.conservatives.push(commander);
+      
+      };
+    
+    };
+  
+  };
+
+  function setAlign (commander) {
+    
+    if (commander.drift > values.centerDrift) {
+      
+      commander.align = "conservative";
+
+    } else {
+
+      commander.align = "radical";
+
+    };
+  
+  };
 
   function driftCommander (rank) {
 
     _.each(army[rank], function(commander) {
 
-      if (commander.retired === false && commander.drifting === "right") {
+      if (commander.retired === false && commander.drifting === "right" && commander.drift < values.baseDrift) {
         
         commander.drift++;
         
-      } else if (commander.retired === false && commander.drifting === "left") {
+      } else if (commander.retired === false && commander.drifting === "left" && commander.drift > 0) {
         
         commander.drift--;
         
       };
+
+      setAlign(commander);
+      checkExtremes(commander);
 
     });
 
@@ -78,12 +114,6 @@ function updateDrifts (army) {
     driftCommander(rank);
 
   };
-
-  // updateDriftsByRank("captains", "companies", "battalions");
-  // updateDriftsByRank("majors", "regiments", "companies");
-  // updateDriftsByRank("coronels", "brigades", "regiments");
-  // updateDriftsByRank("bgGenerals", "divisions", "brigades");
-  // updateDriftsByRank("dvGenerals", army, "divisions");
 
   updateDriftsByRank("captains", "battalions", "platoons");
   updateDriftsByRank("majors", "companies", "battalions");
