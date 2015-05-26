@@ -2,6 +2,7 @@ var helpers = require('../utils/helpers');
 var armyEngine = require('../armyEngine');
 var values = require('../data/values');
 var staffRetire = require('../staff/staffRetire');
+
 var radicals = [];
 var conservatives = [];
 
@@ -33,7 +34,9 @@ var update = function (army) {
 		var target = faction[rndIndex];
 
 
-		if (target !== undefined) {
+		if (target !== undefined && !target.executed) {
+
+			target.executed = true;
 		
 			staffRetire.retireSpecificOfficer(
 				target, 
@@ -53,8 +56,12 @@ var update = function (army) {
 		var rndIndex = helpers.randomNumber(faction.length);
 		var suspect = faction[rndIndex];
 
-		if (suspect && suspect.suspected) {
-		
+		if (suspect && suspect.suspected && !suspect.executed) {
+
+			suspect.executed = true;
+
+			console.log(suspect.lastName, "executing suspect");
+
 			staffRetire.retireSpecificOfficer(
 				suspect, 
 				armyEngine.army(), 
@@ -70,7 +77,7 @@ var update = function (army) {
 		
 		if (suspect !== undefined && !suspect.suspected) {
 			suspect.suspected = true;
-			console.log(suspect.lastName, "authoringggggggggggggggggggggggggggggggg");
+			console.log(suspect.lastName, "suspecting");
 			suspect.history.push(values.terrorMessage.suspect(suspect, target, armyEngine.army().formatedDate));
 		};
 
@@ -83,7 +90,6 @@ var update = function (army) {
 			var faction = removeFromFaction(target);
 			staffRetire.retireSpecificOfficer(target, armyEngine.army(), values.terrorMessage.murder(target, faction));
 			
-			console.log("faction to suspect", faction);
 			if (target.align === "conservative") {
 				suspect(radicals, target);
 			};
@@ -93,7 +99,6 @@ var update = function (army) {
 			var faction = removeFromFaction(target);
 			staffRetire.retireSpecificOfficer(target, armyEngine.army(), values.terrorMessage.murder(target, faction));
 			
-			console.log("faction to suspect", faction);
 			if (target.align === "radical") {
 				suspect(conservatives, target);
 			};

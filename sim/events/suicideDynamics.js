@@ -7,6 +7,7 @@ var suicideDynamics = (function (army) {
 	var suicide = function (officer) {
 		
 		officer.suicided = true;
+		
 		staffRetire.retireSpecificOfficer(
 			officer, 
 			armyEngine.army(), 
