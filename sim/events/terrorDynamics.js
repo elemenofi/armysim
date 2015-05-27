@@ -8,11 +8,19 @@ var conservatives = [];
 
 var update = function (army) {
 
-	var mostPrestige = calculatePrestiges(army);
-	var targets = [].concat(radicals);
-	targets = targets.concat(conservatives);
+	function isActive (terrorist) {
+		return !terrorist.retired && !terrorist.executed && !terrorist.bombed;
+	};
 
-	var removeFromFaction = function (target) {
+	radicals.filter(isActive);
+
+	conservatives.filter(isActive);
+
+	var mostPrestige = calculatePrestiges(army);
+	var terrorists = [].concat(radicals);
+	terrorists = terrorists.concat(conservatives);
+
+	var murder = function (target) {
 	
 		if (target.align === "conservative") {
 	
@@ -28,13 +36,12 @@ var update = function (army) {
 	
 	};
 
-	var execute = function (faction) {
+	var execute = function (faction, victim) {
 		
 		var rndIndex = helpers.randomNumber(faction.length);
 		var target = faction[rndIndex];
 
-
-		if (target !== undefined && !target.executed) {
+		if (target !== undefined && !target.executed && !target.bombed && !target.retired) {
 
 			target.executed = true;
 		
@@ -43,6 +50,7 @@ var update = function (army) {
 				armyEngine.army(), 
 				values.terrorMessage.execute(
 					target, 
+					victim,
 					armyEngine.army().formatedDate
 				)
 			);		
@@ -56,17 +64,16 @@ var update = function (army) {
 		var rndIndex = helpers.randomNumber(faction.length);
 		var suspect = faction[rndIndex];
 
-		if (suspect && suspect.suspected && !suspect.executed) {
+		if (suspect && suspect.suspected && !suspect.executed && !suspect.bombed) {
 
 			suspect.executed = true;
-
-			console.log(suspect.lastName, "executing suspect");
 
 			staffRetire.retireSpecificOfficer(
 				suspect, 
 				armyEngine.army(), 
 				values.terrorMessage.execute(
-					suspect, 
+					suspect,
+					target,
 					armyEngine.army().formatedDate
 				)
 			);
@@ -75,9 +82,8 @@ var update = function (army) {
 
 		};
 		
-		if (suspect !== undefined && !suspect.suspected) {
+		if (suspect !== undefined && !suspect.suspected && !suspect.executed && !suspect.bombed) {
 			suspect.suspected = true;
-			console.log(suspect.lastName, "suspecting");
 			suspect.history.push(values.terrorMessage.suspect(suspect, target, armyEngine.army().formatedDate));
 		};
 
@@ -87,8 +93,8 @@ var update = function (army) {
 	
 		if (!target.immune && target.align !== mostPrestige && chance > 50 && !target.retired) {
 	
-			var faction = removeFromFaction(target);
-			staffRetire.retireSpecificOfficer(target, armyEngine.army(), values.terrorMessage.murder(target, faction));
+			var guiltyFaction = murder(target);
+			staffRetire.retireSpecificOfficer(target, armyEngine.army(), values.terrorMessage.murder(target, guiltyFaction));
 			
 			if (target.align === "conservative") {
 				suspect(radicals, target);
@@ -96,8 +102,8 @@ var update = function (army) {
 
 		} else if (!target.immune && target.align === mostPrestige && chance > 75 && !target.retired) {
 	
-			var faction = removeFromFaction(target);
-			staffRetire.retireSpecificOfficer(target, armyEngine.army(), values.terrorMessage.murder(target, faction));
+			var guiltyFaction = murder(target);
+			staffRetire.retireSpecificOfficer(target, armyEngine.army(), values.terrorMessage.murder(target, guiltyFaction));
 			
 			if (target.align === "radical") {
 				suspect(conservatives, target);
@@ -112,11 +118,11 @@ var update = function (army) {
 
 			if (target.align === "conservative") {
 				
-				execute(radicals);
+				execute(radicals, target.rank + " " + target.lastName);
 			
 			} else if (target.align === "radical") {
 				
-				execute(conservatives);
+				execute(conservatives, target.rank + " " + target.lastName);
 
 			};
 
@@ -124,7 +130,85 @@ var update = function (army) {
 	
 	};
 
-	targets.map(function(target) {
+	function isNotRetired (commander) {
+		return !commander.retired;
+	};
+
+	var bomb = function (unit, commander, chance) {
+
+		function bombUnitCommanders (commander, faction) {
+
+			commander.bombed = true;
+
+			staffRetire.retireSpecificOfficer(
+				commander, 
+				armyEngine.army(), 
+				values.terrorMessage.bombing(
+					commander,
+					unit,
+					faction,
+					armyEngine.army().formatedDate
+				)
+			);
+	
+		};
+		
+		if (unit.drift === 1 && chance > 75 && commander.align === "radical" && !commander.bombed) {
+			
+			bombUnitCommanders(commander, "conservatives");			
+			radicals.map(function(radical) {
+				if (radical.rank === commander.rank && commander.id != radical.id && !radical.bombed) {
+					bombUnitCommanders(radical, "conservative");
+				};
+			});
+
+		} else if (unit.drift === -1 && chance > 75 && commander.align === "conservative" && !commander.bombed) {
+			
+			bombUnitCommanders(commander, "conservatives");			
+			conservatives.map(function(conservative) {
+				if (conservative.rank === commander.rank && commander.id != conservative.id && !conservative.bombed) {
+					bombUnitCommanders(conservative, "radical");
+				};
+			});
+			
+		};
+	
+	};
+
+	function setBomb (units) {
+		
+		if (units === "army") {
+			return;
+		}
+
+		army[units].map(function (unit) {
+			
+			terrorists.filter(isNotRetired).map(function (commander) {
+			
+				if (unit.id === commander.unitId && !unit.bombed) {
+
+					unit.bombed = true;
+					bomb(unit, commander, helpers.randomNumber(values.baseTerror)); 
+
+				};
+
+			});
+		
+		});
+	
+	};	
+
+	// console.log(armyEngine.army(), "armyy")
+	setBomb("army");
+	setBomb("corps");
+	setBomb("divisions");
+	setBomb("brigades");
+	setBomb("regiments");
+	setBomb("companies");
+	setBomb("battalions");
+	setBomb("platoons");
+
+	terrorists.map(function(target) {
 
 		terror(target, helpers.randomNumber(values.baseTerror));
 	

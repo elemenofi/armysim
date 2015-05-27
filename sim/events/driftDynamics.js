@@ -36,7 +36,7 @@ function updateDrifts (army) {
   
   };
 
-  function driftCommander (rank) {
+  function driftSubordinates (rank) {
 
     _.each(army[rank], function(commander) {
 
@@ -97,7 +97,7 @@ function updateDrifts (army) {
   
   };
 
-  function updateDriftsByRank (rank, units, subUnits) {1
+  function updateDriftsByRank (rank, units, subUnits) {
 
     if (units === army) {
 
@@ -111,7 +111,12 @@ function updateDrifts (army) {
 
     });
 
-    driftCommander(rank);
+    // unit drift depends on units commander drift
+    // we then apply the effect on the subordinates
+    // a right winged commander will drift subordinates
+    // to the right regardless of their own drift. 
+
+    driftSubordinates(rank);
 
   };
 

@@ -56,8 +56,6 @@ function updatePlots(army) {
         plotPrestige += values.plotPrestige(plotter);
         prestigeHit += values.prestigeHit(plotter);
 
-          
-
       });
 
       target.prestige -= prestigeHit;

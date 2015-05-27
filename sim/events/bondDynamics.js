@@ -3,7 +3,7 @@ var values = require('../data/values');
 
 function updateBonds (army) {
 
-  function checkIfBondExisted (commander, otherCommander) {
+  function checkHadBond (commander, otherCommander) {
 
     _.each(commander.bonds, function(bond) {
 
@@ -25,9 +25,11 @@ function updateBonds (army) {
     var newBond = otherCommander;
 
     commander.bonds.push({
+  
       id: newBond.id, 
       name: newBond.lastName, 
       strength: 0
+  
     });
 
   };
@@ -39,9 +41,7 @@ function updateBonds (army) {
 
     if ( bothRightDrift || bothLeftDrift ) {
 
-      var hadBond = false;
-
-      hadBond = checkIfBondExisted(commander, otherCommander);
+      var hadBond = checkHadBond(commander, otherCommander);
 
       if (!hadBond) {
 
@@ -55,9 +55,9 @@ function updateBonds (army) {
 
   function createBondsByUnits (units) {
 
-    _.each(army[units], function(unit) {
+    army[units].map(function(unit) {
 
-      _.each(army[units], function(otherUnit) {
+      army[units].map(function(otherUnit) {
 
         if (unit.parentId === otherUnit.parentId && unit.id != otherUnit.id) {
 
@@ -65,10 +65,10 @@ function updateBonds (army) {
 
         };
 
-      });
+      }); 
 
     });
-
+ 
   };
 
   createBondsByUnits("platoons");

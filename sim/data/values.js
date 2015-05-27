@@ -12,9 +12,9 @@ exports.baseDrift = 1000;
 
 exports.centerDrift = 500;
 
-exports.radicalThreshold = 10;
+exports.radicalThreshold = 100;
 
-exports.conservativeThreshold = 990;
+exports.conservativeThreshold = 900;
 
 exports.baseTerror = 100;
 
@@ -30,7 +30,7 @@ exports.maxExperience = {
 };
 
 exports.startingExperience = {
-  general: 70,
+  general: 369,
   ltGeneral: 60,
   dvGeneral: 50,
   bgGeneral: 40,
@@ -109,11 +109,14 @@ exports.terrorMessage = {
   survived: function (target, date) {
     return "Survived an assasination attempt on " + date;
   },
-  execute: function (target, date) {
-    return "Executed for high treason on the ";
+  execute: function (target, victim, date) {
+    return "Executed by martial law for the murder of " + victim + " on ";
   },
   suspect: function (suspect, target, date) {
-    return "Suspected of participating in the assasination of " + target.rank + " " + target.lastName + " on the " + date;
+    return "Suspected of participating in the assasination of " + target.rank + " " + target.lastName + " on " + date;
+  },
+  bombing: function (commander, unit, faction) {
+    return "Died in the bombing of the " + unit.name + " by " + faction + " extremists";
   }
 };
 
