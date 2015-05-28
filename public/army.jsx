@@ -49,6 +49,16 @@ var Inspecting = React.createClass({
     
     if (army.inspecting) {
 
+    function compare(a,b) {
+  if (a.prestige < b.prestige)
+    return 1;
+  if (a.prestige > b.prestige)
+    return -1;
+  return 0;
+}
+    
+army.inspecting.sort(compare);
+
       for (var i = 0; i < army.inspecting.length; i++) {
     
         inspecting.push(
@@ -61,8 +71,7 @@ var Inspecting = React.createClass({
     
       };
     
-    }
-    
+    };
     return (<div>{inspecting}</div>);
   }
 

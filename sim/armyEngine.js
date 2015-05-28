@@ -4,14 +4,14 @@ var unitManager = require('./units/unitManager');
 var staffManager = require('./staff/staffManager');
 var staffRewards = require('./staff/staffRewards');
 var staffRetire = require('./staff/staffRetire');
-var driftDynamics = require('./events/driftDynamics');
-var bondDynamics = require('./events/bondDynamics');
-var plotDynamics = require('./events/plotDynamics');
-var terrorDynamics = require('./events/terrorDynamics');
-var suicideDynamics = require('./events/suicideDynamics');
+// var driftDynamics = require('./events/driftDynamics');
+// var bondDynamics = require('./events/bondDynamics');
+// var plotDynamics = require('./events/plotDynamics');
+// var terrorDynamics = require('./events/terrorDynamics');
+// var suicideDynamics = require('./events/suicideDynamics');
 var helpers = require('./utils/helpers');
 require('date-utils');
-
+var plots = require('./events/plots');
 var army = templates.army;
 var day = 0;
 var lastNames = [];
@@ -33,15 +33,17 @@ function passTurn () {
       helpers.formatDate(army.date);
       staffRewards.rewardStaff(army);
       staffRetire.retireStaff(army);
-      driftDynamics.update(army);
-      bondDynamics.update(army);
-      plotDynamics.update(army);
-      terrorDynamics.update(army);
-      suicideDynamics.update(army);
+      plots.update(army);
+      // driftDynamics.update(army);
+      // bondDynamics.update(army);
+      // plotDynamics.update(army);
+      // terrorDynamics.update(army);
+      // suicideDynamics.update(army);
 
     };
 
     day++;
+    console.log("Passing turn #" + day);
 
   };
 
@@ -58,6 +60,11 @@ exports.actions = function () {
 exports.lastNames = function () {
   return lastNames;
 };
+// for (var i = 0; i < 500; i++) {
+    // passTurn();
+  
+// };
+
 
 setInterval(function(){
   if (army.turns) {

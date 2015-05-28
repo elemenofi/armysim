@@ -72,10 +72,7 @@ exports.badgesPerPrestige = function (officer) {
 
 exports.statusMessage = {
   duty: "In duty",
-  retire: "Retired",
-  forcedRetire: function (plottersNames) {
-    return "Forced to retire by " + plottersNames.splice(" ").join(" and ");
-  }
+  retire: "Retired"
 };
 
 exports.valedictorianMessage = {
@@ -97,8 +94,14 @@ exports.promotionMessage = {
 };
 
 exports.plotMessage = {
-  start: function (accomplice, target, date) {
-    return "Started a plot with " + accomplice + " against " + target + " on " + date;
+  succeed: function (accomplice, target, unit, side) {
+    return "";
+  },
+  retired: function (plotters) {
+    console.log("Forced to retire by " + plotters[0].rank + " " + plotters[0].lastName +
+           " and " + plotters[1].rank + " " + plotters[1].lastName);
+    return "Forced to retire by " + plotters[0].rank + " " + plotters[0].lastName +
+           " and " + plotters[1].rank + " " + plotters[1].lastName;
   }
 };
 

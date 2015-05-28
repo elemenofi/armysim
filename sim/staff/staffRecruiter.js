@@ -31,7 +31,12 @@ exports.newRecruit = function (unit) {
 
 	officer.intelligence = helpers.randomNumber(values.baseIntelligence);
 	officer.leadership = helpers.randomNumber(values.baseLeadership);
+	officer.diplomacy = helpers.randomNumber(values.baseIntelligence);
+	officer.administration = helpers.randomNumber(values.baseIntelligence);
+	officer.piety = helpers.randomNumber(values.baseIntelligence);
+
 	officer.drift = helpers.randomNumber(values.baseDrift);
+	officer.militancy = helpers.randomNumber(values.baseDrift);
 
 	generationBatch.push(officer);
 
