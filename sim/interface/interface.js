@@ -1,4 +1,4 @@
-var staffManager = require('../staff/staffManager');
+var staffManager = require('../staff/manager');
 var armyEngine = require('../armyEngine');
 
 exports.inspectToggle = function (army, officer) {
@@ -12,4 +12,3 @@ exports.inspectReset = function (army) {
 exports.turnsToggle = function () {
   armyEngine.army().turns = !armyEngine.army().turns;
 };
-

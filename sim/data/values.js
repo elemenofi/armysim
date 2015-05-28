@@ -107,7 +107,7 @@ exports.plotMessage = {
 
 exports.terrorMessage = {
   murder: function (target, faction) {
-    return "Murdered by " + faction + " extremists "; 
+    return "Murdered by " + faction + " extremists ";
   },
   survived: function (target, date) {
     return "Survived an assasination attempt on " + date;

@@ -1,14 +1,9 @@
 var templates = require('./data/templates');
 var armyInterface = require('./interface/interface');
-var unitManager = require('./units/unitManager');
-var staffManager = require('./staff/staffManager');
-var staffRewards = require('./staff/staffRewards');
-var staffRetire = require('./staff/staffRetire');
-// var driftDynamics = require('./events/driftDynamics');
-// var bondDynamics = require('./events/bondDynamics');
-// var plotDynamics = require('./events/plotDynamics');
-// var terrorDynamics = require('./events/terrorDynamics');
-// var suicideDynamics = require('./events/suicideDynamics');
+var unitManager = require('./units/manager');
+var staffManager = require('./staff/manager');
+var staffRewards = require('./staff/rewards');
+var staffRetire = require('./staff/retire');
 var helpers = require('./utils/helpers');
 require('date-utils');
 var plots = require('./events/plots');
@@ -23,7 +18,7 @@ function passTurn () {
   if (army.turns) {
 
     if ( day === 0 ) {
-      
+
       helpers.formatDate(army.date);
       unitManager.initUnits(army);
       staffManager.initStaff(army);
@@ -60,10 +55,10 @@ exports.actions = function () {
 exports.lastNames = function () {
   return lastNames;
 };
-// for (var i = 0; i < 500; i++) {
-    // passTurn();
-  
-// };
+
+for (var i = 0; i < 500; i++) {
+    passTurn();
+};
 
 
 setInterval(function(){
@@ -75,4 +70,3 @@ setInterval(function(){
 setInterval(function () {
     passTurn();
 }, 500);
-
