@@ -1,58 +1,50 @@
 var _ = require('underscore');
 var values = require('../data/values');
 var helpers = require('../utils/helpers')
-var staffRecruiter = require('./recruiter');
+var recruiter = require('./recruit');
 var unitManager = require('../units/manager');
 
 var promoteOldUnitCommander = function (oldUnit, army) {
-
 	switch (oldUnit.type) {
-
 		case "platoon":
-			oldUnit.commander = staffRecruiter.newRecruit(oldUnit);
+			oldUnit.commander = recruiter.new(oldUnit);
 			army.captains.push(oldUnit.commander);
 		break;
 
 		case "battalion":
-			promoteOfficer("Captain", army, oldUnit);
+			officer("Captain", army, oldUnit);
 		break;
 
 		case "company":
-			promoteOfficer("Major", army, oldUnit);
+			officer("Major", army, oldUnit);
 		break;
 
 		case "regiment":
-			promoteOfficer("Lieutenant Coronel", army, oldUnit);
+			officer("Lieutenant Coronel", army, oldUnit);
 		break;
 
 		case "brigade":
-			promoteOfficer("Coronel", army, oldUnit);
+			officer("Coronel", army, oldUnit);
 		break;
 
 		case "division":
-			promoteOfficer("Brigade General", army, oldUnit);
+			officer("Brigade General", army, oldUnit);
 		break;
 
 		case "corp":
-			promoteOfficer("Division General", army, oldUnit);
+			officer("Division General", army, oldUnit);
 		break;
-
 	};
-
 };
 
 var promotion = function (rank, army, oldUnit, targetUnit)  {
-
 	var targetUnitName = '';
-
+	
 	if (targetUnit) {
-
 		oldUnit.commander.unitId = targetUnit.id;
 		targetUnit.commander = oldUnit.commander;
 		targetUnitName = targetUnit.name;
-
 	} else {
-
 		army.commander = oldUnit.commander;
 		targetUnitName = army.name;
 	};
@@ -67,49 +59,33 @@ var promotion = function (rank, army, oldUnit, targetUnit)  {
 
 	oldUnit.commander = undefined;
 	promoteOldUnitCommander(oldUnit, army);
-
 };
 
 var findSeniorOfficer = function (army, units, targetUnit, oldRanks, newRanks, newRank) {
-
 	var seniorXP = 0;
 
 	_.each(army[units], function(unit) {
-
 		if (unit.parentId === targetUnit.id) {
-
 			if (unit.commander && unit.commander.xp > seniorXP) {
-
 				seniorXP = unit.commander.xp;
-
 			};
-
 		};
-
 	});
 
 	_.each(army[units], function(unit) {
-
 		if (unit.parentId === targetUnit.id) {
-
 			if (unit.commander && unit.commander.xp === seniorXP) {
-
 				army[oldRanks].splice(army[oldRanks].indexOf(unit.commander), 1);
 
 				army[newRanks].push(unit.commander);
 
 				promotion(newRank, army, unit, targetUnit);
-
 			};
-
 		};
-
 	});
-
 };
 
-var promoteOfficer = function (rank, army, targetUnit) {
-
+var officer = function (rank, army, targetUnit) {
 	var seniorXP = 0;
 
 	switch (rank) {
@@ -135,11 +111,10 @@ var promoteOfficer = function (rank, army, targetUnit) {
 			findSeniorOfficer(army, "corps", army, "ltGenerals", "generals", "General");
 		break;
 	};
-
 };
 
 exports.promotion = promotion;
-exports.promoteOfficer = promoteOfficer;
+exports.officer = officer;
 
 exports.staff = function (army) {
 	return army.staff;

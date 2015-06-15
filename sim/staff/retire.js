@@ -1,8 +1,8 @@
 var _ = require('underscore');
 var helpers = require('../utils/helpers');
 var values = require('../data/values');
-var staffRecruiter = require('./recruiter');
-var staffPromote = require('./promote');
+var recruiter = require('./recruit');
+var promote = require('./promote');
 var unitManager = require('../units/manager');
 
 var retirement = function (army, units, officer, retiredRank, promoteRank) {
@@ -10,7 +10,7 @@ var retirement = function (army, units, officer, retiredRank, promoteRank) {
 		if (unit.commander && unit.commander.id === officer.id) {
 			army.retired[retiredRank].push(unit.commander);
 			unit.commander = undefined;
-			staffPromote.promoteOfficer(promoteRank, army, unit);
+			promote.officer(promoteRank, army, unit);
 		};
 	});
 };
@@ -26,7 +26,7 @@ var retireOfficer = function (officer, army, message) {
 				if (platoon.commander && platoon.commander.id === officer.id) {
 					army.retired.captains.push(platoon.commander);
 					platoon.commander = undefined;
-					platoon.commander = staffRecruiter.newRecruit(platoon);
+					platoon.commander = recruiter.new(platoon);
 					army.captains.push(platoon.commander);
 				};
 			});
@@ -60,7 +60,7 @@ var retireOfficer = function (officer, army, message) {
 			if (army.commander && army.commander.id === officer.id) {
 				army.retired.generals.push(army.commander);
 				army.commander = undefined;
-				staffPromote.promoteOfficer("Lieutenant General", army);
+				promote.officer("Lieutenant General", army);
 			};
 		break;
 	};
@@ -114,7 +114,7 @@ var update = function (army) {
 	});
 };
 
-exports.retireSpecificOfficer = function (officer, army, message) {
+exports.specificOfficer = function (officer, army, message) {
 	retireOfficer(officer, army, message);
 };
 

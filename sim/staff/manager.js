@@ -1,6 +1,6 @@
 var _ = require('underscore');
 var helpers = require('../utils/helpers')
-var staffRecruiter = require('./recruiter');
+var recruiter = require('./recruit');
 var staffPromote = require('./promote');
 var staffRetire = require('./retire');
 var unitManager = require('../units/manager');
@@ -8,27 +8,19 @@ var unitManager = require('../units/manager');
 exports.init = function (army) {
 
 	function assignNewOfficer (rank, unit) {
-
-		var officer = staffRecruiter.newRecruit(unit);
+		var officer = recruiter.new(unit);
 		army[rank].push(officer);
 		unit.commander = officer;
-
 	};
 
 	function initStaffByUnits (rank, units) {
-
 		if (units === army) {
-
 			assignNewOfficer(rank, units);
-
 		} else {
-
 			_.each(army[units], function (unit) {
 				assignNewOfficer(rank, unit);
 			});
-
 		};
-
 	};
 
 	initStaffByUnits("generals", army);
@@ -41,30 +33,22 @@ exports.init = function (army) {
 	initStaffByUnits("captains", "platoons");
 
 	return army.staff;
-
 };
 
 exports.inspectToggle = function (army, officer) {
-
 	_.each(army.staff, function (targetOfficer) {
-
 		if (targetOfficer.id === officer.id) {
-
 			targetOfficer.inspecting = !targetOfficer.inspecting;
 
 			army.inspecting.push(targetOfficer);
-
 		};
-
 	});
-
 };
 
 exports.inspectReset = function (army) {
 	army.oldInspected = army.oldInspected.concat(army.inspecting);
 	army.inspecting = [];
 };
-
 
 exports.staff = function (army) {
 	return army.staff;

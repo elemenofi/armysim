@@ -1,6 +1,6 @@
 var MersenneTwister = require('mersenne-twister');
 var randomNumberGenerator = new MersenneTwister();
-var armyEngine = require('../armyEngine');
+var engine = require('../engine');
 var values = require('../data/values');
 var Chance = require('chance');
 var chance = new Chance();
@@ -84,10 +84,10 @@ var createBadge = function  () {
 
 var formatDate = function (date) {
   
-  armyEngine.army().formatedDate = date.toFormat("DDDD the D of MMMM, YYYY");
-  armyEngine.army().formatedDate = armyEngine.army().formatedDate.split(" ");
-  armyEngine.army().formatedDate[2] = date.toFormat("D") + dateSuffix(date.toFormat("D"));
-  armyEngine.army().formatedDate = armyEngine.army().formatedDate.join(" ");
+  engine.army().formatedDate = date.toFormat("DDDD the D of MMMM, YYYY");
+  engine.army().formatedDate = engine.army().formatedDate.split(" ");
+  engine.army().formatedDate[2] = date.toFormat("D") + dateSuffix(date.toFormat("D"));
+  engine.army().formatedDate = engine.army().formatedDate.join(" ");
 
 };
 

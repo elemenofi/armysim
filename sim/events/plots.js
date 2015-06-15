@@ -1,13 +1,10 @@
-var armyEngines = require('../armyEngine');
-var staffRetire = require('../staff/retire');
+var retire = require('../staff/retire');
 var values = require('../data/values');
 
 var plots = function(army) {
-
 	var activePlots = [];
 
 	var unitAlign = function (army, units) {
-
 		army[units].map(function (unit) {
 			if (unit.commander.drift > 500) {
 				unit.commander.align = "right";
@@ -17,7 +14,6 @@ var plots = function(army) {
 				unit.align = "left";
 			};
 		});
-
 	};
 
 	var sameAlign = function (officerA, officerB) {
@@ -25,25 +21,19 @@ var plots = function(army) {
 	};
 
 	var findPlots = function (army, tier) {
-
 		army[tier[1]].map(function (unit) {
-
 			var plotters = [];
 			var targetUnit = unit;
 
 			unit[tier[0]].map(function (subUnit) {
-
 				if (!sameAlign(unit.commander, subUnit.commander)) {
 					plotters.push(subUnit.commander);
 				};
-
 			});
 
 			// at this point if both subCommanders are of opposite align than the
 			// commander, they start a plot
-
 			if (plotters.length >= 2) {
-
 				var newPlot = {
 					plotters: plotters,
 					target: unit.commander,
@@ -52,17 +42,12 @@ var plots = function(army) {
 				};
 
 				activePlots.push(newPlot);
-
 			};
-
 		});
-
 	};
 
 	var removeFailedPlots = function (plots) {
-
 		plots.map(function(plot) {
-
 			if (
 				!plot.plotters[0] ||
 				!plot.plotters[1] ||
@@ -73,15 +58,11 @@ var plots = function(army) {
 			) {
 				plots.splice(plots.indexOf(plot), 1);
 			};
-
 		});
-
 	};
 
 	var updatePlots = function (plots) {
-
 		plots.map(function (plot) {
-
 			var plotPrestige =
 			plot.plotters[0].prestige +
 			plot.plotters[1].prestige;
@@ -91,19 +72,16 @@ var plots = function(army) {
 			plotters.push(plot.plotters[1]);
 
 			if ((plot.target.prestige * 2.5) < plotPrestige) {
-				staffRetire.retireSpecificOfficer(
+				retire.specificOfficer(
 					plot.target, army, values.plotMessage.retired(plotters)
 				);
 			} else {
-				plot.target.prestige -= (plotPrestige/100);
+				plot.target.prestige -= (plotPrestige / 100);
 			};
-
 		});
-
 	};
 
 	var update = (function (army) {
-
 		var unitTypes = [
 			"platoons", "battalions", "companies",
 			"regiments", "brigades", "divisions",
@@ -128,13 +106,8 @@ var plots = function(army) {
 		});
 
 		removeFailedPlots(activePlots);
-
 		updatePlots(activePlots);
-
-		console.log(activePlots.length);
-
 	})(army);
-
 };
 
 exports.update = function (army) {

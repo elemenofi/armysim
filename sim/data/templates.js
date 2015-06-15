@@ -1,4 +1,3 @@
-var armyEngine = require('../armyEngine');
 exports.army = {
   id: 1,
   type: "army",
