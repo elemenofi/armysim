@@ -25,7 +25,10 @@ var setFirstName = function () {
 	var name = "";
 
 	if (randomNumber(100) <= values.doubleNameChance) {
-		name = chance.first({ gender: "male" }) + " " +	chance.first({ gender: "male" });
+		name = 
+      chance.first({ gender: "male" }) +
+      " " +	
+      chance.first({ gender: "male" });
 	} else {
 		name = chance.first({ gender: "male" });
 	};
