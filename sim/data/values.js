@@ -1,22 +1,16 @@
 var helpers = require('../utils/helpers');
 
 exports.unitDepth = 2;
-
 exports.doubleNameChance = 10;
-
 exports.baseIntelligence = 100;
-
 exports.baseLeadership = 100;
-
 exports.baseDrift = 1000;
-
 exports.centerDrift = 500;
-
 exports.radicalThreshold = 100;
-
 exports.conservativeThreshold = 900;
-
 exports.baseTerror = 100;
+exports.prestigeTurn = 10;
+exports.prestigeValedictorian = 10;
 
 exports.maxExperience = {
   general: 370,
@@ -50,29 +44,22 @@ exports.startingPrestige = {
   captain: 10
 };
 
-exports.plotPrestige = function (plotter) {
-  return Math.round(plotter.prestige / 100);
-};
-
-exports.prestigeHit = function (plotter) {
-  return Math.round(plotter.prestige / 50);
-};
-
-exports.prestigeTurn = 10;
-exports.prestigeValedictorian = 10;
-
-exports.prestigePromotion = function (officer) {
-  return Math.round(officer.prestige / 20);
-};
-
-
-exports.badgesPerPrestige = function (officer) {
-  return Math.round(officer.prestige / 200);
-};
-
 exports.statusMessage = {
   duty: "In duty",
   retire: "Retired"
+};
+
+exports.plotPrestige = function (plotter) {
+  return Math.round(plotter.prestige / 100);
+};
+exports.prestigeHit = function (plotter) {
+  return Math.round(plotter.prestige / 50);
+};
+exports.prestigePromotion = function (officer) {
+  return Math.round(officer.prestige / 20);
+};
+exports.badgesPerPrestige = function (officer) {
+  return Math.round(officer.prestige / 200);
 };
 
 exports.valedictorianMessage = {
@@ -98,10 +85,9 @@ exports.plotMessage = {
     return "";
   },
   retired: function (plotters) {
-    console.log("Forced to retire by " + plotters[0].rank + " " + plotters[0].lastName +
-           " and " + plotters[1].rank + " " + plotters[1].lastName);
-    return "Forced to retire by " + plotters[0].rank + " " + plotters[0].lastName +
-           " and " + plotters[1].rank + " " + plotters[1].lastName;
+    return "Forced to retire by " + 
+          plotters[0].rank + " " + plotters[0].lastName +
+          " and " + plotters[1].rank + " " + plotters[1].lastName;
   }
 };
 

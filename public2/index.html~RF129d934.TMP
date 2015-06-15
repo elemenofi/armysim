@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Army React</title>
+  <script src="node_modules/react/dist/JSXTransformer.js"></script>
+  <script src="node_modules/react/dist/react.js"></script>
+  <script src="node_modules/jquery/dist/jquery.js"></script>
+
+</head>
+<body>
+  
+  <script type="text/jsx">
+    var army;
+    var message;
+    var rendered = false;
+
+    $(document).ready(function () {
+
+      function getArmy () {
+
+        $.get('army').success(function (data) {
+          
+          console.log(data);
+          army = data;
+
+          if (!rendered) {
+            renderArmy(army)            
+          };
+
+        });
+
+      };
+
+      function renderArmy (army) {
+
+      console.log(army.corps[0]);
+
+
+        rendered = true;
+
+        React.render(
+          <Corp corp={army.corps[0]} />,
+          document.body
+        );
+      
+      };  
+
+      function drawStructure (corp) {
+        var rows = [];
+        for (var i=0; i < corp.division; i++) {
+            rows.push(<Division division={this.props.corp.divisions[i]} />);
+        }
+        return (
+          <div>{rows}</div>
+        );  
+      }
+      
+
+
+      var Corp = React.createClass({
+        render: function() {
+          return (
+            <div>
+              <UnitName unit={this.props.corp} />
+              <UnitCommander commander={this.props.corp.commander} />
+              <Division division={this.props.corp.divisions[0]} />
+            </div>
+          );
+        }
+      });
+
+      var Division = React.createClass({
+        render: function() {
+          return (
+            <div>
+              <UnitName unit={this.props.division} />
+              <UnitCommander commander={this.props.division.commander} />
+            </div>
+          );
+        }
+      });
+
+      var UnitName = React.createClass({
+        render: function() {
+          return (
+            <p>{this.props.unit.name}</p>
+          );
+        }
+      });
+
+      var UnitCommander = React.createClass({
+        render: function() {
+          return (
+            <p>{this.props.commander.rank} {this.props.commander.firstName} {this.props.commander.lastName}</p>
+          );
+        }
+      });     
+
+      setInterval(function(){
+        getArmy();        
+      }, 2000);
+
+    });
+  </script>
+
+</body>
+</html>

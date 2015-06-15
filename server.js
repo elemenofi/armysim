@@ -10,10 +10,8 @@ army.use(express.static(__dirname + '/public'));
 army.use(bodyParser.json());
 army.use(bodyParser.urlencoded({ extended: true}));
 
-io.sockets.on('connection', function(socket){
-	
+io.sockets.on('connection', function (socket) {
 	setInterval(function(){
-		
 		var armyDTO = {
 			corps: armyEngine.army().corps,
 			turns: armyEngine.army().turns,
@@ -24,7 +22,6 @@ io.sockets.on('connection', function(socket){
 		};
 
 		socket.emit('army', armyDTO);
-
 	}, 1000);  
 
 	socket.on('inspect', function (data) {
@@ -38,7 +35,6 @@ io.sockets.on('connection', function(socket){
   socket.on('clear', function () {
   	armyEngine.actions().inspectReset(armyEngine.army());
   });
-	
 });
 
 http.listen(8000, function(){
