@@ -10,29 +10,29 @@ army.use(bodyParser.json());
 army.use(bodyParser.urlencoded({ extended: true}));
 
 io.sockets.on('connection', function (socket) {
-	setInterval(function(){
-		var armyDTO = {
-			name: engine.army().name,
-			date: engine.army().formatedDate,
+  setInterval(function(){
+    var armyDTO = {
+      name: engine.army().name,
+      date: engine.army().formatedDate,
       turns: engine.army().turns,
       commander: engine.army().commander,
       corps: engine.army().corps,
-			inspecting: engine.army().inspecting
-		};
+      inspecting: engine.army().inspecting
+    };
 
-		socket.emit('army', armyDTO);
-	}, 1000);  
+    socket.emit('army', armyDTO);
+  }, 1000);  
 
-	socket.on('inspect', function (data) {
-		engine.actions().inspectToggle(engine.army(), data.officer);
-	});
+  socket.on('inspect', function (data) {
+    engine.actions().inspectToggle(engine.army(), data.officer);
+  });
 
   socket.on('pause', function (data) {
-  	engine.actions().turnsToggle(engine.army());
+    engine.actions().turnsToggle(engine.army());
   });
 
   socket.on('clear', function () {
-  	engine.actions().inspectReset(engine.army());
+    engine.actions().inspectReset(engine.army());
   });
 });
 
