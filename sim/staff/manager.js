@@ -5,7 +5,7 @@ var staffPromote = require('./promote');
 var staffRetire = require('./retire');
 var unitManager = require('../units/manager');
 
-exports.initStaff = function (army) {
+exports.init = function (army) {
 
 	function assignNewOfficer (rank, unit) {
 

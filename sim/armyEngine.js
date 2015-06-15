@@ -1,65 +1,44 @@
 var templates = require('./data/templates');
-var armyInterface = require('./interface/interface');
-var unitManager = require('./units/manager');
-var staffManager = require('./staff/manager');
-var staffRewards = require('./staff/rewards');
-var staffRetire = require('./staff/retire');
+var interface = require('./interface/interface');
+var units = require('./units/manager');
+var staff = require('./staff/manager');
+var rewards = require('./staff/rewards');
+var retirements = require('./staff/retire');
 var helpers = require('./utils/helpers');
 require('date-utils');
 var plots = require('./events/plots');
+
 var army = templates.army;
 var day = 0;
-var lastNames = [];
-
 army.date = new Date();
 
 function passTurn () {
-
   if (army.turns) {
-
     if ( day === 0 ) {
-
-      helpers.formatDate(army.date);
-      unitManager.initUnits(army);
-      staffManager.initStaff(army);
-
+      units.init(army);
+      staff.init(army);
     } else {
-
       helpers.formatDate(army.date);
-      staffRewards.rewardStaff(army);
-      staffRetire.retireStaff(army);
+      rewards.update(army);
+      retirements.update(army);
       plots.update(army);
-      // driftDynamics.update(army);
-      // bondDynamics.update(army);
-      // plotDynamics.update(army);
-      // terrorDynamics.update(army);
-      // suicideDynamics.update(army);
-
     };
 
+    helpers.formatDate(army.date);
     day++;
-    console.log("Passing turn #" + day);
-
   };
-
 };
 
 exports.army = function () {
   return army;
 };
-
 exports.actions = function () {
-  return armyInterface;
-};
-
-exports.lastNames = function () {
-  return lastNames;
+  return interface;
 };
 
 for (var i = 0; i < 500; i++) {
     passTurn();
 };
-
 
 setInterval(function(){
   if (army.turns) {

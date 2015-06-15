@@ -2,22 +2,16 @@ var _ = require('underscore');
 var names = require('../data/names');
 var values = require('../data/values');
 
-exports.initUnits = function (army) {
-
+exports.init = function (army) {
   var unitId = 2;
   var unitDepth = values.unitDepth;
   var units = [];
 
   function generateUnit (type, quantity, parent) {
-
       if (quantity === 0) {
-      
         return;
-      
       } else {
-
         var unit = {};
-        
         unit.id = unitId;
         unit.type = type;
 
@@ -30,7 +24,6 @@ exports.initUnits = function (army) {
         unitId++;
 
         switch (type) {
-
           case "corp":
             unit.divisions = [];
             unit.name = names.corps[0];
@@ -111,17 +104,11 @@ exports.initUnits = function (army) {
 
             generateUnit("platoon", quantity - 1, parent);
           break;
-
         };
-
         units.push(unit);
-
       };
-
     };
 
     generateUnit("corp", unitDepth);
-
   return army;
-
 };

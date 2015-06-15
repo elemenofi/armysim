@@ -6,28 +6,21 @@ var staffPromote = require('./promote');
 var unitManager = require('../units/manager');
 
 var retirement = function (army, units, officer, retiredRank, promoteRank) {
-
 	_.each(army[units], function (unit) {
-
 		if (unit.commander && unit.commander.id === officer.id) {
-
 			army.retired[retiredRank].push(unit.commander);
 			unit.commander = undefined;
 			staffPromote.promoteOfficer(promoteRank, army, unit);
-
 		};
-
 	});
-
 };
 
 var retireOfficer = function (officer, army, message) {
-
 	officer.retired = true;
 	officer.statusMessage = message;
 	officer.history.push(message + " on " + army.formatedDate);
+	
 	switch (officer.rank) {
-
 		case "Captain":
 			_.each(army.platoons, function (platoon) {
 				if (platoon.commander && platoon.commander.id === officer.id) {
@@ -70,41 +63,32 @@ var retireOfficer = function (officer, army, message) {
 				staffPromote.promoteOfficer("Lieutenant General", army);
 			};
 		break;
-
 	};
-
-
 };
 
-var retireStaff = function (army) {
-
+var update = function (army) {
 	var message = values.statusMessage.retire;
-
 	_.each(army.staff, function(officer) {
-
 		if (officer) {
-
-
 			var threshold = 0;
 
 			switch (officer.rank) {
-
 				case "Captain":
 					threshold = values.maxExperience.captain;
 				break;
-
+				
 				case "Major":
 					threshold = values.maxExperience.major;
 				break;
-
+				
 				case "Coronel":
 					threshold = values.maxExperience.coronel;
 				break;
-
+				
 				case "Lieutenant Coronel":
 					threshold = values.maxExperience.coronel;
 				break;
-
+				
 				case "Brigade General":
 					threshold = values.maxExperience.bgGeneral;
 				break;
@@ -120,7 +104,6 @@ var retireStaff = function (army) {
 				case "General":
 					threshold = values.maxExperience.ltGeneral;
 				break;
-
 			};
 
 			if (officer.xp > threshold && officer.retired === false) {
@@ -128,10 +111,7 @@ var retireStaff = function (army) {
 				army.staff.splice(army.staff.indexOf(officer), 1);
 			};
 		};
-
-
 	});
-
 };
 
 exports.retireSpecificOfficer = function (officer, army, message) {
@@ -139,7 +119,7 @@ exports.retireSpecificOfficer = function (officer, army, message) {
 };
 
 exports.retireOfficer = retireOfficer;
-exports.retireStaff = retireStaff;
+exports.update = update;
 
 exports.staff = function (army) {
 	return army.staff;
