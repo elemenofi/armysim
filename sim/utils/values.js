@@ -44,7 +44,7 @@ exports.startingPrestige = {
   captain: 10
 };
 
-exports.statusMessage = {
+exports.status = {
   duty: "In duty",
   retire: "Retired"
 };
@@ -62,36 +62,34 @@ exports.badgesPerPrestige = function (officer) {
   return Math.round(officer.prestige / 200);
 };
 
-exports.valedictorianMessage = {
-  valedictorian: function (date) {
-    return "Graduated valedictorian from the class of " + date;
-  }
+exports.valedictorian = function (date) {
+  return "Graduated valedictorian from the class of " + date;
+};
+exports.comission = function (unit, date) {
+  return "Comissioned into " + unit.name + " on " + date;
+};
+exports.promotion = function (rank, unit, date) {
+  return "Promoted to " + rank + " as commander of the " + unit + " on " + date;
 };
 
-exports.comissionMessage = {
-  comission: function (unit, date) {
-    return "Comissioned into " + unit.name + " on " + date;
-  }
-};
-
-exports.promotionMessage = {
-  promotion: function (rank, unit, date) {
-    return "Promoted to " + rank + " as commander of the " + unit + " on " + date;
-  }
-};
-
-exports.plotMessage = {
+exports.plot = {
   succeed: function (accomplice, target, unit, side) {
     return "";
   },
   retired: function (plotters) {
-    return "Forced to retire by " + 
-          plotters[0].rank + " " + plotters[0].lastName +
-          " and " + plotters[1].rank + " " + plotters[1].lastName;
+    console.log(
+      "Forced to retire by " + 
+      plotters[0].rank + " " + plotters[0].lastName +
+      " and " + plotters[1].rank + " " + plotters[1].lastName
+    );
+    return 
+      "Forced to retire by " + 
+      plotters[0].rank + " " + plotters[0].lastName +
+      " and " + plotters[1].rank + " " + plotters[1].lastName;
   }
 };
 
-exports.terrorMessage = {
+exports.terror = {
   murder: function (target, faction) {
     return "Murdered by " + faction + " extremists ";
   },
@@ -109,8 +107,6 @@ exports.terrorMessage = {
   }
 };
 
-exports.suicideMessage = {
-  suicide: function (officer, date) {
-    return "Comitted suicide on " + date;
-  }
+exports.suicide = function (officer, date) {
+  return "Comitted suicide on " + date;
 };

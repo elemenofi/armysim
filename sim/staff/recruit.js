@@ -19,7 +19,7 @@ exports.new = function (unit) {
 
 	officer.lastName = helpers.setLastName();
 	officer.firstName = helpers.setFirstName();
-	officer.statusMessage = values.statusMessage.duty;
+	officer.status = values.status.duty;
 
 	officer.inspecting = false;
 	officer.retired = false;
@@ -52,11 +52,11 @@ exports.new = function (unit) {
 		generationBatch.sort(compare);
 
 	 	generationBatch[generationBatch.indexOf(officer)].history.push(
-	 		values.valedictorianMessage.valedictorian(engine.army().date.toFormat("YYYY")-1)
+	 		values.valedictorian(engine.army().date.toFormat("YYYY")-1)
 	 	);
 
 		generationBatch[generationBatch.indexOf(officer)].history.push(
-			values.comissionMessage.comission(unit, engine.army().formatedDate)
+			values.comission(unit, engine.army().formatedDate)
 		);
 
 		generationBatch[generationBatch.indexOf(officer)].valedictorian = true;
@@ -64,7 +64,7 @@ exports.new = function (unit) {
 		lastBatch = engine.army().date.toFormat("YYYY");
 		generationBatch = [];
 	} else if (unit.type === "platoon") {
-		officer.history.push(values.comissionMessage.comission(unit, engine.army().formatedDate));
+		officer.history.push(values.comission(unit, engine.army().formatedDate));
 	};
 
 	switch (unit.type) {

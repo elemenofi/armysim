@@ -4,7 +4,11 @@ var values = require('../utils/values');
 var plots = function (army) {
   var activePlots = [];
 
-  var unitAlign = function (army, units) {
+  var sameAlign = function (officerA, officerB) {
+    return officerA.align === officerB.align;
+  };
+
+  var align = function (army, units) {
     army[units].map(function (unit) {
       if (unit.commander.drift > 500) {
         unit.commander.align = "right";
@@ -16,11 +20,7 @@ var plots = function (army) {
     });
   };
 
-  var sameAlign = function (officerA, officerB) {
-    return officerA.align === officerB.align;
-  };
-
-  var findPlots = function (army, tier) {
+  var startPlots = function (army, tier) {
     army[tier[1]].map(function (unit) {
       var plotters = [];
       var targetUnit = unit;
@@ -31,14 +31,11 @@ var plots = function (army) {
         };
       });
 
-      // at this point if both subCommanders are of opposite align than the
-      // commander, they start a plot
       if (plotters.length >= 2) {
         var newPlot = {
           plotters: plotters,
           target: unit.commander,
           unit: unit,
-          strength: 0
         };
 
         activePlots.push(newPlot);
@@ -63,51 +60,42 @@ var plots = function (army) {
 
   var updatePlots = function (plots) {
     plots.map(function (plot) {
-      var plotPrestige =
-      plot.plotters[0].prestige +
-      plot.plotters[1].prestige;
-
-      var plotters = [];
-      plotters.push(plot.plotters[0]);
-      plotters.push(plot.plotters[1]);
+      var plotters = plot.plotters;
+      var plotPrestige = plotters[0].prestige + plotters[1].prestige;
 
       if ((plot.target.prestige * 2.5) < plotPrestige) {
-        retire.specificOfficer(
-          plot.target, army, values.plotMessage.retired(plotters)
-        );
+        retire.specific(plot.target, army, values.plot.retired(plotters));
       } else {
         plot.target.prestige -= (plotPrestige / 100);
       };
     });
   };
 
-  var update = (function (army) {
-    var unitTypes = [
-      "platoons", "battalions", "companies",
-      "regiments", "brigades", "divisions",
-      "corps"
-    ];
+  var unitTypes = [
+    "platoons", "battalions", "companies",
+    "regiments", "brigades", "divisions",
+    "corps"
+  ];
 
-    var unitTiers = [
-      [unitTypes[0], unitTypes[1]], //platoon - battalion
-      [unitTypes[1], unitTypes[2]], //etc
-      [unitTypes[2], unitTypes[3]],
-      [unitTypes[3], unitTypes[4]],
-      [unitTypes[4], unitTypes[5]],
-      [unitTypes[5], unitTypes[6]]
-    ];
+  var unitTiers = [
+    [unitTypes[0], unitTypes[1]], //platoon - battalion
+    [unitTypes[1], unitTypes[2]], //etc
+    [unitTypes[2], unitTypes[3]],
+    [unitTypes[3], unitTypes[4]],
+    [unitTypes[4], unitTypes[5]],
+    [unitTypes[5], unitTypes[6]]
+  ];
 
-    unitTypes.map(function (units) {
-      unitAlign(army, units);
-    });
+  unitTypes.map(function (units) {
+    align(army, units);
+  });
 
-    unitTiers.map(function (tier) {
-      findPlots(army, tier);
-    });
+  unitTiers.map(function (tier) {
+    startPlots(army, tier);
+  });
 
-    removeFailedPlots(activePlots);
-    updatePlots(activePlots);
-  })(army);
+  removeFailedPlots(activePlots);
+  updatePlots(activePlots);
 };
 
 exports.update = function (army) {

@@ -16,7 +16,7 @@ var retirement = function (army, units, officer, retiredRank, promoteRank) {
 
 var retireOfficer = function (officer, army, message) {
 	officer.retired = true;
-	officer.statusMessage = message;
+	officer.status = message;
 	officer.history.push(message + " on " + army.formatedDate);
 	
 	switch (officer.rank) {
@@ -66,7 +66,7 @@ var retireOfficer = function (officer, army, message) {
 };
 
 var update = function (army) {
-	var message = values.statusMessage.retire;
+	var message = values.status.retire;
 	_.each(army.staff, function(officer) {
 		if (officer) {
 			var threshold = 0;
@@ -113,7 +113,7 @@ var update = function (army) {
 	});
 };
 
-exports.specificOfficer = function (officer, army, message) {
+exports.specific = function (officer, army, message) {
 	retireOfficer(officer, army, message);
 };
 
