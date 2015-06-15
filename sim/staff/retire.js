@@ -17,7 +17,7 @@ var retirement = function (army, units, officer, retiredRank, promoteRank) {
 var retire = function (officer, army, message) {
 	officer.retired = true;
 	officer.status = message;
-	officer.history.push(message + " on " + army.formatedDate);
+	officer.history.push(message + " on " + army.date);
 	
 	switch (officer.rank) {
 		case "Captain":
@@ -75,31 +75,24 @@ var update = function (army) {
 				case "Captain":
 					threshold = values.maxXP.captain;
 				break;
-				
 				case "Major":
 					threshold = values.maxXP.major;
 				break;
-				
 				case "Coronel":
 					threshold = values.maxXP.coronel;
 				break;
-				
 				case "Lieutenant Coronel":
 					threshold = values.maxXP.coronel;
-				break;
-				
+				break;		
 				case "Brigade General":
 					threshold = values.maxXP.bgGeneral;
 				break;
-
 				case "Division General":
 					threshold = values.maxXP.dvGeneral;
 				break;
-
 				case "Lieutenant General":
 					threshold = values.maxXP.ltGeneral;
 				break;
-
 				case "General":
 					threshold = values.maxXP.ltGeneral;
 				break;

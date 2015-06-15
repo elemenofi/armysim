@@ -233,7 +233,9 @@ var Rank = React.createClass({
         return (<p>&#9733; &#9733; &#9733; &#9733;</p>);
       break;
       default:
-        return (<p>{commander.rank} {commander.firstName} {commander.lastName}</p>);
+        return (
+          <p>{commander.rank} {commander.firstName} {commander.lastName}</p>
+        );
     }
   }
 });
@@ -279,7 +281,9 @@ function drawNames (commander) {
     break;
 
     default:
-      return (<p>{commander.rank} {commander.firstName} {commander.lastName}</p>);
+      return (
+        <p>{commander.rank} {commander.firstName} {commander.lastName}</p>
+      );
   }
 } 
 

@@ -47,11 +47,10 @@ exports.update = function (army) {
 
 		if (officer.retired === false) {
 			officer.xp++;
-
 			officer.prestige = givePrestige(officer, army);
-
 			giveNewBadges(officer, badges);
 		};
 	});
+
 	return army.staff;
 };

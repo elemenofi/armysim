@@ -13,7 +13,7 @@ io.sockets.on('connection', function (socket) {
   setInterval(function(){
     var armyDTO = {
       name: engine.army().name,
-      date: engine.army().formatedDate,
+      date: engine.army().date,
       turns: engine.army().turns,
       commander: engine.army().commander,
       corps: engine.army().corps,

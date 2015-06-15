@@ -6,11 +6,10 @@ var rewards = require('./staff/reward');
 var retirements = require('./staff/retire');
 var helpers = require('./utils/helpers');
 var plots = require('./events/plots');
-require('date-utils');
-
 var army = templates.army;
 var day = 0;
-army.date = new Date();
+require('date-utils');
+army.rawDate = new Date();
 
 function passTurn () {
   if (army.turns) {
@@ -18,13 +17,13 @@ function passTurn () {
       units.init(army);
       staff.init(army);
     } else {
-      helpers.formatDate(army.date);
+      helpers.formatDate(army.rawDate);
       rewards.update(army);
       retirements.update(army);
       plots.update(army);
     };
 
-    helpers.formatDate(army.date);
+    helpers.formatDate(army.rawDate);
     day++;
   };
 };
@@ -42,7 +41,7 @@ for (var i = 0; i < 500; i++) {
 
 setInterval(function(){
   if (army.turns) {
-    army.date = army.date.addDays(1);
+    army.rawDate = army.rawDate.addDays(1);
   };
 }, 10);
 

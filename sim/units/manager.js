@@ -105,6 +105,7 @@ exports.init = function (army) {
             generateUnit("platoon", quantity - 1, parent);
           break;
         };
+        
         units.push(unit);
       };
     };

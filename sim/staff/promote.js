@@ -53,7 +53,7 @@ var promotion = function (rank, army, oldUnit, targetUnit)  {
   oldUnit.commander.plotting = false;
 
   oldUnit.commander.history.push(
-    values.promotion(rank, targetUnitName, army.formatedDate)
+    values.promotion(rank, targetUnitName, army.date)
   );
 
   oldUnit.commander = undefined;

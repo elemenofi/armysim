@@ -14,7 +14,7 @@ exports.new = function (unit) {
 	officer.id = globalOfficerId;
 	globalOfficerId++;
 
-	officer.generation = engine.army().date.getYear();
+	officer.generation = engine.army().rawDate.getYear();
 	officer.history = [].concat(officer.history);
 
 	officer.lastName = helpers.setLastName();
@@ -40,7 +40,7 @@ exports.new = function (unit) {
 	generationBatch.push(officer);
 
 	if ((unit.type === "platoon") && (generationBatch.length >= 20) &&
-	(engine.army().date.toFormat("YYYY") !== lastBatch)) {
+	(engine.army().rawDate.toFormat("YYYY") !== lastBatch)) {
 		function compare (a, b) {
 		  if (a.intelligence < b.intelligence)
 		    return -1;
@@ -52,19 +52,19 @@ exports.new = function (unit) {
 		generationBatch.sort(compare);
 
 	 	generationBatch[generationBatch.indexOf(officer)].history.push(
-	 		values.valedictorian(engine.army().date.toFormat("YYYY")-1)
+	 		values.valedictorian(engine.army().rawDate.toFormat("YYYY") - 1)
 	 	);
 
 		generationBatch[generationBatch.indexOf(officer)].history.push(
-			values.comission(unit, engine.army().formatedDate)
+			values.comission(unit, engine.army().rawDate)
 		);
 
 		generationBatch[generationBatch.indexOf(officer)].valedictorian = true;
 
-		lastBatch = engine.army().date.toFormat("YYYY");
+		lastBatch = engine.army().rawDate.toFormat("YYYY");
 		generationBatch = [];
 	} else if (unit.type === "platoon") {
-		officer.history.push(values.comission(unit, engine.army().formatedDate));
+		officer.history.push(values.comission(unit, engine.army().date));
 	};
 
 	switch (unit.type) {
