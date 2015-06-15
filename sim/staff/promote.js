@@ -1,8 +1,7 @@
-var _ = require('underscore');
-var values = require('../data/values');
+var values = require('../utils/values');
 var helpers = require('../utils/helpers')
 var recruiter = require('./recruit');
-var unitManager = require('../units/manager');
+var _ = require('underscore');
 
 var promoteOldUnitCommander = function (oldUnit, army) {
 	switch (oldUnit.type) {

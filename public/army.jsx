@@ -1,17 +1,21 @@
+function compare(a,b) {
+  if (a.prestige < b.prestige)
+    return 1;
+  if (a.prestige > b.prestige)
+    return -1;
+  return 0;
+}
+
 var army;
 var message;
-
 var socket = io('http://localhost:8000');
 
 socket.on('army', function(armyData) {
-
   army = armyData;
   renderArmy(army);
-
 });
 
 function renderArmy (army) {
-
   rendered = true;
 
   React.render(
@@ -23,108 +27,73 @@ function renderArmy (army) {
     </div>,
     document.body
   );
-
 };
 
 var clearStyle = {
-
   clear: 'both'
-
 };
 
 var Inspecting = React.createClass({
-
-  
   getInitialState: function() {
-      return {inspected: true};
+    return {inspected: true};
   },
-  
+
   onClick: function () {
     this.setState({inspected: !this.state.inspected});
   },
-  
-  render: function () {
-    
-    var inspecting = [];
-    
-    if (army.inspecting) {
 
-    function compare(a,b) {
-  if (a.prestige < b.prestige)
-    return 1;
-  if (a.prestige > b.prestige)
-    return -1;
-  return 0;
-}
-    
-army.inspecting.sort(compare);
+  render: function () {
+    var inspecting = [];
+
+    if (army.inspecting) {
+      army.inspecting.sort(compare);
 
       for (var i = 0; i < army.inspecting.length; i++) {
-    
         inspecting.push(
-
           <div className="inspecting" key={army.inspecting[i].id}>
             <History officer={army.inspecting[i]} />
           </div>
-
         );
-    
       };
-    
     };
+
     return (<div>{inspecting}</div>);
   }
-
 });
 
 
 var generateUnitClass = function (unit, subUnit) {
-  
   var newClass = React.createClass({
-    
     getInitialState: function() {
-        
-        return {inspected: this.props.unit.commander.inspecting};
-    
+      return {inspected: this.props.unit.commander.inspecting};
     },
     
     componentWillReceiveProps: function () {
-      
       this.setState({inspected: false});
       this.setState({inspected: this.props.unit.commander.inspecting});    
-    
     },
     
     onClick: function () {
-      
       this.setState({inspected: !this.state.inspected});
       this.props.unit.commander.inspecting = true;
       socket.emit('inspect', { officer: this.props.unit.commander });
-    
     },
     
     render: function () {
-      
       return drawUnit (this.props.unit, subUnit, this);
-    
     }
-  
   });  
 
   return newClass;
-      
 };
 
 
 function drawUnit(unit, subUnit, that) {
-
   var subUnits = [];
   var className = '';
 
   var componentType = function () {
-  
     switch (subUnit) {
-
       case "corps":
         className = 'army';
         headerName = 'armyHeader';
@@ -140,7 +109,6 @@ function drawUnit(unit, subUnit, that) {
       case "brigades":
         className = 'division';
         headerName = 'brigadeHeader';
-
         return <Brigade unit={unit[subUnit][i]} key={unit[subUnit][i].id} />
       break;
 
@@ -164,35 +132,25 @@ function drawUnit(unit, subUnit, that) {
         className = 'battalion';
         return <Platoon unit={unit[subUnit][i]} key={unit[subUnit][i].id} />
       break;
-
     }
-
   }
 
   if (subUnit) {
-
     for (var i=0; i < unit[subUnit].length; i++) {
-
       subUnits.push(componentType());
-
     };
-
   };
 
   var history;
 
   if (that && that.state.inspected) {
-
     history = <History officer={unit.commander} />;
-
   };
 
   var valedictorian;
 
   if (that && unit.commander.valedictorian) {
-
     valedictorian = <div className="valedictorian">&curren;</div>;
-
   };
   
   return (
@@ -208,11 +166,9 @@ function drawUnit(unit, subUnit, that) {
       {subUnits}
     </div>
   );
-
 };
 
 var Pause = React.createClass({
-  
   onClick: function () {
     socket.emit('pause');
   },
@@ -220,19 +176,16 @@ var Pause = React.createClass({
   render: function () {
     return (<p onClick={this.onClick}>Pause the game</p>);
   }
-
 });
 
-var Clear = React.createClass({
-  
+var Clear = React.createClass({  
   onClick: function () {
     socket.emit('clear');
   },
-  
+
   render: function () {
     return (<p onClick={this.onClick}>Clear inspected</p>);
   }
-
 });
 
 var Army = generateUnitClass("army", "corps");
@@ -248,7 +201,6 @@ var UnitName = React.createClass({
   render: function() {
     return (
       <p>{this.props.unit.name}</p>
-
     );
   }
 });
@@ -287,39 +239,25 @@ var Rank = React.createClass({
 });
 
 var UnitCommander = React.createClass({
-  
   render: function() {
-    
-    return drawNames(this.props.commander);
-    
+    return drawNames(this.props.commander); 
   }
-  
 });
 
 var Badges = React.createClass({
-  
   render: function() {
-    
-    return drawBadges(this.props.officer.badges);
-    
+    return drawBadges(this.props.officer.badges); 
   }
-  
 });
 
 var History = React.createClass({
-
   render: function() {
-
     return drawHistories(this.props.officer);
-
   }
-
 });
 
 function drawNames (commander) {
-
   switch (commander.rank) {
-
     case "Captain":
       return (<p>{commander.lastName}</p>);
     break;
@@ -343,69 +281,60 @@ function drawNames (commander) {
     default:
       return (<p>{commander.rank} {commander.firstName} {commander.lastName}</p>);
   }
-
 } 
 
 function drawBadges (badges) {
-
   var badgeHolder = [];
 
   for (var i = 1; i < badges.length; i++) {
-    
     var divStyle = {
-
       backgroundColor: badges[i].bg,
       width: badges[i].x,
       height: badges[i].y
-
     };
 
-    badgeHolder.push(<div style={divStyle} key={badges[i].id}></div>)
-  
+    badgeHolder.push(<div style={divStyle} key={badges[i].id}></div>);
   };
 
   return (
-  
     <div className="badgeHolder">
       <div className="badges">{badgeHolder}</div>
       <div style={clearStyle}></div>
     </div>
-  
   );
-
 };
 
 function drawHistories (officer) {
-
   var history = [];
 
   for (var i = 1; i < officer.history.length; i++) {
-
     history.push(<div>{officer.history[i]}</div>)
-  
   };
 
   var valedictorian;
 
   if (officer.valedictorian) {
-
     valedictorian = <div className="valedictorian">&curren;</div>;
-
   };
 
-  return (
-  
+  return (  
     <div className="history">
-      <div><Rank commander={officer} />  {officer.rank} {officer.firstName} {officer.lastName}</div>
+      <div><Rank commander={officer} />
+        {officer.rank} {officer.firstName} {officer.lastName}
+      </div>
       <br/>
       {valedictorian}
       <Badges officer={officer} />
       <div className="histories">{history}</div>
       <div style={clearStyle}></div>
     </div>
-  
   );
-
 };
 
-  
+function compare(a,b) {
+  if (a.prestige < b.prestige)
+    return 1;
+  if (a.prestige > b.prestige)
+    return -1;
+  return 0;
+}

@@ -1,9 +1,8 @@
-var _ = require('underscore');
 var helpers = require('../utils/helpers');
-var values = require('../data/values');
+var values = require('../utils/values');
 var recruiter = require('./recruit');
 var promote = require('./promote');
-var unitManager = require('../units/manager');
+var _ = require('underscore');
 
 var retirement = function (army, units, officer, retiredRank, promoteRank) {
 	_.each(army[units], function (unit) {

@@ -1,6 +1,6 @@
+var names = require('../utils/names');
+var values = require('../utils/values');
 var _ = require('underscore');
-var names = require('../data/names');
-var values = require('../data/values');
 
 exports.init = function (army) {
   var unitId = 2;

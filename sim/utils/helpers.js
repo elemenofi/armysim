@@ -1,54 +1,38 @@
 var MersenneTwister = require('mersenne-twister');
 var randomNumberGenerator = new MersenneTwister();
 var engine = require('../engine');
-var values = require('../data/values');
+var values = require('./values');
 var Chance = require('chance');
 var chance = new Chance();
 
 var randomNumber = function (range) {
-
 	return  Math.round(randomNumberGenerator.random() * range);
-
 };
 
 var setLastName = function () {
-	
 	var name = "";
 
 	if (randomNumber(100) <= values.doubleNameChance) {
-
 		name = chance.last() + " " + chance.last();
-
 	} else {
-
 		name = chance.last();
-
 	};
 
 	return name;
-
 };
 
 var setFirstName = function () {
-	
 	var name = "";
-
 	if (randomNumber(100) <= values.doubleNameChance) {
-
 		name = chance.first({ gender: "male" }) + " " +	chance.first({ gender: "male" });
-
 	} else {
-
 		name = chance.first({ gender: "male" });
-
 	};
 
 	return name;
-
 };
 
 var randomColor = function () {
-	
 	var colors = [
 		"#000000",
 		"#FFCB05",
@@ -62,13 +46,11 @@ var randomColor = function () {
 	];
 	
 	return colors[Math.floor(Math.random()*colors.length)];
-
 };
 
 var badgeId = 1;
 
-var createBadge = function  () {
-	
+var createBadge = function  () {	
 	var badge = {};
 
 	badge.id = badgeId;
@@ -79,16 +61,13 @@ var createBadge = function  () {
 	badgeId++;
 	
 	return badge;
-
 };
 
 var formatDate = function (date) {
-  
   engine.army().formatedDate = date.toFormat("DDDD the D of MMMM, YYYY");
   engine.army().formatedDate = engine.army().formatedDate.split(" ");
   engine.army().formatedDate[2] = date.toFormat("D") + dateSuffix(date.toFormat("D"));
   engine.army().formatedDate = engine.army().formatedDate.join(" ");
-
 };
 
 var dateSuffix = function (i) {

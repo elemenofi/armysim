@@ -1,6 +1,6 @@
 var helpers = require('../utils/helpers');
-var names = require('../data/names');
-var values = require('../data/values')
+var names = require('../utils/names');
+var values = require('../utils/values')
 var manager = require('./manager')
 var engine = require('../engine');
 
@@ -97,7 +97,7 @@ exports.new = function (unit) {
 			officer.xp = helpers.randomNumber(10) + values.startingExperience.coronel;;
 			officer.rank = names.ranks.coronel;
 		break;
-
+ 
 		case "company":
 			officer.prestige = helpers.randomNumber(10) + values.startingPrestige.ltCoronel;
 			officer.xp = helpers.randomNumber(10) + values.startingExperience.ltCoronel;;

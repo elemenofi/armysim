@@ -1,12 +1,12 @@
-var templates = require('./data/templates');
+var templates = require('./utils/templates');
 var interface = require('./interface/interface');
 var units = require('./units/manager');
 var staff = require('./staff/manager');
 var rewards = require('./staff/reward');
 var retirements = require('./staff/retire');
 var helpers = require('./utils/helpers');
-require('date-utils');
 var plots = require('./events/plots');
+require('date-utils');
 
 var army = templates.army;
 var day = 0;

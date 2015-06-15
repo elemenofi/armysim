@@ -1,5 +1,5 @@
 var retire = require('../staff/retire');
-var values = require('../data/values');
+var values = require('../utils/values');
 
 var plots = function(army) {
 	var activePlots = [];
