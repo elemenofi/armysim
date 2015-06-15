@@ -12,7 +12,7 @@ exports.baseTerror = 100;
 exports.prestigeTurn = 10;
 exports.prestigeValedictorian = 10;
 
-exports.maxExperience = {
+exports.maxXP = {
   general: 370,
   ltGeneral: 320,
   dvGeneral: 280,
@@ -23,7 +23,7 @@ exports.maxExperience = {
   captain: 80
 };
 
-exports.startingExperience = {
+exports.startXP = {
   general: 369,
   ltGeneral: 60,
   dvGeneral: 50,
@@ -33,7 +33,7 @@ exports.startingExperience = {
   major: 10
 };
 
-exports.startingPrestige = {
+exports.prestige = {
   general: 80,
   ltGeneral: 70,
   dvGeneral: 60,

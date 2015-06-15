@@ -1,9 +1,8 @@
-var _ = require('underscore');
 var helpers = require('../utils/helpers')
 var recruiter = require('./recruit');
 var staffPromote = require('./promote');
 var staffRetire = require('./retire');
-var unitManager = require('../units/manager');
+var _ = require('underscore');
 
 exports.init = function (army) {
 

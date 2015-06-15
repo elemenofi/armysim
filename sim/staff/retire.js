@@ -14,7 +14,7 @@ var retirement = function (army, units, officer, retiredRank, promoteRank) {
 	});
 };
 
-var retireOfficer = function (officer, army, message) {
+var retire = function (officer, army, message) {
 	officer.retired = true;
 	officer.status = message;
 	officer.history.push(message + " on " + army.formatedDate);
@@ -73,40 +73,40 @@ var update = function (army) {
 
 			switch (officer.rank) {
 				case "Captain":
-					threshold = values.maxExperience.captain;
+					threshold = values.maxXP.captain;
 				break;
 				
 				case "Major":
-					threshold = values.maxExperience.major;
+					threshold = values.maxXP.major;
 				break;
 				
 				case "Coronel":
-					threshold = values.maxExperience.coronel;
+					threshold = values.maxXP.coronel;
 				break;
 				
 				case "Lieutenant Coronel":
-					threshold = values.maxExperience.coronel;
+					threshold = values.maxXP.coronel;
 				break;
 				
 				case "Brigade General":
-					threshold = values.maxExperience.bgGeneral;
+					threshold = values.maxXP.bgGeneral;
 				break;
 
 				case "Division General":
-					threshold = values.maxExperience.dvGeneral;
+					threshold = values.maxXP.dvGeneral;
 				break;
 
 				case "Lieutenant General":
-					threshold = values.maxExperience.ltGeneral;
+					threshold = values.maxXP.ltGeneral;
 				break;
 
 				case "General":
-					threshold = values.maxExperience.ltGeneral;
+					threshold = values.maxXP.ltGeneral;
 				break;
 			};
 
 			if (officer.xp > threshold && officer.retired === false) {
-				retireOfficer(officer, army, message);
+				retire(officer, army, message);
 				army.staff.splice(army.staff.indexOf(officer), 1);
 			};
 		};
@@ -114,10 +114,10 @@ var update = function (army) {
 };
 
 exports.specific = function (officer, army, message) {
-	retireOfficer(officer, army, message);
+	retire(officer, army, message);
 };
 
-exports.retireOfficer = retireOfficer;
+exports.retire = retire;
 exports.update = update;
 
 exports.staff = function (army) {

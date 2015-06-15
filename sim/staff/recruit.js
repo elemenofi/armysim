@@ -69,49 +69,49 @@ exports.new = function (unit) {
 
 	switch (unit.type) {
 		case "army":
-			officer.prestige = helpers.randomNumber(10) + values.startingPrestige.general;
-			officer.xp = helpers.randomNumber(10) + values.startingExperience.general;
+			officer.prestige = helpers.randomNumber(10) + values.prestige.general;
+			officer.xp = helpers.randomNumber(10) + values.startXP.general;
 			officer.rank = names.ranks.general;
 		break;
 
 		case "corp":
-			officer.prestige = helpers.randomNumber(10) + values.startingPrestige.ltGeneral;
-			officer.xp = helpers.randomNumber(10) + values.startingExperience.ltGeneral;
+			officer.prestige = helpers.randomNumber(10) + values.prestige.ltGeneral;
+			officer.xp = helpers.randomNumber(10) + values.startXP.ltGeneral;
 			officer.rank = names.ranks.ltGeneral;
 		break;
 
 		case "division":
-			officer.prestige = helpers.randomNumber(10) + values.startingPrestige.dvGeneral;
-			officer.xp = helpers.randomNumber(10) + values.startingExperience.dvGeneral;;
+			officer.prestige = helpers.randomNumber(10) + values.prestige.dvGeneral;
+			officer.xp = helpers.randomNumber(10) + values.startXP.dvGeneral;;
 			officer.rank = names.ranks.dvGeneral;
 		break;
 
 		case "brigade":
-			officer.prestige = helpers.randomNumber(10) + values.startingPrestige.bgGeneral;
-			officer.xp = helpers.randomNumber(10) + values.startingExperience.bgGeneral;;
+			officer.prestige = helpers.randomNumber(10) + values.prestige.bgGeneral;
+			officer.xp = helpers.randomNumber(10) + values.startXP.bgGeneral;;
 			officer.rank = names.ranks.bgGeneral;
 		break;
 
 		case "regiment":
-			officer.prestige = helpers.randomNumber(10) + values.startingPrestige.coronel;
-			officer.xp = helpers.randomNumber(10) + values.startingExperience.coronel;;
+			officer.prestige = helpers.randomNumber(10) + values.prestige.coronel;
+			officer.xp = helpers.randomNumber(10) + values.startXP.coronel;;
 			officer.rank = names.ranks.coronel;
 		break;
  
 		case "company":
-			officer.prestige = helpers.randomNumber(10) + values.startingPrestige.ltCoronel;
-			officer.xp = helpers.randomNumber(10) + values.startingExperience.ltCoronel;;
+			officer.prestige = helpers.randomNumber(10) + values.prestige.ltCoronel;
+			officer.xp = helpers.randomNumber(10) + values.startXP.ltCoronel;;
 			officer.rank = names.ranks.ltCoronel;
 		break;
 
 		case "battalion":
-			officer.prestige = helpers.randomNumber(10) + values.startingPrestige.major;
-			officer.xp = helpers.randomNumber(10) + values.startingExperience.major;
+			officer.prestige = helpers.randomNumber(10) + values.prestige.major;
+			officer.xp = helpers.randomNumber(10) + values.startXP.major;
 			officer.rank = names.ranks.major;
 		break;
 
 		case "platoon":
-			officer.prestige = helpers.randomNumber(10) + values.startingPrestige.captain;
+			officer.prestige = helpers.randomNumber(10) + values.prestige.captain;
 			officer.xp = 10;
 			officer.rank = names.ranks.captain;
 		break;
