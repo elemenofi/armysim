@@ -56,7 +56,7 @@ exports.new = function (unit) {
 	 	);
 
 		generationBatch[generationBatch.indexOf(officer)].history.push(
-			values.comission(unit, engine.army().rawDate)
+			values.comission(unit, engine.army().date)
 		);
 
 		generationBatch[generationBatch.indexOf(officer)].valedictorian = true;

@@ -71,42 +71,16 @@ exports.comission = function (unit, date) {
 exports.promotion = function (rank, unit, date) {
   return "Promoted to " + rank + " as commander of the " + unit + " on " + date;
 };
-
 exports.plot = {
-  succeed: function (accomplice, target, unit, side) {
-    return "";
+  succeed: function (plot, date) {
+    console.log("Forced " + plot.target.rank + " " +
+      plot.target.lastName + " to retire on " + date)
+    return "Forced " + plot.target.rank + " " +
+      plot.target.lastName + " to retire on " + date;
   },
   retired: function (plotters) {
-    console.log(
-      "Forced to retire by " + 
-      plotters[0].rank + " " + plotters[0].lastName +
-      " and " + plotters[1].rank + " " + plotters[1].lastName
-    );
-    return 
-      "Forced to retire by " + 
+    return "Forced to retire by " + 
       plotters[0].rank + " " + plotters[0].lastName +
       " and " + plotters[1].rank + " " + plotters[1].lastName;
   }
-};
-
-exports.terror = {
-  murder: function (target, faction) {
-    return "Murdered by " + faction + " extremists ";
-  },
-  survived: function (target, date) {
-    return "Survived an assasination attempt on " + date;
-  },
-  execute: function (target, victim, date) {
-    return "Executed by martial law for the murder of " + victim + " on ";
-  },
-  suspect: function (suspect, target, date) {
-    return "Suspected of participating in the assasination of " + target.rank + " " + target.lastName + " on " + date;
-  },
-  bombing: function (commander, unit, faction) {
-    return "Died in the bombing of the " + unit.name + " by " + faction + " extremists";
-  }
-};
-
-exports.suicide = function (officer, date) {
-  return "Comitted suicide on " + date;
 };

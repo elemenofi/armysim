@@ -62,13 +62,17 @@ var update = function (army) {
     plots.map(function (plot) {
       var plotters = plot.plotters;
       var plotPrestige = plotters[0].prestige + plotters[1].prestige;
-
+      
       if ((plot.target.prestige * 2.5) < plotPrestige) {
-        retire.specific(plot.target, army, values.plot.retired(plotters));
+        plotters.forEach(function (plotter) {
+          retire.specific(plot.target, army, values.plot.retired(plotters));
+          plotter.history.push(values.plot.succeed(plot, army.date));
+        });
       } else {
         plot.target.prestige -= (plotPrestige / 100);
       };
     });
+
   };
 
   var unitTypes = [

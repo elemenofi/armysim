@@ -37,7 +37,7 @@ exports.actions = function () {
   return interface;
 };
 
-for (var i = 0; i < 500; i++) {
+for (var i = 0; i < 1000; i++) {
     passTurn();
 };
 
