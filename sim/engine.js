@@ -1,14 +1,16 @@
+var helpers = require('./utils/helpers');
 var templates = require('./utils/templates');
 var interface = require('./interface/interface');
 var units = require('./units/manager');
 var staff = require('./staff/manager');
 var rewards = require('./staff/reward');
 var retirements = require('./staff/retire');
-var helpers = require('./utils/helpers');
 var plots = require('./events/plots');
+require('date-utils');
+
+
 var army = templates.army;
 var day = 0;
-require('date-utils');
 army.rawDate = new Date();
 
 function passTurn () {
