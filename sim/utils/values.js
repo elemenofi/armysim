@@ -1,14 +1,16 @@
 var helpers = require('../utils/helpers');
 
 exports.unitDepth = 2;
+
 exports.doubleNameChance = 10;
 exports.baseIntelligence = 100;
 exports.baseLeadership = 100;
+
 exports.baseDrift = 1000;
 exports.centerDrift = 500;
 exports.radicalThreshold = 100;
 exports.conservativeThreshold = 900;
-exports.baseTerror = 100;
+
 exports.prestigeTurn = 10;
 exports.prestigeValedictorian = 10;
 
@@ -44,10 +46,6 @@ exports.prestige = {
   captain: 10
 };
 
-exports.status = {
-  duty: "In duty",
-  retire: "Retired"
-};
 
 exports.plotPrestige = function (plotter) {
   return Math.round(plotter.prestige / 100);
@@ -62,6 +60,10 @@ exports.badgesPerPrestige = function (officer) {
   return Math.round(officer.prestige / 200);
 };
 
+exports.status = {
+  duty: "In duty",
+  retire: "Retired"
+};
 exports.valedictorian = function (date) {
   return "Graduated valedictorian from the class of " + date;
 };
@@ -72,9 +74,11 @@ exports.promotion = function (rank, unit, date) {
   return "Promoted to " + rank + " as commander of the " + unit + " on " + date;
 };
 exports.plot = {
+  start: function (plot, date) {
+    return "Started a plot to retire " + plot.target.rank + " " 
+      + plot.target.lastName + " on " + date;
+  },
   succeed: function (plot, date) {
-    console.log("Forced " + plot.target.rank + " " +
-      plot.target.lastName + " to retire on " + date)
     return "Forced " + plot.target.rank + " " +
       plot.target.lastName + " to retire on " + date;
   },

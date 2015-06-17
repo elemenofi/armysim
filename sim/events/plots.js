@@ -38,6 +38,18 @@ var update = function (army) {
           unit: unit,
         };
 
+        // validate plots
+        plotters.forEach(function(plotter){
+          plotter.plots.forEach(function(plot) {
+            if (plot === newPlot.target.id) plotter.hadPlot = true;
+          });
+
+          if (!plotter.hadPlot) {
+            plotter.plots.push(newPlot.target.id);
+            plotter.history.push(values.plot.start(newPlot, army.date));
+          }
+        });
+
         activePlots.push(newPlot);
       };
     });
@@ -65,9 +77,10 @@ var update = function (army) {
       
       if ((plot.target.prestige * 2.5) < plotPrestige) {
         plotters.forEach(function (plotter) {
-          retire.specific(plot.target, army, values.plot.retired(plotters));
           plotter.history.push(values.plot.succeed(plot, army.date));
         });
+        
+        retire.specific(plot.target, army, values.plot.retired(plotters));
       } else {
         plot.target.prestige -= (plotPrestige / 100);
       };
@@ -99,6 +112,7 @@ var update = function (army) {
   });
 
   remove(activePlots);
+
   advance(activePlots);
 };
 

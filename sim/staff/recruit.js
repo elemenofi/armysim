@@ -25,6 +25,7 @@ exports.new = function (unit) {
 	officer.retired = false;
 	officer.plotting = false;
 
+	officer.plots = [];
 	officer.bonds = [];
 	officer.badges = [];
 
