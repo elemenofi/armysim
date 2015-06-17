@@ -9,27 +9,21 @@ var promoteOldUnitCommander = function (oldUnit, army) {
       oldUnit.commander = recruiter.new(oldUnit);
       army.captains.push(oldUnit.commander);
     break;
-
     case "battalion":
       officer("Captain", army, oldUnit);
     break;
-
     case "company":
       officer("Major", army, oldUnit);
     break;
-
     case "regiment":
       officer("Lieutenant Coronel", army, oldUnit);
     break;
-
     case "brigade":
       officer("Coronel", army, oldUnit);
     break;
-
     case "division":
       officer("Brigade General", army, oldUnit);
     break;
-
     case "corp":
       officer("Division General", army, oldUnit);
     break;
@@ -60,7 +54,7 @@ var promotion = function (rank, army, oldUnit, targetUnit)  {
   promoteOldUnitCommander(oldUnit, army);
 };
 
-var findSeniorOfficer = function (army, units, targetUnit, oldRanks, newRanks, newRank) {
+var senior = function (army, units, targetUnit, oldRanks, newRanks, newRank) {
   var seniorXP = 0;
 
   _.each(army[units], function(unit) {
@@ -89,25 +83,25 @@ var officer = function (rank, army, targetUnit) {
 
   switch (rank) {
     case "Captain":
-      findSeniorOfficer(army, "platoons", targetUnit, "captains", "majors", "Major");
+      senior(army, "platoons", targetUnit, "captains", "majors", "Major");
     break;
     case "Major":
-      findSeniorOfficer(army, "battalions", targetUnit, "majors", "ltCoronels", "Lieutenant Coronel");
+      senior(army, "battalions", targetUnit, "majors", "ltCoronels", "Lieutenant Coronel");
     break;
     case "Lieutenant Coronel":
-      findSeniorOfficer(army, "companies", targetUnit, "ltCoronels", "coronels", "Coronel");
+      senior(army, "companies", targetUnit, "ltCoronels", "coronels", "Coronel");
     break;
     case "Coronel":
-      findSeniorOfficer(army, "regiments", targetUnit, "coronels", "bgGenerals", "Brigade General");
+      senior(army, "regiments", targetUnit, "coronels", "bgGenerals", "Brigade General");
     break;
     case "Brigade General":
-      findSeniorOfficer(army, "brigades", targetUnit, "bgGenerals", "dvGenerals", "Division General");
+      senior(army, "brigades", targetUnit, "bgGenerals", "dvGenerals", "Division General");
     break;
     case "Division General":
-      findSeniorOfficer(army, "divisions", targetUnit, "dvGenerals", "ltGenerals", "Lieutenant General");
+      senior(army, "divisions", targetUnit, "dvGenerals", "ltGenerals", "Lieutenant General");
     break;
     case "Lieutenant General":
-      findSeniorOfficer(army, "corps", army, "ltGenerals", "generals", "General");
+      senior(army, "corps", army, "ltGenerals", "generals", "General");
     break;
   };
 };

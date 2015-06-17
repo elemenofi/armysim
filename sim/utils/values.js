@@ -1,14 +1,16 @@
 var helpers = require('../utils/helpers');
 
 exports.unitDepth = 2;
+
 exports.doubleNameChance = 10;
 exports.baseIntelligence = 100;
 exports.baseLeadership = 100;
+
 exports.baseDrift = 1000;
 exports.centerDrift = 500;
 exports.radicalThreshold = 100;
 exports.conservativeThreshold = 900;
-exports.baseTerror = 100;
+
 exports.prestigeTurn = 10;
 exports.prestigeValedictorian = 10;
 
@@ -44,10 +46,6 @@ exports.prestige = {
   captain: 10
 };
 
-exports.status = {
-  duty: "In duty",
-  retire: "Retired"
-};
 
 exports.plotPrestige = function (plotter) {
   return Math.round(plotter.prestige / 100);
@@ -62,6 +60,10 @@ exports.badgesPerPrestige = function (officer) {
   return Math.round(officer.prestige / 200);
 };
 
+exports.status = {
+  duty: "In duty",
+  retire: "Retired"
+};
 exports.valedictorian = function (date) {
   return "Graduated valedictorian from the class of " + date;
 };
@@ -71,42 +73,18 @@ exports.comission = function (unit, date) {
 exports.promotion = function (rank, unit, date) {
   return "Promoted to " + rank + " as commander of the " + unit + " on " + date;
 };
-
 exports.plot = {
-  succeed: function (accomplice, target, unit, side) {
-    return "";
+  start: function (plot, date) {
+    return "Started a plot to retire " + plot.target.rank + " " 
+      + plot.target.lastName + " on " + date;
+  },
+  succeed: function (plot, date) {
+    return "Forced " + plot.target.rank + " " +
+      plot.target.lastName + " to retire on " + date;
   },
   retired: function (plotters) {
-    console.log(
-      "Forced to retire by " + 
-      plotters[0].rank + " " + plotters[0].lastName +
-      " and " + plotters[1].rank + " " + plotters[1].lastName
-    );
-    return 
-      "Forced to retire by " + 
+    return "Forced to retire by " + 
       plotters[0].rank + " " + plotters[0].lastName +
       " and " + plotters[1].rank + " " + plotters[1].lastName;
   }
-};
-
-exports.terror = {
-  murder: function (target, faction) {
-    return "Murdered by " + faction + " extremists ";
-  },
-  survived: function (target, date) {
-    return "Survived an assasination attempt on " + date;
-  },
-  execute: function (target, victim, date) {
-    return "Executed by martial law for the murder of " + victim + " on ";
-  },
-  suspect: function (suspect, target, date) {
-    return "Suspected of participating in the assasination of " + target.rank + " " + target.lastName + " on " + date;
-  },
-  bombing: function (commander, unit, faction) {
-    return "Died in the bombing of the " + unit.name + " by " + faction + " extremists";
-  }
-};
-
-exports.suicide = function (officer, date) {
-  return "Comitted suicide on " + date;
 };
