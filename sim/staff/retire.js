@@ -9,7 +9,8 @@ var retirement = function (army, units, officer, retiredRank, promoteRank) {
 		if (unit.commander && unit.commander.id === officer.id) {
 			army.retired[retiredRank].push(unit.commander);
 			unit.commander = undefined;
-			promote.officer(promoteRank, army, unit);
+			if (promoteRank) promote.officer(promoteRank, army, unit);
+			if (units === "platoons") unit.commander = recruiter.new(unit);
 		};
 	});
 };
@@ -21,14 +22,7 @@ var retire = function (officer, army, message) {
 	
 	switch (officer.rank) {
 		case "Captain":
-			_.each(army.platoons, function (platoon) {
-				if (platoon.commander && platoon.commander.id === officer.id) {
-					army.retired.captains.push(platoon.commander);
-					platoon.commander = undefined;
-					platoon.commander = recruiter.new(platoon);
-					army.captains.push(platoon.commander);
-				};
-			});
+			retirement(army, "platoons", officer, "captains")
 		break;
 		case "Major":
 			retirement(army, "battalions", officer, "majors", "Captain");
