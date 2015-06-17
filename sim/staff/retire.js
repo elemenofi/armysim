@@ -30,31 +30,24 @@ var retire = function (officer, army, message) {
 				};
 			});
 		break;
-
 		case "Major":
 			retirement(army, "battalions", officer, "majors", "Captain");
 		break;
-
 		case "Lieutenant Coronel":
 			retirement(army, "companies", officer, "ltCoronels", "Major");
 		break;
-
 		case "Coronel":
 			retirement(army, "regiments", officer, "coronels", "Lieutenant Coronel");
 		break;
-
 		case "Brigade General":
 			retirement(army, "brigades", officer, "bgGenerals", "Coronel");
 		break;
-
 		case "Division General":
 			retirement(army, "divisions", officer, "dvGenerals", "Brigade General");
 		break;
-
 		case "Lieutenant General":
 			retirement(army, "corps", officer, "ltGenerals", "Division General");
 		break;
-
 		case "General":
 			if (army.commander && army.commander.id === officer.id) {
 				army.retired.generals.push(army.commander);
