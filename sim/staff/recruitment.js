@@ -1,7 +1,7 @@
 var helpers = require('../utils/helpers');
 var names = require('../utils/names');
 var values = require('../utils/values')
-var manager = require('./manager')
+var manager = require('./management')
 var engine = require('../engine');
 
 var globalOfficerId = 1;

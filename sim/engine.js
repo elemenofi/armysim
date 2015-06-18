@@ -2,9 +2,9 @@ var helpers = require('./utils/helpers');
 var templates = require('./utils/templates');
 var interface = require('./interface/interface');
 var units = require('./units/manager');
-var staff = require('./staff/manager');
-var rewards = require('./staff/reward');
-var retirements = require('./staff/retire');
+var staff = require('./staff/management');
+var rewards = require('./staff/rewarding');
+var retirements = require('./staff/retirement');
 var plots = require('./events/plots');
 require('date-utils');
 
@@ -19,7 +19,6 @@ function passTurn () {
       units.init(army);
       staff.init(army);
     } else {
-      helpers.formatDate(army.rawDate);
       rewards.update(army);
       retirements.update(army);
       plots.update(army);
@@ -38,7 +37,7 @@ exports.actions = function () {
 };
 
 for (var i = 0; i < 1000; i++) {
-    passTurn();
+  passTurn();
 };
 
 setInterval(function(){

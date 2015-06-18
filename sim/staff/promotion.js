@@ -1,6 +1,6 @@
 var values = require('../utils/values');
 var helpers = require('../utils/helpers')
-var recruiter = require('./recruit');
+var recruiter = require('./recruitment');
 var _ = require('underscore');
 
 var promoteOldUnitCommander = function (oldUnit, army) {

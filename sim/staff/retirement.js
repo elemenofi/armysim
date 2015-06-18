@@ -1,7 +1,7 @@
 var helpers = require('../utils/helpers');
 var values = require('../utils/values');
-var recruiter = require('./recruit');
-var promote = require('./promote');
+var recruiter = require('./recruitment');
+var promote = require('./promotion');
 var _ = require('underscore');
 
 var retirement = function (army, units, officer, retiredRank, promoteRank) {

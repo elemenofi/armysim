@@ -51,6 +51,4 @@ exports.update = function (army) {
 			giveNewBadges(officer, badges);
 		};
 	});
-
-	return army.staff;
 };

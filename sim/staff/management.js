@@ -1,7 +1,7 @@
 var helpers = require('../utils/helpers')
-var recruiter = require('./recruit');
-var staffPromote = require('./promote');
-var staffRetire = require('./retire');
+var recruiter = require('./recruitment');
+var staffPromote = require('./promotion');
+var staffRetire = require('./retirement');
 var _ = require('underscore');
 
 exports.init = function (army) {
