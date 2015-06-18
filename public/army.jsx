@@ -20,12 +20,17 @@ function renderArmy (army) {
 
   React.render(
     <div>
-      <p>{army.date}</p>
-      <Army unit={army} />
-      <Pause /> <Clear />
-      <Inspecting />
+      <div>
+        <p>{army.date}</p>
+        <Army unit={army} />
+      </div>
+      <div>
+        <Clear />
+        <Pause /> <Clear />
+        <Inspecting />
+      </div>
     </div>,
-    document.body
+    document.getElementById('army')
   );
 };
 
@@ -174,7 +179,7 @@ var Pause = React.createClass({
   },
   
   render: function () {
-    return (<p onClick={this.onClick}>Pause the game</p>);
+    return (<div onClick={this.onClick}>Pause the game</div>);
   }
 });
 
@@ -184,7 +189,7 @@ var Clear = React.createClass({
   },
 
   render: function () {
-    return (<p onClick={this.onClick}>Clear inspected</p>);
+    return (<div onClick={this.onClick}>Clear inspected</div>);
   }
 });
 

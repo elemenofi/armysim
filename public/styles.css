@@ -1,14 +1,19 @@
-body {
+body, div svg {
   background-color:#7B8738;
   font-size: 10px;
   font-family: monospace;
+}
+#world-map {
+  margin-top: 10px;
+  border: 1px solid black;
+  padding: 10px;
 }
 
 h1 {
   color:blue;
 }
 
-p {
+p, a, a:visited {
   color:black;
 }
 
@@ -53,4 +58,15 @@ div.inspecting {
 
 div.valedictorian {
   color: #FFCB05;
+}
+div#world-map {
+  width: 45%;
+  height: 500px;
+}
+body {
+  width: 100%;
+  position: relative;
+}
+div#army {
+
 }
