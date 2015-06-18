@@ -1,4 +1,4 @@
-var retire = require('../staff/retire');
+var retire = require('../staff/retirement');
 var values = require('../utils/values');
 
 var update = function (army) {
@@ -40,11 +40,13 @@ var update = function (army) {
 
         // validate plots
         plotters.forEach(function(plotter){
+          var hadPlot = false;
+
           plotter.plots.forEach(function(plot) {
-            if (plot === newPlot.target.id) plotter.hadPlot = true;
+            if (plot === newPlot.target.id) hadPlot = true;
           });
 
-          if (!plotter.hadPlot) {
+          if (!hadPlot) {
             plotter.plots.push(newPlot.target.id);
             plotter.history.push(values.plot.start(newPlot, army.date));
           }

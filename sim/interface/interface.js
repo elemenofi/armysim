@@ -1,4 +1,4 @@
-var manager = require('../staff/manager');
+var manager = require('../staff/management');
 var engine = require('../engine');
 
 exports.inspectToggle = function (army, officer) {
