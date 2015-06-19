@@ -2,21 +2,14 @@
 import Officer from './officer';
 
 class Officers {
-  constructor(size) {
+  constructor (size) {
     this.staff = [];
     this.recruit(size);
   }
 
-  recruit(amount) {
-    let newOfficer = () => {
-      let officer = new Officer();
-      this.staff.push(officer);
-      amount--;
-      this.recruit(amount);
-    };
-    
-    if (amount) {
-      newOfficer();
+  recruit (amount) {
+    while (this.staff.length < amount) {
+      this.staff.push(new Officer());
     }
   }
 

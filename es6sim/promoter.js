@@ -22,8 +22,23 @@ class Promoter {
     };
   }
   
-  promote(nextRank) {
+  checkPromotion (officer) {
+    let nextRank = {};
+    
+    if (officer.experience > this.thresholds.major) {
+      nextRank = this.ranks.major;
+    } else if (officer.experience > this.thresholds.captain) {
+      nextRank = this.ranks.captain;
+    }
+
+    if (nextRank !== {} && nextRank !== officer.rank) {
+      officer.rank = this.promote(nextRank.alias);
+    }
+  }
+
+  promote (nextRank) {
     return this.ranks[nextRank];
   }
 }
+
 export default Promoter;

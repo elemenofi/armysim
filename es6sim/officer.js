@@ -1,4 +1,5 @@
 'use strict';
+/* global chance */
 import config from './config';
 import Promoter from './promoter';
 import {} from './chance';
@@ -19,29 +20,7 @@ class Officer {
 
   update() {
     this.experience++;
-    this.checkPromotion();
-  }
-
-  checkPromotion() {
-    let nextRank = {};
-    
-    if (this.experience > promoter.thresholds.major) {
-      nextRank = promoter.ranks.major;
-    } else if (this.experience > promoter.thresholds.captain) {
-      nextRank = promoter.ranks.captain;
-    } else {
-      nextRank = promoter.ranks.lieutenant;
-    }
-
-    if (
-      nextRank !== {} && 
-      nextRank !== this.rank
-    ) {
-      console.log('Promoting ' + this.name() + ' to ' + nextRank.title);
-      this.rank = promoter.promote(nextRank.alias);
-    } else {
-      console.log('Passed for promotion.');
-    }
+    promoter.checkPromotion(this);
   } 
 }
 
