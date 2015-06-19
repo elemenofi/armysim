@@ -5,9 +5,9 @@ import Comparison from './comparison';
 let comparison = new Comparison();
 
 class Ui {
-  render (officers) {
+  render (officers, units) {
     React.render(
-      <Army officers={officers} />, 
+      <Army officers={officers} units={units} />, 
       document.body
     );
   }
@@ -27,7 +27,11 @@ class Army extends React.Component {
       );
     });
 
-    return <div>{ officers }</div>;
+    return(
+      <div>
+        <div>{ officers }</div>
+      </div>
+    ); 
   }
 }
 

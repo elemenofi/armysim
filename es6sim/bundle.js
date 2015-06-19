@@ -1707,7 +1707,7 @@ var Army = (function () {
       if (quantity === 0) {
         return;
       } else {
-        var unit = {};
+        var unit = new _unit2['default']();
 
         unit.id = this.unitId;
         this.unitId++;
@@ -1755,36 +1755,36 @@ var Army = (function () {
             break;
 
           case 'regiment':
-            unit.companies = [];
+            unit.battalions = [];
             unit.name = _names2['default'].regiments[0];
 
             _names2['default'].regiments.shift();
             parent.regiments.push(unit);
 
-            this.generate('company', this.unitDepth, unit);
+            this.generate('battalion', this.unitDepth, unit);
             this.generate('regiment', quantity - 1, parent);
             break;
 
-          case 'company':
-            unit.battalions = [];
-            unit.name = _names2['default'].companies[0];
-
-            _names2['default'].companies.shift();
-            parent.companies.push(unit);
-
-            this.generate('battalion', this.unitDepth, unit);
-            this.generate('company', quantity - 1, parent);
-            break;
-
           case 'battalion':
-            unit.platoons = [];
+            unit.companies = [];
             unit.name = _names2['default'].battalions[0];
 
             _names2['default'].battalions.shift();
             parent.battalions.push(unit);
 
-            this.generate('platoon', this.unitDepth, unit);
+            this.generate('company', this.unitDepth, unit);
             this.generate('battalion', quantity - 1, parent);
+            break;
+
+          case 'company':
+            unit.platoons = [];
+            unit.name = _names2['default'].companies[0];
+
+            _names2['default'].companies.shift();
+            parent.companies.push(unit);
+
+            this.generate('platoon', this.unitDepth, unit);
+            this.generate('company', quantity - 1, parent);
             break;
 
           case 'platoon':
@@ -1928,11 +1928,10 @@ var Engine = (function () {
     key: 'update',
     value: function update() {
       this.turn++;
-      console.log(army.units);
       officers.retire();
       officers.replenish();
       officers.update();
-      ui.render(officers);
+      ui.render(officers, army.units);
     }
   }]);
 
@@ -2200,8 +2199,8 @@ var Ui = (function () {
 
   _createClass(Ui, [{
     key: 'render',
-    value: function render(officers) {
-      _react2['default'].render(_react2['default'].createElement(Army, { officers: officers }), document.body);
+    value: function render(officers, units) {
+      _react2['default'].render(_react2['default'].createElement(Army, { officers: officers, units: units }), document.body);
     }
   }]);
 
@@ -2239,7 +2238,11 @@ var Army = (function (_React$Component) {
       return _react2['default'].createElement(
         'div',
         null,
-        officers
+        _react2['default'].createElement(
+          'div',
+          null,
+          officers
+        )
       );
     }
   }]);
@@ -2261,8 +2264,6 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
 var Unit = function Unit() {
   _classCallCheck(this, Unit);
-
-  return {};
 };
 
 exports['default'] = Unit;

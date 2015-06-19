@@ -2,7 +2,6 @@
 
 class Unit {
   constructor () {
-    return {};
   }
 }
 

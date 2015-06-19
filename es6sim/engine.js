@@ -18,11 +18,10 @@ class Engine {
 
   update() {
     this.turn++;
-    console.log(army.units);
     officers.retire();
     officers.replenish();
     officers.update();
-    ui.render(officers);
+    ui.render(officers, army.units);
   }
 }
 

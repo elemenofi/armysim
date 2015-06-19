@@ -19,7 +19,7 @@ class Army {
     if (quantity === 0) {
       return;
     } else {
-      let unit = {};
+      let unit = new Unit();
       
       unit.id = this.unitId;
       this.unitId++;
@@ -67,36 +67,36 @@ class Army {
         break;
 
         case "regiment":
-          unit.companies = [];
+          unit.battalions = [];
           unit.name = names.regiments[0];
 
           names.regiments.shift();
           parent.regiments.push(unit);
 
-          this.generate("company", this.unitDepth, unit);
+          this.generate("battalion", this.unitDepth, unit);
           this.generate("regiment", quantity - 1, parent);
         break;
 
-        case "company":
-          unit.battalions = [];
-          unit.name = names.companies[0];
-
-          names.companies.shift();
-          parent.companies.push(unit);
-
-          this.generate("battalion", this.unitDepth, unit);
-          this.generate("company", quantity - 1, parent);
-        break;
-
         case "battalion":
-          unit.platoons = [];
+          unit.companies = [];
           unit.name = names.battalions[0];
 
           names.battalions.shift();
           parent.battalions.push(unit);
 
-          this.generate("platoon", this.unitDepth, unit);
+          this.generate("company", this.unitDepth, unit);
           this.generate("battalion", quantity - 1, parent);
+        break;
+
+        case "company":
+          unit.platoons = [];
+          unit.name = names.companies[0];
+
+          names.companies.shift();
+          parent.companies.push(unit);
+
+          this.generate("platoon", this.unitDepth, unit);
+          this.generate("company", quantity - 1, parent);
         break;
 
         case "platoon":
