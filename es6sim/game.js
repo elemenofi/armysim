@@ -1,9 +1,6 @@
 'use strict';
 import Engine from './engine';
-import Ui from './ui.jsx';
 
-const engine = new Engine();
-const ui = new Ui();
+let engine = new Engine();
 
 engine.start();
-ui.start();
