@@ -4,7 +4,7 @@ import Army from './army';
 import Ui from './ui.jsx';
 
 let officers = new Officers();
-let army = new Army();
+let army = new Army(officers);
 let ui = new Ui();
 
 class Engine {
@@ -18,10 +18,13 @@ class Engine {
 
   update() {
     this.turn++;
+    // sweeps through officers with retire = true;
     officers.retire();
-    officers.replenish();
+    // gives experience to officers, promotes them if they should be, 
+    // or toggles retire = true if they should retire
     officers.update();
-    ui.render(officers, army.units);
+  // passes the objects to react
+    ui.render(officers, army);
   }
 }
 

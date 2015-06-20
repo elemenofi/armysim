@@ -1,17 +1,17 @@
 'use strict';
-import config from './config';
 import Officer from './officer';
 
 class Officers {
   constructor () {
     this.staff = [];
-    while (this.staff.length < config.staffSize) {
-      this.staff.push(new Officer());
-    }
   }
 
-  recruit () {
-    this.staff.push(new Officer());
+  recruit (experience, unitId) {
+    let recruit = new Officer(experience, unitId);
+    
+    this.staff.push(recruit);
+    
+    return recruit;
   }
 
   retire () {
@@ -20,16 +20,11 @@ class Officers {
     });
   }
 
-  replenish () {
-    while (this.staff.length < config.staffSize) {
-      this.staff.push(new Officer());
-    }
-  }a
-
   update () {
     this.staff.forEach(officer => {
       officer.update();
     });
+    console.log(this.staff.length);
   }
 }
 

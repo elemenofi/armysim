@@ -7,8 +7,9 @@ import Promoter from './promoter';
 const promoter = new Promoter();
 
 class Officer {
-  constructor () {
-    this.experience = config.experience();
+  constructor (experience, unitId) {
+    this.experience = config.experience(experience);
+    this.unitId = unitId;
     this.fname = chance.name({ gender: 'male' });
     this.lname = chance.last();
     this.retired = false;
