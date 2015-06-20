@@ -1,8 +1,18 @@
 'use strict';
 
 class HQ {
-	constructor (army) {
-		console.log(army);
+	constructor () {
+		this.units = [];
+	}
+	
+	add (unit) {
+		this.units.push(unit);
+	}
+
+	update () {
+		this.units.forEach(unit => {
+			console.log(unit.name);
+		});
 	}
 }
 

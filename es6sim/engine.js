@@ -23,6 +23,7 @@ class Engine {
     // gives experience to officers, promotes them if they should be,
     // or toggles retire = true if they should retire
     officers.update();
+    army.HQ.update();
     // passes the objects to react
     ui.render(officers, army);
   }
