@@ -2,9 +2,12 @@
 import config from './config';
 import names from './names';
 import Unit from './unit';
+import HQ from './hq';
+
 
 class Army {
   constructor (officers) {
+    this.HQ = new HQ(this);
     this.unitId = 2;
     this.unitDepth = config.unitDepth;
     this.officers = officers;
@@ -12,7 +15,7 @@ class Army {
       corps: []
     };
 
-    this.generate("corp", this.unitDepth); 
+    this.generate("corp", this.unitDepth);
   }
 
   generate (type, quantity, parent) {
@@ -20,10 +23,10 @@ class Army {
       return;
     } else {
       let unit = new Unit();
-      
+
       unit.id = this.unitId;
       this.unitId++;
-      
+
       unit.type = type;
 
       if (parent) {
@@ -39,7 +42,7 @@ class Army {
           unit.commander = this.officers.recruit('lgeneral', unit.id);
           names.corps.shift();
           this.units.corps.push(unit);
-          
+
           this.generate("division", this.unitDepth, unit);
           this.generate("corp", quantity - 1, parent);
         break;
@@ -47,7 +50,7 @@ class Army {
         case "division":
           unit.brigades = [];
           unit.name = names.divisions[0];
-          unit.commander = this.officers.recruit('dgeneral', unit.id);          
+          unit.commander = this.officers.recruit('dgeneral', unit.id);
           names.divisions.shift();
           parent.divisions.push(unit);
 
@@ -113,4 +116,3 @@ class Army {
 }
 
 export default Army;
-

@@ -1,7 +1,7 @@
 'use strict';
 const config = {
-  experience (bonus) {
-    return Math.round(Math.random() * 10 + bonus);
+  experience () {
+    return Math.round(Math.random() * 10);
   },
 
   unitDepth: 2,
@@ -24,47 +24,56 @@ const config = {
     lieutenant: {
       hierarchy: 0,
       title: 'Lieutenant',
-      alias: 'lieutenant'
+      alias: 'lieutenant',
+      startxp: 10
     },
     captain: {
       hierarchy: 1,
       title: 'Captain',
-      alias: 'captain'
+      alias: 'captain',
+      startxp: 40
     },
     major: {
       hierarchy: 2,
       title: 'Major',
-      alias: 'major'
+      alias: 'major',
+      startxp: 60
     },
     lcoronel: {
       hierarchy: 3,
       title: 'Lieutenant Coronel',
-      alias: 'lcoronel'
+      alias: 'lcoronel',
+      startxp: 80
     },
     coronel: {
       hierarchy: 4,
       title: 'Coronel',
-      alias: 'coronel'
+      alias: 'coronel',
+      startxp: 100
     },
     bgeneral: {
       hierarchy: 5,
       title: 'Brigade General',
-      alias: 'bgeneral'
+      alias: 'bgeneral',
+      startxp: 120
     },
     dgeneral: {
       hierarchy: 6,
       title: 'Division General',
-      alias: 'dgeneral'
+      alias: 'dgeneral',
+      startxp: 140
     },
     lgeneral: {
       hierarchy: 7,
       title: 'Lieutenant General',
-      alias: 'lgeneral'
+      alias: 'lgeneral',
+      startxp: 160
     },
     general: {
       hierarchy: 8,
       title: 'General',
-      alias: 'general'
+      alias: 'general',
+      startxp: 180
     }
   }
 };

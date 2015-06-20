@@ -2,18 +2,17 @@
 /* global chance */
 import {} from './chance';
 import config from './config';
-import Promoter from './promoter';
+// import Promoter from './promoter';
 
-const promoter = new Promoter();
+// const promoter = new Promoter();
 
 class Officer {
   constructor (rank, unitId) {
-    this.experience = config.experience();
     this.unitId = unitId;
-    this.fname = chance.name({ gender: 'male' });
+    this.rank = config.ranks[rank];
     this.lname = chance.last();
-    this.retired = false;
-    this.ranks = config.ranks[rank];
+    this.fname = chance.name({ gender: 'male' });
+    this.experience = config.experience() + config.ranks[rank].startxp;
   }
 
   name () {
@@ -22,11 +21,12 @@ class Officer {
 
   update () {
     this.experience++;
-    promoter.checkPromotion(this);
+    // promoter.checkPromotion(this);
   }
 
   promote (nextRank) {
-    this.rank = nextRank;
+    this.promotable = true;
+    this.nextRank = nextRank;
   }
 
   retire () {

@@ -15,34 +15,67 @@ class Ui {
 
 class Army extends React.Component {
   render () {
-    let staff = this.props.officers.staff;
-    
-    staff.sort(comparison.byRank);
-
-    let officers = [];
-
-    staff.forEach(officer => {
-      officers.push(
-        <div>{officer.name()}</div>
-      );
-    });
-
     let army = this.props.army;
-
-    let corps = [];
-
-    army.units.corps.forEach(corp => {
-      corps.push(
-        <div>{corp.name}, {corp.commander.name()}, {corp.commander.experience}</div>
-      );
-    });
 
     return(
       <div>
-        <div>{ officers }</div>
-        <div>{ corps }</div>
+        <Corps corps={army.units.corps}/>
       </div>
     ); 
+  }
+}
+
+class Corps extends React.Component {
+  render () {
+    let elements = [];
+    let corps = this.props.corps;
+    
+    corps.forEach(corp => {
+      elements.push(
+        <div>
+          <p>{corp.commander.rank.title} {corp.commander.name()}</p>
+          <Divisions divisions={corp.divisions} /> 
+        </div>
+      );
+    });
+
+    return(<div>{elements}</div>);
+  }
+}
+
+class Divisions extends React.Component {
+  render () {
+    let elements = [];
+    let divisions = this.props.divisions;
+    
+    divisions.forEach(division => {
+      elements.push(
+        <div>
+          <p>{division.commander.rank.title}  {division.commander.name()}</p>
+          <Brigades brigades={division.brigades} />
+        </div>
+      );
+    });
+
+    return(<div>{elements}</div>)
+  }
+}
+
+class Brigades extends React.Component {
+  render () {
+    let elements = [];
+    let brigades = this.props.brigades;
+    
+    brigades.forEach(brigade => {
+      elements.push(
+        <div>
+          <p>{brigade.commander.rank.title}  {brigade.commander.name()}</p>
+          <Regiements regiments={brigade.regiments} />
+        </div>
+      );
+    });
+
+    return(<div>{elements}</div>)
   }
 }
 

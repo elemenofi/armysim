@@ -11,7 +11,7 @@ class Engine {
   constructor() {
     this.turn = 0;
   }
-  
+
   start() {
     setInterval(this.update, 1000);
   }
@@ -20,10 +20,10 @@ class Engine {
     this.turn++;
     // sweeps through officers with retire = true;
     officers.retire();
-    // gives experience to officers, promotes them if they should be, 
+    // gives experience to officers, promotes them if they should be,
     // or toggles retire = true if they should retire
     officers.update();
-  // passes the objects to react
+    // passes the objects to react
     ui.render(officers, army);
   }
 }
