@@ -7,12 +7,13 @@ import Promoter from './promoter';
 const promoter = new Promoter();
 
 class Officer {
-  constructor (experience, unitId) {
-    this.experience = config.experience(experience);
+  constructor (rank, unitId) {
+    this.experience = config.experience();
     this.unitId = unitId;
     this.fname = chance.name({ gender: 'male' });
     this.lname = chance.last();
     this.retired = false;
+    this.ranks = config.ranks[rank];
   }
 
   name () {

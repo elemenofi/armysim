@@ -6,8 +6,8 @@ class Officers {
     this.staff = [];
   }
 
-  recruit (experience, unitId) {
-    let recruit = new Officer(experience, unitId);
+  recruit (rank, unitId) {
+    let recruit = new Officer(rank, unitId);
     
     this.staff.push(recruit);
     

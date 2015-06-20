@@ -36,7 +36,7 @@ class Army {
         case "corp":
           unit.divisions = [];
           unit.name = names.corps[0];
-          unit.commander = this.officers.recruit(100, unit.id);
+          unit.commander = this.officers.recruit('lgeneral', unit.id);
           names.corps.shift();
           this.units.corps.push(unit);
           
@@ -47,7 +47,7 @@ class Army {
         case "division":
           unit.brigades = [];
           unit.name = names.divisions[0];
-          unit.commander = this.officers.recruit(80, unit.id);          
+          unit.commander = this.officers.recruit('dgeneral', unit.id);          
           names.divisions.shift();
           parent.divisions.push(unit);
 
@@ -58,7 +58,7 @@ class Army {
         case "brigade":
           unit.regiments = [];
           unit.name = names.brigades[0];
-          unit.commander = this.officers.recruit(60, unit.id);
+          unit.commander = this.officers.recruit('bgeneral', unit.id);
           names.brigades.shift();
           parent.brigades.push(unit);
 
@@ -69,7 +69,7 @@ class Army {
         case "regiment":
           unit.battalions = [];
           unit.name = names.regiments[0];
-          unit.commander = this.officers.recruit(40, unit.id);
+          unit.commander = this.officers.recruit('coronel', unit.id);
           names.regiments.shift();
           parent.regiments.push(unit);
 
@@ -80,7 +80,7 @@ class Army {
         case "battalion":
           unit.companies = [];
           unit.name = names.battalions[0];
-          unit.commander = this.officers.recruit(30, unit.id);
+          unit.commander = this.officers.recruit('lcoronel', unit.id);
           names.battalions.shift();
           parent.battalions.push(unit);
 
@@ -91,7 +91,7 @@ class Army {
         case "company":
           unit.platoons = [];
           unit.name = names.companies[0];
-          unit.commander = this.officers.recruit(20, unit.id);
+          unit.commander = this.officers.recruit('major', unit.id);
           names.companies.shift();
           parent.companies.push(unit);
 
@@ -101,7 +101,7 @@ class Army {
 
         case "platoon":
           unit.name = names.platoons[0];
-          unit.commander = this.officers.recruit(10, unit.id);
+          unit.commander = this.officers.recruit('captain', unit.id);
           names.platoons.shift();
           parent.platoons.push(unit);
 

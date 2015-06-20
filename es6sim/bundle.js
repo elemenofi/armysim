@@ -1724,7 +1724,7 @@ var Army = (function () {
           case 'corp':
             unit.divisions = [];
             unit.name = _names2['default'].corps[0];
-            unit.commander = this.officers.recruit(100, unit.id);
+            unit.commander = this.officers.recruit('lgeneral', unit.id);
             _names2['default'].corps.shift();
             this.units.corps.push(unit);
 
@@ -1735,7 +1735,7 @@ var Army = (function () {
           case 'division':
             unit.brigades = [];
             unit.name = _names2['default'].divisions[0];
-            unit.commander = this.officers.recruit(80, unit.id);
+            unit.commander = this.officers.recruit('dgeneral', unit.id);
             _names2['default'].divisions.shift();
             parent.divisions.push(unit);
 
@@ -1746,7 +1746,7 @@ var Army = (function () {
           case 'brigade':
             unit.regiments = [];
             unit.name = _names2['default'].brigades[0];
-            unit.commander = this.officers.recruit(60, unit.id);
+            unit.commander = this.officers.recruit('bgeneral', unit.id);
             _names2['default'].brigades.shift();
             parent.brigades.push(unit);
 
@@ -1757,7 +1757,7 @@ var Army = (function () {
           case 'regiment':
             unit.battalions = [];
             unit.name = _names2['default'].regiments[0];
-            unit.commander = this.officers.recruit(40, unit.id);
+            unit.commander = this.officers.recruit('coronel', unit.id);
             _names2['default'].regiments.shift();
             parent.regiments.push(unit);
 
@@ -1768,7 +1768,7 @@ var Army = (function () {
           case 'battalion':
             unit.companies = [];
             unit.name = _names2['default'].battalions[0];
-            unit.commander = this.officers.recruit(30, unit.id);
+            unit.commander = this.officers.recruit('lcoronel', unit.id);
             _names2['default'].battalions.shift();
             parent.battalions.push(unit);
 
@@ -1779,7 +1779,7 @@ var Army = (function () {
           case 'company':
             unit.platoons = [];
             unit.name = _names2['default'].companies[0];
-            unit.commander = this.officers.recruit(20, unit.id);
+            unit.commander = this.officers.recruit('major', unit.id);
             _names2['default'].companies.shift();
             parent.companies.push(unit);
 
@@ -1789,7 +1789,7 @@ var Army = (function () {
 
           case 'platoon':
             unit.name = _names2['default'].platoons[0];
-            unit.commander = this.officers.recruit(10, unit.id);
+            unit.commander = this.officers.recruit('captain', unit.id);
             _names2['default'].platoons.shift();
             parent.platoons.push(unit);
 
@@ -2034,14 +2034,15 @@ var _promoter2 = _interopRequireDefault(_promoter);
 var promoter = new _promoter2['default']();
 
 var Officer = (function () {
-  function Officer(experience, unitId) {
+  function Officer(rank, unitId) {
     _classCallCheck(this, Officer);
 
-    this.experience = _config2['default'].experience(experience);
+    this.experience = _config2['default'].experience();
     this.unitId = unitId;
     this.fname = chance.name({ gender: 'male' });
     this.lname = chance.last();
     this.retired = false;
+    this.ranks = _config2['default'].ranks[rank];
   }
 
   _createClass(Officer, [{
@@ -2098,8 +2099,8 @@ var Officers = (function () {
 
   _createClass(Officers, [{
     key: 'recruit',
-    value: function recruit(experience, unitId) {
-      var recruit = new _officer2['default'](experience, unitId);
+    value: function recruit(rank, unitId) {
+      var recruit = new _officer2['default'](rank, unitId);
 
       this.staff.push(recruit);
 
