@@ -1,5 +1,6 @@
 'use strict';
 import Engine from './engine';
 
-const engine = new Engine();
+let engine = new Engine();
+
 engine.start();
