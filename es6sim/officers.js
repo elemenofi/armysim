@@ -8,15 +8,8 @@ class Officers {
   }
 
   recruit(amount) {
-    let newOfficer = () => {
-      let officer = new Officer();
-      this.staff.push(officer);
-      amount--;
-      this.recruit(amount);
-    };
-    
-    if (amount) {
-      newOfficer();
+    while (this.staff.length < amount) {
+      this.staff.push(new Officer());
     }
   }
 

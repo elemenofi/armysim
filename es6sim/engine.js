@@ -12,6 +12,7 @@ class Engine {
     let update = () => {
       this.turn++;
       this.update();
+      console.log(this.entities.staff);
     };
 
     setInterval(update, 1000);

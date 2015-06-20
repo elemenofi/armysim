@@ -1672,7 +1672,7 @@ Object.defineProperty(exports, '__esModule', {
   value: true
 });
 var config = {
-  staffSize: 20,
+  staffSize: 5,
   experience: function experience() {
     return Math.round(Math.random() * 10 + 1);
   }
@@ -1716,6 +1716,7 @@ var Engine = (function () {
       var update = function update() {
         _this.turn++;
         _this.update();
+        console.log(_this.entities.staff);
       };
 
       setInterval(update, 1000);
@@ -1733,19 +1734,7 @@ var Engine = (function () {
 exports['default'] = Engine;
 module.exports = exports['default'];
 
-},{"./config":6,"./officers":10}],8:[function(require,module,exports){
-'use strict';
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
-
-var _engine = require('./engine');
-
-var _engine2 = _interopRequireDefault(_engine);
-
-var engine = new _engine2['default']();
-engine.start();
-
-},{"./engine":7}],9:[function(require,module,exports){
+},{"./config":6,"./officers":9}],8:[function(require,module,exports){
 'use strict';
 Object.defineProperty(exports, '__esModule', {
   value: true
@@ -1788,27 +1777,7 @@ var Officer = (function () {
     key: 'update',
     value: function update() {
       this.experience++;
-      this.checkPromotion();
-    }
-  }, {
-    key: 'checkPromotion',
-    value: function checkPromotion() {
-      var nextRank = {};
-
-      if (this.experience > promoter.thresholds.major) {
-        nextRank = promoter.ranks.major;
-      } else if (this.experience > promoter.thresholds.captain) {
-        nextRank = promoter.ranks.captain;
-      } else {
-        nextRank = promoter.ranks.lieutenant;
-      }
-
-      if (nextRank !== {} && nextRank !== this.rank) {
-        console.log('Promoting ' + this.name() + ' to ' + nextRank.title);
-        this.rank = promoter.promote(nextRank.alias);
-      } else {
-        console.log('Passed for promotion.');
-      }
+      promoter.checkPromotion(this);
     }
   }]);
 
@@ -1818,7 +1787,7 @@ var Officer = (function () {
 exports['default'] = Officer;
 module.exports = exports['default'];
 
-},{"./chance":5,"./config":6,"./promoter":11}],10:[function(require,module,exports){
+},{"./chance":5,"./config":6,"./promoter":10}],9:[function(require,module,exports){
 'use strict';
 Object.defineProperty(exports, '__esModule', {
   value: true
@@ -1845,17 +1814,8 @@ var Officers = (function () {
   _createClass(Officers, [{
     key: 'recruit',
     value: function recruit(amount) {
-      var _this = this;
-
-      var newOfficer = function newOfficer() {
-        var officer = new _officer2['default']();
-        _this.staff.push(officer);
-        amount--;
-        _this.recruit(amount);
-      };
-
-      if (amount) {
-        newOfficer();
+      while (this.staff.length < amount) {
+        this.staff.push(new _officer2['default']());
       }
     }
   }, {
@@ -1873,7 +1833,7 @@ var Officers = (function () {
 exports['default'] = Officers;
 module.exports = exports['default'];
 
-},{"./officer":9}],11:[function(require,module,exports){
+},{"./officer":8}],10:[function(require,module,exports){
 'use strict';
 Object.defineProperty(exports, '__esModule', {
   value: true
@@ -1909,6 +1869,25 @@ var Promoter = (function () {
   }
 
   _createClass(Promoter, [{
+    key: 'checkPromotion',
+    value: function checkPromotion(officer) {
+      var nextRank = {};
+
+      if (officer.experience > this.thresholds.major) {
+        nextRank = this.ranks.major;
+      } else if (officer.experience > this.thresholds.captain) {
+        nextRank = this.ranks.captain;
+      } else {
+        nextRank = this.ranks.lieutenant;
+      }
+
+      if (nextRank !== {} && nextRank !== officer.rank) {
+        officer.rank = this.promote(nextRank.alias);
+      } else {
+        console.log('Passed for promotion.');
+      }
+    }
+  }, {
     key: 'promote',
     value: function promote(nextRank) {
       return this.ranks[nextRank];
@@ -1921,4 +1900,16 @@ var Promoter = (function () {
 exports['default'] = Promoter;
 module.exports = exports['default'];
 
-},{}]},{},[8]);
+},{}],11:[function(require,module,exports){
+'use strict';
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+
+var _engine = require('./engine');
+
+var _engine2 = _interopRequireDefault(_engine);
+
+var engine = new _engine2['default']();
+engine.start();
+
+},{"./engine":7}]},{},[11]);
