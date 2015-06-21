@@ -11,16 +11,19 @@ class HQ {
 	}
 
 	update () {
+    this.officers.update();
+	
 		this.units.map((unit) => {
 			if (unit.commander.retired) {
-				replace(unit);
+				this.replace(unit.commander, unit);
 			}
 		});
+	
 		this.officers.retire();
 	}
 
-	replace (unit) {
-		
+	replace (commander, unit) {
+		console.log(commander, unit);
 	}
 }
 

@@ -1952,7 +1952,6 @@ var Engine = (function () {
     key: 'update',
     value: function update() {
       this.turn++;
-      officers.update();
       army.HQ.update();
       ui.render(officers, army);
     }
@@ -1991,16 +1990,23 @@ var HQ = (function () {
 	}, {
 		key: 'update',
 		value: function update() {
+			var _this = this;
+
+			this.officers.update();
+
 			this.units.map(function (unit) {
 				if (unit.commander.retired) {
-					replace(unit);
+					_this.replace(unit.commander, unit);
 				}
 			});
+
 			this.officers.retire();
 		}
 	}, {
 		key: 'replace',
-		value: function replace(unit) {}
+		value: function replace(commander, unit) {
+			console.log(commander, unit);
+		}
 	}]);
 
 	return HQ;
@@ -2114,7 +2120,7 @@ var Officers = (function () {
   function Officers() {
     _classCallCheck(this, Officers);
 
-    this.staff = [];
+    this.active = [];
     this.retired = [];
   }
 
@@ -2123,21 +2129,21 @@ var Officers = (function () {
     value: function recruit(rank, unitId) {
       var recruit = new _officer2['default'](rank, unitId);
 
-      this.staff.push(recruit);
+      this.active.push(recruit);
 
       return recruit;
     }
   }, {
     key: 'retire',
     value: function retire() {
-      this.retired = this.retired.concat(this.staff.filter(function (officer) {
+      this.retired = this.retired.concat(this.active.filter(function (officer) {
         return officer.retired;
       }));
     }
   }, {
     key: 'update',
     value: function update() {
-      this.staff.forEach(function (officer) {
+      this.active.forEach(function (officer) {
         officer.update();
       });
     }
