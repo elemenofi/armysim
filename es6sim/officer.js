@@ -18,10 +18,7 @@ class Officer {
 
   update () {
     this.experience++;
-  }
-
-  promotable () {
-    this.promotable = true;
+    if (this.experience > this.rank.maxxp) this.retire();
   }
 
   promote (nextRank) {

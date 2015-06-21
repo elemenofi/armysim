@@ -1695,7 +1695,7 @@ var Army = (function () {
   function Army(officers) {
     _classCallCheck(this, Army);
 
-    this.HQ = new _hq2['default']();
+    this.HQ = new _hq2['default'](officers);
     this.unitId = 2;
     this.unitDepth = _config2['default'].unitDepth;
     this.officers = officers;
@@ -1838,73 +1838,69 @@ var config = {
   unitDepth: 2,
   staffSize: 20,
 
-  thresholds: {
-    lieutenant: 20,
-    captain: 40,
-    major: 60,
-    lcoronel: 80,
-    coronel: 100,
-    bgeneral: 120,
-    dgeneral: 140,
-    lgeneral: 160,
-    general: 180,
-    retirement: 220
-  },
-
   ranks: {
     lieutenant: {
       hierarchy: 0,
       title: 'Lieutenant',
       alias: 'lieutenant',
-      startxp: 10
+      startxp: 10,
+      maxxp: 40
     },
     captain: {
       hierarchy: 1,
       title: 'Captain',
       alias: 'captain',
-      startxp: 40
+      startxp: 40,
+      maxxp: 60
     },
     major: {
       hierarchy: 2,
       title: 'Major',
       alias: 'major',
-      startxp: 60
+      startxp: 60,
+      maxxp: 80
     },
     lcoronel: {
       hierarchy: 3,
       title: 'Lieutenant Coronel',
       alias: 'lcoronel',
-      startxp: 80
+      startxp: 80,
+      maxxp: 100
     },
     coronel: {
       hierarchy: 4,
       title: 'Coronel',
       alias: 'coronel',
-      startxp: 100
+      startxp: 100,
+      maxxp: 120
     },
     bgeneral: {
       hierarchy: 5,
       title: 'Brigade General',
       alias: 'bgeneral',
-      startxp: 120
+      startxp: 120,
+      maxxp: 140
     },
     dgeneral: {
       hierarchy: 6,
       title: 'Division General',
       alias: 'dgeneral',
-      startxp: 140
+      startxp: 140,
+      maxxp: 160
     },
     lgeneral: {
       hierarchy: 7,
       title: 'Lieutenant General',
       alias: 'lgeneral',
-      startxp: 160
+      startxp: 160,
+      maxxp: 180
     },
     general: {
       hierarchy: 8,
       title: 'General',
       alias: 'general',
-      startxp: 180
+      startxp: 180,
+      maxxp: 220
     }
   }
 };
@@ -1956,8 +1952,8 @@ var Engine = (function () {
     key: 'update',
     value: function update() {
       this.turn++;
-      army.HQ.update();
       officers.update();
+      army.HQ.update();
       ui.render(officers, army);
     }
   }]);
@@ -1980,10 +1976,11 @@ var _createClass = (function () { function defineProperties(target, props) { for
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
 
 var HQ = (function () {
-	function HQ() {
+	function HQ(officers) {
 		_classCallCheck(this, HQ);
 
 		this.units = [];
+		this.officers = officers;
 	}
 
 	_createClass(HQ, [{
@@ -1994,8 +1991,16 @@ var HQ = (function () {
 	}, {
 		key: 'update',
 		value: function update() {
-			this.units.forEach(function (unit) {});
+			this.units.map(function (unit) {
+				if (unit.commander.retired) {
+					replace(unit);
+				}
+			});
+			this.officers.retire();
 		}
+	}, {
+		key: 'replace',
+		value: function replace(unit) {}
 	}]);
 
 	return HQ;
@@ -2069,11 +2074,7 @@ var Officer = (function () {
     key: 'update',
     value: function update() {
       this.experience++;
-    }
-  }, {
-    key: 'promotable',
-    value: function promotable() {
-      this.promotable = true;
+      if (this.experience > this.rank.maxxp) this.retire();
     }
   }, {
     key: 'promote',
@@ -2114,6 +2115,7 @@ var Officers = (function () {
     _classCallCheck(this, Officers);
 
     this.staff = [];
+    this.retired = [];
   }
 
   _createClass(Officers, [{
@@ -2128,9 +2130,9 @@ var Officers = (function () {
   }, {
     key: 'retire',
     value: function retire() {
-      this.staff = this.staff.filter(function (officer) {
-        return !officer.retired;
-      });
+      this.retired = this.retired.concat(this.staff.filter(function (officer) {
+        return officer.retired;
+      }));
     }
   }, {
     key: 'update',

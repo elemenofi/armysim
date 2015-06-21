@@ -33,9 +33,9 @@ class Army extends React.Component {
 class Unit extends React.Component {
   render () {
     let unit = this.props.unit;
-    
-    let subunits = [];
 
+    let subunits = [];
+    
     if (unit.subunits) {
       unit.subunits.forEach(subunit => {
         subunits.push(

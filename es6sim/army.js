@@ -7,7 +7,7 @@ import HQ from './hq';
 
 class Army {
   constructor (officers) {
-    this.HQ = new HQ();
+    this.HQ = new HQ(officers);
     this.unitId = 2;
     this.unitDepth = config.unitDepth;
     this.officers = officers;

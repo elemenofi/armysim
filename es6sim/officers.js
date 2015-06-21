@@ -4,6 +4,7 @@ import Officer from './officer';
 class Officers {
   constructor () {
     this.staff = [];
+    this.retired = [];
   }
 
   recruit (rank, unitId) {
@@ -15,9 +16,11 @@ class Officers {
   }
 
   retire () {
-    this.staff = this.staff.filter(officer => {
-      return !officer.retired;
-    });
+    this.retired = this.retired.concat(
+      this.staff.filter(officer => {
+        return officer.retired;
+      })
+    );
   }
 
   update () {

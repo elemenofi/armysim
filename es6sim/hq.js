@@ -1,8 +1,9 @@
 'use strict';
 
 class HQ {
-	constructor () {
+	constructor (officers) {
 		this.units = [];
+		this.officers = officers;
 	}
 	
 	add (unit) {
@@ -10,9 +11,16 @@ class HQ {
 	}
 
 	update () {
-		this.units.forEach(unit => {
-			
+		this.units.map((unit) => {
+			if (unit.commander.retired) {
+				replace(unit);
+			}
 		});
+		this.officers.retire();
+	}
+
+	replace (unit) {
+		
 	}
 }
 

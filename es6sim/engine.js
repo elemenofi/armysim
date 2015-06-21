@@ -18,8 +18,8 @@ class Engine {
 
   update() {
     this.turn++;
-    army.HQ.update();
     officers.update();
+    army.HQ.update();
     ui.render(officers, army);
   }
 }
