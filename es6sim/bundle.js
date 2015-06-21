@@ -1956,13 +1956,8 @@ var Engine = (function () {
     key: 'update',
     value: function update() {
       this.turn++;
-      // sweeps through officers with retire = true;
-      officers.retire();
-      // gives experience to officers, promotes them if they should be,
-      // or toggles retire = true if they should retire
-      officers.update();
       army.HQ.update();
-      // passes the objects to react
+      officers.update();
       ui.render(officers, army);
     }
   }]);
@@ -1999,9 +1994,7 @@ var HQ = (function () {
 	}, {
 		key: 'update',
 		value: function update() {
-			this.units.forEach(function (unit) {
-				console.log(unit.name);
-			});
+			this.units.forEach(function (unit) {});
 		}
 	}]);
 
@@ -2056,10 +2049,6 @@ var _config = require('./config');
 
 var _config2 = _interopRequireDefault(_config);
 
-// import Promoter from './promoter';
-
-// const promoter = new Promoter();
-
 var Officer = (function () {
   function Officer(rank, unitId) {
     _classCallCheck(this, Officer);
@@ -2080,12 +2069,15 @@ var Officer = (function () {
     key: 'update',
     value: function update() {
       this.experience++;
-      // promoter.checkPromotion(this);
+    }
+  }, {
+    key: 'promotable',
+    value: function promotable() {
+      this.promotable = true;
     }
   }, {
     key: 'promote',
     value: function promote(nextRank) {
-      this.promotable = true;
       this.nextRank = nextRank;
     }
   }, {
@@ -2138,16 +2130,6 @@ var Officers = (function () {
     value: function retire() {
       this.staff = this.staff.filter(function (officer) {
         return !officer.retired;
-      });
-    }
-  }, {
-    key: 'candidate',
-
-    // this function creates an array with those commanders which
-    // have been selected for promotion
-    value: function candidate() {
-      this.staff = this.staff.filter(function (officer) {
-        return officer.promotable;
       });
     }
   }, {

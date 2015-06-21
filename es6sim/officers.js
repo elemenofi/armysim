@@ -20,14 +20,6 @@ class Officers {
     });
   }
 
-  // this function creates an array with those commanders which
-  // have been selected for promotion
-  candidate () {
-    this.staff = this.staff.filter(officer => {
-      return officer.promotable;
-    });
-  }
-
   update () {
     this.staff.forEach(officer => {
       officer.update();

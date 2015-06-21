@@ -2,9 +2,6 @@
 /* global chance */
 import {} from './chance';
 import config from './config';
-// import Promoter from './promoter';
-
-// const promoter = new Promoter();
 
 class Officer {
   constructor (rank, unitId) {
@@ -21,11 +18,13 @@ class Officer {
 
   update () {
     this.experience++;
-    // promoter.checkPromotion(this);
+  }
+
+  promotable () {
+    this.promotable = true;
   }
 
   promote (nextRank) {
-    this.promotable = true;
     this.nextRank = nextRank;
   }
 

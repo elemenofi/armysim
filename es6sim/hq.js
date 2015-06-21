@@ -11,7 +11,7 @@ class HQ {
 
 	update () {
 		this.units.forEach(unit => {
-			console.log(unit.name);
+			
 		});
 	}
 }
