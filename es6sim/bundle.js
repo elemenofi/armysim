@@ -1983,7 +1983,7 @@ var Engine = (function () {
   _createClass(Engine, [{
     key: 'start',
     value: function start() {
-      setInterval(this.update, 1000);
+      setInterval(this.update, 500);
     }
   }, {
     key: 'update',
@@ -2052,11 +2052,6 @@ var HQ = (function () {
       this.officers.update();
     }
   }, {
-    key: 'replace',
-    value: function replace(unit) {
-      unit.commander = this.officers.replace(unit.commander);
-    }
-  }, {
     key: 'deassign',
     value: function deassign(unitId) {
       var _this2 = this;
@@ -2067,6 +2062,11 @@ var HQ = (function () {
           return true;
         }
       });
+    }
+  }, {
+    key: 'replace',
+    value: function replace(unit) {
+      unit.commander = this.officers.replace(unit.commander);
     }
   }]);
 
@@ -2253,7 +2253,7 @@ var Officers = (function () {
       candidate.unitId = unitId;
       candidate.rank = _config2['default'].ranks[newRank];
       candidate.history.push(_config2['default'].promoted(newRank));
-      debugger;
+
       return candidate;
     }
   }, {
@@ -2326,7 +2326,6 @@ var Army = (function (_React$Component) {
     key: 'render',
     value: function render() {
       var army = this.props.army;
-
       var corps = [];
 
       army.units.corps.forEach(function (corp) {
@@ -2363,7 +2362,6 @@ var Unit = (function (_React$Component2) {
     key: 'render',
     value: function render() {
       var unit = this.props.unit;
-
       var subunits = [];
 
       if (unit.subunits) {

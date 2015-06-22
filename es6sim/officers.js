@@ -68,7 +68,7 @@ class Officers {
     candidate.unitId = unitId;  
     candidate.rank = config.ranks[newRank];
     candidate.history.push(config.promoted(newRank));
-    debugger;
+
     return candidate;
   } 
 

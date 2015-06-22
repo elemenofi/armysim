@@ -17,12 +17,8 @@ class HQ {
       }
     });
     
-    this.officers.retire();
     this.officers.update();
-  }
-
-  replace (unit) {
-    unit.commander = this.officers.replace(unit.commander);
+    this.officers.retire();
   }
 
   deassign (unitId) {
@@ -32,6 +28,10 @@ class HQ {
         return true;
       }
     });
+  }
+
+  replace (unit) {
+    unit.commander = this.officers.replace(unit.commander);
   }
 }
 

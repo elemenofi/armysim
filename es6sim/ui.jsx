@@ -13,7 +13,6 @@ class Ui {
 class Army extends React.Component {
   render () {
     let army = this.props.army;
-    
     let corps = [];
         
     army.units.corps.forEach(corp => {
@@ -33,7 +32,6 @@ class Army extends React.Component {
 class Unit extends React.Component {
   render () {
     let unit = this.props.unit;
-
     let subunits = [];
     
     if (unit.subunits) {
