@@ -24,6 +24,15 @@ class HQ {
   replace (unit) {
     unit.commander = this.officers.replace(unit.commander);
   }
+
+  deassign (unitId) {
+    this.units.some((unit) => {
+      if (unit.id === unitId) {
+        this.replace(unit);
+        return true;
+      }
+    });
+  }
 }
 
 export default HQ;

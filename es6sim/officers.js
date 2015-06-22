@@ -6,8 +6,9 @@ import Officer from './officer';
 let comparisons = new Comparisons();
 
 class Officers {
-  constructor () {
+  constructor (HQ) {
     this.active = [];
+    this.HQ = HQ;
   }
 
   recruit (rank, unitId) {
@@ -25,44 +26,48 @@ class Officers {
   }
 
   replace (commander) {
-    let candidateAlias;
+    let oldRank;
 
     switch (commander.rank.alias) {
       case 'captain':
         return this.recruit('captain', commander.unitId);
-      break;
       case 'major':
-        candidateAlias = 'captain';
+        oldRank = 'captain';
       break;
       case 'lcoronel':
-        candidateAlias = 'major';
+        oldRank = 'major';
       break;
       case 'coronel':
-        candidateAlias = 'lcoronel';
+        oldRank = 'lcoronel';
       break;
       case 'bgeneral':
-        candidateAlias = 'coronel';
+        oldRank = 'coronel';
       break;
       case 'dgeneral':
-        candidateAlias = 'bgeneral';
+        oldRank = 'bgeneral';
       break;
       case 'lgeneral':
-        candidateAlias = 'dgeneral';
+        oldRank = 'dgeneral';
       break;
     }
 
-    return this.candidate(commander.unitId, commander.rank.alias, candidateAlias);
+    return this.candidate(commander.unitId, commander.rank.alias, oldRank);
   }
 
-  candidate (unitId, alias, candidateAlias) {
-    let candidates = this.active.filter(officer => {
-      return officer.rank.alias === candidateAlias;
+  candidate (unitId, newRank, oldRank) {
+    let candidates = []; 
+
+    this.active.map(officer => {
+      if (officer.rank.alias === oldRank) candidates.push(officer);
     });
 
     let candidate = candidates.sort(comparisons.byExperience)[0];
-    candidate.unitId = unitId;
-    candidate.rank = config.ranks[alias];
-    
+
+    this.HQ.deassign(candidate.unitId);
+
+    candidate.unitId = unitId;  
+    candidate.rank = config.ranks[newRank];
+
     return candidate;
   } 
 
