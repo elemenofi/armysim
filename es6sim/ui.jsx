@@ -2,9 +2,9 @@
 import React from './react';
 
 class Ui {
-  render (officers, army) {
+  render (army) {
     React.render(
-      <Army officers={officers} army={army} />, 
+      <Army officers={army.HQ.officers} army={army} />, 
       document.body
     );
   }
@@ -48,8 +48,8 @@ class Unit extends React.Component {
 
     return(
       <div>
-        <p>{unit.commander.name()}</p>
-        {subunits} 
+        <p>{unit.commander.name()} {unit.commander.experience}</p>
+        {subunits}
       </div>
     );
   }

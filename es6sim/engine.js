@@ -1,10 +1,8 @@
 'use strict';
-import Officers from './officers';
 import Army from './army';
 import Ui from './ui.jsx';
 
-let officers = new Officers();
-let army = new Army(officers);
+let army = new Army();
 let ui = new Ui();
 
 class Engine {
@@ -19,7 +17,7 @@ class Engine {
   update() {
     this.turn++;
     army.HQ.update();
-    ui.render(officers, army);
+    ui.render(army);
   }
 }
 

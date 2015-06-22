@@ -9,7 +9,7 @@ class Officer {
     this.rank = config.ranks[rank];
     this.lname = chance.last();
     this.fname = chance.name({ gender: 'male' });
-    this.experience = config.experience() + config.ranks[rank].startxp;
+    this.experience = config.ranks[rank].startxp + config.experience();
   }
 
   name () {
@@ -19,10 +19,6 @@ class Officer {
   update () {
     this.experience++;
     if (this.experience > this.rank.maxxp) this.retire();
-  }
-
-  promote (nextRank) {
-    this.nextRank = nextRank;
   }
 
   retire () {

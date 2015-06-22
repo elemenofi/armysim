@@ -1,9 +1,9 @@
 'use strict';
 class Comparisons {
-  byRank (a, b) {
-    if (a.rank.hierarchy > b.rank.hierarchy) {
+  byExperience (a, b) {
+    if (a.experience > b.experience) {
       return -1;
-    } else if (a.rank.hierarchy < b.rank.hierarchy) {
+    } else if (a.experience < b.experience) {
       return 1;
     }
     return 0;
