@@ -1869,6 +1869,10 @@ Object.defineProperty(exports, '__esModule', {
   value: true
 });
 var config = {
+  promoted: function promoted(rank) {
+    return 'Promoted to ' + this.ranks[rank].title;
+  },
+
   experience: function experience() {
     return Math.round(Math.random() * 10);
   },
@@ -2126,6 +2130,7 @@ var Officer = (function () {
     this.lname = chance.last();
     this.fname = chance.name({ gender: 'male' });
     this.experience = _config2['default'].ranks[rank].startxp + _config2['default'].experience();
+    this.history = [];
   }
 
   _createClass(Officer, [{
@@ -2247,7 +2252,8 @@ var Officers = (function () {
 
       candidate.unitId = unitId;
       candidate.rank = _config2['default'].ranks[newRank];
-
+      candidate.history.push(_config2['default'].promoted(newRank));
+      debugger;
       return candidate;
     }
   }, {

@@ -11,7 +11,7 @@ class Engine {
   }
 
   start() {
-    setInterval(this.update, 1000);
+    setInterval(this.update, 500);
   }
 
   update() {

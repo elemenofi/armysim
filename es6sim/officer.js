@@ -10,6 +10,7 @@ class Officer {
     this.lname = chance.last();
     this.fname = chance.name({ gender: 'male' });
     this.experience = config.ranks[rank].startxp + config.experience();
+    this.history = [];
   }
 
   name () {

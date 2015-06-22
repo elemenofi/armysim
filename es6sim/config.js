@@ -1,5 +1,9 @@
 'use strict';
-const config = {
+let config = {
+  promoted (rank) {
+    return 'Promoted to ' + this.ranks[rank].title;
+  },
+
   experience () {
     return Math.round(Math.random() * 10);
   },

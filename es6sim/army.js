@@ -5,7 +5,6 @@ import Unit from './unit';
 import Officers from './officers';
 import HQ from './hq';
 
-
 class Army {
   constructor () {
     this.HQ = new HQ();
