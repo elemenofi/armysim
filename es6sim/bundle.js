@@ -1700,14 +1700,14 @@ var Army = (function () {
     _classCallCheck(this, Army);
 
     this.HQ = new _hq2['default']();
-    var officers = new _officers2['default'](this.HQ);
-    this.HQ.officers = officers;
+    this.HQ.officers = new _officers2['default'](this.HQ);
 
-    this.unitId = 2;
+    this._unitId = 2;
     this.units = {
       corps: []
     };
 
+    this.id = 1;
     this.generate('corp', _config2['default'].unitDepth);
   }
 
@@ -1719,8 +1719,8 @@ var Army = (function () {
       } else {
         var unit = new _unit2['default']();
 
-        unit.id = this.unitId;
-        this.unitId++;
+        unit.id = this._unitId;
+        this._unitId++;
 
         unit.type = type;
 
@@ -2372,7 +2372,7 @@ var Unit = (function (_React$Component2) {
 
       return _react2['default'].createElement(
         'div',
-        null,
+        { className: unit.type },
         _react2['default'].createElement(
           'p',
           null,

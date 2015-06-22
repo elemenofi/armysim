@@ -1,0 +1,9 @@
+.corp, .division, .brigade {
+  width: 50%;
+  float: left;
+}
+.corp:after {
+  content: ' ';
+  display: block;
+  clear: both;
+};

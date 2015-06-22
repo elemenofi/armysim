@@ -9,14 +9,14 @@ import HQ from './hq';
 class Army {
   constructor () {
     this.HQ = new HQ();
-    let officers = new Officers(this.HQ);
-    this.HQ.officers = officers;
+    this.HQ.officers = new Officers(this.HQ);
 
-    this.unitId = 2;
+    this._unitId = 2;
     this.units = {
       corps: []
     };
 
+    this.id = 1;
     this.generate("corp", config.unitDepth);
   }
 
@@ -26,8 +26,8 @@ class Army {
     } else {
       let unit = new Unit();
 
-      unit.id = this.unitId;
-      this.unitId++;
+      unit.id = this._unitId;
+      this._unitId++;
 
       unit.type = type;
 
