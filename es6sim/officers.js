@@ -29,8 +29,10 @@ class Officers {
     let oldRank;
 
     switch (commander.rank.alias) {
+      case 'lieutenant':
+        return this.recruit('lieutenant', commander.unitId);
       case 'captain':
-        return this.recruit('captain', commander.unitId);
+        oldRank = 'lieutenant';
       case 'major':
         oldRank = 'captain';
       break;
