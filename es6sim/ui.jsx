@@ -29,6 +29,38 @@ class Army extends React.Component {
   }
 }
 
+class Commander extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {hover: false};
+  }
+
+  mouseOver () {
+    this.setState({hover: true});
+  }
+
+  mouseOut () {
+    this.setState({hover: false});
+  }
+
+  render () {
+    let history = [];
+  
+    if (this.state.hover && this.props.officer.history) {
+      this.props.officer.history.forEach(log => {
+        history.push(<p>{log}</p>);
+      });
+    }
+  
+    return (
+      <div onMouseOver={this.mouseOver.bind(this)} onMouseOut={this.mouseOut.bind(this)}>
+        <p>{this.props.officer.name()}</p>
+        <div className="history">{history}</div>
+      </div>
+    );
+  }
+}
+
 class Unit extends React.Component {
   render () {
     let unit = this.props.unit;
@@ -46,9 +78,7 @@ class Unit extends React.Component {
 
     return(
       <div className={unit.type}>
-        <p>
-          {unit.commander.name()} {unit.commander.experience}
-        </p>
+        <Commander officer={unit.commander}/>
         {subunits}
       </div>
     );

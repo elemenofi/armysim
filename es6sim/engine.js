@@ -14,6 +14,10 @@ class Engine {
     setInterval(this.update, 500);
   }
 
+  turn () {
+    return this.turn;
+  }
+
   update() {
     this.turn++;
     army.HQ.update();

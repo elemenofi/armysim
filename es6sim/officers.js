@@ -67,7 +67,8 @@ class Officers {
 
     candidate.unitId = unitId;  
     candidate.rank = config.ranks[newRank];
-    candidate.history.push(config.promoted(newRank));
+    // new rank, date, id
+    candidate.history.push(config.promoted(newRank, this.HQ.realDate, this.HQ.unitName(candidate.unitId)));
 
     return candidate;
   } 
