@@ -28,18 +28,30 @@ names.regiments = [
 ];
 
 names.companies = [
-    '1st Company', '2nd Company', '3rd Company',
-    '4th Company', '5th Company', '6th Company',
-    '7th Company', '8th Company', '9th Company',
-    '10th Company', '11th Company', '12th Company',
-    '13th Company', '14th Company', '15th Company',
-    '16th Company',
-    '17th Company', '18th Company', '19th Company',
-    '20th Company', '21th Company', '22th Company',
-    '23th Company', '24th Company', '25th Company',
-    '26th Company', '27th Company', '28th Company',
-    '29th Company', '30th Company', '31th Company',
-    '32th Company'
+    '1st A Company', '2nd A Company', '3rd A Company',
+    '4th A Company', '5th A Company', '6th A Company',
+    '7th A Company', '8th A Company', '9th A Company',
+    '10th A Company', '11th A Company', '12th A Company',
+    '13th A Company', '14th A Company', '15th A Company',
+    '16th A Company',
+    '17th A Company', '18th A Company', '19th A Company',
+    '20th A Company', '21th A Company', '22th A Company',
+    '23th A Company', '24th A Company', '25th A Company',
+    '26th A Company', '27th A Company', '28th A Company',
+    '29th A Company', '30th A Company', '31th A Company',
+    '32th A Company',
+    '1st B Company', '2nd B Company', '3rd B Company',
+    '4th B Company', '5th B Company', '6th B Company',
+    '7th B Company', '8th B Company', '9th B Company',
+    '10th B Company', '11th B Company', '12th B Company',
+    '13th B Company', '14th B Company', '15th B Company',
+    '16th B Company',
+    '17th B Company', '18th B Company', '19th B Company',
+    '20th B Company', '21th B Company', '22th B Company',
+    '23th B Company', '24th B Company', '25th B Company',
+    '26th B Company', '27th B Company', '28th B Company',
+    '29th B Company', '30th B Company', '31th B Company',
+    '32th B Company'
 ];
 
 names.battalions = [

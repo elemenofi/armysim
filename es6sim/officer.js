@@ -2,15 +2,26 @@
 /* global chance */
 import {} from './chance';
 import config from './config';
+import Traits from './traits';
+
+let traits = new Traits();
 
 class Officer {
-  constructor (rank, unitId) {
-    this.unitId = unitId;
-    this.rank = config.ranks[rank];
+  constructor (spec) {
+    this.unitId = spec.unitId;
+    this.rank = config.ranks[spec.rank];
     this.lname = chance.last();
     this.fname = chance.name({ gender: 'male' });
-    this.experience = config.ranks[rank].startxp + config.experience();
+    this.experience = config.ranks[spec.rank].startxp + config.experience();
     this.history = [];
+    this.trait = traits.random();
+
+    let graduation = {
+      unit: spec.unitName,
+      date: spec.date
+    };
+
+    this.history.push(config.graduated(graduation, this));
   }
 
   name () {

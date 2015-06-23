@@ -1,7 +1,7 @@
+'use strict';
 import {} from './date.js';
 import config from './config';
 
-'use strict';
 
 class HQ {
   constructor (officers) {
@@ -45,7 +45,7 @@ class HQ {
     let name = '';
     this.units.some((unit) => {
       if (unit.id === unitId) {
-        name = unit.name;
+        name = unit.name; 
         return true;
       }
     }); 

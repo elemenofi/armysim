@@ -1,8 +1,17 @@
 'use strict';
 
 let config = {
-  promoted (rank, date, unit) {
-    let message = 'Promoted to ' + this.ranks[rank].title + ' on ' + date + ', assigned to the ' + unit;
+  promoted (promotion) {
+    let message = 
+    'Promoted to ' + this.ranks[promotion.rank].title + 
+    ' on ' + promotion.date + ', assigned to the ' + promotion.unit;
+    return message;
+  },
+
+  graduated (graduation, officer) {
+    let message = 
+    'Graduated as a Lieutenant from the ' + officer.trait.school + 
+    ' on ' + graduation.date + ', assigned to the ' + graduation.unit;
     return message;
   },
 
@@ -10,23 +19,23 @@ let config = {
     var j = i % 10,
         k = i % 100;
     if (j == 1 && k != 11) {
-      return "st";
+      return 'st';
     }
     if (j == 2 && k != 12) {
-      return "nd";
+      return 'nd';
     }
     if (j == 3 && k != 13) {
-      return "rd";
+      return 'rd';
     }
-    return "th";
+    return 'th';
   },
 
   formatDate (rawDate) {
     let realDate;
-    realDate = rawDate.toFormat("DDDD the D of MMMM, YYYY");
-    realDate = realDate.split(" ");
-    realDate[2] = rawDate.toFormat("D") + config.suffix(rawDate.toFormat("D"));
-    realDate = realDate.join(" ");
+    realDate = rawDate.toFormat('DDDD the D of MMMM, YYYY');
+    realDate = realDate.split(' ');
+    realDate[2] = rawDate.toFormat('D') + config.suffix(rawDate.toFormat('D'));
+    realDate = realDate.join(' ');
     return realDate;
   },
 

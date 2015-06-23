@@ -17,7 +17,6 @@ class Army {
 
     this.id = 1;
     this.generate("corp", config.unitDepth);
-    debugger;
   }
 
   generate (type, quantity, parent) {
@@ -124,7 +123,7 @@ class Army {
 
         case "squad":
           unit.name = names.squads[0];
-          names.platoons.shift();
+          names.squads.shift();
           unit.commander = this.HQ.officers.recruit('lieutenant', unit.id);
 
           parent.subunits.push(unit);

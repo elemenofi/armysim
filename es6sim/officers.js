@@ -12,7 +12,17 @@ class Officers {
   }
 
   recruit (rank, unitId) {
-    let recruit = new Officer(rank, unitId);
+    let date = this.HQ.realDate;
+    let unitName = this.HQ.unitName(unitId);
+
+    let options = {
+      rank: rank, 
+      date: date,
+      unitId: unitId,
+      unitName: unitName  
+    };
+
+    let recruit = new Officer(options);
 
     this.active.push(recruit);
 
@@ -33,6 +43,7 @@ class Officers {
         return this.recruit('lieutenant', commander.unitId);
       case 'captain':
         oldRank = 'lieutenant';
+      break;
       case 'major':
         oldRank = 'captain';
       break;
@@ -69,8 +80,14 @@ class Officers {
 
     candidate.unitId = unitId;  
     candidate.rank = config.ranks[newRank];
-    // new rank, date, id
-    candidate.history.push(config.promoted(newRank, this.HQ.realDate, this.HQ.unitName(candidate.unitId)));
+
+    let promotion = {
+      rank: newRank, 
+      date: this.HQ.realDate,
+      unit: this.HQ.unitName(candidate.unitId) 
+    };
+
+    candidate.history.push(config.promoted(promotion));
 
     return candidate;
   } 
