@@ -28,15 +28,19 @@ class World {
           unit.regionId = region.id;
           unitIndex++;
           count++;
+        } else {
+          return;
         }
       }
     });
+
     let mcount = 0;
     this.HQ.units.map(function(unit) {
       if (unit.regionId < 0 || unit.regionId === undefined) {
         mcount++;
       }
     });
+    debugger;
   } 
 
   generate () {

@@ -1,4 +1,6 @@
 /* jshint ignore:start */
+import React from './react';
+
 class Ui {
   render (army) {
     React.render(
