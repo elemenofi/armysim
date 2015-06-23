@@ -1,7 +1,7 @@
 'use strict';
 import config from './config';
-import Comparisons from './comparisons';
 import Officer from './officer';
+import Comparisons from './comparisons';
 
 let comparisons = new Comparisons();
 
@@ -16,10 +16,10 @@ class Officers {
     let unitName = this.HQ.unitName(unitId);
 
     let options = {
-      rank: rank, 
       date: date,
       unitId: unitId,
-      unitName: unitName  
+      unitName: unitName,  
+      rank: rank 
     };
 
     let recruit = new Officer(options);

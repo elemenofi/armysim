@@ -11,11 +11,11 @@ class Engine {
   }
 
   start() {
-    let count = 0;
-    while (count < 200) {
-      this.update();
-      count++;
-    }
+    // let count = 0;
+    // while (count < 200) {
+    //   this.update();
+    //   count++;
+    // }
     setInterval(this.update, 500);
   }
 

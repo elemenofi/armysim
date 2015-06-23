@@ -1,12 +1,13 @@
 /* jshint ignore:start */
 import config from './config';
 import names from './names';
+import World from './world';
+import HQ from './hq';
 import Unit from './unit';
 import Officers from './officers';
-import HQ from './hq';
 
 class Army {
-  constructor () {
+  constructor () {    
     this.HQ = new HQ();
     this.HQ.officers = new Officers(this.HQ);
 
@@ -17,6 +18,8 @@ class Army {
 
     this.id = 1;
     this.generate("corp", config.unitDepth);
+
+    this.HQ.world = new World(this.HQ);
   }
 
   generate (type, quantity, parent) {

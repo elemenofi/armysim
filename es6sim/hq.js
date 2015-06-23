@@ -2,17 +2,19 @@
 import {} from './date.js';
 import config from './config';
 
-
 class HQ {
-  constructor (officers) {
-    this.units = [];
-    this.officers = officers;
+  constructor () {
     this.rawDate = new Date();
+    this.units = [];
+  }
+
+  updateDate () {
+    this.rawDate = this.rawDate.addDays(config.random(150));
+    this.realDate = config.formatDate(this.rawDate);
   }
   
   update () {
-    this.rawDate = this.rawDate.addDays(config.days());
-    this.realDate = config.formatDate(this.rawDate);
+    this.updateDate();
 
     this.units.map((unit) => {
       if (unit.commander.retired) {

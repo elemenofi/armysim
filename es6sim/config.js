@@ -5,13 +5,18 @@ let config = {
     let message = 
     'Promoted to ' + this.ranks[promotion.rank].title + 
     ' on ' + promotion.date + ', assigned to the ' + promotion.unit;
+    
     return message;
   },
 
   graduated (graduation, officer) {
-    let message = 
-    'Graduated as a Lieutenant from the ' + officer.trait.school + 
-    ' on ' + graduation.date + ', assigned to the ' + graduation.unit;
+    let when = '';
+    
+    if (graduation.date && graduation.unit) {
+      when = ' on ' + graduation.date + ', assigned to the ' + graduation.unit;
+    }
+
+    let message = 'Graduated from ' + officer.traits.base.school + when;
     return message;
   },
 
@@ -39,12 +44,8 @@ let config = {
     return realDate;
   },
 
-  days () {
-    return Math.round(Math.random() * 150);
-  },
-
-  experience () {
-    return Math.round(Math.random() * 10);
+  random (n) {
+    return Math.round(Math.random() * n);
   },
 
   unitDepth: 2,
