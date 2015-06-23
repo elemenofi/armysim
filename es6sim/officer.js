@@ -15,7 +15,12 @@ class Officer {
     this.traits = {
       base: traits.random()
     };
-    
+
+
+    this.alignment = 0;
+    this.militancy = config.random(10);
+    this.drift = config.random(10);
+
     this.administration = this.traits.base.administration + config.random(10);
     this.intelligence = this.traits.base.intelligence + config.random(10);
     this.commanding = this.traits.base.commanding + config.random(10);
@@ -37,9 +42,18 @@ class Officer {
     return this.rank.title + ' ' + this.fname + ' ' + this.lname;
   } 
 
-  update () {
+  update (actives, units) {
     this.experience++;
     if (this.experience > this.rank.maxxp) this.retire();
+
+    debugger;
+    let mine = units.filter(unit => {
+      return unit.id === this.unitId;
+    })[0];
+    
+    let mineCommander = actives.filter(active => {
+      return active.unitId === mine.parentId;
+    });
   }
 
   retire () {

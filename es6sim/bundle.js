@@ -3640,6 +3640,10 @@ var Officer = (function () {
       base: traits.random()
     };
 
+    this.alignment = 0;
+    this.militancy = _config2['default'].random(10);
+    this.drift = _config2['default'].random(10);
+
     this.administration = this.traits.base.administration + _config2['default'].random(10);
     this.intelligence = this.traits.base.intelligence + _config2['default'].random(10);
     this.commanding = this.traits.base.commanding + _config2['default'].random(10);
@@ -3664,9 +3668,20 @@ var Officer = (function () {
     }
   }, {
     key: 'update',
-    value: function update() {
+    value: function update(actives, units) {
+      var _this = this;
+
       this.experience++;
       if (this.experience > this.rank.maxxp) this.retire();
+
+      debugger;
+      var mine = units.filter(function (unit) {
+        return unit.id === _this.unitId;
+      })[0];
+
+      var mineCommander = actives.filter(function (active) {
+        return active.unitId === mine.parentId;
+      });
     }
   }, {
     key: 'retire',
@@ -3803,8 +3818,10 @@ var Officers = (function () {
   }, {
     key: 'update',
     value: function update() {
+      var _this = this;
+
       this.active.forEach(function (officer) {
-        officer.update();
+        officer.update(_this.active, _this.HQ.units);
       });
     }
   }]);
@@ -4139,8 +4156,10 @@ var World = (function () {
 
       this.regions.map(function (region) {
         var count = 0;
+
         while (count < unitsPerRegion) {
           var unit = _this.HQ.units[unitIndex];
+
           if (unit) {
             region.units.push(unit);
             unit.regionId = region.id;
@@ -4151,14 +4170,6 @@ var World = (function () {
           }
         }
       });
-
-      var mcount = 0;
-      this.HQ.units.map(function (unit) {
-        if (unit.regionId < 0 || unit.regionId === undefined) {
-          mcount++;
-        }
-      });
-      debugger;
     }
   }, {
     key: 'generate',
