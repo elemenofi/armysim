@@ -43,10 +43,13 @@ class Officer {
     return this.rank.title + ' ' + this.fname + ' ' + this.lname;
   } 
 
-  update (officers, units) {
+  update () {
     this.experience++;
     if (this.experience > this.rank.maxxp) this.retire();
 
+  }
+
+  driftAlign (officers, units) {
     this.unit = units.filter(unit => {
       return unit.id === this.unitId;
     })[0];
@@ -55,10 +58,6 @@ class Officer {
       return officer.unitId === this.unit.parentId;
     })[0];
     
-    if (this.commander) this.driftAlign();
-  }
-
-  driftAlign () {
     if (this.commander.alignment > 500) {
       this.drift++;
     } else {

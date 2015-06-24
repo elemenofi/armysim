@@ -44,7 +44,7 @@ class Army {
           unit.name = names.corps[0];
           names.corps.shift();
           unit.subunits = [];
-          unit.commander = this.HQ.officers.recruit('lgeneral', unit.id);
+          unit.commander = this.HQ.officers.recruit('lgeneral', unit.id, this.HQ);
 
           this.units.corps.push(unit);
 
@@ -56,7 +56,7 @@ class Army {
           unit.name = names.divisions[0];
           names.divisions.shift();
           unit.subunits = [];
-          unit.commander = this.HQ.officers.recruit('dgeneral', unit.id);
+          unit.commander = this.HQ.officers.recruit('dgeneral', unit.id, this.HQ);
 
           parent.subunits.push(unit);
 
@@ -68,7 +68,7 @@ class Army {
           unit.name = names.brigades[0];
           names.brigades.shift();
           unit.subunits = [];
-          unit.commander = this.HQ.officers.recruit('bgeneral', unit.id);
+          unit.commander = this.HQ.officers.recruit('bgeneral', unit.id, this.HQ);
 
           parent.subunits.push(unit);
 
@@ -80,7 +80,7 @@ class Army {
           unit.name = names.regiments[0];
           names.regiments.shift();
           unit.subunits = [];
-          unit.commander = this.HQ.officers.recruit('coronel', unit.id);
+          unit.commander = this.HQ.officers.recruit('coronel', unit.id, this.HQ);
 
           parent.subunits.push(unit);
 
@@ -92,7 +92,7 @@ class Army {
           unit.name = names.battalions[0];
           names.battalions.shift();
           unit.subunits = [];
-          unit.commander = this.HQ.officers.recruit('lcoronel', unit.id);
+          unit.commander = this.HQ.officers.recruit('lcoronel', unit.id, this.HQ);
 
           parent.subunits.push(unit);
 
@@ -104,7 +104,7 @@ class Army {
           unit.name = names.companies[0];
           names.companies.shift();
           unit.subunits = [];
-          unit.commander = this.HQ.officers.recruit('major', unit.id);
+          unit.commander = this.HQ.officers.recruit('major', unit.id, this.HQ);
 
           parent.subunits.push(unit);
 
@@ -116,7 +116,7 @@ class Army {
           unit.name = names.platoons[0];
           names.platoons.shift();
           unit.subunits = [];
-          unit.commander = this.HQ.officers.recruit('captain', unit.id);
+          unit.commander = this.HQ.officers.recruit('captain', unit.id, this.HQ);
 
           parent.subunits.push(unit);
 
@@ -127,7 +127,7 @@ class Army {
         case "squad":
           unit.name = names.squads[0];
           names.squads.shift();
-          unit.commander = this.HQ.officers.recruit('lieutenant', unit.id);
+          unit.commander = this.HQ.officers.recruit('lieutenant', unit.id, this.HQ);
 
           parent.subunits.push(unit);
 

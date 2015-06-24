@@ -6,15 +6,14 @@ import Comparisons from './comparisons';
 let comparisons = new Comparisons();
 
 class Officers {
-  constructor (HQ) {
+  constructor () {
     this.active = [];
-    this.HQ = HQ;
     this.__officersID = 1;
   }
 
-  recruit (rank, unitId) {
-    let date = this.HQ.realDate;
-    let unitName = this.HQ.unitName(unitId);
+  recruit (rank, unitId, HQ) {
+    let date = HQ.realDate;
+    let unitName = HQ.unitName(unitId);
 
     let options = {
       id: this.__officersID,
@@ -39,12 +38,12 @@ class Officers {
     });
   }
 
-  replace (commander) {
+  replace (commander, HQ) {
     let oldRank;
 
     switch (commander.rank.alias) {
       case 'lieutenant':
-        return this.recruit('lieutenant', commander.unitId);
+        return this.recruit('lieutenant', commander.unitId, HQ);
       case 'captain':
         oldRank = 'lieutenant';
       break;
@@ -68,10 +67,10 @@ class Officers {
       break;
     }
 
-    return this.candidate(commander.unitId, commander.rank.alias, oldRank);
+    return this.candidate(commander.unitId, commander.rank.alias, oldRank, HQ);
   }
 
-  candidate (unitId, newRank, oldRank) {
+  candidate (unitId, newRank, oldRank, HQ) {
     let candidates = []; 
 
     this.active.map(officer => {
@@ -80,15 +79,15 @@ class Officers {
 
     let candidate = candidates.sort(comparisons.byExperience)[0];
 
-    this.HQ.deassign(candidate.unitId);
+    HQ.deassign(candidate.unitId);
 
     candidate.unitId = unitId;  
     candidate.rank = config.ranks[newRank];
 
     let promotion = {
       rank: newRank, 
-      date: this.HQ.realDate,
-      unit: this.HQ.unitName(candidate.unitId) 
+      date: HQ.realDate,
+      unit: HQ.unitName(candidate.unitId) 
     };
 
     candidate.history.push(config.promoted(promotion));
@@ -96,9 +95,9 @@ class Officers {
     return candidate;
   } 
 
-  update () {
+  update (HQ) {
     this.active.forEach(officer => {
-      officer.update(this.active, this.HQ.units);
+      officer.update();
     });
   }
 }

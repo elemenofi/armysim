@@ -1741,7 +1741,7 @@ var Army = (function () {
             unit.name = _names2['default'].corps[0];
             _names2['default'].corps.shift();
             unit.subunits = [];
-            unit.commander = this.HQ.officers.recruit('lgeneral', unit.id);
+            unit.commander = this.HQ.officers.recruit('lgeneral', unit.id, this.HQ);
 
             this.units.corps.push(unit);
 
@@ -1753,7 +1753,7 @@ var Army = (function () {
             unit.name = _names2['default'].divisions[0];
             _names2['default'].divisions.shift();
             unit.subunits = [];
-            unit.commander = this.HQ.officers.recruit('dgeneral', unit.id);
+            unit.commander = this.HQ.officers.recruit('dgeneral', unit.id, this.HQ);
 
             parent.subunits.push(unit);
 
@@ -1765,7 +1765,7 @@ var Army = (function () {
             unit.name = _names2['default'].brigades[0];
             _names2['default'].brigades.shift();
             unit.subunits = [];
-            unit.commander = this.HQ.officers.recruit('bgeneral', unit.id);
+            unit.commander = this.HQ.officers.recruit('bgeneral', unit.id, this.HQ);
 
             parent.subunits.push(unit);
 
@@ -1777,7 +1777,7 @@ var Army = (function () {
             unit.name = _names2['default'].regiments[0];
             _names2['default'].regiments.shift();
             unit.subunits = [];
-            unit.commander = this.HQ.officers.recruit('coronel', unit.id);
+            unit.commander = this.HQ.officers.recruit('coronel', unit.id, this.HQ);
 
             parent.subunits.push(unit);
 
@@ -1789,7 +1789,7 @@ var Army = (function () {
             unit.name = _names2['default'].battalions[0];
             _names2['default'].battalions.shift();
             unit.subunits = [];
-            unit.commander = this.HQ.officers.recruit('lcoronel', unit.id);
+            unit.commander = this.HQ.officers.recruit('lcoronel', unit.id, this.HQ);
 
             parent.subunits.push(unit);
 
@@ -1801,7 +1801,7 @@ var Army = (function () {
             unit.name = _names2['default'].companies[0];
             _names2['default'].companies.shift();
             unit.subunits = [];
-            unit.commander = this.HQ.officers.recruit('major', unit.id);
+            unit.commander = this.HQ.officers.recruit('major', unit.id, this.HQ);
 
             parent.subunits.push(unit);
 
@@ -1813,7 +1813,7 @@ var Army = (function () {
             unit.name = _names2['default'].platoons[0];
             _names2['default'].platoons.shift();
             unit.subunits = [];
-            unit.commander = this.HQ.officers.recruit('captain', unit.id);
+            unit.commander = this.HQ.officers.recruit('captain', unit.id, this.HQ);
 
             parent.subunits.push(unit);
 
@@ -1824,7 +1824,7 @@ var Army = (function () {
           case 'squad':
             unit.name = _names2['default'].squads[0];
             _names2['default'].squads.shift();
-            unit.commander = this.HQ.officers.recruit('lieutenant', unit.id);
+            unit.commander = this.HQ.officers.recruit('lieutenant', unit.id, this.HQ);
 
             parent.subunits.push(unit);
 
@@ -3528,10 +3528,11 @@ var HQ = (function () {
       this.units.map(function (unit) {
         if (unit.commander.retired) {
           _this.replace(unit);
+          unit.commander.driftAlign(_this.officers.active, _this.units);
         }
       });
 
-      this.officers.update();
+      this.officers.update(this);
       this.officers.retire();
     }
   }, {
@@ -3554,7 +3555,7 @@ var HQ = (function () {
   }, {
     key: 'replace',
     value: function replace(unit) {
-      unit.commander = this.officers.replace(unit.commander);
+      unit.commander = this.officers.replace(unit.commander, this);
     }
   }, {
     key: 'unitName',
@@ -3670,11 +3671,14 @@ var Officer = (function () {
     }
   }, {
     key: 'update',
-    value: function update(officers, units) {
-      var _this = this;
-
+    value: function update() {
       this.experience++;
       if (this.experience > this.rank.maxxp) this.retire();
+    }
+  }, {
+    key: 'driftAlign',
+    value: function driftAlign(officers, units) {
+      var _this = this;
 
       this.unit = units.filter(function (unit) {
         return unit.id === _this.unitId;
@@ -3684,11 +3688,6 @@ var Officer = (function () {
         return officer.unitId === _this.unit.parentId;
       })[0];
 
-      if (this.commander) this.driftAlign();
-    }
-  }, {
-    key: 'driftAlign',
-    value: function driftAlign() {
       if (this.commander.alignment > 500) {
         this.drift++;
       } else {
@@ -3741,19 +3740,18 @@ var _comparisons2 = _interopRequireDefault(_comparisons);
 var comparisons = new _comparisons2['default']();
 
 var Officers = (function () {
-  function Officers(HQ) {
+  function Officers() {
     _classCallCheck(this, Officers);
 
     this.active = [];
-    this.HQ = HQ;
     this.__officersID = 1;
   }
 
   _createClass(Officers, [{
     key: 'recruit',
-    value: function recruit(rank, unitId) {
-      var date = this.HQ.realDate;
-      var unitName = this.HQ.unitName(unitId);
+    value: function recruit(rank, unitId, HQ) {
+      var date = HQ.realDate;
+      var unitName = HQ.unitName(unitId);
 
       var options = {
         id: this.__officersID,
@@ -3780,12 +3778,12 @@ var Officers = (function () {
     }
   }, {
     key: 'replace',
-    value: function replace(commander) {
+    value: function replace(commander, HQ) {
       var oldRank = undefined;
 
       switch (commander.rank.alias) {
         case 'lieutenant':
-          return this.recruit('lieutenant', commander.unitId);
+          return this.recruit('lieutenant', commander.unitId, HQ);
         case 'captain':
           oldRank = 'lieutenant';
           break;
@@ -3809,11 +3807,11 @@ var Officers = (function () {
           break;
       }
 
-      return this.candidate(commander.unitId, commander.rank.alias, oldRank);
+      return this.candidate(commander.unitId, commander.rank.alias, oldRank, HQ);
     }
   }, {
     key: 'candidate',
-    value: function candidate(unitId, newRank, oldRank) {
+    value: function candidate(unitId, newRank, oldRank, HQ) {
       var candidates = [];
 
       this.active.map(function (officer) {
@@ -3822,15 +3820,15 @@ var Officers = (function () {
 
       var candidate = candidates.sort(comparisons.byExperience)[0];
 
-      this.HQ.deassign(candidate.unitId);
+      HQ.deassign(candidate.unitId);
 
       candidate.unitId = unitId;
       candidate.rank = _config2['default'].ranks[newRank];
 
       var promotion = {
         rank: newRank,
-        date: this.HQ.realDate,
-        unit: this.HQ.unitName(candidate.unitId)
+        date: HQ.realDate,
+        unit: HQ.unitName(candidate.unitId)
       };
 
       candidate.history.push(_config2['default'].promoted(promotion));
@@ -3839,11 +3837,9 @@ var Officers = (function () {
     }
   }, {
     key: 'update',
-    value: function update() {
-      var _this = this;
-
+    value: function update(HQ) {
       this.active.forEach(function (officer) {
-        officer.update(_this.active, _this.HQ.units);
+        officer.update();
       });
     }
   }]);

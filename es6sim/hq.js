@@ -19,10 +19,11 @@ class HQ {
     this.units.map((unit) => {
       if (unit.commander.retired) {
         this.replace(unit);
+        unit.commander.driftAlign(this.officers.active, this.units);
       }
     });
     
-    this.officers.update();
+    this.officers.update(this);
     this.officers.retire();
   }
 
@@ -40,7 +41,7 @@ class HQ {
   }
 
   replace (unit) {
-    unit.commander = this.officers.replace(unit.commander);
+    unit.commander = this.officers.replace(unit.commander, this);
   }
 
   unitName (unitId) {
