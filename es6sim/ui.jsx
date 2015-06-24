@@ -54,7 +54,8 @@ class Commander extends React.Component {
   
     return (
       <div onMouseOver={this.mouseOver.bind(this)} onMouseOut={this.mouseOut.bind(this)}>
-        <p>{this.props.officer.name()} {this.props.officer.alignment} {this.props.officer.drift}</p>
+        <p>{this.props.officer.name()} {this.props.officer.alignment} {this.props.officer.drift}
+        {this.props.officer.militancy}</p>
         <div className="history">{history}</div>
       </div>
     );

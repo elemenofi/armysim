@@ -97,7 +97,7 @@ class Officers {
 
   update (HQ) {
     this.active.forEach(officer => {
-      officer.update();
+      officer.update(HQ);
     });
   }
 }

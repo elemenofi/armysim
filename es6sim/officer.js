@@ -21,6 +21,7 @@ class Officer {
     this.alignment = config.random(1000); // 0 1000
     this.militancy = config.random(10); // 1 a 10
     this.drift = 0; //1 a 10
+    this.operations = [];
 
     this.administration = this.traits.base.administration + config.random(10);
     this.intelligence = this.traits.base.intelligence + config.random(10);
@@ -43,10 +44,11 @@ class Officer {
     return this.rank.title + ' ' + this.fname + ' ' + this.lname;
   } 
 
-  update () {
+  update (HQ) {
+    this.align();
+    this.militate(HQ);
     this.experience++;
     if (this.experience > this.rank.maxxp) this.retire();
-    this.align();
   }
 
   drifts (officers, units) {
@@ -70,6 +72,19 @@ class Officer {
       this.alignment += this.drift;
     } else if (this.drift < 0 && this.alignment > 0) {
       this.alignment += this.drift;
+    }
+  }
+
+  militate (HQ) {
+    if ((this.drift > 0 && this.alignment > 900) || (this.drift < 0 && this.alignment < 100)) {
+      if (this.militancy < 10) this.militancy++;
+    }
+    if (this.militancy === 10) {
+      debugger;
+      // this returns the operation so it should be stored to use for the message;
+      this.operations.push(HQ.operations.add(this, HQ));
+      this.history.push('Begun operation on ' + HQ.realDate);
+      this.militancy = 0;
     }
   }
 

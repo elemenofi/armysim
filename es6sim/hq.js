@@ -1,9 +1,11 @@
 'use strict';
 import {} from './date.js';
 import config from './config';
+import Operations from './operations';
 
 class HQ {
   constructor () {
+    this.operations = new Operations();
     this.rawDate = new Date();
     this.units = [];
   }
