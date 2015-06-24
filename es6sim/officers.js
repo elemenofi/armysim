@@ -9,6 +9,7 @@ class Officers {
   constructor (HQ) {
     this.active = [];
     this.HQ = HQ;
+    this.__officersID = 1;
   }
 
   recruit (rank, unitId) {
@@ -16,6 +17,7 @@ class Officers {
     let unitName = this.HQ.unitName(unitId);
 
     let options = {
+      id: this.__officersID,
       date: date,
       unitId: unitId,
       unitName: unitName,  
@@ -25,6 +27,8 @@ class Officers {
     let recruit = new Officer(options);
 
     this.active.push(recruit);
+
+    this.officerID++;
 
     return recruit;
   }

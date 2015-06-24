@@ -3625,12 +3625,14 @@ var _traits = require('./traits');
 
 var _traits2 = _interopRequireDefault(_traits);
 
-var chance = new Chance();
-var traits = new _traits2['default']();
-
 var Officer = (function () {
   function Officer(spec) {
     _classCallCheck(this, Officer);
+
+    var chance = new Chance();
+    var traits = new _traits2['default']();
+
+    this.id = spec.id;
 
     this.unitId = spec.unitId;
     this.rank = _config2['default'].ranks[spec.rank];
@@ -3640,9 +3642,9 @@ var Officer = (function () {
       base: traits.random()
     };
 
-    this.alignment = 0;
-    this.militancy = _config2['default'].random(10);
-    this.drift = _config2['default'].random(10);
+    this.alignment = _config2['default'].random(1000); // 0 1000
+    this.militancy = _config2['default'].random(10); // 1 a 10
+    this.drift = 0; //1 a 10
 
     this.administration = this.traits.base.administration + _config2['default'].random(10);
     this.intelligence = this.traits.base.intelligence + _config2['default'].random(10);
@@ -3668,20 +3670,36 @@ var Officer = (function () {
     }
   }, {
     key: 'update',
-    value: function update(actives, units) {
+    value: function update(officers, units) {
       var _this = this;
 
       this.experience++;
       if (this.experience > this.rank.maxxp) this.retire();
 
-      debugger;
-      var mine = units.filter(function (unit) {
+      this.unit = units.filter(function (unit) {
         return unit.id === _this.unitId;
       })[0];
 
-      var mineCommander = actives.filter(function (active) {
-        return active.unitId === mine.parentId;
-      });
+      this.commander = officers.filter(function (officer) {
+        return officer.unitId === _this.unit.parentId;
+      })[0];
+
+      if (this.commander) this.driftAlign();
+    }
+  }, {
+    key: 'driftAlign',
+    value: function driftAlign() {
+      if (this.commander.alignment > 500) {
+        this.drift++;
+      } else {
+        this.drift--;
+      }
+
+      if (this.drift > 0 && this.alignment < 1000) {
+        this.alignment += this.drift;
+      } else if (this.drift < 0 && this.alignment > 0) {
+        this.alignment -= this.drift;
+      }
     }
   }, {
     key: 'retire',
@@ -3728,6 +3746,7 @@ var Officers = (function () {
 
     this.active = [];
     this.HQ = HQ;
+    this.__officersID = 1;
   }
 
   _createClass(Officers, [{
@@ -3737,6 +3756,7 @@ var Officers = (function () {
       var unitName = this.HQ.unitName(unitId);
 
       var options = {
+        id: this.__officersID,
         date: date,
         unitId: unitId,
         unitName: unitName,
@@ -3746,6 +3766,8 @@ var Officers = (function () {
       var recruit = new _officer2['default'](options);
 
       this.active.push(recruit);
+
+      this.officerID++;
 
       return recruit;
     }
@@ -4137,7 +4159,6 @@ var World = (function () {
     this.HQ = HQ;
     this.regions = [];
     this.generate();
-    this.mapUnitsAndRegions();
   }
 
   _createClass(World, [{
@@ -4145,6 +4166,15 @@ var World = (function () {
     value: function addRegion() {
       var regionId = this.regions.length;
       this.regions.push(new _region2['default'](regionId));
+    }
+  }, {
+    key: 'generate',
+    value: function generate() {
+      var amount = _config2['default'].random(10) + 5;
+      for (var i = 0; i < amount; i++) {
+        this.addRegion();
+      }
+      this.mapUnitsAndRegions();
     }
   }, {
     key: 'mapUnitsAndRegions',
@@ -4170,14 +4200,6 @@ var World = (function () {
           }
         }
       });
-    }
-  }, {
-    key: 'generate',
-    value: function generate() {
-      var amount = _config2['default'].random(10) + 5;
-      for (var i = 0; i < amount; i++) {
-        this.addRegion();
-      }
     }
   }]);
 

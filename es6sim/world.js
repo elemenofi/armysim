@@ -7,12 +7,19 @@ class World {
     this.HQ = HQ;
     this.regions = [];
     this.generate();
-    this.mapUnitsAndRegions();
   }
 
   addRegion () {
     let regionId = this.regions.length;
     this.regions.push(new Region(regionId));
+  }
+
+  generate () {
+    let amount = config.random(10) + 5;
+    for (var i = 0; i < amount; i++) {
+      this.addRegion();
+    }
+    this.mapUnitsAndRegions();
   }
 
   mapUnitsAndRegions () {
@@ -36,13 +43,6 @@ class World {
       }
     });
   } 
-
-  generate () {
-    let amount = config.random(10) + 5;
-    for (var i = 0; i < amount; i++) {
-      this.addRegion();
-    }
-  }
 }
 
 export default World;
