@@ -3945,8 +3945,8 @@ var Operation = (function () {
 		this.side = officer.alignment > 500 ? 'right' : 'left';
 		this.lead = officer;
 		this.target = this.pick(officer, HQ);
-		this.type = this.types[officer.traits.base.area];
 		if (this.target === undefined) this.failed = true;
+		this.type = this.types[officer.traits.base.area];
 	}
 
 	_createClass(Operation, [{
