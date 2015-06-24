@@ -27,7 +27,7 @@ class Officers {
 
     this.active.push(recruit);
 
-    this.officerID++;
+    this.__officersID++;
 
     return recruit;
   }

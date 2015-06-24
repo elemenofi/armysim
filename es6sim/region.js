@@ -6,7 +6,7 @@ let chance = new Chance();
 class Region {
   constructor (id) {
     this.id = id;
-    // this.name = chance.city();
+    this.name = chance.city();
     this.units = [];
   }
 }

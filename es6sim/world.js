@@ -4,9 +4,8 @@ import Region from './region';
 
 class World {
   constructor (HQ) {
-    this.HQ = HQ;
     this.regions = [];
-    this.generate();
+    this.generate(HQ);
   }
 
   addRegion () {
@@ -14,23 +13,23 @@ class World {
     this.regions.push(new Region(regionId));
   }
 
-  generate () {
+  generate (HQ) {
     let amount = config.random(10) + 5;
     for (var i = 0; i < amount; i++) {
       this.addRegion();
     }
-    this.mapUnitsAndRegions();
+    this.mapUnitsAndRegions(HQ);
   }
 
-  mapUnitsAndRegions () {
-    let unitsPerRegion = Math.ceil((this.HQ.units.length) / this.regions.length) + 1;
+  mapUnitsAndRegions (HQ) {
+    let unitsPerRegion = Math.ceil((HQ.units.length) / this.regions.length) + 1;
     let unitIndex = 0;
 
     this.regions.map(region => {
       let count = 0;
       
       while (count < unitsPerRegion) {
-        let unit = this.HQ.units[unitIndex];
+        let unit = HQ.units[unitIndex];
       
         if (unit) {
           region.units.push(unit);

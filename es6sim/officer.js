@@ -29,7 +29,7 @@ class Officer {
     this.diplomacy = this.traits.base.diplomacy + config.random(10);
 
     this.lname = chance.last();
-    this.fname = chance.name({gender: 'male'});
+    this.fname = chance.first({gender: 'male'});
     
     let graduation = {
       unit: spec.unitName,
@@ -76,12 +76,15 @@ class Officer {
   }
 
   militate (HQ) {
-    if ((this.drift > 0 && this.alignment > 900) || (this.drift < 0 && this.alignment < 100)) {
+    if (
+      (this.drift > 0 && this.alignment > 900) || 
+      (this.drift < 0 && this.alignment < 100)
+    ) {
       if (this.militancy < 10) this.militancy++;
     }
     if (this.militancy === 10) {
-      debugger;
-      // this returns the operation so it should be stored to use for the message;
+      // this returns the operation so it should 
+      // be stored to use for the message;
       this.operations.push(HQ.operations.add(this, HQ));
       this.history.push('Begun operation on ' + HQ.realDate);
       this.militancy = 0;
