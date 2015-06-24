@@ -3528,7 +3528,7 @@ var HQ = (function () {
       this.units.map(function (unit) {
         if (unit.commander.retired) {
           _this.replace(unit);
-          unit.commander.driftAlign(_this.officers.active, _this.units);
+          unit.commander.drifts(_this.officers.active, _this.units);
         }
       });
 
@@ -3674,10 +3674,11 @@ var Officer = (function () {
     value: function update() {
       this.experience++;
       if (this.experience > this.rank.maxxp) this.retire();
+      this.align();
     }
   }, {
-    key: 'driftAlign',
-    value: function driftAlign(officers, units) {
+    key: 'drifts',
+    value: function drifts(officers, units) {
       var _this = this;
 
       this.unit = units.filter(function (unit) {
@@ -3688,16 +3689,19 @@ var Officer = (function () {
         return officer.unitId === _this.unit.parentId;
       })[0];
 
-      if (this.commander.alignment > 500) {
+      if (this.commander && this.commander.alignment > 500) {
         this.drift++;
       } else {
         this.drift--;
       }
-
+    }
+  }, {
+    key: 'align',
+    value: function align() {
       if (this.drift > 0 && this.alignment < 1000) {
         this.alignment += this.drift;
       } else if (this.drift < 0 && this.alignment > 0) {
-        this.alignment -= this.drift;
+        this.alignment += this.drift;
       }
     }
   }, {
@@ -4056,7 +4060,11 @@ var Commander = (function (_React$Component2) {
         _react2["default"].createElement(
           "p",
           null,
-          this.props.officer.name()
+          this.props.officer.name(),
+          " ",
+          this.props.officer.alignment,
+          " ",
+          this.props.officer.drift
         ),
         _react2["default"].createElement(
           "div",
