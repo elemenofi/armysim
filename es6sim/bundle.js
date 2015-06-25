@@ -3937,6 +3937,7 @@ var Operation = (function () {
 
     this.lead = officer;
     this.target = this.pick(officer, HQ);
+    if (this.target === undefined) this.failed = true;
   }
 
   _createClass(Operation, [{

@@ -43,6 +43,7 @@ class Operation {
     
     this.lead = officer;
     this.target = this.pick(officer, HQ);
+    if (this.target === undefined) this.failed = true;
   }
 
   pick (officer, HQ) {
