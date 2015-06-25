@@ -3427,36 +3427,45 @@ THE SOFTWARE.
 })();
 
 },{}],10:[function(require,module,exports){
-"use strict";
-
-Object.defineProperty(exports, "__esModule", {
+'use strict';
+Object.defineProperty(exports, '__esModule', {
   value: true
 });
 
-var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
 
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
+
+var _uiJsx = require('./ui.jsx');
+
+var _uiJsx2 = _interopRequireDefault(_uiJsx);
 
 var Engine = (function () {
-  function Engine() {
+  function Engine(army) {
     _classCallCheck(this, Engine);
 
+    this.ui = new _uiJsx2['default'](this);
+    this.army = army;
     this.turn = 0;
+    this.running = true;
+    this.start(this);
   }
 
   _createClass(Engine, [{
-    key: "start",
-    value: function start(army) {
-      this.army = army;
-      this.update();
+    key: 'start',
+    value: function start(engine) {
+      this.update(engine);
     }
   }, {
-    key: "pause",
+    key: 'pause',
     value: function pause() {
-      console.log("pause");
+      this.running = !this.running;
+      if (this.running) this.update();
     }
   }, {
-    key: "update",
+    key: 'update',
     value: function update() {
       var _this = this;
 
@@ -3464,19 +3473,21 @@ var Engine = (function () {
       this.army.HQ.update();
       this.ui.render(this.army);
 
-      setTimeout(function () {
-        _this.update();
-      }, 1000);
+      if (this.running) {
+        setTimeout(function () {
+          _this.update();
+        }, 250);
+      }
     }
   }]);
 
   return Engine;
 })();
 
-exports["default"] = Engine;
-module.exports = exports["default"];
+exports['default'] = Engine;
+module.exports = exports['default'];
 
-},{}],11:[function(require,module,exports){
+},{"./ui.jsx":19}],11:[function(require,module,exports){
 'use strict';
 Object.defineProperty(exports, '__esModule', {
   value: true
@@ -3867,7 +3878,7 @@ module.exports = exports['default'];
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
-	value: true
+  value: true
 });
 
 var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
@@ -3875,101 +3886,109 @@ var _createClass = (function () { function defineProperties(target, props) { for
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
 
 var Operations = (function () {
-	function Operations() {
-		_classCallCheck(this, Operations);
+  function Operations() {
+    _classCallCheck(this, Operations);
 
-		this.__operationID = 1;
-		this.ongoing = [];
-	}
+    this.__operationID = 1;
+    this.ongoing = [];
+  }
 
-	_createClass(Operations, [{
-		key: 'add',
-		value: function add(officer, HQ) {
-			var operation = new Operation(officer, HQ);
-			operation.id = this.__operationID;
-			this.ongoing.push(operation);
-			return operation.id;
-		}
-	}, {
-		key: 'update',
-		value: function update(HQ) {
-			this.ongoing = this.ongoing.filter(function (operation) {
-				return !operation.done && !operation.failed && !operation.lead.retired && !operation.target.retired;
-			});
-			this.ongoing.map(function (operation) {
-				operation.execute(HQ);
-			});
-		}
-	}]);
+  _createClass(Operations, [{
+    key: 'add',
+    value: function add(officer, HQ) {
+      var operation = new Operation(officer, HQ);
+      operation.id = this.__operationID;
+      this.ongoing.push(operation);
+      return operation.id;
+    }
+  }, {
+    key: 'update',
+    value: function update(HQ) {
+      debugger;
+      this.ongoing = this.ongoing.filter(function (operation) {
+        return operation.done === null && operation.failed === null && !operation.lead.retired && !operation.target.retired;
+      });
 
-	return Operations;
+      this.ongoing.map(function (operation) {
+        operation.execute(HQ);
+      });
+    }
+  }]);
+
+  return Operations;
 })();
 
 var Operation = (function () {
-	function Operation(officer, HQ) {
-		_classCallCheck(this, Operation);
+  function Operation(officer, HQ) {
+    _classCallCheck(this, Operation);
 
-		this.types = {
-			administration: { action: 'deviate', area: 'administration' },
-			commanding: { action: 'coup', area: 'commanding' },
-			diplomacy: { action: 'influence', area: 'diplomacy' },
-			intelligence: { action: 'spy', area: 'intelligence' }
-		};
-		this.strength = 0;
-		this.side = officer.alignment > 500 ? 'right' : 'left';
-		this.lead = officer;
-		this.target = this.pick(officer, HQ);
-		if (this.target === undefined) this.failed = true;
-		this.type = this.types[officer.traits.base.area];
-	}
+    this.types = {
+      administration: { action: 'deviate', area: 'administration' },
+      commanding: { action: 'coup', area: 'commanding' },
+      diplomacy: { action: 'influence', area: 'diplomacy' },
+      intelligence: { action: 'spy', area: 'intelligence' }
+    };
 
-	_createClass(Operation, [{
-		key: 'pick',
-		value: function pick(officer, HQ) {
-			var _this = this;
+    this.failed = null;
+    this.done = null;
 
-			var targets = HQ.officers.active.filter(function (officer) {
-				return officer.alignment > 500 && _this.side === 'left' || officer.alignment < 500 && _this.side === 'right' && officer.militancy > 7;
-			}) || [];
-			return targets[Math.ceil(Math.random() * targets.length)];
-		}
-	}, {
-		key: 'execute',
-		value: function execute(HQ) {
-			this.strength++;
-			if (this.strength > 5) {
-				if (this.target[this.type.area] < this.lead[this.type.area]) {
-					this[this.type.action](HQ.realDate);
-					HQ.deassign(this.target.unitId);
-					this.done = true;
-				} else {
-					this.failed = true;
-				}
-			}
-		}
-	}, {
-		key: 'deviate',
-		value: function deviate(date) {
-			this.lead.history.push('Forced ' + this.target.name() + ' into retirement after revealing a fraudulent scheme on ' + date);
-		}
-	}, {
-		key: 'coup',
-		value: function coup(date) {
-			this.lead.history.push('Forced ' + this.target.name() + ' into retirement after taking control of his unit on ' + date);
-		}
-	}, {
-		key: 'influence',
-		value: function influence(date) {
-			this.lead.history.push('Forced ' + this.target.name() + ' into retirement after influencing key staff members on ' + date);
-		}
-	}, {
-		key: 'spy',
-		value: function spy(date) {
-			this.lead.history.push('Forced ' + this.target.name() + ' into retirement after revealing personal secrets on ' + date);
-		}
-	}]);
+    this.side = officer.alignment > 500 ? 'right' : 'left';
+    this.type = this.types[officer.traits.base.area];
+    this.strength = 0;
 
-	return Operation;
+    this.lead = officer;
+    this.target = this.pick(officer, HQ);
+  }
+
+  _createClass(Operation, [{
+    key: 'pick',
+    value: function pick(officer, HQ) {
+      var _this = this;
+
+      this.targets = HQ.officers.active.filter(function (officer) {
+        return officer.alignment > 500 && _this.side === 'left' || officer.alignment < 500 && _this.side === 'right';
+      }) || [];
+
+      return this.targets[Math.ceil(Math.random() * this.targets.length)];
+    }
+  }, {
+    key: 'execute',
+    value: function execute(HQ) {
+      this.strength++;
+      if (this.strength > 5) {
+        debugger;
+        if (this.target[this.type.area] < this.lead[this.type.area]) {
+          this[this.type.action](HQ.realDate);
+          HQ.deassign(this.target.unitId);
+          this.done = true;
+        } else {
+          this.failed = true;
+        }
+      }
+    }
+  }, {
+    key: 'deviate',
+    value: function deviate(date) {
+      this.lead.history.push('Forced ' + this.target.name() + ' into retirement after revealing a fraudulent scheme on ' + date);
+    }
+  }, {
+    key: 'coup',
+    value: function coup(date) {
+      this.lead.history.push('Forced ' + this.target.name() + ' into retirement after taking control of his unit on ' + date);
+    }
+  }, {
+    key: 'influence',
+    value: function influence(date) {
+      this.lead.history.push('Forced ' + this.target.name() + ' into retirement after influencing key staff members on ' + date);
+    }
+  }, {
+    key: 'spy',
+    value: function spy(date) {
+      this.lead.history.push('Forced ' + this.target.name() + ' into retirement after revealing personal secrets on ' + date);
+    }
+  }]);
+
+  return Operation;
 })();
 
 exports['default'] = Operations;
@@ -4094,13 +4113,12 @@ var Ui = (function () {
     _classCallCheck(this, Ui);
 
     this.engine = spec;
-    this.engine.pause();
   }
 
   _createClass(Ui, [{
     key: "render",
     value: function render(army) {
-      _react2["default"].render(_react2["default"].createElement(Army, { officers: army.HQ.officers, army: army }), document.body);
+      _react2["default"].render(_react2["default"].createElement(Army, { officers: army.HQ.officers, army: army, engine: this.engine }), document.body);
     }
   }]);
 
@@ -4108,17 +4126,25 @@ var Ui = (function () {
 })();
 
 var Army = (function (_React$Component) {
-  function Army() {
+  function Army(props) {
     _classCallCheck(this, Army);
 
-    if (_React$Component != null) {
-      _React$Component.apply(this, arguments);
-    }
+    _get(Object.getPrototypeOf(Army.prototype), "constructor", this).call(this, props);
+
+    this.state = {
+      officers: props.officers,
+      army: props.army, engine: props.engine
+    };
   }
 
   _inherits(Army, _React$Component);
 
   _createClass(Army, [{
+    key: "pause",
+    value: function pause() {
+      this.state.engine.pause();
+    }
+  }, {
     key: "render",
     value: function render() {
       var army = this.props.army;
@@ -4135,7 +4161,16 @@ var Army = (function (_React$Component) {
       return _react2["default"].createElement(
         "div",
         null,
-        corps
+        _react2["default"].createElement(
+          "div",
+          { onClick: this.pause.bind(this) },
+          "Pause"
+        ),
+        _react2["default"].createElement(
+          "div",
+          null,
+          corps
+        )
       );
     }
   }]);
@@ -4186,10 +4221,7 @@ var Commander = (function (_React$Component2) {
           null,
           this.props.officer.name(),
           " ",
-          this.props.officer.alignment,
-          " ",
-          this.props.officer.drift,
-          this.props.officer.militancy
+          this.props.officer.alignment
         ),
         _react2["default"].createElement(
           "div",
@@ -4344,18 +4376,11 @@ var _engine = require('./engine');
 
 var _engine2 = _interopRequireDefault(_engine);
 
-var _uiJsx = require('./ui.jsx');
-
-var _uiJsx2 = _interopRequireDefault(_uiJsx);
-
 var _army = require('./army');
 
 var _army2 = _interopRequireDefault(_army);
 
-var engine = new _engine2['default']();
 var army = new _army2['default']();
-engine.ui = new _uiJsx2['default'](engine);
+var engine = new _engine2['default'](army);
 
-engine.start(army);
-
-},{"./army":5,"./engine":10,"./ui.jsx":19}]},{},[22]);
+},{"./army":5,"./engine":10}]},{},[22]);

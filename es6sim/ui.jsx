@@ -4,18 +4,30 @@ import React from './react';
 class Ui {
   constructor (spec) {
     this.engine = spec;
-    this.engine.pause();
   }
 
   render (army) {
     React.render(
-      <Army officers={army.HQ.officers} army={army} />, 
+      <Army officers={army.HQ.officers} army={army} engine={this.engine}/>, 
       document.body
     );
   }
 }
 
 class Army extends React.Component {
+  constructor(props) {
+    super(props);
+    
+    this.state = {
+      officers: props.officers, 
+      army: props.army, engine: props.engine
+    };
+  }
+
+  pause () {
+    this.state.engine.pause();
+  }
+
   render () {
     let army = this.props.army;
     let corps = [];
@@ -29,7 +41,10 @@ class Army extends React.Component {
     });
 
     return(
-      <div>{corps}</div>
+      <div>
+        <div onClick={this.pause.bind(this)}>Pause</div>
+        <div>{corps}</div>
+      </div>
     ); 
   }
 }
@@ -59,8 +74,7 @@ class Commander extends React.Component {
   
     return (
       <div onMouseOver={this.mouseOver.bind(this)} onMouseOut={this.mouseOut.bind(this)}>
-        <p>{this.props.officer.name()} {this.props.officer.alignment} {this.props.officer.drift}
-        {this.props.officer.militancy}</p>
+        <p>{this.props.officer.name()} {this.props.officer.alignment}</p>
         <div className="history">{history}</div>
       </div>
     );

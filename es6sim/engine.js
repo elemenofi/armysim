@@ -1,27 +1,34 @@
 'use strict';
+import Ui from './ui.jsx';
 
 class Engine {
-  constructor() {
+  constructor(army) {
+    this.ui = new Ui(this);
+    this.army = army;
     this.turn = 0;
+    this.running = true;
+    this.start(this);
   }
 
-  start (army) {
-    this.army = army;
-    this.update();
+  start (engine) {
+    this.update(engine);
   }
 
   pause () {
-    console.log("pause");
+    this.running = !this.running;
+    if (this.running) this.update();
   }
 
-  update() {
+  update () {
     this.turn++;
     this.army.HQ.update();
     this.ui.render(this.army);
-    
-    setTimeout(() => {
-      this.update();
-    }, 1000);
+
+    if (this.running) {
+      setTimeout(() => {
+        this.update();
+      }, 250);
+    }
   }
 }
 
