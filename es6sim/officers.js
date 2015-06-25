@@ -2,13 +2,16 @@
 import config from './config';
 import Officer from './officer';
 import Comparisons from './comparisons';
+import Secretary from './secretary';
 
 let comparisons = new Comparisons();
+
 
 class Officers {
   constructor () {
     this.active = [];
     this.__officersID = 1;
+    this.secretary = new Secretary();
   }
 
   recruit (rank, unitId, HQ) {
@@ -23,12 +26,10 @@ class Officers {
       rank: rank 
     };
 
-    let recruit = new Officer(options);
-
-    this.active.push(recruit);
-
     this.__officersID++;
 
+    let recruit = new Officer(options);
+    this.active.push(recruit);
     return recruit;
   }
 
@@ -39,42 +40,20 @@ class Officers {
   }
 
   replace (commander, HQ) {
-    let oldRank;
-
-    switch (commander.rank.alias) {
-      case 'lieutenant':
-        return this.recruit('lieutenant', commander.unitId, HQ);
-      case 'captain':
-        oldRank = 'lieutenant';
-      break;
-      case 'major':
-        oldRank = 'captain';
-      break;
-      case 'lcoronel':
-        oldRank = 'major';
-      break;
-      case 'coronel':
-        oldRank = 'lcoronel';
-      break;
-      case 'bgeneral':
-        oldRank = 'coronel';
-      break;
-      case 'dgeneral':
-        oldRank = 'bgeneral';
-      break;
-      case 'lgeneral':
-        oldRank = 'dgeneral';
-      break;
-    }
+    let lowerRank = this.secretary.rankLower(commander.rank);
 
     let spec = {
       unitId: commander.unitId,
       rank: commander.rank.alias,
-      rankToPromote: oldRank,
+      rankToPromote: lowerRank,
       HQ: HQ
     };
-
-    return this.candidate(spec);
+    
+    if (!lowerRank) {
+      return this.recruit('lieutenant', commander.unitId, HQ);
+    } else {
+      return this.candidate(spec);
+    }
   }
 
   candidate (spec) {
@@ -92,6 +71,9 @@ class Officers {
   }
 
   promotion (officer, spec) {
+    officer.unitId = spec.unitId;  
+    officer.rank = config.ranks[spec.rank];
+
     return {
       rank: spec.rank,
       date: spec.HQ.realDate,
@@ -102,18 +84,13 @@ class Officers {
   promote (officer, spec) {
     spec.HQ.deassign(officer.unitId);
 
-    officer.unitId = spec.unitId;  
-    officer.rank = config.ranks[spec.rank];
-
     let promotion = this.promotion(officer, spec);
-
+    
     officer.history.push(config.promoted(promotion));
     officer.drifts(this.active, spec.HQ.units);
 
     return officer;
   }
-
-  
 
   update (HQ) {
     this.active.forEach(officer => {

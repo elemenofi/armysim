@@ -26,7 +26,6 @@ class Operations {
     this.ongoing.map(operation => {
       operation.execute(HQ);
     });
-
   }
 }
 
