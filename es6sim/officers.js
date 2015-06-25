@@ -91,6 +91,7 @@ class Officers {
     };
 
     candidate.history.push(config.promoted(promotion));
+    candidate.drifts(this.active, HQ.units);
 
     return candidate;
   } 

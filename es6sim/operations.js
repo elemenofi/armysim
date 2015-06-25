@@ -40,12 +40,12 @@ class Operation {
 	}
 
 	pick (officer, HQ) {
-		this.targets = HQ.officers.active.filter(officer => {
+		let targets = HQ.officers.active.filter(officer => {
 			return officer.alignment > 500 && this.side === 'left' || 
-						 officer.alignment < 500 && this.side === 'right' &&
-			       officer.militancy > 7;
+				officer.alignment < 500 && this.side === 'right' &&
+			    officer.militancy > 7;
 		}) || [];
-		return this.targets[Math.ceil(Math.random() * this.targets.length)];
+		return targets[Math.ceil(Math.random() * targets.length)];
 	}
 
 	execute (HQ) {

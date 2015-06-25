@@ -21,7 +21,6 @@ class HQ {
     this.units.map((unit) => {
       if (unit.commander.retired) {
         this.replace(unit);
-        unit.commander.drifts(this.officers.active, this.units);
       }
     });
     

@@ -18,9 +18,9 @@ class Officer {
       base: traits.random()
     };
 
-    this.alignment = config.random(1000); // 0 1000
-    this.militancy = config.random(10); // 1 a 10
-    this.drift = 0; //1 a 10
+    this.alignment = config.random(1000);
+    this.militancy = config.random(10);
+    this.drift = 0;
     this.operations = [];
 
     this.administration = this.traits.base.administration + config.random(10);
