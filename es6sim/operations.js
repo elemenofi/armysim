@@ -22,7 +22,7 @@ class Operations {
         return true;
       }
     });
-    
+
     this.ongoing.map(operation => {
       operation.execute(HQ);
     });
@@ -40,11 +40,11 @@ class Operation {
 
     this.failed = null;
     this.done = null;
-    
+
     this.side = (officer.alignment > 500) ? 'right' : 'left';
     this.type = this.types[officer.traits.base.area];
     this.strength = 0;
-    
+
     this.lead = officer;
     this.target = this.pick(officer, HQ);
     if (this.target === undefined) this.failed = true;
@@ -57,7 +57,7 @@ class Operation {
           officer.alignment > 500 && this.side === 'left' ||
           officer.alignment < 500 && this.side === 'right'
         ) {
-          return true; 
+          return true;
         }
       }
     }) || [];
@@ -80,28 +80,28 @@ class Operation {
 
   deviate (date) {
     this.lead.history.push(
-      'Forced ' + this.target.name() + 
+      'Forced ' + this.target.name() +
       ' into retirement after revealing a fraudulent scheme on ' + date
     );
   }
 
   coup (date) {
     this.lead.history.push(
-      'Forced ' + this.target.name() + 
+      'Forced ' + this.target.name() +
       ' into retirement after taking control of his unit on ' + date
     );
   }
 
   influence (date) {
     this.lead.history.push(
-      'Forced ' + this.target.name() + 
+      'Forced ' + this.target.name() +
       ' into retirement after influencing key staff members on ' + date
     );
   }
 
   spy (date) {
     this.lead.history.push(
-      'Forced ' + this.target.name() + 
+      'Forced ' + this.target.name() +
       ' into retirement after revealing personal secrets on ' + date
     );
   }

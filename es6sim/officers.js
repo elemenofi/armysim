@@ -19,8 +19,8 @@ class Officers {
       id: this.__officersID,
       date: HQ.realDate,
       unitId: unitId,
-      unitName: HQ.unitName(unitId),  
-      rank: rank 
+      unitName: HQ.unitName(unitId),
+      rank: rank
     };
 
     let recruit = new Officer(options);
@@ -29,7 +29,7 @@ class Officers {
     return recruit;
   }
 
-  retire () { 
+  retire () {
     // this.active = this.active.filter(officer => {
     this.active = this.active.filter(officer => {
       return !officer.retired;
@@ -45,7 +45,7 @@ class Officers {
       rankToPromote: lowerRank,
       HQ: HQ
     };
-    
+
     if (!lowerRank) {
       return this.recruit('lieutenant', commander.unitId, HQ);
     } else {
@@ -54,7 +54,7 @@ class Officers {
   }
 
   candidate (spec) {
-    let candidates = []; 
+    let candidates = [];
 
     this.active.map(officer => {
       if (officer.rank.alias === spec.rankToPromote) {
@@ -68,7 +68,7 @@ class Officers {
   }
 
   promotion (officer, spec) {
-    officer.unitId = spec.unitId;  
+    officer.unitId = spec.unitId;
     officer.rank = config.ranks[spec.rank];
 
     return {
@@ -82,7 +82,7 @@ class Officers {
     spec.HQ.deassign(officer.unitId);
 
     let promotion = this.promotion(officer, spec);
-    
+
     officer.history.push(config.promoted(promotion));
     officer.drifts(this.active, spec.HQ.units);
 
