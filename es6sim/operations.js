@@ -14,7 +14,6 @@ class Operations {
   }
 
   update (HQ) {
-    debugger;
     this.ongoing = this.ongoing.filter(operation => {
       return operation.done === null && operation.failed === null && !operation.lead.retired && !operation.target.retired;
     });

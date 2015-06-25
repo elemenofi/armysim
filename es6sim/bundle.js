@@ -3904,7 +3904,6 @@ var Operations = (function () {
   }, {
     key: 'update',
     value: function update(HQ) {
-      debugger;
       this.ongoing = this.ongoing.filter(function (operation) {
         return operation.done === null && operation.failed === null && !operation.lead.retired && !operation.target.retired;
       });
