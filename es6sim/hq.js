@@ -26,6 +26,7 @@ class HQ {
     
     this.officers.update(this);
     this.officers.retire();
+
     this.operations.update(this);
   }
 

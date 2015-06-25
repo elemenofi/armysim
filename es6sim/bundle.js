@@ -3555,6 +3555,7 @@ var HQ = (function () {
 
       this.officers.update(this);
       this.officers.retire();
+
       this.operations.update(this);
     }
   }, {
@@ -3846,34 +3847,53 @@ var Officers = (function () {
           break;
       }
 
-      return this.candidate(commander.unitId, commander.rank.alias, oldRank, HQ);
+      var spec = {
+        unitId: commander.unitId,
+        rank: commander.rank.alias,
+        rankToPromote: oldRank,
+        HQ: HQ
+      };
+
+      return this.candidate(spec);
     }
   }, {
     key: 'candidate',
-    value: function candidate(unitId, newRank, oldRank, HQ) {
+    value: function candidate(spec) {
       var candidates = [];
 
       this.active.map(function (officer) {
-        if (officer.rank.alias === oldRank) candidates.push(officer);
+        if (officer.rank.alias === spec.rankToPromote) {
+          candidates.push(officer);
+        }
       });
 
       var candidate = candidates.sort(comparisons.byExperience)[0];
 
-      HQ.deassign(candidate.unitId);
-
-      candidate.unitId = unitId;
-      candidate.rank = _config2['default'].ranks[newRank];
-
-      var promotion = {
-        rank: newRank,
-        date: HQ.realDate,
-        unit: HQ.unitName(candidate.unitId)
+      return this.promote(candidate, spec);
+    }
+  }, {
+    key: 'promotion',
+    value: function promotion(officer, spec) {
+      return {
+        rank: spec.rank,
+        date: spec.HQ.realDate,
+        unit: spec.HQ.unitName(officer.unitId)
       };
+    }
+  }, {
+    key: 'promote',
+    value: function promote(officer, spec) {
+      spec.HQ.deassign(officer.unitId);
 
-      candidate.history.push(_config2['default'].promoted(promotion));
-      candidate.drifts(this.active, HQ.units);
+      officer.unitId = spec.unitId;
+      officer.rank = _config2['default'].ranks[spec.rank];
 
-      return candidate;
+      var promotion = this.promotion(officer, spec);
+
+      officer.history.push(_config2['default'].promoted(promotion));
+      officer.drifts(this.active, spec.HQ.units);
+
+      return officer;
     }
   }, {
     key: 'update',

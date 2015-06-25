@@ -67,34 +67,53 @@ class Officers {
       break;
     }
 
-    return this.candidate(commander.unitId, commander.rank.alias, oldRank, HQ);
+    let spec = {
+      unitId: commander.unitId,
+      rank: commander.rank.alias,
+      rankToPromote: oldRank,
+      HQ: HQ
+    };
+
+    return this.candidate(spec);
   }
 
-  candidate (unitId, newRank, oldRank, HQ) {
+  candidate (spec) {
     let candidates = []; 
 
     this.active.map(officer => {
-      if (officer.rank.alias === oldRank) candidates.push(officer);
+      if (officer.rank.alias === spec.rankToPromote) {
+        candidates.push(officer);
+      }
     });
 
     let candidate = candidates.sort(comparisons.byExperience)[0];
 
-    HQ.deassign(candidate.unitId);
+    return this.promote(candidate, spec);
+  }
 
-    candidate.unitId = unitId;  
-    candidate.rank = config.ranks[newRank];
-
-    let promotion = {
-      rank: newRank, 
-      date: HQ.realDate,
-      unit: HQ.unitName(candidate.unitId) 
+  promotion (officer, spec) {
+    return {
+      rank: spec.rank,
+      date: spec.HQ.realDate,
+      unit: spec.HQ.unitName(officer.unitId)
     };
+  }
 
-    candidate.history.push(config.promoted(promotion));
-    candidate.drifts(this.active, HQ.units);
+  promote (officer, spec) {
+    spec.HQ.deassign(officer.unitId);
 
-    return candidate;
-  } 
+    officer.unitId = spec.unitId;  
+    officer.rank = config.ranks[spec.rank];
+
+    let promotion = this.promotion(officer, spec);
+
+    officer.history.push(config.promoted(promotion));
+    officer.drifts(this.active, spec.HQ.units);
+
+    return officer;
+  }
+
+  
 
   update (HQ) {
     this.active.forEach(officer => {
