@@ -15,7 +15,7 @@ class Operations {
 
 	update (HQ) {
 		this.ongoing = this.ongoing.filter(operation => {
-			return !operation.done && !operation.failed;
+			return !operation.done && !operation.failed && !operation.lead.retired && !operation.target.retired;
 		});
 		this.ongoing.map(operation => {
 			operation.execute(HQ);
@@ -52,7 +52,6 @@ class Operation {
 		this.strength++;
 		if (this.strength > 10) {
 			if (this.target[this.type.area] < this.lead[this.type.area]) {
-				this.target.retired = true;
 				this[this.type.action](HQ.realDate);
 				HQ.deassign(this.target.unitId);
 				this.done = true;

@@ -3713,10 +3713,7 @@ var Officer = (function () {
         if (this.militancy < 10) this.militancy++;
       }
       if (this.militancy === 10) {
-        // this returns the operation so it should
-        // be stored to use for the message;
         this.operations.push(HQ.operations.add(this, HQ));
-        this.history.push('Begun operation on ' + HQ.realDate);
         this.militancy = 0;
       }
     }
@@ -3902,7 +3899,7 @@ var Operations = (function () {
 		key: 'update',
 		value: function update(HQ) {
 			this.ongoing = this.ongoing.filter(function (operation) {
-				return !operation.done && !operation.failed;
+				return !operation.done && !operation.failed && !operation.lead.retired && !operation.target.retired;
 			});
 			this.ongoing.map(function (operation) {
 				operation.execute(HQ);
@@ -3947,7 +3944,6 @@ var Operation = (function () {
 			this.strength++;
 			if (this.strength > 10) {
 				if (this.target[this.type.area] < this.lead[this.type.area]) {
-					this.target.retired = true;
 					this[this.type.action](HQ.realDate);
 					HQ.deassign(this.target.unitId);
 					this.done = true;

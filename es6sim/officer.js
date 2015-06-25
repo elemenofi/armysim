@@ -83,10 +83,7 @@ class Officer {
       if (this.militancy < 10) this.militancy++;
     }
     if (this.militancy === 10) {
-      // this returns the operation so it should 
-      // be stored to use for the message;
       this.operations.push(HQ.operations.add(this, HQ));
-      this.history.push('Begun operation on ' + HQ.realDate);
       this.militancy = 0;
     }
   }
