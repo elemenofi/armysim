@@ -3795,9 +3795,6 @@ var Officers = (function () {
   _createClass(Officers, [{
     key: 'recruit',
     value: function recruit(rank, unitId, HQ) {
-      // let date = ;
-      // let unitName = ;
-
       var options = {
         id: this.__officersID,
         date: HQ.realDate,
@@ -3814,6 +3811,7 @@ var Officers = (function () {
   }, {
     key: 'retire',
     value: function retire() {
+      // this.active = this.active.filter(officer => {
       this.active = this.active.filter(function (officer) {
         return !officer.retired;
       });
