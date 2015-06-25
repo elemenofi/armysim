@@ -15,7 +15,12 @@ class Operations {
 
   update (HQ) {
     this.ongoing = this.ongoing.filter(operation => {
-      return operation.done === null && operation.failed === null && !operation.lead.retired && !operation.target.retired;
+    	if (
+    		!operation.done && !operation.failed &&
+    		!operation.lead.retired && !operation.target.retired
+    	) {
+      	return true;
+    	}
     });
     
     this.ongoing.map(operation => {
@@ -48,7 +53,14 @@ class Operation {
 
   pick (officer, HQ) {
     this.targets = HQ.officers.active.filter(officer => {
-      return officer.alignment > 500 && this.side === 'left' ||  officer.alignment < 500 && this.side === 'right'; 
+	    if (officer.militancy > 5)	{
+	    	if (
+	    		officer.alignment > 500 && this.side === 'left' ||
+	    		officer.alignment < 500 && this.side === 'right'
+	    	) {
+	      	return true; 
+	    	}
+	    }
     }) || [];
 
     return this.targets[Math.ceil(Math.random() * this.targets.length)];
