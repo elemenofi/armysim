@@ -22,7 +22,7 @@ class World {
   }
 
   mapUnitsAndRegions (HQ) {
-    let unitsPerRegion = Math.ceil((HQ.units.length) / this.regions.length) + 1;
+    let unitsPerRegion = Math.ceil(HQ.units.length / this.regions.length) + 1;
     let unitIndex = 0;
 
     this.regions.map(region => {
