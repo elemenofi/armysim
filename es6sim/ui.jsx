@@ -2,6 +2,11 @@
 import React from './react';
 
 class Ui {
+  constructor (spec) {
+    this.engine = spec;
+    this.engine.pause();
+  }
+
   render (army) {
     React.render(
       <Army officers={army.HQ.officers} army={army} />, 

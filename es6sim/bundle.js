@@ -3427,27 +3427,15 @@ THE SOFTWARE.
 })();
 
 },{}],10:[function(require,module,exports){
-'use strict';
-Object.defineProperty(exports, '__esModule', {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
-var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
 
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
-
-var _army = require('./army');
-
-var _army2 = _interopRequireDefault(_army);
-
-var _uiJsx = require('./ui.jsx');
-
-var _uiJsx2 = _interopRequireDefault(_uiJsx);
-
-var army = new _army2['default']();
-var ui = new _uiJsx2['default']();
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var Engine = (function () {
   function Engine() {
@@ -3457,31 +3445,38 @@ var Engine = (function () {
   }
 
   _createClass(Engine, [{
-    key: 'start',
-    value: function start() {
-      setInterval(this.update, 1000);
+    key: "start",
+    value: function start(army) {
+      this.army = army;
+      this.update();
     }
   }, {
-    key: 'turn',
-    value: function turn() {
-      return this.turn;
+    key: "pause",
+    value: function pause() {
+      console.log("pause");
     }
   }, {
-    key: 'update',
+    key: "update",
     value: function update() {
+      var _this = this;
+
       this.turn++;
-      army.HQ.update();
-      ui.render(army);
+      this.army.HQ.update();
+      this.ui.render(this.army);
+
+      setTimeout(function () {
+        _this.update();
+      }, 1000);
     }
   }]);
 
   return Engine;
 })();
 
-exports['default'] = Engine;
-module.exports = exports['default'];
+exports["default"] = Engine;
+module.exports = exports["default"];
 
-},{"./army":5,"./ui.jsx":19}],11:[function(require,module,exports){
+},{}],11:[function(require,module,exports){
 'use strict';
 Object.defineProperty(exports, '__esModule', {
   value: true
@@ -3942,7 +3937,7 @@ var Operation = (function () {
 		key: 'execute',
 		value: function execute(HQ) {
 			this.strength++;
-			if (this.strength > 10) {
+			if (this.strength > 5) {
 				if (this.target[this.type.area] < this.lead[this.type.area]) {
 					this[this.type.action](HQ.realDate);
 					HQ.deassign(this.target.unitId);
@@ -4095,8 +4090,11 @@ var _react = require("./react");
 var _react2 = _interopRequireDefault(_react);
 
 var Ui = (function () {
-  function Ui() {
+  function Ui(spec) {
     _classCallCheck(this, Ui);
+
+    this.engine = spec;
+    this.engine.pause();
   }
 
   _createClass(Ui, [{
@@ -4346,8 +4344,18 @@ var _engine = require('./engine');
 
 var _engine2 = _interopRequireDefault(_engine);
 
+var _uiJsx = require('./ui.jsx');
+
+var _uiJsx2 = _interopRequireDefault(_uiJsx);
+
+var _army = require('./army');
+
+var _army2 = _interopRequireDefault(_army);
+
 var engine = new _engine2['default']();
+var army = new _army2['default']();
+engine.ui = new _uiJsx2['default'](engine);
 
-engine.start();
+engine.start(army);
 
-},{"./engine":10}]},{},[22]);
+},{"./army":5,"./engine":10,"./ui.jsx":19}]},{},[22]);

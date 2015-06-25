@@ -1,27 +1,27 @@
 'use strict';
-import Army from './army';
-import Ui from './ui.jsx';
-
-let army = new Army();
-let ui = new Ui();
 
 class Engine {
   constructor() {
     this.turn = 0;
   }
 
-  start() {
-    setInterval(this.update, 1000);
+  start (army) {
+    this.army = army;
+    this.update();
   }
 
-  turn () {
-    return this.turn;
+  pause () {
+    console.log("pause");
   }
 
   update() {
     this.turn++;
-    army.HQ.update();
-    ui.render(army);
+    this.army.HQ.update();
+    this.ui.render(this.army);
+    
+    setTimeout(() => {
+      this.update();
+    }, 1000);
   }
 }
 
