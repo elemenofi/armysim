@@ -4236,7 +4236,8 @@ var Commander = (function (_React$Component2) {
 
       return _react2["default"].createElement(
         "div",
-        { onMouseOver: this.mouseOver.bind(this), onMouseOut: this.mouseOut.bind(this) },
+        { onMouseOver: this.mouseOver.bind(this),
+          onMouseOut: this.mouseOut.bind(this) },
         _react2["default"].createElement(
           "p",
           null,
