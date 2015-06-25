@@ -57,7 +57,6 @@ class Operation {
   execute (HQ) {
     this.strength++;
     if (this.strength>5)  {
-      debugger;
       if (this.target[this.type.area] < this.lead[this.type.area]) {
         this[this.type.action](HQ.realDate);
         HQ.deassign(this.target.unitId);
