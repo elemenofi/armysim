@@ -3795,21 +3795,20 @@ var Officers = (function () {
   _createClass(Officers, [{
     key: 'recruit',
     value: function recruit(rank, unitId, HQ) {
-      var date = HQ.realDate;
-      var unitName = HQ.unitName(unitId);
+      // let date = ;
+      // let unitName = ;
 
       var options = {
         id: this.__officersID,
-        date: date,
+        date: HQ.realDate,
         unitId: unitId,
-        unitName: unitName,
+        unitName: HQ.unitName(unitId),
         rank: rank
       };
 
-      this.__officersID++;
-
       var recruit = new _officer2['default'](options);
       this.active.push(recruit);
+      this.__officersID++;
       return recruit;
     }
   }, {

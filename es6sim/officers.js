@@ -15,21 +15,17 @@ class Officers {
   }
 
   recruit (rank, unitId, HQ) {
-    let date = HQ.realDate;
-    let unitName = HQ.unitName(unitId);
-
     let options = {
       id: this.__officersID,
-      date: date,
+      date: HQ.realDate,
       unitId: unitId,
-      unitName: unitName,  
+      unitName: HQ.unitName(unitId),  
       rank: rank 
     };
 
-    this.__officersID++;
-
     let recruit = new Officer(options);
     this.active.push(recruit);
+    this.__officersID++;
     return recruit;
   }
 
