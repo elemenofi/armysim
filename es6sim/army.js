@@ -1,4 +1,4 @@
-/* jshint ignore:start */
+'use strict';
 import config from './config';
 import names from './names';
 import World from './world';
@@ -133,7 +133,7 @@ class Army {
 
           this.generate("squad", quantity - 1, parent);
         break;
-      };
+      }
 
       this.HQ.add(unit);
     }

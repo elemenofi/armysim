@@ -35,7 +35,6 @@ class Officers {
   }
 
   retire () {
-    // this.active = this.active.filter(officer => {
     this.active = this.active.filter(officer => {
       return !officer.retired;
     });

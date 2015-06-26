@@ -8,7 +8,7 @@ class Ui {
 
   render (army) {
     React.render(
-      <Army officers={army.HQ.officers} army={army} engine={this.engine}/>, 
+      <Army officers={army.HQ.officers} army={army} engine={this.engine}/>,
       document.body
     );
   }
@@ -17,9 +17,9 @@ class Ui {
 class Army extends React.Component {
   constructor(props) {
     super(props);
-    
+
     this.state = {
-      officers: props.officers, 
+      officers: props.officers,
       army: props.army, engine: props.engine
     };
   }
@@ -31,7 +31,7 @@ class Army extends React.Component {
   render () {
     let army = this.props.army;
     let corps = [];
-        
+
     army.units.corps.forEach(corp => {
       corps.push(
         <div key={corp.id}>
@@ -45,7 +45,7 @@ class Army extends React.Component {
         <div onClick={this.pause.bind(this)}>Pause</div>
         <div>{corps}</div>
       </div>
-    ); 
+    );
   }
 }
 
@@ -65,15 +65,15 @@ class Commander extends React.Component {
 
   render () {
     let history = [];
-  
+
     if (this.state.hover && this.props.officer.history) {
       this.props.officer.history.forEach(log => {
         history.push(<p>{log}</p>);
       });
     }
-  
+
     return (
-      <div onMouseOver={this.mouseOver.bind(this)} 
+      <div onMouseOver={this.mouseOver.bind(this)}
         onMouseOut={this.mouseOut.bind(this)}>
         <p>{this.props.officer.name()} {this.props.officer.alignment}</p>
         <div className="history">{history}</div>
@@ -86,11 +86,11 @@ class Unit extends React.Component {
   render () {
     let unit = this.props.unit;
     let subunits = [];
-    
+
     if (unit.subunits) {
       unit.subunits.forEach(subunit => {
         subunits.push(
-          <div key={subunit.id}>  
+          <div key={subunit.id}>
             <Unit unit={subunit}/>
           </div>
         );

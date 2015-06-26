@@ -4,4 +4,3 @@ import Army from './army';
 
 var army = new Army();
 var engine = new Engine(army);
-

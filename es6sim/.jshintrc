@@ -1,4 +1,5 @@
 {
   "esnext": true,
-  "globalstrict": true
+  "globalstrict": true,
+  "browser": true
 }
