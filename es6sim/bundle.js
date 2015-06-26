@@ -4125,7 +4125,6 @@ var Officer = (function () {
   }, {
     key: 'graduate',
     value: function graduate(spec) {
-      debugger;
       var graduation = {
         unit: spec.unitName,
         date: spec.date
