@@ -27,21 +27,16 @@ class HQ {
     this.units.push(unit);
   }
 
-  deassign (unitId) {
-    this.units.some((unit) => {
-      if (unit.id === unitId) {
-        this.replace(unit);
-        return true;
-      }
-    });
-  }
-
   retire (unit) {
     if (unit.commander.retired) this.replace(unit);
   }
 
   replace (unit) {
     unit.commander = this.officers.replace.call(this, unit.commander);
+  }
+
+  deassign (unitId) {
+    this.replace(this.units.filter(unit => { return unit.id === unitId; })[0]);
   }
 
   unitName (unitId) {

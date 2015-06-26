@@ -3999,18 +3999,6 @@ var HQ = (function () {
       this.units.push(unit);
     }
   }, {
-    key: 'deassign',
-    value: function deassign(unitId) {
-      var _this = this;
-
-      this.units.some(function (unit) {
-        if (unit.id === unitId) {
-          _this.replace(unit);
-          return true;
-        }
-      });
-    }
-  }, {
     key: 'retire',
     value: function retire(unit) {
       if (unit.commander.retired) this.replace(unit);
@@ -4019,6 +4007,13 @@ var HQ = (function () {
     key: 'replace',
     value: function replace(unit) {
       unit.commander = this.officers.replace.call(this, unit.commander);
+    }
+  }, {
+    key: 'deassign',
+    value: function deassign(unitId) {
+      this.replace(this.units.filter(function (unit) {
+        return unit.id === unitId;
+      })[0]);
     }
   }, {
     key: 'unitName',
