@@ -31,17 +31,21 @@ class Officer {
     this.lname = chance.last();
     this.fname = chance.first({gender: 'male'});
     
+    this.history = [];
+  }
+
+  name () {
+    return this.rank.title + ' ' + this.fname + ' ' + this.lname;
+  }
+
+  graduate (spec) {
+    debugger;
     let graduation = {
       unit: spec.unitName,
       date: spec.date
     };
 
-    this.history = [];
     this.history.push(config.graduated(graduation, this));
-  }
-
-  name () {
-    return this.rank.title + ' ' + this.fname + ' ' + this.lname;
   } 
 
   update (HQ) {

@@ -1,8 +1,8 @@
 'use strict';
 import config from './config';
 import Officer from './officer';
-import Comparisons from './comparisons';
 import Secretary from './secretary';
+import Comparisons from './comparisons';
 
 let comparisons = new Comparisons();
 
@@ -22,7 +22,6 @@ class Officers {
   recruit (rank, unitId) {
     let options = {
       date: this.realDate,
-      unitName: this.unitName(unitId),
       id: this.officers.__officersID,
       unitId: unitId,
       rank: rank

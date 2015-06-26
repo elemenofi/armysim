@@ -4013,9 +4013,7 @@ var HQ = (function () {
   }, {
     key: 'retire',
     value: function retire(unit) {
-      if (unit.commander.retired) {
-        this.replace(unit);
-      }
+      if (unit.commander.retired) this.replace(unit);
     }
   }, {
     key: 'replace',
@@ -4027,7 +4025,7 @@ var HQ = (function () {
     value: function unitName(unitId) {
       return this.units.filter(function (unit) {
         return unit.id === unitId;
-      })[0];
+      })[0].name;
     }
   }]);
 
@@ -4116,19 +4114,24 @@ var Officer = (function () {
     this.lname = chance.last();
     this.fname = chance.first({ gender: 'male' });
 
-    var graduation = {
-      unit: spec.unitName,
-      date: spec.date
-    };
-
     this.history = [];
-    this.history.push(_config2['default'].graduated(graduation, this));
   }
 
   _createClass(Officer, [{
     key: 'name',
     value: function name() {
       return this.rank.title + ' ' + this.fname + ' ' + this.lname;
+    }
+  }, {
+    key: 'graduate',
+    value: function graduate(spec) {
+      debugger;
+      var graduation = {
+        unit: spec.unitName,
+        date: spec.date
+      };
+
+      this.history.push(_config2['default'].graduated(graduation, this));
     }
   }, {
     key: 'update',
@@ -4210,13 +4213,13 @@ var _officer = require('./officer');
 
 var _officer2 = _interopRequireDefault(_officer);
 
-var _comparisons = require('./comparisons');
-
-var _comparisons2 = _interopRequireDefault(_comparisons);
-
 var _secretary = require('./secretary');
 
 var _secretary2 = _interopRequireDefault(_secretary);
+
+var _comparisons = require('./comparisons');
+
+var _comparisons2 = _interopRequireDefault(_comparisons);
 
 var comparisons = new _comparisons2['default']();
 
@@ -4241,7 +4244,6 @@ var Officers = (function () {
     value: function recruit(rank, unitId) {
       var options = {
         date: this.realDate,
-        unitName: this.unitName(unitId),
         id: this.officers.__officersID,
         unitId: unitId,
         rank: rank
@@ -4812,6 +4814,7 @@ var Unit = function Unit(spec, HQ) {
   this.name = _names2['default'][spec.type][0];_names2['default'][spec.type].shift();
   this.subunits = [];
   this.commander = HQ.officers.recruit.call(HQ, spec.rank, this.id);
+  this.commander.graduate({ date: HQ.realDate, unitName: this.name });
 };
 
 exports['default'] = Unit;

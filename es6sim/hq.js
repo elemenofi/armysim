@@ -37,9 +37,7 @@ class HQ {
   }
 
   retire (unit) {
-    if (unit.commander.retired) {
-      this.replace(unit);
-    }
+    if (unit.commander.retired) this.replace(unit);
   }
 
   replace (unit) {
@@ -47,7 +45,7 @@ class HQ {
   }
 
   unitName (unitId) {
-    return this.units.filter(unit => { return unit.id === unitId; })[0];
+    return this.units.filter(unit => { return unit.id === unitId; })[0].name;
   }
 }
 
