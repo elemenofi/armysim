@@ -39,7 +39,6 @@ class Officer {
   }
 
   graduate (spec) {
-    debugger;
     let graduation = {
       unit: spec.unitName,
       date: spec.date
