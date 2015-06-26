@@ -43,18 +43,11 @@ class HQ {
   }
 
   replace (unit) {
-    unit.commander = this.officers.replace(unit.commander, this);
+    unit.commander = this.officers.replace.call(this, unit.commander);
   }
 
   unitName (unitId) {
-    let name = '';
-    this.units.some((unit) => {
-      if (unit.id === unitId) {
-        name = unit.name;
-        return true;
-      }
-    });
-    return name;
+    return this.units.filter(unit => { return unit.id === unitId; })[0];
   }
 }
 

@@ -1,9 +1,8 @@
 'use strict';
-import config from './config';
-import names from './names';
-import World from './world';
 import HQ from './hq';
 import Unit from './unit';
+import World from './world';
+import config from './config';
 import Officers from './officers';
 
 class Army {
@@ -11,13 +10,13 @@ class Army {
     this.HQ = new HQ();
     this.HQ.officers = new Officers(this.HQ);
 
-    this._unitId = 2;
+    this._unitsId = 2;
     this.units = {
       corps: []
     };
 
     this.id = 1;
-    this.generate("corp", config.unitDepth);
+    this.generate('corp', config.unitDepth);
 
     this.HQ.world = new World(this.HQ);
   }
@@ -26,112 +25,85 @@ class Army {
     if (quantity === 0) {
       return;
     } else {
-      let unit = new Unit();
+      let spec = {
+        id: this._unitsId,
+        type: type
+      };
 
-      unit.id = this._unitId;
-      this._unitId++;
-
-      unit.type = type;
-
-      if (parent) {
-        unit.parentId = parent.id;
-      } else {
-        unit.parentId = 1;
-      }
+      let unit = {}; 
+      this._unitsId++;
+      spec.parentId = parent ? parent.id : 1;
 
       switch (type) {
-        case "corp":
-          unit.name = names.corps[0];
-          names.corps.shift();
-          unit.subunits = [];
-          unit.commander = this.HQ.officers.recruit('lgeneral', unit.id, this.HQ);
-
+        case 'corp':
+          spec.rank = 'lgeneral';
+          let unit = new Unit(spec, this.HQ);
           this.units.corps.push(unit);
 
-          this.generate("division", config.unitDepth, unit);
-          this.generate("corp", quantity - 1, parent);
+          this.generate('division', config.unitDepth, unit);
+          this.generate('corp', quantity - 1, parent);
         break;
 
-        case "division":
-          unit.name = names.divisions[0];
-          names.divisions.shift();
-          unit.subunits = [];
-          unit.commander = this.HQ.officers.recruit('dgeneral', unit.id, this.HQ);
-
+        case 'division':
+          spec.rank = 'dgeneral';
+          unit = new Unit(spec, this.HQ);
           parent.subunits.push(unit);
 
-          this.generate("brigade", config.unitDepth, unit);
-          this.generate("division", quantity - 1, parent);
+          this.generate('brigade', config.unitDepth, unit);
+          this.generate('division', quantity - 1, parent);
         break;
 
-        case "brigade":
-          unit.name = names.brigades[0];
-          names.brigades.shift();
-          unit.subunits = [];
-          unit.commander = this.HQ.officers.recruit('bgeneral', unit.id, this.HQ);
-
+        case 'brigade':
+          spec.rank = 'bgeneral';
+          unit = new Unit(spec, this.HQ);
           parent.subunits.push(unit);
 
-          this.generate("regiment", config.unitDepth, unit);
-          this.generate("brigade", quantity - 1, parent);
+          this.generate('regiment', config.unitDepth, unit);
+          this.generate('brigade', quantity - 1, parent);
         break;
 
-        case "regiment":
-          unit.name = names.regiments[0];
-          names.regiments.shift();
-          unit.subunits = [];
-          unit.commander = this.HQ.officers.recruit('coronel', unit.id, this.HQ);
-
+        case 'regiment':
+          spec.rank = 'coronel';
+          unit = new Unit(spec, this.HQ);
           parent.subunits.push(unit);
 
-          this.generate("battalion", config.unitDepth, unit);
-          this.generate("regiment", quantity - 1, parent);
+          this.generate('battalion', config.unitDepth, unit);
+          this.generate('regiment', quantity - 1, parent);
         break;
 
-        case "battalion":
-          unit.name = names.battalions[0];
-          names.battalions.shift();
-          unit.subunits = [];
-          unit.commander = this.HQ.officers.recruit('lcoronel', unit.id, this.HQ);
-
+        case 'battalion':
+          spec.rank = 'lcoronel';
+          unit = new Unit(spec, this.HQ);
           parent.subunits.push(unit);
 
-          this.generate("company", config.unitDepth, unit);
-          this.generate("battalion", quantity - 1, parent);
+          this.generate('company', config.unitDepth, unit);
+          this.generate('battalion', quantity - 1, parent);
         break;
 
-        case "company":
-          unit.name = names.companies[0];
-          names.companies.shift();
-          unit.subunits = [];
-          unit.commander = this.HQ.officers.recruit('major', unit.id, this.HQ);
-
+        case 'company':
+          spec.rank = 'major';
+          unit = new Unit(spec, this.HQ);
           parent.subunits.push(unit);
 
-          this.generate("platoon", config.unitDepth, unit);
-          this.generate("company", quantity - 1, parent);
+          this.generate('platoon', config.unitDepth, unit);
+          this.generate('company', quantity - 1, parent);
         break;
 
-        case "platoon":
-          unit.name = names.platoons[0];
-          names.platoons.shift();
-          unit.subunits = [];
-          unit.commander = this.HQ.officers.recruit('captain', unit.id, this.HQ);
-
+        case 'platoon':
+          spec.rank = 'captain';
+          unit = new Unit(spec, this.HQ);
           parent.subunits.push(unit);
 
-          this.generate("squad", config.unitDepth, unit);
-          this.generate("platoon", quantity - 1, parent);
+          this.generate('squad', config.unitDepth, unit);
+          this.generate('platoon', quantity - 1, parent);
         break;
 
-        case "squad":
-          unit.name = names.squads[0];
-          names.squads.shift();
-          unit.commander = this.HQ.officers.recruit('lieutenant', unit.id, this.HQ);
-
+        case 'squad':
+          spec.rank = 'lieutenant';
+          unit = new Unit(spec, this.HQ);
           parent.subunits.push(unit);
 
-          this.generate("squad", quantity - 1, parent);
+          this.generate('squad', quantity - 1, parent);
         break;
       }
 

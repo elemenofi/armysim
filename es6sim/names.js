@@ -2,23 +2,23 @@
 
 let names = {};
 
-names.corps = [
+names.corp = [
   '1st Corp', '2nd Corp'
 ];
 
-names.divisions = [
+names.division = [
     '1st Division', '2nd Division',
     '3rd Division', '4th Division'
 ];
 
-names.brigades = [
+names.brigade = [
     '1st Brigade', '2nd Brigade',
     '3rd Brigade', '4th Brigade',
     '5th Brigade', '6th Brigade',
     '7th Brigade', '8th Brigade'
 ];
 
-names.regiments = [
+names.regiment = [
     '1st Regiment', '2nd Regiment', '3rd Regiment',
     '4th Regiment', '5th Regiment', '6th Regiment',
     '7th Regiment', '8th Regiment', '9th Regiment',
@@ -27,7 +27,7 @@ names.regiments = [
     '16th Regiment'
 ];
 
-names.companies = [
+names.company = [
     '1st A Company', '2nd A Company', '3rd A Company',
     '4th A Company', '5th A Company', '6th A Company',
     '7th A Company', '8th A Company', '9th A Company',
@@ -54,7 +54,7 @@ names.companies = [
     '32th B Company'
 ];
 
-names.battalions = [
+names.battalion = [
   '1st Battalion', '2nd Battalion', '3rd Battalion',
   '4th Battalion', '5th Battalion', '6th Battalion',
   '7th Battalion', '8th Battalion', '9th Battalion',
@@ -81,7 +81,7 @@ names.battalions = [
   '64th Battalion'
 ];
 
-names.platoons = [
+names.platoon = [
   '1st Platoon', '2nd Platoon', '3rd Platoon',
   '4th Platoon', '5th Platoon', '6th Platoon',
   '7th Platoon', '8th Platoon', '9th Platoon',
@@ -131,7 +131,7 @@ names.platoons = [
   '129th Platoon'
 ];
 
-names.squads = [
+names.squad = [
   '1st A Squad', '2nd A Squad', '3rd A Squad',
   '4th A Squad', '5th A Squad', '6th A Squad',
   '7th A Squad', '8th A Squad', '9th A Squad',
@@ -227,7 +227,5 @@ names.squads = [
   '126th B Squad', '127th B Squad', '128th B Squad',
   '129th B Squad'
 ];
-
-
 
 export default names;

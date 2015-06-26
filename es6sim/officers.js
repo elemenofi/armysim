@@ -1,6 +1,5 @@
 'use strict';
 import config from './config';
-import HQ from './hq';
 import Officer from './officer';
 import Comparisons from './comparisons';
 import Secretary from './secretary';
@@ -8,7 +7,7 @@ import Secretary from './secretary';
 let comparisons = new Comparisons();
 
 class Officers {
-  constructor (HQ) {
+  constructor () {
     this.active = [];
     this.__officersID = 1;
     this.secretary = new Secretary();
@@ -20,19 +19,19 @@ class Officers {
     });
   }
 
-  recruit (rank, unitId, HQ) {
+  recruit (rank, unitId) {
     let options = {
-      date: HQ.realDate,
-      unitName: HQ.unitName(unitId),
-      id: this.__officersID,
+      date: this.realDate,
+      unitName: this.unitName(unitId),
+      id: this.officers.__officersID,
       unitId: unitId,
       rank: rank
     };
 
-    let recruit = new Officer(options);
-    this.active.push(recruit);
-    this.__officersID++;
-    return recruit;
+    let cadet = new Officer(options);
+    this.officers.active.push(cadet);
+    this.officers.__officersID++;
+    return cadet;
   }
 
   retire () {
@@ -41,20 +40,20 @@ class Officers {
     });
   }
 
-  replace (commander, HQ) {
-    let lowerRank = this.secretary.rankLower(commander.rank);
+  replace (commander) {
+    let lowerRank = this.officers.secretary.rankLower(commander.rank);
 
     let spec = {
       unitId: commander.unitId,
       rank: commander.rank.alias,
       rankToPromote: lowerRank,
-      HQ: HQ
+      HQ: this
     };
 
     if (!lowerRank) {
-      return this.recruit('lieutenant', commander.unitId, HQ);
+      return this.officers.recruit.call(this, spec.rank, commander.unitId);
     } else {
-      return this.candidate(spec);
+      return this.officers.candidate(spec);
     }
   }
 
@@ -72,18 +71,7 @@ class Officers {
     return this.promote(candidate, spec);
   }
 
-  promotion (officer, spec) {
-    officer.unitId = spec.unitId;
-    officer.rank = config.ranks[spec.rank];
-
-    return {
-      rank: spec.rank,
-      date: spec.HQ.realDate,
-      unit: spec.HQ.unitName(officer.unitId)
-    };
-  }
-
-  promote (officer, spec) {
+   promote (officer, spec) {
     spec.HQ.deassign(officer.unitId);
 
     let promotion = this.promotion(officer, spec);
@@ -94,6 +82,16 @@ class Officers {
     return officer;
   }
 
+  promotion (officer, spec) {
+    officer.unitId = spec.unitId;
+    officer.rank = config.ranks[spec.rank];
+
+    return {
+      rank: spec.rank,
+      date: spec.HQ.realDate,
+      unit: spec.HQ.unitName(officer.unitId)
+    };
+  }
 }
 
 export default Officers;
