@@ -14,26 +14,19 @@ class HQ {
     this.rawDate = this.rawDate.addDays(config.random(150));
     this.realDate = config.formatDate(this.rawDate);
   }
-  
+
   update () {
     this.updateDate();
-
-    this.units.map((unit) => {
-      if (unit.commander.retired) {
-        this.replace(unit);
-      }
-    });
-    
+    this.units.map(this.retire.bind(this));
+    this.operations.update(this);
     this.officers.update(this);
     this.officers.retire();
-
-    this.operations.update(this);
   }
 
   add (unit) {
     this.units.push(unit);
   }
-  
+
   deassign (unitId) {
     this.units.some((unit) => {
       if (unit.id === unitId) {
@@ -41,6 +34,12 @@ class HQ {
         return true;
       }
     });
+  }
+
+  retire (unit) {
+    if (unit.commander.retired) {
+      this.replace(unit);
+    }
   }
 
   replace (unit) {
@@ -51,10 +50,10 @@ class HQ {
     let name = '';
     this.units.some((unit) => {
       if (unit.id === unitId) {
-        name = unit.name; 
+        name = unit.name;
         return true;
       }
-    }); 
+    });
     return name;
   }
 }

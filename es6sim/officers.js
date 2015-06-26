@@ -1,5 +1,6 @@
 'use strict';
 import config from './config';
+import HQ from './hq';
 import Officer from './officer';
 import Comparisons from './comparisons';
 import Secretary from './secretary';
@@ -7,7 +8,7 @@ import Secretary from './secretary';
 let comparisons = new Comparisons();
 
 class Officers {
-  constructor () {
+  constructor (HQ) {
     this.active = [];
     this.__officersID = 1;
     this.secretary = new Secretary();

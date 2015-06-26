@@ -1662,9 +1662,7 @@ module.exports = isArray || function (val) {
 };
 
 },{}],5:[function(require,module,exports){
-/* jshint ignore:start */
 'use strict';
-
 Object.defineProperty(exports, '__esModule', {
   value: true
 });
@@ -1830,7 +1828,7 @@ var Army = (function () {
 
             this.generate('squad', quantity - 1, parent);
             break;
-        };
+        }
 
         this.HQ.add(unit);
       }
@@ -3543,20 +3541,11 @@ var HQ = (function () {
   }, {
     key: 'update',
     value: function update() {
-      var _this = this;
-
       this.updateDate();
-
-      this.units.map(function (unit) {
-        if (unit.commander.retired) {
-          _this.replace(unit);
-        }
-      });
-
+      this.units.map(this.retire.bind(this));
+      this.operations.update(this);
       this.officers.update(this);
       this.officers.retire();
-
-      this.operations.update(this);
     }
   }, {
     key: 'add',
@@ -3566,14 +3555,21 @@ var HQ = (function () {
   }, {
     key: 'deassign',
     value: function deassign(unitId) {
-      var _this2 = this;
+      var _this = this;
 
       this.units.some(function (unit) {
         if (unit.id === unitId) {
-          _this2.replace(unit);
+          _this.replace(unit);
           return true;
         }
       });
+    }
+  }, {
+    key: 'retire',
+    value: function retire(unit) {
+      if (unit.commander.retired) {
+        this.replace(unit);
+      }
     }
   }, {
     key: 'replace',
@@ -3769,6 +3765,10 @@ var _config = require('./config');
 
 var _config2 = _interopRequireDefault(_config);
 
+var _hq = require('./hq');
+
+var _hq2 = _interopRequireDefault(_hq);
+
 var _officer = require('./officer');
 
 var _officer2 = _interopRequireDefault(_officer);
@@ -3784,7 +3784,7 @@ var _secretary2 = _interopRequireDefault(_secretary);
 var comparisons = new _comparisons2['default']();
 
 var Officers = (function () {
-  function Officers() {
+  function Officers(HQ) {
     _classCallCheck(this, Officers);
 
     this.active = [];
@@ -3793,13 +3793,20 @@ var Officers = (function () {
   }
 
   _createClass(Officers, [{
+    key: 'update',
+    value: function update(HQ) {
+      this.active.forEach(function (officer) {
+        officer.update(HQ);
+      });
+    }
+  }, {
     key: 'recruit',
     value: function recruit(rank, unitId, HQ) {
       var options = {
-        id: this.__officersID,
         date: HQ.realDate,
-        unitId: unitId,
         unitName: HQ.unitName(unitId),
+        id: this.__officersID,
+        unitId: unitId,
         rank: rank
       };
 
@@ -3811,7 +3818,6 @@ var Officers = (function () {
   }, {
     key: 'retire',
     value: function retire() {
-      // this.active = this.active.filter(officer => {
       this.active = this.active.filter(function (officer) {
         return !officer.retired;
       });
@@ -3873,13 +3879,6 @@ var Officers = (function () {
 
       return officer;
     }
-  }, {
-    key: 'update',
-    value: function update(HQ) {
-      this.active.forEach(function (officer) {
-        officer.update(HQ);
-      });
-    }
   }]);
 
   return Officers;
@@ -3888,7 +3887,7 @@ var Officers = (function () {
 exports['default'] = Officers;
 module.exports = exports['default'];
 
-},{"./comparisons":7,"./config":8,"./officer":14,"./secretary":19}],16:[function(require,module,exports){
+},{"./comparisons":7,"./config":8,"./hq":12,"./officer":14,"./secretary":19}],16:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
