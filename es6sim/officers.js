@@ -6,12 +6,17 @@ import Secretary from './secretary';
 
 let comparisons = new Comparisons();
 
-
 class Officers {
   constructor () {
     this.active = [];
     this.__officersID = 1;
     this.secretary = new Secretary();
+  }
+
+  update (HQ) {
+    this.active.forEach(officer => {
+      officer.update(HQ);
+    });
   }
 
   recruit (rank, unitId, HQ) {
@@ -89,11 +94,6 @@ class Officers {
     return officer;
   }
 
-  update (HQ) {
-    this.active.forEach(officer => {
-      officer.update(HQ);
-    });
-  }
 }
 
 export default Officers;

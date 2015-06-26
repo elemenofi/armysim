@@ -7,7 +7,7 @@ import Unit from './unit';
 import Officers from './officers';
 
 class Army {
-  constructor () {    
+  constructor () {
     this.HQ = new HQ();
     this.HQ.officers = new Officers(this.HQ);
 
