@@ -4791,6 +4791,7 @@ var Unit = function Unit(spec, HQ) {
   this.type = spec.type;
   this.name = _names2['default'][spec.type][0];_names2['default'][spec.type].shift();
   this.subunits = [];
+
   this.commander = HQ.officers.recruit.call(HQ, spec.rank, this.id);
   this.commander.graduate({ date: HQ.realDate, unitName: this.name });
 };
