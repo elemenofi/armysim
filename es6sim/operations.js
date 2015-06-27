@@ -2,13 +2,13 @@
 
 class Operations {
   constructor () {
-    this.__operationID = 1;
+    this.__operationsID = 1;
     this.ongoing = [];
   }
 
   add (officer, HQ) {
     let operation = new Operation(officer, HQ);
-    operation.id = this.__operationID;
+    operation.id = this.__operationsID;
     this.ongoing.push(operation);
     return operation.id;
   }
@@ -23,9 +23,7 @@ class Operations {
       }
     });
 
-    this.ongoing.map(operation => {
-      operation.execute(HQ);
-    });
+    this.ongoing.forEach(operation => { operation.execute(HQ); });
   }
 }
 
