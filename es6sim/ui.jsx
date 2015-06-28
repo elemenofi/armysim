@@ -65,6 +65,7 @@ class Commander extends React.Component {
 
   render () {
     let history = [];
+    let title = (this.props.officer.isPlayer) ? <div><strong>{this.props.officer.name()}</strong></div> : <div>{this.props.officer.name()}</div>;
 
     if (this.state.hover && this.props.officer.history) {
       this.props.officer.history.forEach(log => {
@@ -75,7 +76,7 @@ class Commander extends React.Component {
     return (
       <div onMouseOver={this.mouseOver.bind(this)}
         onMouseOut={this.mouseOut.bind(this)}>
-        <p>{this.props.officer.name()} {this.props.officer.alignment}</p>
+        {title}
         <div className="history">{history}</div>
       </div>
     );

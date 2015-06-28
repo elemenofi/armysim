@@ -23,6 +23,12 @@ class HQ {
     this.officers.retire();
   }
 
+  player () {
+    let unit = this.units.filter(unit => { return unit.id === 414; })[0];
+    unit.commander = this.officers.replaceForPlayer.call(this, unit.commander);
+    debugger;
+  }
+
   add (unit) {
     this.units.push(unit);
   }

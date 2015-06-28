@@ -3,6 +3,7 @@ import config from './config';
 import Officer from './officer';
 import Secretary from './secretary';
 import Comparisons from './comparisons';
+import Player from './player';
 
 let comparisons = new Comparisons();
 
@@ -19,7 +20,7 @@ class Officers {
     });
   }
 
-  recruit (rank, unitId) {
+  recruit (rank, unitId, isPlayer) {
     let options = {
       date: this.realDate,
       id: this.officers.__officersID,
@@ -27,7 +28,8 @@ class Officers {
       rank: rank
     };
 
-    let cadet = new Officer(options);
+
+    let cadet = (isPlayer) ? new Player(options) : new Officer(options);
     this.officers.active.push(cadet);
     this.officers.__officersID++;
     return cadet;
@@ -37,21 +39,25 @@ class Officers {
     this.active = this.active.filter(officer => { return !officer.retired; });
   }
 
-  replace (commander) {
-    let lowerRank = this.officers.secretary.rankLower(commander.rank);
+  replace (replacedCommander) {
+    let lowerRank = this.officers.secretary.rankLower(replacedCommander.rank);
 
     let spec = {
-      unitId: commander.unitId,
-      rank: commander.rank.alias,
+      unitId: replacedCommander.unitId,
+      rank: replacedCommander.rank.alias,
       rankToPromote: lowerRank,
       HQ: this
     };
 
-    if (!lowerRank) {
-      return this.officers.recruit.call(this, spec.rank, commander.unitId);
-    } else {
+    if (lowerRank) {
       return this.officers.candidate(spec);
+    } else {
+      return this.officers.recruit.call(this, spec.rank, replacedCommander.unitId);
     }
+  }
+
+  replaceForPlayer (replacedCommander) {
+    return this.officers.recruit.call(this, 'lieutenant', replacedCommander.unitId, true);
   }
 
   candidate (spec) {

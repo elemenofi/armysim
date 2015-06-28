@@ -1,3 +1,4 @@
+/* global Chance */
 'use strict';
 import {} from './chance';
 import config from './config';
@@ -9,11 +10,12 @@ class Officer {
     let traits = new Traits();
 
     this.id = spec.id;
+    this.isPlayer = spec.isPlayer;
 
     this.unitId = spec.unitId;
     this.rank = config.ranks[spec.rank];
     this.experience = config.ranks[spec.rank].startxp + config.random(10);
-    
+
     this.traits = {
       base: traits.random()
     };
@@ -28,9 +30,14 @@ class Officer {
     this.commanding = this.traits.base.commanding + config.random(10);
     this.diplomacy = this.traits.base.diplomacy + config.random(10);
 
-    this.lname = chance.last();
-    this.fname = chance.first({gender: 'male'});
-    
+    if (this.isPlayer) {
+      this.lname = window.prompt('Please enter your last name', 'Richardson');
+      this.fname = window.prompt('Please enter your name', 'John');
+    } else {
+      this.lname = chance.last();
+      this.fname = chance.first({gender: 'male'});
+    }
+
     this.history = [];
   }
 
@@ -45,7 +52,7 @@ class Officer {
     };
 
     this.history.push(config.graduated(graduation, this));
-  } 
+  }
 
   update (HQ) {
     this.align();
@@ -62,7 +69,7 @@ class Officer {
     this.commander = officers.filter(officer => {
       return officer.unitId === this.unit.parentId;
     })[0];
-    
+
     if (this.commander && this.commander.alignment > 500) {
       this.drift++;
     } else {
@@ -80,7 +87,7 @@ class Officer {
 
   militate (HQ) {
     if (
-      (this.drift > 0 && this.alignment > 900) || 
+      (this.drift > 0 && this.alignment > 900) ||
       (this.drift < 0 && this.alignment < 100)
     ) {
       if (this.militancy < 10) this.militancy++;

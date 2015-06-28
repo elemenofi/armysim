@@ -11,6 +11,7 @@ class Engine {
   }
 
   start (engine) {
+    this.army.HQ.player();
     this.update(engine);
   }
 
