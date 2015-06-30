@@ -1810,7 +1810,7 @@ var Army = (function () {
 exports['default'] = Army;
 module.exports = exports['default'];
 
-},{"./config":8,"./hq":11,"./officers":14,"./unit":22,"./world":23}],6:[function(require,module,exports){
+},{"./config":7,"./hq":11,"./officers":14,"./unit":22,"./world":23}],6:[function(require,module,exports){
 (function (Buffer){
 "use strict";
 
@@ -2294,39 +2294,6 @@ module.exports = exports['default'];
 }).call(this,require("buffer").Buffer)
 },{"buffer":1}],7:[function(require,module,exports){
 'use strict';
-Object.defineProperty(exports, '__esModule', {
-  value: true
-});
-
-var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
-
-var Comparisons = (function () {
-  function Comparisons() {
-    _classCallCheck(this, Comparisons);
-  }
-
-  _createClass(Comparisons, [{
-    key: 'byExperience',
-    value: function byExperience(a, b) {
-      if (a.experience > b.experience) {
-        return -1;
-      } else if (a.experience < b.experience) {
-        return 1;
-      }
-      return 0;
-    }
-  }]);
-
-  return Comparisons;
-})();
-
-exports['default'] = Comparisons;
-module.exports = exports['default'];
-
-},{}],8:[function(require,module,exports){
-'use strict';
 
 Object.defineProperty(exports, '__esModule', {
   value: true
@@ -2450,7 +2417,7 @@ var config = {
 exports['default'] = config;
 module.exports = exports['default'];
 
-},{}],9:[function(require,module,exports){
+},{}],8:[function(require,module,exports){
 /*
 
 © 2011 by Jerry Sievert
@@ -3870,7 +3837,7 @@ THE SOFTWARE.
     };
 })();
 
-},{}],10:[function(require,module,exports){
+},{}],9:[function(require,module,exports){
 'use strict';
 Object.defineProperty(exports, '__esModule', {
   value: true
@@ -3921,7 +3888,7 @@ var Engine = (function () {
       if (this.running) {
         setTimeout(function () {
           _this.update();
-        }, 1000);
+        }, 500);
       }
     }
   }]);
@@ -3932,7 +3899,23 @@ var Engine = (function () {
 exports['default'] = Engine;
 module.exports = exports['default'];
 
-},{"./ui.jsx":21}],11:[function(require,module,exports){
+},{"./ui.jsx":21}],10:[function(require,module,exports){
+'use strict';
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+
+var _engine = require('./engine');
+
+var _engine2 = _interopRequireDefault(_engine);
+
+var _army = require('./army');
+
+var _army2 = _interopRequireDefault(_army);
+
+var army = new _army2['default']();
+var engine = new _engine2['default'](army);
+
+},{"./army":5,"./engine":9}],11:[function(require,module,exports){
 'use strict';
 Object.defineProperty(exports, '__esModule', {
   value: true
@@ -4025,7 +4008,7 @@ var HQ = (function () {
 exports['default'] = HQ;
 module.exports = exports['default'];
 
-},{"./config":8,"./date.js":9,"./operations":15}],12:[function(require,module,exports){
+},{"./config":7,"./date.js":8,"./operations":15}],12:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -4195,7 +4178,7 @@ var Officer = (function () {
 exports['default'] = Officer;
 module.exports = exports['default'];
 
-},{"./chance":6,"./config":8,"./traits":20}],14:[function(require,module,exports){
+},{"./chance":6,"./config":7,"./traits":20}],14:[function(require,module,exports){
 'use strict';
 Object.defineProperty(exports, '__esModule', {
   value: true
@@ -4219,15 +4202,9 @@ var _secretary = require('./secretary');
 
 var _secretary2 = _interopRequireDefault(_secretary);
 
-var _comparisons = require('./comparisons');
-
-var _comparisons2 = _interopRequireDefault(_comparisons);
-
 var _player = require('./player');
 
 var _player2 = _interopRequireDefault(_player);
-
-var comparisons = new _comparisons2['default']();
 
 var Officers = (function () {
   function Officers() {
@@ -4293,25 +4270,18 @@ var Officers = (function () {
   }, {
     key: 'candidate',
     value: function candidate(spec) {
-      var candidates = [];
-
-      this.active.map(function (officer) {
-        if (officer.rank.alias === spec.rankToPromote) {
-          candidates.push(officer);
-        }
+      var candidate = this.active.filter(function (officer) {
+        return officer.rank.alias === spec.rankToPromote;
+      }).reduce(function (prev, curr) {
+        return curr.experience > prev.experience ? curr : prev;
       });
-
-      var candidate = candidates.sort(comparisons.byExperience)[0];
-
       return this.promote(candidate, spec);
     }
   }, {
     key: 'promote',
     value: function promote(officer, spec) {
       spec.HQ.deassign(officer.unitId);
-
       var promotion = this.promotion(officer, spec);
-
       officer.history.push(_config2['default'].promoted(promotion));
       officer.drifts(this.active, spec.HQ.units);
       return officer;
@@ -4336,7 +4306,7 @@ var Officers = (function () {
 exports['default'] = Officers;
 module.exports = exports['default'];
 
-},{"./comparisons":7,"./config":8,"./officer":13,"./player":16,"./secretary":19}],15:[function(require,module,exports){
+},{"./config":7,"./officer":13,"./player":16,"./secretary":19}],15:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -4945,20 +4915,4 @@ var World = (function () {
 exports['default'] = World;
 module.exports = exports['default'];
 
-},{"./config":8,"./region":18}],24:[function(require,module,exports){
-'use strict';
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
-
-var _engine = require('./engine');
-
-var _engine2 = _interopRequireDefault(_engine);
-
-var _army = require('./army');
-
-var _army2 = _interopRequireDefault(_army);
-
-var army = new _army2['default']();
-var engine = new _engine2['default'](army);
-
-},{"./army":5,"./engine":10}]},{},[24]);
+},{"./config":7,"./region":18}]},{},[10]);

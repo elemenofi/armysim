@@ -27,10 +27,10 @@ class World {
 
     this.regions.map(region => {
       let count = 0;
-      
+
       while (count < unitsPerRegion) {
         let unit = HQ.units[unitIndex];
-      
+
         if (unit) {
           region.units.push(unit);
           unit.regionId = region.id;
@@ -41,7 +41,7 @@ class World {
         }
       }
     });
-  } 
+  }
 }
 
 export default World;

@@ -2,10 +2,7 @@
 import config from './config';
 import Officer from './officer';
 import Secretary from './secretary';
-import Comparisons from './comparisons';
 import Player from './player';
-
-let comparisons = new Comparisons();
 
 class Officers {
   constructor () {
@@ -60,24 +57,15 @@ class Officers {
   }
 
   candidate (spec) {
-    let candidates = [];
-
-    this.active.map(officer => {
-      if (officer.rank.alias === spec.rankToPromote) {
-        candidates.push(officer);
-      }
-    });
-
-    let candidate = candidates.sort(comparisons.byExperience)[0];
-
+    let candidate = this.active
+      .filter(officer => { return officer.rank.alias === spec.rankToPromote; })
+      .reduce((prev, curr) => (curr.experience > prev.experience) ? curr : prev);
     return this.promote(candidate, spec);
   }
 
   promote (officer, spec) {
     spec.HQ.deassign(officer.unitId);
-
     let promotion = this.promotion(officer, spec);
-
     officer.history.push(config.promoted(promotion));
     officer.drifts(this.active, spec.HQ.units);
     return officer;
