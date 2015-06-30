@@ -25,7 +25,9 @@ class HQ {
 
   player () {
     let unit = this.units.filter(unit => { return unit.id === 414; })[0];
+    unit.commander.retired = true;
     unit.commander = this.officers.replaceForPlayer.call(this, unit.commander);
+    this.player = unit.commander;
   }
 
   add (unit) {

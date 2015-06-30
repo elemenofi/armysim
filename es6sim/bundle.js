@@ -3984,7 +3984,9 @@ var HQ = (function () {
       var unit = this.units.filter(function (unit) {
         return unit.id === 414;
       })[0];
+      unit.commander.retired = true;
       unit.commander = this.officers.replaceForPlayer.call(this, unit.commander);
+      this.player = unit.commander;
     }
   }, {
     key: 'add',
@@ -4180,7 +4182,10 @@ var Officer = (function () {
     key: 'retire',
     value: function retire() {
       this.retired = true;
-      if (this.isPlayer) window.location.reload();
+      if (this.isPlayer) {
+        alert('You have been retired');
+        window.location.reload();
+      }
     }
   }]);
 
@@ -4713,6 +4718,11 @@ var Army = (function (_React$Component) {
       return _react2["default"].createElement(
         "div",
         null,
+        _react2["default"].createElement(
+          "div",
+          null,
+          this.props.army.HQ.player.name()
+        ),
         _react2["default"].createElement(
           "div",
           { onClick: this.pause.bind(this) },

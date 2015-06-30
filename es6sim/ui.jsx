@@ -42,6 +42,7 @@ class Army extends React.Component {
 
     return(
       <div>
+        <div>{this.props.army.HQ.player.name()}</div>
         <div onClick={this.pause.bind(this)}>Pause</div>
         <div>{corps}</div>
       </div>

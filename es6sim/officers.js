@@ -28,7 +28,6 @@ class Officers {
       rank: rank
     };
 
-
     let cadet = (isPlayer) ? new Player(options) : new Officer(options);
     this.officers.active.push(cadet);
     this.officers.__officersID++;
@@ -74,7 +73,7 @@ class Officers {
     return this.promote(candidate, spec);
   }
 
-   promote (officer, spec) {
+  promote (officer, spec) {
     spec.HQ.deassign(officer.unitId);
 
     let promotion = this.promotion(officer, spec);
