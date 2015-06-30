@@ -33,6 +33,7 @@ class Officer {
     if (this.isPlayer) {
       this.lname = window.prompt('Please enter your last name', 'Richardson');
       this.fname = window.prompt('Please enter your name', 'John');
+      this.experience = 0;
     } else {
       this.lname = chance.last();
       this.fname = chance.first({gender: 'male'});
@@ -55,6 +56,7 @@ class Officer {
   }
 
   update (HQ) {
+    if (this.isPlayer) console.log(this);
     this.align();
     this.militate(HQ);
     this.experience++;
@@ -100,6 +102,7 @@ class Officer {
 
   retire () {
     this.retired = true;
+    if (this.isPlayer) window.location.reload();
   }
 }
 

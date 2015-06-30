@@ -81,7 +81,6 @@ class Officers {
 
     officer.history.push(config.promoted(promotion));
     officer.drifts(this.active, spec.HQ.units);
-
     return officer;
   }
 

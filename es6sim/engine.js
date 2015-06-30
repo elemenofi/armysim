@@ -28,7 +28,7 @@ class Engine {
     if (this.running) {
       setTimeout(() => {
         this.update();
-      }, 250);
+      }, 1000);
     }
   }
 }

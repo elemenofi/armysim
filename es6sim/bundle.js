@@ -3921,7 +3921,7 @@ var Engine = (function () {
       if (this.running) {
         setTimeout(function () {
           _this.update();
-        }, 250);
+        }, 1000);
       }
     }
   }]);
@@ -3985,7 +3985,6 @@ var HQ = (function () {
         return unit.id === 414;
       })[0];
       unit.commander = this.officers.replaceForPlayer.call(this, unit.commander);
-      debugger;
     }
   }, {
     key: 'add',
@@ -4105,6 +4104,7 @@ var Officer = (function () {
     if (this.isPlayer) {
       this.lname = window.prompt('Please enter your last name', 'Richardson');
       this.fname = window.prompt('Please enter your name', 'John');
+      this.experience = 0;
     } else {
       this.lname = chance.last();
       this.fname = chance.first({ gender: 'male' });
@@ -4131,6 +4131,7 @@ var Officer = (function () {
   }, {
     key: 'update',
     value: function update(HQ) {
+      if (this.isPlayer) console.log(this);
       this.align();
       this.militate(HQ);
       this.experience++;
@@ -4179,6 +4180,7 @@ var Officer = (function () {
     key: 'retire',
     value: function retire() {
       this.retired = true;
+      if (this.isPlayer) window.location.reload();
     }
   }]);
 
@@ -4307,7 +4309,6 @@ var Officers = (function () {
 
       officer.history.push(_config2['default'].promoted(promotion));
       officer.drifts(this.active, spec.HQ.units);
-
       return officer;
     }
   }, {
@@ -4742,12 +4743,7 @@ var Commander = (function (_React$Component2) {
   _createClass(Commander, [{
     key: "mouseOver",
     value: function mouseOver() {
-      this.setState({ hover: true });
-    }
-  }, {
-    key: "mouseOut",
-    value: function mouseOut() {
-      this.setState({ hover: false });
+      this.setState({ hover: !this.state.hover });
     }
   }, {
     key: "render",
@@ -4779,8 +4775,7 @@ var Commander = (function (_React$Component2) {
 
       return _react2["default"].createElement(
         "div",
-        { onMouseOver: this.mouseOver.bind(this),
-          onMouseOut: this.mouseOut.bind(this) },
+        { onClick: this.mouseOver.bind(this) },
         title,
         _react2["default"].createElement(
           "div",

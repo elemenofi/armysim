@@ -56,11 +56,7 @@ class Commander extends React.Component {
   }
 
   mouseOver () {
-    this.setState({hover: true});
-  }
-
-  mouseOut () {
-    this.setState({hover: false});
+    this.setState({hover: !this.state.hover});
   }
 
   render () {
@@ -74,8 +70,7 @@ class Commander extends React.Component {
     }
 
     return (
-      <div onMouseOver={this.mouseOver.bind(this)}
-        onMouseOut={this.mouseOut.bind(this)}>
+      <div onClick={this.mouseOver.bind(this)}>
         {title}
         <div className="history">{history}</div>
       </div>
