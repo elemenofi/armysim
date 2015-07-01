@@ -4361,6 +4361,7 @@ var Operation = (function () {
       intelligence: { action: 'spy', area: 'intelligence' }
     };
 
+    this.result = 'Active';
     this.failed = null;
     this.done = null;
 
@@ -4394,7 +4395,7 @@ var Operation = (function () {
       this.strength++;
       if (this.strength > 5) {
         if (this.target[this.type.area] < this.lead[this.type.area]) {
-          this[this.type.action](HQ.realDate);
+          this.result = this[this.type.action](HQ.realDate);
           HQ.deassign(this.target.unitId);
           this.done = true;
         } else {
@@ -4405,22 +4406,31 @@ var Operation = (function () {
   }, {
     key: 'deviate',
     value: function deviate(date) {
-      this.lead.history.push('Forced ' + this.target.name() + ' into retirement after revealing a fraudulent scheme on ' + date);
+      var result = 'Forced ' + this.target.name() + ' into retirement after revealing a fraudulent scheme on ' + date;
+      this.lead.history.push(result);
+      this.target.history.push(result);
+      return result;
     }
   }, {
     key: 'coup',
     value: function coup(date) {
-      this.lead.history.push('Forced ' + this.target.name() + ' into retirement after taking control of his unit on ' + date);
+      var result = 'Forced ' + this.target.name() + ' into retirement after taking control of his unit on ' + date;
+      this.lead.history.push(result);
+      return result;
     }
   }, {
     key: 'influence',
     value: function influence(date) {
-      this.lead.history.push('Forced ' + this.target.name() + ' into retirement after influencing key staff members on ' + date);
+      var result = 'Forced ' + this.target.name() + ' into retirement after influencing key staff members on ' + date;
+      this.lead.history.push(result);
+      return result;
     }
   }, {
     key: 'spy',
     value: function spy(date) {
-      this.lead.history.push('Forced ' + this.target.name() + ' into retirement after revealing personal secrets on ' + date);
+      var result = 'Forced ' + this.target.name() + ' into retirement after revealing personal secrets on ' + date;
+      this.lead.history.push(result);
+      return result;
     }
   }]);
 
@@ -4719,8 +4729,17 @@ var Player = (function (_React$Component2) {
     key: "render",
     value: function render() {
       var player = this.props.player;
+
       var operations = [];
       player.operations.forEach(function (operation) {
+        var result = undefined;
+
+        if (operation.failed) {
+          result = "Failed";
+        } else {
+          result = operation.result;
+        }
+
         operations.push(_react2["default"].createElement(
           "ul",
           null,
@@ -4740,10 +4759,26 @@ var Player = (function (_React$Component2) {
             "li",
             null,
             "Type: ",
-            operation.type
+            operation.type.area
+          ),
+          _react2["default"].createElement(
+            "li",
+            null,
+            "Result: ",
+            result
           )
         ));
       });
+
+      var history = [];
+      player.history.forEach(function (story) {
+        history.push(_react2["default"].createElement(
+          "li",
+          null,
+          story
+        ));
+      });
+
       return _react2["default"].createElement(
         "div",
         null,
@@ -4803,7 +4838,7 @@ var Player = (function (_React$Component2) {
           )
         ),
         _react2["default"].createElement(
-          "ul",
+          "div",
           null,
           _react2["default"].createElement(
             "p",
@@ -4811,6 +4846,16 @@ var Player = (function (_React$Component2) {
             "Operations"
           ),
           operations
+        ),
+        _react2["default"].createElement(
+          "ul",
+          null,
+          _react2["default"].createElement(
+            "p",
+            null,
+            "History"
+          ),
+          history
         )
       );
     }

@@ -57,16 +57,32 @@ class Player extends React.Component {
   }
   render() {
     let player = this.props.player;
+
     let operations = [];
     player.operations.forEach(operation => {
+      let result;
+
+      if (operation.failed) {
+        result = "Failed";
+      } else {
+        result = operation.result;
+      }
+
       operations.push(
         <ul>
           <li>Target: {operation.target.name()}</li>
           <li>Strength: {operation.strength}</li>
-          <li>Type: {operation.type}</li>
+          <li>Type: {operation.type.area}</li>
+          <li>Result: {result}</li>
         </ul>
       );
     });
+
+    let history = [];
+    player.history.forEach(story => {
+      history.push(<li>{story}</li>);
+    });
+
     return (
       <div>
         <p>{player.name()}</p>
@@ -81,11 +97,15 @@ class Player extends React.Component {
           <li>Intelligence {player.intelligence}</li>
           <li>Administration {player.administration}</li>
         </ul>
-        <ul>
+        <div>
           <p>Operations</p>
           {operations}
+        </div>
+        <ul>
+          <p>History</p>
+          {history}
         </ul>
-      </div>
+    </div>
     );
   }
 }

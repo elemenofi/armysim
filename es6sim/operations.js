@@ -15,10 +15,8 @@ class Operations {
 
   update (HQ) {
     this.ongoing = this.ongoing.filter(operation => {
-      if (
-        !operation.done && !operation.failed &&
-        !operation.lead.retired && !operation.target.retired
-      ) {
+      if (!operation.done && !operation.failed &&
+        !operation.lead.retired && !operation.target.retired) {
         return true;
       }
     });
@@ -36,6 +34,7 @@ class Operation {
       intelligence: {action: 'spy', area: 'intelligence'}
     };
 
+    this.result = 'Active';
     this.failed = null;
     this.done = null;
 
@@ -67,7 +66,7 @@ class Operation {
     this.strength++;
     if (this.strength > 5)  {
       if (this.target[this.type.area] < this.lead[this.type.area]) {
-        this[this.type.action](HQ.realDate);
+        this.result = this[this.type.action](HQ.realDate);
         HQ.deassign(this.target.unitId);
         this.done = true;
       } else {
@@ -77,31 +76,32 @@ class Operation {
   }
 
   deviate (date) {
-    this.lead.history.push(
-      'Forced ' + this.target.name() +
-      ' into retirement after revealing a fraudulent scheme on ' + date
-    );
+    let result = 'Forced ' + this.target.name() +
+    ' into retirement after revealing a fraudulent scheme on ' + date;
+    this.lead.history.push(result);
+    this.target.history.push(result);
+    return result;
   }
 
   coup (date) {
-    this.lead.history.push(
-      'Forced ' + this.target.name() +
-      ' into retirement after taking control of his unit on ' + date
-    );
+    let result = 'Forced ' + this.target.name() +
+    ' into retirement after taking control of his unit on ' + date;
+    this.lead.history.push(result);
+    return result;
   }
 
   influence (date) {
-    this.lead.history.push(
-      'Forced ' + this.target.name() +
-      ' into retirement after influencing key staff members on ' + date
-    );
+    let result = 'Forced ' + this.target.name() +
+    ' into retirement after influencing key staff members on ' + date;
+    this.lead.history.push(result);
+    return result;
   }
 
   spy (date) {
-    this.lead.history.push(
-      'Forced ' + this.target.name() +
-      ' into retirement after revealing personal secrets on ' + date
-    );
+    let result = 'Forced ' + this.target.name() +
+    ' into retirement after revealing personal secrets on ' + date;
+    this.lead.history.push(result);
+    return result;
   }
 }
 
