@@ -17,7 +17,6 @@ class Army {
 
     this.id = 1;
     this.generate('corp', config.unitDepth);
-
     this.HQ.world = new World(this.HQ);
   }
 
@@ -30,7 +29,7 @@ class Army {
         type: type
       };
 
-      let unit = {}; 
+      let unit = {};
       this._unitsId++;
       spec.parentId = parent ? parent.id : 1;
 

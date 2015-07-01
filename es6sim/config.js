@@ -2,16 +2,16 @@
 
 let config = {
   promoted (promotion) {
-    let message = 
-    'Promoted to ' + this.ranks[promotion.rank].title + 
+    let message =
+    'Promoted to ' + this.ranks[promotion.rank].title +
     ' on ' + promotion.date + ', assigned to the ' + promotion.unit;
-    
+
     return message;
   },
 
   graduated (graduation, officer) {
     let when = '';
-    
+
     if (graduation.date && graduation.unit) {
       when = ' on ' + graduation.date + ', assigned to the ' + graduation.unit;
     }

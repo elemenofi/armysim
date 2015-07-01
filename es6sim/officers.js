@@ -26,6 +26,14 @@ class Officers {
     };
 
     let cadet = (isPlayer) ? new Player(options) : new Officer(options);
+
+    if (isPlayer) {
+      cadet.graduate({
+        date: config.formatDate(this.rawDate),
+        unitName: this.unitName(options.unitId)
+      });
+    }
+
     this.officers.active.push(cadet);
     this.officers.__officersID++;
     return cadet;

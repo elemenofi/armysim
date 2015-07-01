@@ -20,7 +20,8 @@ class Army extends React.Component {
 
     this.state = {
       officers: props.officers,
-      army: props.army, engine: props.engine
+      army: props.army,
+      engine: props.engine
     };
   }
 
@@ -28,24 +29,34 @@ class Army extends React.Component {
     this.state.engine.pause();
   }
 
+  show () {
+    this.setState({showArmy: !this.state.showArmy});
+  }
+
   render () {
     let army = this.props.army;
     let player = army.HQ.player;
     let corps = [];
 
-    army.units.corps.forEach(corp => {
-      corps.push(
-        <div key={corp.id}>
-          <Unit unit={corp}/>
-        </div>
-      );
-    });
+    if (this.state.showArmy) {
+      army.units.corps.forEach(corp => {
+        corps.push(
+          <div key={corp.id}>
+            <Unit unit={corp}/>
+          </div>
+        );
+      });
+    }
 
     return(
       <div>
+        {this.state.army.HQ.realDate}
         <Player player={player}/>
-        <div onClick={this.pause.bind(this)}>Pause</div>
-        <div>{corps}</div>
+        <button onClick={this.pause.bind(this)}>Pause</button>
+        <button onClick={this.show.bind(this)}>Army</button>
+        <div>
+          {corps}
+        </div>
       </div>
     );
   }
@@ -86,11 +97,6 @@ class Player extends React.Component {
     return (
       <div>
         <p>{player.name()}</p>
-        <ul>
-          <li>Drift {player.drift}</li>
-          <li>Alignment {player.alignment}</li>
-          <li>Militancy {player.militancy}</li>
-        </ul>
         <ul>
           <li>Diplomacy {player.diplomacy}</li>
           <li>Commanding {player.commanding}</li>
@@ -142,8 +148,20 @@ class Commander extends React.Component {
 }
 
 class Unit extends React.Component {
+  constructor() {
+    super();
+    this.state = {
+      showCommander: false
+    }
+  }
+
+  showCommander () {
+    this.setState({showCommander: !this.state.showCommander})
+  }
+
   render () {
     let unit = this.props.unit;
+    let commander;
     let subunits = [];
 
     if (unit.subunits) {
@@ -156,9 +174,14 @@ class Unit extends React.Component {
       });
     }
 
+    if (this.state.showCommander) {
+      commander = <Commander officer={unit.commander}/>;
+    }
+
     return(
       <div className={unit.type}>
-        <Commander officer={unit.commander}/>
+        <p onClick={this.showCommander.bind(this)}>{unit.name}</p>
+        {commander}
         {subunits}
       </div>
     );

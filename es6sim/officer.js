@@ -31,8 +31,8 @@ class Officer {
     this.diplomacy = this.traits.base.diplomacy + config.random(10);
 
     if (this.isPlayer) {
-      this.lname = window.prompt('Please enter your last name', 'Richardson');
-      this.fname = window.prompt('Please enter your name', 'John');
+      this.lname = 'Richardson';
+      this.fname = 'John';
       this.experience = 0;
     } else {
       this.lname = chance.last();
