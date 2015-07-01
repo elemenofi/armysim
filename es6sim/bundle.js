@@ -3993,6 +3993,11 @@ var HQ = (function () {
       })[0]);
     }
   }, {
+    key: 'inspect',
+    value: function inspect(officer) {
+      this.officers.inspected = officer;
+    }
+  }, {
     key: 'unitName',
     value: function unitName(unitId) {
       return this.units.filter(function (unit) {
@@ -4209,6 +4214,7 @@ var Officers = (function () {
     _classCallCheck(this, Officers);
 
     this.active = [];
+    this.inspected = {};
     this.__officersID = 1;
     this.secretary = new _secretary2['default']();
   }
@@ -4698,6 +4704,12 @@ var Army = (function (_React$Component) {
     value: function render() {
       var army = this.props.army;
       var player = army.HQ.player;
+      var inspected = function inspected() {
+        if (army.HQ.officers.inspected.fname !== undefined) {
+          return _react2["default"].createElement(Officer, { officer: army.HQ.officers.inspected });
+        }
+      };
+
       var corps = [];
 
       if (this.state.showArmy) {
@@ -4705,7 +4717,7 @@ var Army = (function (_React$Component) {
           corps.push(_react2["default"].createElement(
             "div",
             { key: corp.id },
-            _react2["default"].createElement(Unit, { unit: corp })
+            _react2["default"].createElement(Unit, { unit: corp, headquarters: army.HQ })
           ));
         });
       }
@@ -4714,7 +4726,10 @@ var Army = (function (_React$Component) {
         "div",
         null,
         this.state.army.HQ.realDate,
+        _react2["default"].createElement("div", { className: "clear" }),
         _react2["default"].createElement(Player, { player: player }),
+        inspected(),
+        _react2["default"].createElement("div", { className: "clear" }),
         _react2["default"].createElement(
           "button",
           { onClick: this.pause.bind(this) },
@@ -4737,14 +4752,83 @@ var Army = (function (_React$Component) {
   return Army;
 })(_react2["default"].Component);
 
-var Player = (function (_React$Component2) {
+var Unit = (function (_React$Component2) {
+  function Unit(props) {
+    _classCallCheck(this, Unit);
+
+    _get(Object.getPrototypeOf(Unit.prototype), "constructor", this).call(this, props);
+    this.state = {
+      showCommander: false,
+      headquarters: props.headquarters
+    };
+  }
+
+  _inherits(Unit, _React$Component2);
+
+  _createClass(Unit, [{
+    key: "mouseClick",
+    value: function mouseClick(commander) {
+      this.showCommander();
+      this.setInspected(commander);
+    }
+  }, {
+    key: "showCommander",
+    value: function showCommander() {
+      this.setState({ showCommander: !this.state.showCommander });
+    }
+  }, {
+    key: "setInspected",
+    value: function setInspected(commander) {
+      this.state.headquarters.officers.inspected = commander;
+      console.log(this.state.headquarters);
+    }
+  }, {
+    key: "render",
+    value: function render() {
+      var _this = this;
+
+      var unit = this.props.unit;
+      var commander = undefined;
+      var subunits = [];
+      if (unit.subunits) {
+        unit.subunits.forEach(function (subunit) {
+          subunits.push(_react2["default"].createElement(
+            "div",
+            { key: subunit.id },
+            _react2["default"].createElement(Unit, { unit: subunit, headquarters: _this.state.headquarters })
+          ));
+        });
+      }
+
+      if (this.state.showCommander) {
+        commander = _react2["default"].createElement(Commander, { officer: unit.commander });
+      }
+
+      return _react2["default"].createElement(
+        "div",
+        { className: unit.type },
+        _react2["default"].createElement(
+          "p",
+          { onClick: this.mouseClick.bind(this, unit.commander) },
+          unit.name
+        ),
+        commander,
+        subunits
+      );
+    }
+  }]);
+
+  return Unit;
+})(_react2["default"].Component);
+
+var Player = (function (_React$Component3) {
   function Player(props) {
     _classCallCheck(this, Player);
 
     _get(Object.getPrototypeOf(Player.prototype), "constructor", this).call(this, props);
   }
 
-  _inherits(Player, _React$Component2);
+  _inherits(Player, _React$Component3);
 
   _createClass(Player, [{
     key: "render",
@@ -4802,7 +4886,7 @@ var Player = (function (_React$Component2) {
 
       return _react2["default"].createElement(
         "div",
-        null,
+        { className: "player" },
         _react2["default"].createElement(
           "p",
           null,
@@ -4863,22 +4947,164 @@ var Player = (function (_React$Component2) {
   return Player;
 })(_react2["default"].Component);
 
-var Commander = (function (_React$Component3) {
+var Officer = (function (_React$Component4) {
+  function Officer(props) {
+    _classCallCheck(this, Officer);
+
+    _get(Object.getPrototypeOf(Officer.prototype), "constructor", this).call(this, props);
+  }
+
+  _inherits(Officer, _React$Component4);
+
+  _createClass(Officer, [{
+    key: "render",
+    value: function render() {
+      var player = this.props.officer;
+
+      var operations = [];
+      player.operations.forEach(function (operation) {
+        var result = undefined;
+
+        if (operation.failed) {
+          result = "Failed";
+        } else {
+          result = operation.result;
+        }
+
+        operations.push(_react2["default"].createElement(
+          "ul",
+          null,
+          _react2["default"].createElement(
+            "li",
+            null,
+            "Target: ",
+            operation.target.name()
+          ),
+          _react2["default"].createElement(
+            "li",
+            null,
+            "Strength: ",
+            operation.strength
+          ),
+          _react2["default"].createElement(
+            "li",
+            null,
+            "Type: ",
+            operation.type.area
+          ),
+          _react2["default"].createElement(
+            "li",
+            null,
+            "Result: ",
+            result
+          )
+        ));
+      });
+
+      var history = [];
+      player.history.forEach(function (story) {
+        history.push(_react2["default"].createElement(
+          "li",
+          null,
+          story
+        ));
+      });
+
+      return _react2["default"].createElement(
+        "div",
+        { className: "inspected" },
+        _react2["default"].createElement(
+          "p",
+          null,
+          player.name()
+        ),
+        _react2["default"].createElement(
+          "ul",
+          null,
+          _react2["default"].createElement(
+            "li",
+            null,
+            "Drift ",
+            player.drift
+          ),
+          _react2["default"].createElement(
+            "li",
+            null,
+            "Alignment ",
+            player.alignment
+          ),
+          _react2["default"].createElement(
+            "li",
+            null,
+            "Militancy ",
+            player.militancy
+          )
+        ),
+        _react2["default"].createElement(
+          "ul",
+          null,
+          _react2["default"].createElement(
+            "li",
+            null,
+            "Diplomacy ",
+            player.diplomacy
+          ),
+          _react2["default"].createElement(
+            "li",
+            null,
+            "Commanding ",
+            player.commanding
+          ),
+          _react2["default"].createElement(
+            "li",
+            null,
+            "Intelligence ",
+            player.intelligence
+          ),
+          _react2["default"].createElement(
+            "li",
+            null,
+            "Administration ",
+            player.administration
+          )
+        ),
+        _react2["default"].createElement(
+          "div",
+          null,
+          _react2["default"].createElement(
+            "p",
+            null,
+            "Operations"
+          ),
+          operations
+        ),
+        _react2["default"].createElement(
+          "ul",
+          null,
+          _react2["default"].createElement(
+            "p",
+            null,
+            "History"
+          ),
+          history
+        )
+      );
+    }
+  }]);
+
+  return Officer;
+})(_react2["default"].Component);
+
+var Commander = (function (_React$Component5) {
   function Commander(props) {
     _classCallCheck(this, Commander);
 
     _get(Object.getPrototypeOf(Commander.prototype), "constructor", this).call(this, props);
-    this.state = { hover: false };
   }
 
-  _inherits(Commander, _React$Component3);
+  _inherits(Commander, _React$Component5);
 
   _createClass(Commander, [{
-    key: "mouseClick",
-    value: function mouseClick() {
-      this.setState({ hover: !this.state.hover });
-    }
-  }, {
     key: "render",
     value: function render() {
       var history = [];
@@ -4896,85 +5122,15 @@ var Commander = (function (_React$Component3) {
         this.props.officer.name()
       );
 
-      if (this.state.hover && this.props.officer.history) {
-        this.props.officer.history.forEach(function (log) {
-          history.push(_react2["default"].createElement(
-            "p",
-            null,
-            log
-          ));
-        });
-      }
-
       return _react2["default"].createElement(
         "div",
-        { onClick: this.mouseClick.bind(this) },
-        title,
-        _react2["default"].createElement(
-          "div",
-          { className: "history" },
-          history
-        )
+        null,
+        title
       );
     }
   }]);
 
   return Commander;
-})(_react2["default"].Component);
-
-var Unit = (function (_React$Component4) {
-  function Unit() {
-    _classCallCheck(this, Unit);
-
-    _get(Object.getPrototypeOf(Unit.prototype), "constructor", this).call(this);
-    this.state = {
-      showCommander: false
-    };
-  }
-
-  _inherits(Unit, _React$Component4);
-
-  _createClass(Unit, [{
-    key: "showCommander",
-    value: function showCommander() {
-      this.setState({ showCommander: !this.state.showCommander });
-    }
-  }, {
-    key: "render",
-    value: function render() {
-      var unit = this.props.unit;
-      var commander = undefined;
-      var subunits = [];
-
-      if (unit.subunits) {
-        unit.subunits.forEach(function (subunit) {
-          subunits.push(_react2["default"].createElement(
-            "div",
-            { key: subunit.id },
-            _react2["default"].createElement(Unit, { unit: subunit })
-          ));
-        });
-      }
-
-      if (this.state.showCommander) {
-        commander = _react2["default"].createElement(Commander, { officer: unit.commander });
-      }
-
-      return _react2["default"].createElement(
-        "div",
-        { className: unit.type },
-        _react2["default"].createElement(
-          "p",
-          { onClick: this.showCommander.bind(this) },
-          unit.name
-        ),
-        commander,
-        subunits
-      );
-    }
-  }]);
-
-  return Unit;
 })(_react2["default"].Component);
 
 exports["default"] = Ui;

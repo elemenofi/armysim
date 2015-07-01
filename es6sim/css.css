@@ -1,7 +1,10 @@
 ul {
   padding: 0;
 }
-.corp, .division, .brigade {
+.clear {
+  clear: both;
+}
+.player, .inspected, .corp, .division, .brigade {
   width: 50%;
   float: left;
 }

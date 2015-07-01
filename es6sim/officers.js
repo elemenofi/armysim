@@ -7,6 +7,7 @@ import Player from './player';
 class Officers {
   constructor () {
     this.active = [];
+    this.inspected = {};
     this.__officersID = 1;
     this.secretary = new Secretary();
   }

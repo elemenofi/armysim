@@ -46,6 +46,10 @@ class HQ {
     this.replace(this.units.filter(unit => { return unit.id === unitId; })[0]);
   }
 
+  inspect (officer) {
+    this.officers.inspected = officer;
+  }
+
   unitName (unitId) {
     return this.units.filter(unit => { return unit.id === unitId; })[0].name;
   }
