@@ -10,7 +10,7 @@ class Operations {
     let operation = new Operation(officer, HQ);
     operation.id = this.__operationsID;
     this.ongoing.push(operation);
-    return operation.id;
+    return operation;
   }
 
   update (HQ) {

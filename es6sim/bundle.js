@@ -4116,7 +4116,6 @@ var Officer = (function () {
   }, {
     key: 'update',
     value: function update(HQ) {
-      if (this.isPlayer) console.log(this);
       this.align();
       this.militate(HQ);
       this.experience++;
@@ -4331,7 +4330,7 @@ var Operations = (function () {
       var operation = new Operation(officer, HQ);
       operation.id = this.__operationsID;
       this.ongoing.push(operation);
-      return operation.id;
+      return operation;
     }
   }, {
     key: 'update',
@@ -4675,6 +4674,7 @@ var Army = (function (_React$Component) {
     key: "render",
     value: function render() {
       var army = this.props.army;
+      var player = army.HQ.player;
       var corps = [];
 
       army.units.corps.forEach(function (corp) {
@@ -4688,11 +4688,7 @@ var Army = (function (_React$Component) {
       return _react2["default"].createElement(
         "div",
         null,
-        _react2["default"].createElement(
-          "div",
-          null,
-          this.props.army.HQ.player.name()
-        ),
+        _react2["default"].createElement(Player, { player: player }),
         _react2["default"].createElement(
           "div",
           { onClick: this.pause.bind(this) },
@@ -4710,7 +4706,120 @@ var Army = (function (_React$Component) {
   return Army;
 })(_react2["default"].Component);
 
-var Commander = (function (_React$Component2) {
+var Player = (function (_React$Component2) {
+  function Player(props) {
+    _classCallCheck(this, Player);
+
+    _get(Object.getPrototypeOf(Player.prototype), "constructor", this).call(this, props);
+  }
+
+  _inherits(Player, _React$Component2);
+
+  _createClass(Player, [{
+    key: "render",
+    value: function render() {
+      var player = this.props.player;
+      var operations = [];
+      player.operations.forEach(function (operation) {
+        operations.push(_react2["default"].createElement(
+          "ul",
+          null,
+          _react2["default"].createElement(
+            "li",
+            null,
+            "Target: ",
+            operation.target.name()
+          ),
+          _react2["default"].createElement(
+            "li",
+            null,
+            "Strength: ",
+            operation.strength
+          ),
+          _react2["default"].createElement(
+            "li",
+            null,
+            "Type: ",
+            operation.type
+          )
+        ));
+      });
+      return _react2["default"].createElement(
+        "div",
+        null,
+        _react2["default"].createElement(
+          "p",
+          null,
+          player.name()
+        ),
+        _react2["default"].createElement(
+          "ul",
+          null,
+          _react2["default"].createElement(
+            "li",
+            null,
+            "Drift ",
+            player.drift
+          ),
+          _react2["default"].createElement(
+            "li",
+            null,
+            "Alignment ",
+            player.alignment
+          ),
+          _react2["default"].createElement(
+            "li",
+            null,
+            "Militancy ",
+            player.militancy
+          )
+        ),
+        _react2["default"].createElement(
+          "ul",
+          null,
+          _react2["default"].createElement(
+            "li",
+            null,
+            "Diplomacy ",
+            player.diplomacy
+          ),
+          _react2["default"].createElement(
+            "li",
+            null,
+            "Commanding ",
+            player.commanding
+          ),
+          _react2["default"].createElement(
+            "li",
+            null,
+            "Intelligence ",
+            player.intelligence
+          ),
+          _react2["default"].createElement(
+            "li",
+            null,
+            "Administration ",
+            player.administration
+          )
+        ),
+        _react2["default"].createElement(
+          "ul",
+          null,
+          _react2["default"].createElement(
+            "p",
+            null,
+            "Operations"
+          ),
+          operations
+        )
+      );
+    }
+  }]);
+
+  return Player;
+})(_react2["default"].Component);
+
+var Commander = (function (_React$Component3) {
   function Commander(props) {
     _classCallCheck(this, Commander);
 
@@ -4718,11 +4827,11 @@ var Commander = (function (_React$Component2) {
     this.state = { hover: false };
   }
 
-  _inherits(Commander, _React$Component2);
+  _inherits(Commander, _React$Component3);
 
   _createClass(Commander, [{
-    key: "mouseOver",
-    value: function mouseOver() {
+    key: "mouseClick",
+    value: function mouseClick() {
       this.setState({ hover: !this.state.hover });
     }
   }, {
@@ -4755,7 +4864,7 @@ var Commander = (function (_React$Component2) {
 
       return _react2["default"].createElement(
         "div",
-        { onClick: this.mouseOver.bind(this) },
+        { onClick: this.mouseClick.bind(this) },
         title,
         _react2["default"].createElement(
           "div",
@@ -4769,16 +4878,16 @@ var Commander = (function (_React$Component2) {
   return Commander;
 })(_react2["default"].Component);
 
-var Unit = (function (_React$Component3) {
+var Unit = (function (_React$Component4) {
   function Unit() {
     _classCallCheck(this, Unit);
 
-    if (_React$Component3 != null) {
-      _React$Component3.apply(this, arguments);
+    if (_React$Component4 != null) {
+      _React$Component4.apply(this, arguments);
     }
   }
 
-  _inherits(Unit, _React$Component3);
+  _inherits(Unit, _React$Component4);
 
   _createClass(Unit, [{
     key: "render",

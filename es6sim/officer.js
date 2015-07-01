@@ -56,7 +56,6 @@ class Officer {
   }
 
   update (HQ) {
-    if (this.isPlayer) console.log(this);
     this.align();
     this.militate(HQ);
     this.experience++;
@@ -105,7 +104,6 @@ class Officer {
     if (this.isPlayer) {
       alert("You have been retired");
       window.location.reload();
-
     }
   }
 }
