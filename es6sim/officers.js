@@ -7,7 +7,6 @@ import Player from './player';
 class Officers {
   constructor () {
     this.active = [];
-    this.inspected = {};
     this.__officersID = 1;
     this.secretary = new Secretary();
   }
@@ -26,14 +25,7 @@ class Officers {
       rank: rank
     };
 
-    let cadet = (isPlayer) ? new Player(options) : new Officer(options);
-
-    if (isPlayer) {
-      cadet.graduate({
-        date: config.formatDate(this.rawDate),
-        unitName: this.unitName(options.unitId)
-      });
-    }
+    let cadet = (isPlayer) ? new Player(options, this) : new Officer(options);
 
     this.officers.active.push(cadet);
     this.officers.__officersID++;

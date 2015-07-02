@@ -1,4 +1,5 @@
 'use strict';
+import config from './config';
 
 class Operations {
   constructor () {
@@ -27,32 +28,13 @@ class Operations {
 
 class Operation {
   constructor (officer, HQ, target, type) {
-    this.types = {
-      administration: {action: 'deviate', area: 'administration'},
-      commanding: {action: 'coup', area: 'commanding'},
-      diplomacy: {action: 'influence', area: 'diplomacy'},
-      intelligence: {action: 'spy', area: 'intelligence'}
-    };
-
     this.lead = officer;
-    this.failed = null;
-    this.done = null;
-    this.strength = 0;
     this.side = (officer.alignment > 500) ? 'right' : 'left';
-
-    if (type) {
-      this.type = type;
-    } else {
-      this.type = this.types[officer.traits.base.area];
-    }
-
-    if (target) {
-      this.target = target;
-    } else {
-      this.target = this.pick(officer, HQ);
-    }
-
-    if (this.target === undefined) this.failed = true;
+    this.target = (target) ? target : this.pick(officer, HQ);
+    this.type = (type) ? type : config.operations[officer.traits.base.area];
+    this.strength = 0;
+    this.failed = (this.target) ? null : true;
+    this.done = null;
   }
 
   pick (officer, HQ) {
@@ -74,11 +56,11 @@ class Operation {
     this.strength++;
     if (this.strength > 5)  {
       if (this.target[this.type.area] < this.lead[this.type.area]) {
-        this.result = this[this.type.action](HQ.realDate);
-        this.target.history.push('Forced to retire by ' + this.lead.name());
-        this.target.retired = true;
         HQ.deassign(this.target.unitId);
         this.done = true;
+        this.result = this[this.type.action](HQ.realDate);
+        this.target.retired = true;
+        this.target.history.push('Forced to retire by ' + this.lead.name());
       } else {
         this.failed = true;
       }
