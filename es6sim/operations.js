@@ -39,10 +39,12 @@ class Operation {
     this.done = null;
 
     this.side = (officer.alignment > 500) ? 'right' : 'left';
+    //
     this.type = this.types[officer.traits.base.area];
     this.strength = 0;
 
     this.lead = officer;
+    // 
     this.target = this.pick(officer, HQ);
     if (this.target === undefined) this.failed = true;
   }

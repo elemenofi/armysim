@@ -82,7 +82,7 @@ class Unit extends React.Component {
 
   mouseClick (commander) {
     this.showCommander();
-    this.setInspected(commander);
+    if (!this.state.showCommander) this.setInspected(commander);
   }
 
   showCommander () {
