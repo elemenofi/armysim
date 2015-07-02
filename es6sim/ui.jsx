@@ -36,11 +36,7 @@ class Army extends React.Component {
   render () {
     let army = this.state.army;
     let player = army.HQ.player;
-    let inspected = () => {
-      if (army.HQ.officers.inspected.fname !== undefined) {
-        return (<Officer officer={army.HQ.officers.inspected} headquarters={army.HQ}/>);
-      }
-    };
+
 
     let corps = [];
 
@@ -59,7 +55,6 @@ class Army extends React.Component {
         {this.state.army.HQ.realDate}
         <div className="clear"></div>
         <Player player={player}/>
-        {inspected()}
         <div className="clear"></div>
         <button onClick={this.pause.bind(this)}>Pause</button>
         <button onClick={this.show.bind(this)}>Army</button>
@@ -75,6 +70,7 @@ class Unit extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      hover: false,
       unit: props.unit,
       showCommander: false,
       headquarters: props.headquarters
@@ -83,19 +79,27 @@ class Unit extends React.Component {
 
   mouseClick (commander) {
     this.showCommander();
-    if (!this.state.showCommander) this.setInspected(commander);
   }
 
   showCommander () {
     this.setState({showCommander: !this.state.showCommander});
   }
 
-  setInspected (commander) {
-    this.state.headquarters.officers.inspected = commander;
+  mouseEnter () {
+    this.setState({hover: true});
+  }
+
+  mouseLeave () {
+    this.setState({hover: false});
   }
 
   render () {
     let unit = this.state.unit;
+    let inspected = () => {
+      if (this.state.hover) {
+        return (<Officer officer={unit.commander} headquarters={this.state.headquarters}/>);
+      }
+    };
     let commander;
     let subunits = [];
     if (unit.subunits) {
@@ -115,7 +119,10 @@ class Unit extends React.Component {
     return(
       <div className={unit.type}>
         <p onClick={this.mouseClick.bind(this, unit.commander)}>{unit.name}</p>
-        {commander}
+        <div onMouseEnter={this.mouseEnter.bind(this)} onMouseLeave={this.mouseLeave.bind(this)}>
+          {inspected()}
+          {commander}
+        </div>
         {subunits}
       </div>
     );
@@ -245,7 +252,6 @@ class Officer extends React.Component {
 
     return (
       <div className="inspected">
-        <p>{player.name()}</p>
         <Operation officer={this.props.officer} headquarters={this.state.headquarters}/>
         <ul>
           <li>Drift {player.drift}</li>

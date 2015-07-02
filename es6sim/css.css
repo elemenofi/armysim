@@ -5,7 +5,7 @@ ul {
 .clear {
   clear: both;
 }
-.player, .inspected, .corp, .division, .brigade {
+.player, .corp, .division, .brigade {
   width: 50%;
   float: left;
 }

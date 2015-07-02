@@ -4703,11 +4703,6 @@ var Army = (function (_React$Component) {
     value: function render() {
       var army = this.state.army;
       var player = army.HQ.player;
-      var inspected = function inspected() {
-        if (army.HQ.officers.inspected.fname !== undefined) {
-          return _react2["default"].createElement(Officer, { officer: army.HQ.officers.inspected, headquarters: army.HQ });
-        }
-      };
 
       var corps = [];
 
@@ -4727,7 +4722,6 @@ var Army = (function (_React$Component) {
         this.state.army.HQ.realDate,
         _react2["default"].createElement("div", { className: "clear" }),
         _react2["default"].createElement(Player, { player: player }),
-        inspected(),
         _react2["default"].createElement("div", { className: "clear" }),
         _react2["default"].createElement(
           "button",
@@ -4757,6 +4751,7 @@ var Unit = (function (_React$Component2) {
 
     _get(Object.getPrototypeOf(Unit.prototype), "constructor", this).call(this, props);
     this.state = {
+      hover: false,
       unit: props.unit,
       showCommander: false,
       headquarters: props.headquarters
@@ -4769,7 +4764,6 @@ var Unit = (function (_React$Component2) {
     key: "mouseClick",
     value: function mouseClick(commander) {
       this.showCommander();
-      if (!this.state.showCommander) this.setInspected(commander);
     }
   }, {
     key: "showCommander",
@@ -4777,9 +4771,14 @@ var Unit = (function (_React$Component2) {
       this.setState({ showCommander: !this.state.showCommander });
     }
   }, {
-    key: "setInspected",
-    value: function setInspected(commander) {
-      this.state.headquarters.officers.inspected = commander;
+    key: "mouseEnter",
+    value: function mouseEnter() {
+      this.setState({ hover: true });
+    }
+  }, {
+    key: "mouseLeave",
+    value: function mouseLeave() {
+      this.setState({ hover: false });
     }
   }, {
     key: "render",
@@ -4787,6 +4786,11 @@ var Unit = (function (_React$Component2) {
       var _this = this;
 
       var unit = this.state.unit;
+      var inspected = function inspected() {
+        if (_this.state.hover) {
+          return _react2["default"].createElement(Officer, { officer: unit.commander, headquarters: _this.state.headquarters });
+        }
+      };
       var commander = undefined;
       var subunits = [];
       if (unit.subunits) {
@@ -4811,7 +4815,12 @@ var Unit = (function (_React$Component2) {
           { onClick: this.mouseClick.bind(this, unit.commander) },
           unit.name
         ),
-        commander,
+        _react2["default"].createElement(
+          "div",
+          { onMouseEnter: this.mouseEnter.bind(this), onMouseLeave: this.mouseLeave.bind(this) },
+          inspected(),
+          commander
+        ),
         subunits
       );
     }
@@ -5083,11 +5092,6 @@ var Officer = (function (_React$Component5) {
       return _react2["default"].createElement(
         "div",
         { className: "inspected" },
-        _react2["default"].createElement(
-          "p",
-          null,
-          player.name()
-        ),
         _react2["default"].createElement(Operation, { officer: this.props.officer, headquarters: this.state.headquarters }),
         _react2["default"].createElement(
           "ul",
