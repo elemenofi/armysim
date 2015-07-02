@@ -5,10 +5,10 @@ import config from './config';
 import Traits from './traits';
 
 class Officer {
-  constructor (spec) {
+  constructor (spec, HQ, unitName) {
     let chance = new Chance();
     let traits = new Traits();
-
+    if (!HQ) debugger;
     this.id = spec.id;
     this.isPlayer = spec.isPlayer;
 
@@ -39,8 +39,11 @@ class Officer {
       this.lname = chance.last();
       this.fname = chance.first({gender: 'male'});
     }
-
     this.history = [];
+    this.graduate({
+      date: config.formatDate(HQ.rawDate),
+      unitName: HQ.unitName(this.unitId, unitName)
+    });
   }
 
   name () {

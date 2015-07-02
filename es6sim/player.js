@@ -3,13 +3,9 @@ import config from './config';
 import Officer from './officer';
 
 class Player extends Officer {
-  constructor(spec, HQ) {
+  constructor(spec, HQ, unitName) {
     spec.isPlayer = true;
-    super(spec);
-    this.graduate({
-      date: config.formatDate(HQ.rawDate),
-      unitName: HQ.unitName(this.unitId)
-    });
+    super(spec, HQ, unitName);
   }
 }
 

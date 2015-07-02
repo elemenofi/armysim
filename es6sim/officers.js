@@ -17,7 +17,7 @@ class Officers {
     });
   }
 
-  recruit (rank, unitId, isPlayer) {
+  recruit (rank, unitId, isPlayer, unitName) {
     let options = {
       date: this.realDate,
       id: this.officers.__officersID,
@@ -25,7 +25,7 @@ class Officers {
       rank: rank
     };
 
-    let cadet = (isPlayer) ? new Player(options, this) : new Officer(options);
+    let cadet = (isPlayer) ? new Player(options, this, unitName) : new Officer(options, this, unitName);
 
     this.officers.active.push(cadet);
     this.officers.__officersID++;

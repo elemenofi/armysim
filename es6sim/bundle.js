@@ -4007,10 +4007,12 @@ var HQ = (function () {
     }
   }, {
     key: 'unitName',
-    value: function unitName(unitId) {
-      return this.units.filter(function (unit) {
+    value: function unitName(unitId, _unitName) {
+      var result = this.units.filter(function (unit) {
         return unit.id === unitId;
-      })[0].name;
+      })[0];
+      if (!result) return _unitName;
+      return result.name;
     }
   }]);
 
@@ -4071,12 +4073,12 @@ var _traits = require('./traits');
 var _traits2 = _interopRequireDefault(_traits);
 
 var Officer = (function () {
-  function Officer(spec) {
+  function Officer(spec, HQ, unitName) {
     _classCallCheck(this, Officer);
 
     var chance = new Chance();
     var traits = new _traits2['default']();
-
+    if (!HQ) debugger;
     this.id = spec.id;
     this.isPlayer = spec.isPlayer;
 
@@ -4107,8 +4109,11 @@ var Officer = (function () {
       this.lname = chance.last();
       this.fname = chance.first({ gender: 'male' });
     }
-
     this.history = [];
+    this.graduate({
+      date: _config2['default'].formatDate(HQ.rawDate),
+      unitName: HQ.unitName(this.unitId, unitName)
+    });
   }
 
   _createClass(Officer, [{
@@ -4235,7 +4240,7 @@ var Officers = (function () {
     }
   }, {
     key: 'recruit',
-    value: function recruit(rank, unitId, isPlayer) {
+    value: function recruit(rank, unitId, isPlayer, unitName) {
       var options = {
         date: this.realDate,
         id: this.officers.__officersID,
@@ -4243,7 +4248,7 @@ var Officers = (function () {
         rank: rank
       };
 
-      var cadet = isPlayer ? new _player2['default'](options, this) : new _officer2['default'](options);
+      var cadet = isPlayer ? new _player2['default'](options, this, unitName) : new _officer2['default'](options, this, unitName);
 
       this.officers.active.push(cadet);
       this.officers.__officersID++;
@@ -4471,15 +4476,11 @@ var _officer = require('./officer');
 var _officer2 = _interopRequireDefault(_officer);
 
 var Player = (function (_Officer) {
-  function Player(spec, HQ) {
+  function Player(spec, HQ, unitName) {
     _classCallCheck(this, Player);
 
     spec.isPlayer = true;
-    _get(Object.getPrototypeOf(Player.prototype), 'constructor', this).call(this, spec);
-    this.graduate({
-      date: _config2['default'].formatDate(HQ.rawDate),
-      unitName: HQ.unitName(this.unitId)
-    });
+    _get(Object.getPrototypeOf(Player.prototype), 'constructor', this).call(this, spec, HQ, unitName);
   }
 
   _inherits(Player, _Officer);
@@ -5224,9 +5225,8 @@ var Unit = function Unit(spec, HQ) {
   this.type = spec.type;
   this.name = _names2['default'][spec.type][0];_names2['default'][spec.type].shift();
   this.subunits = [];
-
-  this.commander = HQ.officers.recruit.call(HQ, spec.rank, this.id);
-  this.commander.graduate({ date: HQ.realDate, unitName: this.name });
+  debugger;
+  this.commander = HQ.officers.recruit.call(HQ, spec.rank, this.id, false, this.name);
 };
 
 exports['default'] = Unit;

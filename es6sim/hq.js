@@ -50,8 +50,10 @@ class HQ {
     this.officers.inspected = officer;
   }
 
-  unitName (unitId) {
-    return this.units.filter(unit => { return unit.id === unitId; })[0].name;
+  unitName (unitId, unitName) {
+    let result = this.units.filter(unit => { return unit.id === unitId; })[0];
+    if (!result) return unitName;
+    return result.name;
   }
 }
 
