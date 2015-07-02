@@ -2352,63 +2352,72 @@ var config = {
       title: 'Lieutenant',
       alias: 'lieutenant',
       startxp: 10,
-      maxxp: 40
+      maxxp: 40,
+      startpr: 100
     },
     captain: {
       hierarchy: 1,
       title: 'Captain',
       alias: 'captain',
       startxp: 40,
-      maxxp: 60
+      maxxp: 60,
+      startpr: 200
     },
     major: {
       hierarchy: 2,
       title: 'Major',
       alias: 'major',
       startxp: 60,
-      maxxp: 80
+      maxxp: 80,
+      startpr: 300
     },
     lcoronel: {
       hierarchy: 3,
       title: 'Lieutenant Coronel',
       alias: 'lcoronel',
       startxp: 80,
-      maxxp: 100
+      maxxp: 100,
+      startpr: 400
     },
     coronel: {
       hierarchy: 4,
       title: 'Coronel',
       alias: 'coronel',
       startxp: 100,
-      maxxp: 120
+      maxxp: 120,
+      startpr: 500
     },
     bgeneral: {
       hierarchy: 5,
       title: 'Brigade General',
       alias: 'bgeneral',
       startxp: 120,
-      maxxp: 140
+      maxxp: 140,
+      startpr: 600
     },
     dgeneral: {
       hierarchy: 6,
       title: 'Division General',
       alias: 'dgeneral',
       startxp: 140,
-      maxxp: 160
+      maxxp: 160,
+      startpr: 700
     },
     lgeneral: {
       hierarchy: 7,
       title: 'Lieutenant General',
       alias: 'lgeneral',
       startxp: 160,
-      maxxp: 180
+      maxxp: 180,
+      startpr: 800
     },
     general: {
       hierarchy: 8,
       title: 'General',
       alias: 'general',
       startxp: 180,
-      maxxp: 220
+      maxxp: 220,
+      startpr: 900
     }
   }
 };
@@ -4069,6 +4078,7 @@ var Officer = (function () {
     this.unitId = spec.unitId;
     this.rank = _config2['default'].ranks[spec.rank];
     this.experience = _config2['default'].ranks[spec.rank].startxp + _config2['default'].random(10);
+    this.prestige = _config2['default'].ranks[spec.rank].startpr + _config2['default'].random(10);
 
     this.traits = {
       base: traits.random()
@@ -4117,6 +4127,7 @@ var Officer = (function () {
       this.align();
       this.militate(HQ);
       this.experience++;
+      this.prestige += _config2['default'].random(_config2['default'].ranks[this.rank.alias].startpr);
       if (this.experience > this.rank.maxxp) this.retire();
     }
   }, {
@@ -4331,7 +4342,7 @@ var Operations = (function () {
 
   _createClass(Operations, [{
     key: 'add',
-    value: function add(officer, HQ, target) {
+    value: function add(officer, HQ, target, type) {
       var operation = new Operation(officer, HQ, target);
       operation.id = this.__operationsID;
       this.ongoing.push(operation);
@@ -4356,7 +4367,7 @@ var Operations = (function () {
 })();
 
 var Operation = (function () {
-  function Operation(officer, HQ, target) {
+  function Operation(officer, HQ, target, type) {
     _classCallCheck(this, Operation);
 
     this.types = {
@@ -4366,17 +4377,18 @@ var Operation = (function () {
       intelligence: { action: 'spy', area: 'intelligence' }
     };
 
-    this.result = 'Active';
+    this.lead = officer;
     this.failed = null;
     this.done = null;
-
-    this.side = officer.alignment > 500 ? 'right' : 'left';
-    //
-    this.type = this.types[officer.traits.base.area];
     this.strength = 0;
+    this.side = officer.alignment > 500 ? 'right' : 'left';
 
-    this.lead = officer;
-    //
+    if (type) {
+      this.type = type;
+    } else {
+      this.type = this.types[officer.traits.base.area];
+    }
+
     if (target) {
       this.target = target;
     } else {
@@ -4408,6 +4420,8 @@ var Operation = (function () {
       if (this.strength > 5) {
         if (this.target[this.type.area] < this.lead[this.type.area]) {
           this.result = this[this.type.action](HQ.realDate);
+          this.target.history.push('Forced to retire by ' + this.lead.name());
+          this.target.retired = true;
           HQ.deassign(this.target.unitId);
           this.done = true;
         } else {
@@ -4420,7 +4434,6 @@ var Operation = (function () {
     value: function deviate(date) {
       var result = 'Forced ' + this.target.name() + ' into retirement after revealing a fraudulent scheme on ' + date;
       this.lead.history.push(result);
-      this.target.history.push(result);
       return result;
     }
   }, {
@@ -4771,11 +4784,6 @@ var Unit = (function (_React$Component2) {
       this.setState({ showCommander: !this.state.showCommander });
     }
   }, {
-    key: "mouseLeave",
-    value: function mouseLeave() {
-      this.showCommander();
-    }
-  }, {
     key: "render",
     value: function render() {
       var _this = this;
@@ -4812,7 +4820,7 @@ var Unit = (function (_React$Component2) {
         ),
         _react2["default"].createElement(
           "div",
-          { onMouseLeave: this.mouseLeave.bind(this) },
+          null,
           commander,
           inspected()
         ),
@@ -4855,17 +4863,16 @@ var Operation = (function (_React$Component3) {
         "div",
         null,
         _react2["default"].createElement(
-          "button",
-          null,
-          "Operation"
-        ),
-        _react2["default"].createElement(
           "ul",
           null,
           _react2["default"].createElement(
             "li",
-            { onClick: this.mouseClick.bind(this) },
-            "Military"
+            null,
+            _react2["default"].createElement(
+              "button",
+              { onClick: this.mouseClick.bind(this) },
+              "Military Operation"
+            )
           )
         )
       );
@@ -4891,14 +4898,6 @@ var Player = (function (_React$Component4) {
 
       var operations = [];
       player.operations.forEach(function (operation) {
-        var result = undefined;
-
-        if (operation.failed) {
-          result = "Failed";
-        } else {
-          result = operation.result;
-        }
-
         operations.push(_react2["default"].createElement(
           "ul",
           null,
@@ -4919,12 +4918,6 @@ var Player = (function (_React$Component4) {
             null,
             "Type: ",
             operation.type.area
-          ),
-          _react2["default"].createElement(
-            "li",
-            null,
-            "Result: ",
-            result
           )
         ));
       });
@@ -4966,6 +4959,12 @@ var Player = (function (_React$Component4) {
             null,
             "Militancy ",
             player.militancy
+          ),
+          _react2["default"].createElement(
+            "li",
+            null,
+            "Prestige ",
+            player.prestige
           )
         ),
         _react2["default"].createElement(
@@ -5108,6 +5107,12 @@ var Officer = (function (_React$Component5) {
             null,
             "Militancy ",
             player.militancy
+          ),
+          _react2["default"].createElement(
+            "li",
+            null,
+            "Prestige ",
+            player.prestige
           )
         ),
         _react2["default"].createElement(

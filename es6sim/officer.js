@@ -15,6 +15,7 @@ class Officer {
     this.unitId = spec.unitId;
     this.rank = config.ranks[spec.rank];
     this.experience = config.ranks[spec.rank].startxp + config.random(10);
+    this.prestige = config.ranks[spec.rank].startpr + config.random(10);
 
     this.traits = {
       base: traits.random()
@@ -59,6 +60,7 @@ class Officer {
     this.align();
     this.militate(HQ);
     this.experience++;
+    this.prestige += config.random(config.ranks[this.rank.alias].startpr);
     if (this.experience > this.rank.maxxp) this.retire();
   }
 

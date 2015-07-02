@@ -6,7 +6,7 @@ class Operations {
     this.ongoing = [];
   }
 
-  add (officer, HQ, target) {
+  add (officer, HQ, target, type) {
     let operation = new Operation(officer, HQ, target);
     operation.id = this.__operationsID;
     this.ongoing.push(operation);
@@ -26,7 +26,7 @@ class Operations {
 }
 
 class Operation {
-  constructor (officer, HQ, target) {
+  constructor (officer, HQ, target, type) {
     this.types = {
       administration: {action: 'deviate', area: 'administration'},
       commanding: {action: 'coup', area: 'commanding'},
@@ -34,17 +34,18 @@ class Operation {
       intelligence: {action: 'spy', area: 'intelligence'}
     };
 
-    this.result = 'Active';
+    this.lead = officer;
     this.failed = null;
     this.done = null;
-
-    this.side = (officer.alignment > 500) ? 'right' : 'left';
-    //
-    this.type = this.types[officer.traits.base.area];
     this.strength = 0;
+    this.side = (officer.alignment > 500) ? 'right' : 'left';
 
-    this.lead = officer;
-    //
+    if (type) {
+      this.type = type;
+    } else {
+      this.type = this.types[officer.traits.base.area];
+    }
+
     if (target) {
       this.target = target;
     } else {
@@ -74,6 +75,8 @@ class Operation {
     if (this.strength > 5)  {
       if (this.target[this.type.area] < this.lead[this.type.area]) {
         this.result = this[this.type.action](HQ.realDate);
+        this.target.history.push('Forced to retire by ' + this.lead.name());
+        this.target.retired = true;
         HQ.deassign(this.target.unitId);
         this.done = true;
       } else {
@@ -86,7 +89,6 @@ class Operation {
     let result = 'Forced ' + this.target.name() +
     ' into retirement after revealing a fraudulent scheme on ' + date;
     this.lead.history.push(result);
-    this.target.history.push(result);
     return result;
   }
 

@@ -57,63 +57,72 @@ let config = {
       title: 'Lieutenant',
       alias: 'lieutenant',
       startxp: 10,
-      maxxp: 40
+      maxxp: 40,
+      startpr: 100
     },
     captain: {
       hierarchy: 1,
       title: 'Captain',
       alias: 'captain',
       startxp: 40,
-      maxxp: 60
+      maxxp: 60,
+      startpr: 200
     },
     major: {
       hierarchy: 2,
       title: 'Major',
       alias: 'major',
       startxp: 60,
-      maxxp: 80
+      maxxp: 80,
+      startpr: 300
     },
     lcoronel: {
       hierarchy: 3,
       title: 'Lieutenant Coronel',
       alias: 'lcoronel',
       startxp: 80,
-      maxxp: 100
+      maxxp: 100,
+      startpr: 400
     },
     coronel: {
       hierarchy: 4,
       title: 'Coronel',
       alias: 'coronel',
       startxp: 100,
-      maxxp: 120
+      maxxp: 120,
+      startpr: 500
     },
     bgeneral: {
       hierarchy: 5,
       title: 'Brigade General',
       alias: 'bgeneral',
       startxp: 120,
-      maxxp: 140
+      maxxp: 140,
+      startpr: 600
     },
     dgeneral: {
       hierarchy: 6,
       title: 'Division General',
       alias: 'dgeneral',
       startxp: 140,
-      maxxp: 160
+      maxxp: 160,
+      startpr: 700
     },
     lgeneral: {
       hierarchy: 7,
       title: 'Lieutenant General',
       alias: 'lgeneral',
       startxp: 160,
-      maxxp: 180
+      maxxp: 180,
+      startpr: 800
     },
     general: {
       hierarchy: 8,
       title: 'General',
       alias: 'general',
       startxp: 180,
-      maxxp: 220
+      maxxp: 220,
+      startpr: 900
     }
   }
 };

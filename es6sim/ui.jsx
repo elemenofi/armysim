@@ -85,10 +85,6 @@ class Unit extends React.Component {
     this.setState({showCommander: !this.state.showCommander});
   }
 
-  mouseLeave () {
-    this.showCommander();
-  }
-
   render () {
     let unit = this.state.unit;
     let inspected = () => {
@@ -115,7 +111,7 @@ class Unit extends React.Component {
     return(
       <div className={unit.type}>
         <p onClick={this.mouseClick.bind(this, unit.commander)}>{unit.name}</p>
-        <div onMouseLeave={this.mouseLeave.bind(this)}>
+        <div>
           {commander}
           {inspected()}
         </div>
@@ -143,9 +139,8 @@ class Operation extends React.Component {
   render () {
     return(
       <div>
-        <button>Operation</button>
         <ul>
-          <li onClick={this.mouseClick.bind(this)}>Military</li>
+          <li><button onClick={this.mouseClick.bind(this)}>Military Operation</button></li>
         </ul>
       </div>
     );
@@ -161,20 +156,11 @@ class Player extends React.Component {
 
     let operations = [];
     player.operations.forEach(operation => {
-      let result;
-
-      if (operation.failed) {
-        result = "Failed";
-      } else {
-        result = operation.result;
-      }
-
       operations.push(
         <ul>
           <li>Target: {operation.target.name()}</li>
           <li>Strength: {operation.strength}</li>
           <li>Type: {operation.type.area}</li>
-          <li>Result: {result}</li>
         </ul>
       );
     });
@@ -191,6 +177,7 @@ class Player extends React.Component {
           <li>Drift {player.drift}</li>
           <li>Alignment {player.alignment}</li>
           <li>Militancy {player.militancy}</li>
+          <li>Prestige {player.prestige}</li>
         </ul>
         <ul>
           <li>Diplomacy {player.diplomacy}</li>
@@ -253,6 +240,7 @@ class Officer extends React.Component {
           <li>Drift {player.drift}</li>
           <li>Alignment {player.alignment}</li>
           <li>Militancy {player.militancy}</li>
+          <li>Prestige {player.prestige}</li>
         </ul>
         <ul>
           <li>Diplomacy {player.diplomacy}</li>
