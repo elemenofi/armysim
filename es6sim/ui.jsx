@@ -185,6 +185,11 @@ class Player extends React.Component {
       <div className="player">
         <p>{player.name()}</p>
         <ul>
+          <li>Drift {player.drift}</li>
+          <li>Alignment {player.alignment}</li>
+          <li>Militancy {player.militancy}</li>
+        </ul>
+        <ul>
           <li>Diplomacy {player.diplomacy}</li>
           <li>Commanding {player.commanding}</li>
           <li>Intelligence {player.intelligence}</li>
@@ -227,7 +232,6 @@ class Officer extends React.Component {
       operations.push(
         <ul>
           <li>Target: {operation.target.name()}</li>
-          <li>Strength: {operation.strength}</li>
           <li>Type: {operation.type.area}</li>
           <li>Result: {result}</li>
         </ul>

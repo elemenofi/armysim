@@ -4163,10 +4163,7 @@ var Officer = (function () {
     key: 'retire',
     value: function retire() {
       this.retired = true;
-      if (this.isPlayer) {
-        alert('You have been retired');
-        window.location.reload();
-      }
+      this.history.push('Retired');
     }
   }]);
 
@@ -4951,6 +4948,28 @@ var Player = (function (_React$Component4) {
           _react2["default"].createElement(
             "li",
             null,
+            "Drift ",
+            player.drift
+          ),
+          _react2["default"].createElement(
+            "li",
+            null,
+            "Alignment ",
+            player.alignment
+          ),
+          _react2["default"].createElement(
+            "li",
+            null,
+            "Militancy ",
+            player.militancy
+          )
+        ),
+        _react2["default"].createElement(
+          "ul",
+          null,
+          _react2["default"].createElement(
+            "li",
+            null,
             "Diplomacy ",
             player.diplomacy
           ),
@@ -5036,12 +5055,6 @@ var Officer = (function (_React$Component5) {
             null,
             "Target: ",
             operation.target.name()
-          ),
-          _react2["default"].createElement(
-            "li",
-            null,
-            "Strength: ",
-            operation.strength
           ),
           _react2["default"].createElement(
             "li",

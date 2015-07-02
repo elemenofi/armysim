@@ -102,10 +102,7 @@ class Officer {
 
   retire () {
     this.retired = true;
-    if (this.isPlayer) {
-      alert("You have been retired");
-      window.location.reload();
-    }
+    this.history.push("Retired");
   }
 }
 
