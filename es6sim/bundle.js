@@ -4762,7 +4762,7 @@ var Unit = (function (_React$Component2) {
 
   _createClass(Unit, [{
     key: "mouseClick",
-    value: function mouseClick(commander) {
+    value: function mouseClick() {
       this.showCommander();
     }
   }, {
@@ -4771,14 +4771,9 @@ var Unit = (function (_React$Component2) {
       this.setState({ showCommander: !this.state.showCommander });
     }
   }, {
-    key: "mouseEnter",
-    value: function mouseEnter() {
-      this.setState({ hover: true });
-    }
-  }, {
     key: "mouseLeave",
     value: function mouseLeave() {
-      this.setState({ hover: false });
+      this.showCommander();
     }
   }, {
     key: "render",
@@ -4787,7 +4782,7 @@ var Unit = (function (_React$Component2) {
 
       var unit = this.state.unit;
       var inspected = function inspected() {
-        if (_this.state.hover) {
+        if (_this.state.showCommander) {
           return _react2["default"].createElement(Officer, { officer: unit.commander, headquarters: _this.state.headquarters });
         }
       };
@@ -4817,9 +4812,9 @@ var Unit = (function (_React$Component2) {
         ),
         _react2["default"].createElement(
           "div",
-          { onMouseEnter: this.mouseEnter.bind(this), onMouseLeave: this.mouseLeave.bind(this) },
-          inspected(),
-          commander
+          { onMouseLeave: this.mouseLeave.bind(this) },
+          commander,
+          inspected()
         ),
         subunits
       );

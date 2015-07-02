@@ -77,7 +77,7 @@ class Unit extends React.Component {
     }
   }
 
-  mouseClick (commander) {
+  mouseClick () {
     this.showCommander();
   }
 
@@ -85,18 +85,14 @@ class Unit extends React.Component {
     this.setState({showCommander: !this.state.showCommander});
   }
 
-  mouseEnter () {
-    this.setState({hover: true});
-  }
-
   mouseLeave () {
-    this.setState({hover: false});
+    this.showCommander();
   }
 
   render () {
     let unit = this.state.unit;
     let inspected = () => {
-      if (this.state.hover) {
+      if (this.state.showCommander) {
         return (<Officer officer={unit.commander} headquarters={this.state.headquarters}/>);
       }
     };
@@ -119,9 +115,9 @@ class Unit extends React.Component {
     return(
       <div className={unit.type}>
         <p onClick={this.mouseClick.bind(this, unit.commander)}>{unit.name}</p>
-        <div onMouseEnter={this.mouseEnter.bind(this)} onMouseLeave={this.mouseLeave.bind(this)}>
-          {inspected()}
+        <div onMouseLeave={this.mouseLeave.bind(this)}>
           {commander}
+          {inspected()}
         </div>
         {subunits}
       </div>
