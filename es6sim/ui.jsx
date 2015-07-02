@@ -34,11 +34,11 @@ class Army extends React.Component {
   }
 
   render () {
-    let army = this.props.army;
+    let army = this.state.army;
     let player = army.HQ.player;
     let inspected = () => {
       if (army.HQ.officers.inspected.fname !== undefined) {
-        return (<Officer officer={army.HQ.officers.inspected}/>);
+        return (<Officer officer={army.HQ.officers.inspected} headquarters={army.HQ}/>);
       }
     };
 
@@ -75,6 +75,7 @@ class Unit extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      unit: props.unit,
       showCommander: false,
       headquarters: props.headquarters
     }
@@ -91,11 +92,10 @@ class Unit extends React.Component {
 
   setInspected (commander) {
     this.state.headquarters.officers.inspected = commander;
-    console.log(this.state.headquarters);
   }
 
   render () {
-    let unit = this.props.unit;
+    let unit = this.state.unit;
     let commander;
     let subunits = [];
     if (unit.subunits) {
@@ -117,6 +117,33 @@ class Unit extends React.Component {
         <p onClick={this.mouseClick.bind(this, unit.commander)}>{unit.name}</p>
         {commander}
         {subunits}
+      </div>
+    );
+  }
+}
+
+class Operation extends React.Component {
+  constructor (props) {
+    super(props);
+    this.state = {
+      officer: props.officer,
+      headquarters: props.headquarters
+    }
+  }
+  mouseClick () {
+    this.startOp(this.props.officer);
+  }
+  startOp (target) {
+    let HQ = this.state.headquarters;
+    HQ.player.operations.push(HQ.operations.add(HQ.player, HQ, target))
+  }
+  render () {
+    return(
+      <div>
+        <button>Operation</button>
+        <ul>
+          <li onClick={this.mouseClick.bind(this)}>Military</li>
+        </ul>
       </div>
     );
   }
@@ -179,6 +206,10 @@ class Player extends React.Component {
 class Officer extends React.Component {
   constructor(props) {
     super(props);
+    this.state = {
+      officer: props.officer,
+      headquarters: props.headquarters
+    }
   }
   render() {
     let player = this.props.officer;
@@ -211,6 +242,7 @@ class Officer extends React.Component {
     return (
       <div className="inspected">
         <p>{player.name()}</p>
+        <Operation officer={this.props.officer} headquarters={this.state.headquarters}/>
         <ul>
           <li>Drift {player.drift}</li>
           <li>Alignment {player.alignment}</li>

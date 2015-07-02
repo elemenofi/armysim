@@ -4334,8 +4334,8 @@ var Operations = (function () {
 
   _createClass(Operations, [{
     key: 'add',
-    value: function add(officer, HQ) {
-      var operation = new Operation(officer, HQ);
+    value: function add(officer, HQ, target) {
+      var operation = new Operation(officer, HQ, target);
       operation.id = this.__operationsID;
       this.ongoing.push(operation);
       return operation;
@@ -4359,7 +4359,7 @@ var Operations = (function () {
 })();
 
 var Operation = (function () {
-  function Operation(officer, HQ) {
+  function Operation(officer, HQ, target) {
     _classCallCheck(this, Operation);
 
     this.types = {
@@ -4380,7 +4380,12 @@ var Operation = (function () {
 
     this.lead = officer;
     //
-    this.target = this.pick(officer, HQ);
+    if (target) {
+      this.target = target;
+    } else {
+      this.target = this.pick(officer, HQ);
+    }
+
     if (this.target === undefined) this.failed = true;
   }
 
@@ -4699,11 +4704,11 @@ var Army = (function (_React$Component) {
   }, {
     key: "render",
     value: function render() {
-      var army = this.props.army;
+      var army = this.state.army;
       var player = army.HQ.player;
       var inspected = function inspected() {
         if (army.HQ.officers.inspected.fname !== undefined) {
-          return _react2["default"].createElement(Officer, { officer: army.HQ.officers.inspected });
+          return _react2["default"].createElement(Officer, { officer: army.HQ.officers.inspected, headquarters: army.HQ });
         }
       };
 
@@ -4755,6 +4760,7 @@ var Unit = (function (_React$Component2) {
 
     _get(Object.getPrototypeOf(Unit.prototype), "constructor", this).call(this, props);
     this.state = {
+      unit: props.unit,
       showCommander: false,
       headquarters: props.headquarters
     };
@@ -4777,14 +4783,13 @@ var Unit = (function (_React$Component2) {
     key: "setInspected",
     value: function setInspected(commander) {
       this.state.headquarters.officers.inspected = commander;
-      console.log(this.state.headquarters);
     }
   }, {
     key: "render",
     value: function render() {
       var _this = this;
 
-      var unit = this.props.unit;
+      var unit = this.state.unit;
       var commander = undefined;
       var subunits = [];
       if (unit.subunits) {
@@ -4818,14 +4823,65 @@ var Unit = (function (_React$Component2) {
   return Unit;
 })(_react2["default"].Component);
 
-var Player = (function (_React$Component3) {
+var Operation = (function (_React$Component3) {
+  function Operation(props) {
+    _classCallCheck(this, Operation);
+
+    _get(Object.getPrototypeOf(Operation.prototype), "constructor", this).call(this, props);
+    this.state = {
+      officer: props.officer,
+      headquarters: props.headquarters
+    };
+  }
+
+  _inherits(Operation, _React$Component3);
+
+  _createClass(Operation, [{
+    key: "mouseClick",
+    value: function mouseClick() {
+      this.startOp(this.props.officer);
+    }
+  }, {
+    key: "startOp",
+    value: function startOp(target) {
+      var HQ = this.state.headquarters;
+      HQ.player.operations.push(HQ.operations.add(HQ.player, HQ, target));
+    }
+  }, {
+    key: "render",
+    value: function render() {
+      return _react2["default"].createElement(
+        "div",
+        null,
+        _react2["default"].createElement(
+          "button",
+          null,
+          "Operation"
+        ),
+        _react2["default"].createElement(
+          "ul",
+          null,
+          _react2["default"].createElement(
+            "li",
+            { onClick: this.mouseClick.bind(this) },
+            "Military"
+          )
+        )
+      );
+    }
+  }]);
+
+  return Operation;
+})(_react2["default"].Component);
+
+var Player = (function (_React$Component4) {
   function Player(props) {
     _classCallCheck(this, Player);
 
     _get(Object.getPrototypeOf(Player.prototype), "constructor", this).call(this, props);
   }
 
-  _inherits(Player, _React$Component3);
+  _inherits(Player, _React$Component4);
 
   _createClass(Player, [{
     key: "render",
@@ -4944,14 +5000,18 @@ var Player = (function (_React$Component3) {
   return Player;
 })(_react2["default"].Component);
 
-var Officer = (function (_React$Component4) {
+var Officer = (function (_React$Component5) {
   function Officer(props) {
     _classCallCheck(this, Officer);
 
     _get(Object.getPrototypeOf(Officer.prototype), "constructor", this).call(this, props);
+    this.state = {
+      officer: props.officer,
+      headquarters: props.headquarters
+    };
   }
 
-  _inherits(Officer, _React$Component4);
+  _inherits(Officer, _React$Component5);
 
   _createClass(Officer, [{
     key: "render",
@@ -5015,6 +5075,7 @@ var Officer = (function (_React$Component4) {
           null,
           player.name()
         ),
+        _react2["default"].createElement(Operation, { officer: this.props.officer, headquarters: this.state.headquarters }),
         _react2["default"].createElement(
           "ul",
           null,
@@ -5092,14 +5153,14 @@ var Officer = (function (_React$Component4) {
   return Officer;
 })(_react2["default"].Component);
 
-var Commander = (function (_React$Component5) {
+var Commander = (function (_React$Component6) {
   function Commander(props) {
     _classCallCheck(this, Commander);
 
     _get(Object.getPrototypeOf(Commander.prototype), "constructor", this).call(this, props);
   }
 
-  _inherits(Commander, _React$Component5);
+  _inherits(Commander, _React$Component6);
 
   _createClass(Commander, [{
     key: "render",

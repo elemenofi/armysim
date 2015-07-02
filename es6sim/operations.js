@@ -6,8 +6,8 @@ class Operations {
     this.ongoing = [];
   }
 
-  add (officer, HQ) {
-    let operation = new Operation(officer, HQ);
+  add (officer, HQ, target) {
+    let operation = new Operation(officer, HQ, target);
     operation.id = this.__operationsID;
     this.ongoing.push(operation);
     return operation;
@@ -26,7 +26,7 @@ class Operations {
 }
 
 class Operation {
-  constructor (officer, HQ) {
+  constructor (officer, HQ, target) {
     this.types = {
       administration: {action: 'deviate', area: 'administration'},
       commanding: {action: 'coup', area: 'commanding'},
@@ -44,8 +44,13 @@ class Operation {
     this.strength = 0;
 
     this.lead = officer;
-    // 
-    this.target = this.pick(officer, HQ);
+    //
+    if (target) {
+      this.target = target;
+    } else {
+      this.target = this.pick(officer, HQ);
+    }
+
     if (this.target === undefined) this.failed = true;
   }
 

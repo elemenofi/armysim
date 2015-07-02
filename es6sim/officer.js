@@ -94,7 +94,7 @@ class Officer {
       if (this.militancy < 10) this.militancy++;
     }
     if (this.militancy === 10 && !this.isPlayer) {
-      // 
+      //
       this.operations.push(HQ.operations.add(this, HQ));
       this.militancy = 0;
     }
