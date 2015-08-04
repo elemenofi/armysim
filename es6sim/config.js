@@ -48,14 +48,19 @@ let config = {
     return Math.round(Math.random() * n);
   },
 
+  speed: 1500,
+
   unitDepth: 2,
+
   staffSize: 20,
+
   operations: {
       administration: {action: 'deviate', area: 'administration'},
       commanding: {action: 'coup', area: 'commanding'},
       diplomacy: {action: 'influence', area: 'diplomacy'},
       intelligence: {action: 'spy', area: 'intelligence'}
   },
+
   ranks: {
     lieutenant: {
       hierarchy: 0,

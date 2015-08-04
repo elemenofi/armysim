@@ -36,6 +36,12 @@ class HQ {
     return units;
   }
 
+  findPeers (rank) {
+    return this.officers.active.filter(officer => {
+      return officer.rank === rank;
+    });
+  }
+
   add (unit) {
     this.units.push(unit);
   }

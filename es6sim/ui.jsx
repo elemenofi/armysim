@@ -1,5 +1,8 @@
 /* jshint ignore:start */
 import React from './react';
+import Comparisons from './comparisons';
+
+let comparisons = new Comparisons();
 
 class Ui {
   constructor (spec) {
@@ -29,16 +32,19 @@ class Army extends React.Component {
     this.state.engine.pause();
   }
 
-  show () {
+  toggleArmy () {
     this.setState({showArmy: !this.state.showArmy});
+  }
+
+  togglePeers () {
+    this.setState({showPeers: !this.state.showPeers});
   }
 
   render () {
     let army = this.state.army;
     let player = army.HQ.player;
-
-
     let corps = [];
+    let peers = [];
 
     if (this.state.showArmy) {
       army.units.corps.forEach(corp => {
@@ -50,17 +56,27 @@ class Army extends React.Component {
       });
     }
 
+    if (this.state.showPeers) {
+      army.HQ.findPeers(player.rank).sort(comparisons.byExperience).forEach(peer => {
+        peers.push(<li>{peer.name()}, {peer.experience}</li>);
+      });
+    }
+
     return(
       <div>
         {this.state.army.HQ.realDate}
         <div className="clear"></div>
-        <Player player={player}/>
+        <Player player={player} headquarters={army.HQ}/>
         <div className="clear"></div>
         <button onClick={this.pause.bind(this)}>Pause</button>
-        <button onClick={this.show.bind(this)}>Army</button>
+        <button onClick={this.toggleArmy.bind(this)}>Army</button>
+        <button onClick={this.togglePeers.bind(this)}>Peers</button>
         <div>
           {corps}
         </div>
+        <ul>
+          {peers}
+        </ul>
       </div>
     );
   }
@@ -127,6 +143,7 @@ class Player extends React.Component {
   }
   render() {
     let player = this.props.player;
+    let HQ = this.props.headquarters;
 
     let history = [];
     player.history.forEach(story => {

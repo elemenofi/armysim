@@ -1,5 +1,6 @@
 'use strict';
 import Ui from './ui.jsx';
+import config from './config';
 
 class Engine {
   constructor(army) {
@@ -28,7 +29,7 @@ class Engine {
     if (this.running) {
       setTimeout(() => {
         this.update();
-      }, 500);
+      }, config.speed);
     }
   }
 
@@ -36,7 +37,7 @@ class Engine {
     this.ui.render(this.army);
     setTimeout(() => {
       this.updateUI();
-    }, 500);
+    }, config.speed);
   }
 }
 
