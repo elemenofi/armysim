@@ -4038,10 +4038,9 @@ var HQ = (function () {
   }, {
     key: 'findByType',
     value: function findByType(type) {
-      var units = this.units.filter(function (unit) {
+      return this.units.filter(function (unit) {
         return unit.type === type;
       });
-      return units;
     }
   }, {
     key: 'findPeers',

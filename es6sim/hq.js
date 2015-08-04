@@ -32,8 +32,7 @@ class HQ {
   }
 
   findByType (type) {
-    let units = this.units.filter(unit => { return unit.type === type; });
-    return units;
+    return this.units.filter(unit => { return unit.type === type; });
   }
 
   findPeers (rank) {
