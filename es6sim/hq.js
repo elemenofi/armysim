@@ -24,10 +24,16 @@ class HQ {
   }
 
   player () {
-    let unit = this.units.filter(unit => { return unit.id === 414; })[0];
+    let squads = this.findByType('squad');
+    let unit = squads[Math.round(Math.random() * squads.length) + 1];
     unit.commander.retired = true;
     unit.commander = this.officers.replaceForPlayer.call(this, unit.commander);
     this.player = unit.commander;
+  }
+
+  findByType (type) {
+    let units = this.units.filter(unit => { return unit.type === type; });
+    return units;
   }
 
   add (unit) {
@@ -42,8 +48,8 @@ class HQ {
     unit.commander = this.officers.replace.call(this, unit.commander);
   }
 
-  deassign (unitId) {
-    this.replace(this.units.filter(unit => { return unit.id === unitId; })[0]);
+  deassign (id) {
+    this.replace(this.units.filter(unit => { return unit.id === id; })[0]);
   }
 
   inspect (officer) {

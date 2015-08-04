@@ -8,7 +8,7 @@ class Officer {
   constructor (spec, HQ, unitName) {
     let chance = new Chance();
     let traits = new Traits();
-    if (!HQ) debugger;
+    // if (!HQ) debugger;
     this.id = spec.id;
     this.isPlayer = spec.isPlayer;
 
