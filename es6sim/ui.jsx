@@ -121,49 +121,12 @@ class Unit extends React.Component {
   }
 }
 
-class Operation extends React.Component {
-  constructor (props) {
-    super(props);
-    this.state = {
-      officer: props.officer,
-      headquarters: props.headquarters
-    }
-  }
-  mouseClick () {
-    this.startOp(this.props.officer);
-  }
-  startOp (target) {
-    let HQ = this.state.headquarters;
-    HQ.player.operations.push(HQ.operations.add(HQ.player, HQ, target))
-  }
-  render () {
-    return(
-      <div>
-        <ul>
-          <li><button onClick={this.mouseClick.bind(this)}>Military Operation</button></li>
-        </ul>
-      </div>
-    );
-  }
-}
-
 class Player extends React.Component {
   constructor(props) {
     super(props);
   }
   render() {
     let player = this.props.player;
-
-    let operations = [];
-    player.operations.forEach(operation => {
-      operations.push(
-        <ul>
-          <li>Target: {operation.target.name()}</li>
-          <li>Strength: {operation.strength}</li>
-          <li>Type: {operation.type.area}</li>
-        </ul>
-      );
-    });
 
     let history = [];
     player.history.forEach(story => {
@@ -185,10 +148,6 @@ class Player extends React.Component {
           <li>Intelligence {player.intelligence}</li>
           <li>Administration {player.administration}</li>
         </ul>
-        <div>
-          <p>Operations</p>
-          {operations}
-        </div>
         <ul>
           <p>History</p>
           {history}
@@ -209,25 +168,6 @@ class Officer extends React.Component {
   render() {
     let player = this.props.officer;
 
-    let operations = [];
-    player.operations.forEach(operation => {
-      let result;
-
-      if (operation.failed) {
-        result = "Failed";
-      } else {
-        result = operation.result;
-      }
-
-      operations.push(
-        <ul>
-          <li>Target: {operation.target.name()}</li>
-          <li>Type: {operation.type.area}</li>
-          <li>Result: {result}</li>
-        </ul>
-      );
-    });
-
     let history = [];
     player.history.forEach(story => {
       history.push(<li>{story}</li>);
@@ -235,7 +175,6 @@ class Officer extends React.Component {
 
     return (
       <div className="inspected">
-        <Operation officer={this.props.officer} headquarters={this.state.headquarters}/>
         <ul>
           <li>Drift {player.drift}</li>
           <li>Alignment {player.alignment}</li>
@@ -248,10 +187,6 @@ class Officer extends React.Component {
           <li>Intelligence {player.intelligence}</li>
           <li>Administration {player.administration}</li>
         </ul>
-        <div>
-          <p>Operations</p>
-          {operations}
-        </div>
         <ul>
           <p>History</p>
           {history}

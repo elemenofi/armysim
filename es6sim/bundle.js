@@ -4847,95 +4847,19 @@ var Unit = (function (_React$Component2) {
   return Unit;
 })(_react2["default"].Component);
 
-var Operation = (function (_React$Component3) {
-  function Operation(props) {
-    _classCallCheck(this, Operation);
-
-    _get(Object.getPrototypeOf(Operation.prototype), "constructor", this).call(this, props);
-    this.state = {
-      officer: props.officer,
-      headquarters: props.headquarters
-    };
-  }
-
-  _inherits(Operation, _React$Component3);
-
-  _createClass(Operation, [{
-    key: "mouseClick",
-    value: function mouseClick() {
-      this.startOp(this.props.officer);
-    }
-  }, {
-    key: "startOp",
-    value: function startOp(target) {
-      var HQ = this.state.headquarters;
-      HQ.player.operations.push(HQ.operations.add(HQ.player, HQ, target));
-    }
-  }, {
-    key: "render",
-    value: function render() {
-      return _react2["default"].createElement(
-        "div",
-        null,
-        _react2["default"].createElement(
-          "ul",
-          null,
-          _react2["default"].createElement(
-            "li",
-            null,
-            _react2["default"].createElement(
-              "button",
-              { onClick: this.mouseClick.bind(this) },
-              "Military Operation"
-            )
-          )
-        )
-      );
-    }
-  }]);
-
-  return Operation;
-})(_react2["default"].Component);
-
-var Player = (function (_React$Component4) {
+var Player = (function (_React$Component3) {
   function Player(props) {
     _classCallCheck(this, Player);
 
     _get(Object.getPrototypeOf(Player.prototype), "constructor", this).call(this, props);
   }
 
-  _inherits(Player, _React$Component4);
+  _inherits(Player, _React$Component3);
 
   _createClass(Player, [{
     key: "render",
     value: function render() {
       var player = this.props.player;
-
-      var operations = [];
-      player.operations.forEach(function (operation) {
-        operations.push(_react2["default"].createElement(
-          "ul",
-          null,
-          _react2["default"].createElement(
-            "li",
-            null,
-            "Target: ",
-            operation.target.name()
-          ),
-          _react2["default"].createElement(
-            "li",
-            null,
-            "Strength: ",
-            operation.strength
-          ),
-          _react2["default"].createElement(
-            "li",
-            null,
-            "Type: ",
-            operation.type.area
-          )
-        ));
-      });
 
       var history = [];
       player.history.forEach(function (story) {
@@ -5011,16 +4935,6 @@ var Player = (function (_React$Component4) {
           )
         ),
         _react2["default"].createElement(
-          "div",
-          null,
-          _react2["default"].createElement(
-            "p",
-            null,
-            "Operations"
-          ),
-          operations
-        ),
-        _react2["default"].createElement(
           "ul",
           null,
           _react2["default"].createElement(
@@ -5037,7 +4951,7 @@ var Player = (function (_React$Component4) {
   return Player;
 })(_react2["default"].Component);
 
-var Officer = (function (_React$Component5) {
+var Officer = (function (_React$Component4) {
   function Officer(props) {
     _classCallCheck(this, Officer);
 
@@ -5048,46 +4962,12 @@ var Officer = (function (_React$Component5) {
     };
   }
 
-  _inherits(Officer, _React$Component5);
+  _inherits(Officer, _React$Component4);
 
   _createClass(Officer, [{
     key: "render",
     value: function render() {
       var player = this.props.officer;
-
-      var operations = [];
-      player.operations.forEach(function (operation) {
-        var result = undefined;
-
-        if (operation.failed) {
-          result = "Failed";
-        } else {
-          result = operation.result;
-        }
-
-        operations.push(_react2["default"].createElement(
-          "ul",
-          null,
-          _react2["default"].createElement(
-            "li",
-            null,
-            "Target: ",
-            operation.target.name()
-          ),
-          _react2["default"].createElement(
-            "li",
-            null,
-            "Type: ",
-            operation.type.area
-          ),
-          _react2["default"].createElement(
-            "li",
-            null,
-            "Result: ",
-            result
-          )
-        ));
-      });
 
       var history = [];
       player.history.forEach(function (story) {
@@ -5101,7 +4981,6 @@ var Officer = (function (_React$Component5) {
       return _react2["default"].createElement(
         "div",
         { className: "inspected" },
-        _react2["default"].createElement(Operation, { officer: this.props.officer, headquarters: this.state.headquarters }),
         _react2["default"].createElement(
           "ul",
           null,
@@ -5159,16 +5038,6 @@ var Officer = (function (_React$Component5) {
           )
         ),
         _react2["default"].createElement(
-          "div",
-          null,
-          _react2["default"].createElement(
-            "p",
-            null,
-            "Operations"
-          ),
-          operations
-        ),
-        _react2["default"].createElement(
           "ul",
           null,
           _react2["default"].createElement(
@@ -5185,14 +5054,14 @@ var Officer = (function (_React$Component5) {
   return Officer;
 })(_react2["default"].Component);
 
-var Commander = (function (_React$Component6) {
+var Commander = (function (_React$Component5) {
   function Commander(props) {
     _classCallCheck(this, Commander);
 
     _get(Object.getPrototypeOf(Commander.prototype), "constructor", this).call(this, props);
   }
 
-  _inherits(Commander, _React$Component6);
+  _inherits(Commander, _React$Component5);
 
   _createClass(Commander, [{
     key: "render",
