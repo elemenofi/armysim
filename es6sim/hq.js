@@ -25,7 +25,7 @@ class HQ {
 
   player () {
     let squads = this.findByType('squad');
-    let unit = squads[Math.round(Math.random() * squads.length) + 1];
+    let unit = squads[config.random(squads.length) + 1];
     unit.commander.retired = true;
     unit.commander = this.officers.replaceForPlayer.call(this, unit.commander);
     this.player = unit.commander;

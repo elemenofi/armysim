@@ -3987,10 +3987,8 @@ var HQ = (function () {
   }, {
     key: 'player',
     value: function player() {
-      debugger;
-      // let unit = this.units.filter(unit => { return unit.id === 414; })[0];
       var squads = this.findByType('squad');
-      var unit = squads[Math.round(Math.random() * squads.length) + 1];
+      var unit = squads[_config2['default'].random(squads.length) + 1];
       unit.commander.retired = true;
       unit.commander = this.officers.replaceForPlayer.call(this, unit.commander);
       this.player = unit.commander;
@@ -4163,7 +4161,7 @@ var Officer = (function () {
       this.militate(HQ);
       this.experience++;
       this.prestige += _config2['default'].random(_config2['default'].ranks[this.rank.alias].startpr);
-      if (this.experience > this.rank.maxxp) this.retire();
+      if (this.experience > this.rank.maxxp) this.retire(HQ);
     }
   }, {
     key: 'drifts',
@@ -4207,9 +4205,9 @@ var Officer = (function () {
     }
   }, {
     key: 'retire',
-    value: function retire() {
+    value: function retire(HQ) {
       this.retired = true;
-      this.history.push('Retired');
+      this.history.push('Retired on ' + HQ.realDate);
     }
   }]);
 

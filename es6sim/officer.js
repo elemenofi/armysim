@@ -64,7 +64,7 @@ class Officer {
     this.militate(HQ);
     this.experience++;
     this.prestige += config.random(config.ranks[this.rank.alias].startpr);
-    if (this.experience > this.rank.maxxp) this.retire();
+    if (this.experience > this.rank.maxxp) this.retire(HQ);
   }
 
   drifts (officers, units) {
@@ -105,9 +105,9 @@ class Officer {
     }
   }
 
-  retire () {
+  retire (HQ) {
     this.retired = true;
-    this.history.push("Retired");
+    this.history.push('Retired on ' + HQ.realDate);
   }
 }
 
