@@ -8,29 +8,23 @@ class Officer {
   constructor (spec, HQ, unitName) {
     let chance = new Chance();
     let traits = new Traits();
-    // if (!HQ) debugger;
     this.id = spec.id;
     this.isPlayer = spec.isPlayer;
-
     this.unitId = spec.unitId;
     this.rank = config.ranks[spec.rank];
     this.experience = config.ranks[spec.rank].startxp + config.random(10);
     this.prestige = config.ranks[spec.rank].startpr + config.random(10);
-
     this.traits = {
       base: traits.random()
     };
-
     this.alignment = config.random(1000);
     this.militancy = config.random(10);
     this.drift = 0;
     this.operations = [];
-
     this.administration = this.traits.base.administration + config.random(10);
     this.intelligence = this.traits.base.intelligence + config.random(10);
     this.commanding = this.traits.base.commanding + config.random(10);
     this.diplomacy = this.traits.base.diplomacy + config.random(10);
-
     if (this.isPlayer) {
       this.lname = 'Richardson';
       this.fname = 'John';
@@ -106,6 +100,10 @@ class Officer {
   }
 
   reserve (HQ) {
+    var lastUnit = HQ.units.filter(unit=>{return unit.id === this.unitId;})[0];
+    lastUnit.reserve.push(this);
+    if (lastUnit.reserve.length > 3) lastUnit.reserve.pop();
+    console.log(lastUnit.reserve);
     this.reserved = true;
     this.history.push('Moved to reserve on ' + HQ.realDate);
   }

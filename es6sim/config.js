@@ -48,7 +48,7 @@ let config = {
     return Math.round(Math.random() * n);
   },
 
-  speed: 1500,
+  speed: 150,
 
   unitDepth: 2,
 

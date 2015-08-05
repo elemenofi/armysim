@@ -60,7 +60,7 @@ class Operation {
         this.done = true;
         this.result = this[this.type.action](HQ.realDate);
         this.target.reserved = true;
-        this.target.history.push('Forced to retire by ' + this.lead.name());
+        this.target.history.push('Forced on to reserve by ' + this.lead.name());
       } else {
         this.failed = true;
       }
@@ -69,28 +69,28 @@ class Operation {
 
   deviate (date) {
     let result = 'Forced ' + this.target.name() +
-    ' into retirement after revealing a fraudulent scheme on ' + date;
+    ' into reserve after revealing a fraudulent scheme on ' + date;
     this.lead.history.push(result);
     return result;
   }
 
   coup (date) {
     let result = 'Forced ' + this.target.name() +
-    ' into retirement after taking control of his unit on ' + date;
+    ' into reserve after taking control of his unit on ' + date;
     this.lead.history.push(result);
     return result;
   }
 
   influence (date) {
     let result = 'Forced ' + this.target.name() +
-    ' into retirement after influencing key staff members on ' + date;
+    ' into reserve after influencing key staff members on ' + date;
     this.lead.history.push(result);
     return result;
   }
 
   spy (date) {
     let result = 'Forced ' + this.target.name() +
-    ' into retirement after revealing personal secrets on ' + date;
+    ' into reserve after revealing personal secrets on ' + date;
     this.lead.history.push(result);
     return result;
   }

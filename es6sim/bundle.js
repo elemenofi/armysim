@@ -2374,7 +2374,7 @@ var config = {
     return Math.round(Math.random() * n);
   },
 
-  speed: 1500,
+  speed: 150,
 
   unitDepth: 2,
 
@@ -4003,10 +4003,10 @@ var HQ = (function () {
     key: 'update',
     value: function update() {
       this.updateDate();
-      this.units.map(this.retire.bind(this));
+      this.units.map(this.reserve.bind(this));
       this.operations.update(this);
       this.officers.update(this);
-      this.officers.retire();
+      this.officers.reserve();
     }
   }, {
     key: 'player',
@@ -4037,8 +4037,8 @@ var HQ = (function () {
       this.units.push(unit);
     }
   }, {
-    key: 'retire',
-    value: function retire(unit) {
+    key: 'reserve',
+    value: function reserve(unit) {
       if (unit.commander.reserved) this.replace(unit);
     }
   }, {
@@ -4131,29 +4131,23 @@ var Officer = (function () {
 
     var chance = new Chance();
     var traits = new _traits2['default']();
-    // if (!HQ) debugger;
     this.id = spec.id;
     this.isPlayer = spec.isPlayer;
-
     this.unitId = spec.unitId;
     this.rank = _config2['default'].ranks[spec.rank];
     this.experience = _config2['default'].ranks[spec.rank].startxp + _config2['default'].random(10);
     this.prestige = _config2['default'].ranks[spec.rank].startpr + _config2['default'].random(10);
-
     this.traits = {
       base: traits.random()
     };
-
     this.alignment = _config2['default'].random(1000);
     this.militancy = _config2['default'].random(10);
     this.drift = 0;
     this.operations = [];
-
     this.administration = this.traits.base.administration + _config2['default'].random(10);
     this.intelligence = this.traits.base.intelligence + _config2['default'].random(10);
     this.commanding = this.traits.base.commanding + _config2['default'].random(10);
     this.diplomacy = this.traits.base.diplomacy + _config2['default'].random(10);
-
     if (this.isPlayer) {
       this.lname = 'Richardson';
       this.fname = 'John';
@@ -4236,6 +4230,14 @@ var Officer = (function () {
   }, {
     key: 'reserve',
     value: function reserve(HQ) {
+      var _this2 = this;
+
+      var lastUnit = HQ.units.filter(function (unit) {
+        return unit.id === _this2.unitId;
+      })[0];
+      lastUnit.reserve.push(this);
+      if (lastUnit.reserve.length > 3) lastUnit.reserve.pop();
+      console.log(lastUnit.reserve);
       this.reserved = true;
       this.history.push('Moved to reserve on ' + HQ.realDate);
     }
@@ -4308,8 +4310,8 @@ var Officers = (function () {
       return cadet;
     }
   }, {
-    key: 'retire',
-    value: function retire() {
+    key: 'reserve',
+    value: function reserve() {
       this.active = this.active.filter(function (officer) {
         return !officer.reserved;
       });
@@ -4464,7 +4466,7 @@ var Operation = (function () {
           this.done = true;
           this.result = this[this.type.action](HQ.realDate);
           this.target.reserved = true;
-          this.target.history.push('Forced to retire by ' + this.lead.name());
+          this.target.history.push('Forced on to reserve by ' + this.lead.name());
         } else {
           this.failed = true;
         }
@@ -4473,28 +4475,28 @@ var Operation = (function () {
   }, {
     key: 'deviate',
     value: function deviate(date) {
-      var result = 'Forced ' + this.target.name() + ' into retirement after revealing a fraudulent scheme on ' + date;
+      var result = 'Forced ' + this.target.name() + ' into reserve after revealing a fraudulent scheme on ' + date;
       this.lead.history.push(result);
       return result;
     }
   }, {
     key: 'coup',
     value: function coup(date) {
-      var result = 'Forced ' + this.target.name() + ' into retirement after taking control of his unit on ' + date;
+      var result = 'Forced ' + this.target.name() + ' into reserve after taking control of his unit on ' + date;
       this.lead.history.push(result);
       return result;
     }
   }, {
     key: 'influence',
     value: function influence(date) {
-      var result = 'Forced ' + this.target.name() + ' into retirement after influencing key staff members on ' + date;
+      var result = 'Forced ' + this.target.name() + ' into reserve after influencing key staff members on ' + date;
       this.lead.history.push(result);
       return result;
     }
   }, {
     key: 'spy',
     value: function spy(date) {
-      var result = 'Forced ' + this.target.name() + ' into retirement after revealing personal secrets on ' + date;
+      var result = 'Forced ' + this.target.name() + ' into reserve after revealing personal secrets on ' + date;
       this.lead.history.push(result);
       return result;
     }
@@ -5181,6 +5183,7 @@ var Unit = function Unit(spec, HQ) {
   this.type = spec.type;
   this.name = _names2['default'][spec.type][0];_names2['default'][spec.type].shift();
   this.subunits = [];
+  this.reserve = [];
   this.commander = HQ.officers.recruit.call(HQ, spec.rank, this.id, false, this.name);
 };
 

@@ -32,7 +32,7 @@ class Officers {
     return cadet;
   }
 
-  retire () {
+  reserve () {
     this.active = this.active.filter(officer => { return !officer.reserved; });
   }
 

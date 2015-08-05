@@ -17,10 +17,10 @@ class HQ {
 
   update () {
     this.updateDate();
-    this.units.map(this.retire.bind(this));
+    this.units.map(this.reserve.bind(this));
     this.operations.update(this);
     this.officers.update(this);
-    this.officers.retire();
+    this.officers.reserve();
   }
 
   player () {
@@ -45,7 +45,7 @@ class HQ {
     this.units.push(unit);
   }
 
-  retire (unit) {
+  reserve (unit) {
     if (unit.commander.reserved) this.replace(unit);
   }
 
