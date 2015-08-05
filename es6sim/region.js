@@ -2,7 +2,6 @@
 import {} from './chance';
 let chance = new Chance();
 
-
 class Region {
   constructor (id) {
     this.id = id;

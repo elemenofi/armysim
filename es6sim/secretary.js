@@ -6,7 +6,7 @@ class Secretary {
 
   rankLower(rank) {
     let lowerRank = null;
-    
+
     switch (rank.alias) {
       case 'lieutenant':
         return lowerRank;
