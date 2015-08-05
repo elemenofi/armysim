@@ -17,7 +17,7 @@ class Operations {
   update (HQ) {
     this.ongoing = this.ongoing.filter(operation => {
       if (!operation.done && !operation.failed &&
-        !operation.lead.retired && !operation.target.retired) {
+        !operation.lead.reserved && !operation.target.reserved) {
         return true;
       }
     });
@@ -59,7 +59,7 @@ class Operation {
         HQ.deassign(this.target.unitId);
         this.done = true;
         this.result = this[this.type.action](HQ.realDate);
-        this.target.retired = true;
+        this.target.reserved = true;
         this.target.history.push('Forced to retire by ' + this.lead.name());
       } else {
         this.failed = true;

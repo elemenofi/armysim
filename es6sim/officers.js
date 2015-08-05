@@ -33,7 +33,7 @@ class Officers {
   }
 
   retire () {
-    this.active = this.active.filter(officer => { return !officer.retired; });
+    this.active = this.active.filter(officer => { return !officer.reserved; });
   }
 
   replace (replacedCommander) {

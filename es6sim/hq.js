@@ -26,7 +26,7 @@ class HQ {
   player () {
     let squads = this.findByType('squad');
     let unit = squads[config.random(squads.length) + 1];
-    unit.commander.retired = true;
+    unit.commander.reserved = true;
     unit.commander = this.officers.replaceForPlayer.call(this, unit.commander);
     this.player = unit.commander;
   }
@@ -46,7 +46,7 @@ class HQ {
   }
 
   retire (unit) {
-    if (unit.commander.retired) this.replace(unit);
+    if (unit.commander.reserved) this.replace(unit);
   }
 
   replace (unit) {

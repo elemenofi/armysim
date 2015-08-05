@@ -4013,7 +4013,7 @@ var HQ = (function () {
     value: function player() {
       var squads = this.findByType('squad');
       var unit = squads[_config2['default'].random(squads.length) + 1];
-      unit.commander.retired = true;
+      unit.commander.reserved = true;
       unit.commander = this.officers.replaceForPlayer.call(this, unit.commander);
       this.player = unit.commander;
     }
@@ -4039,7 +4039,7 @@ var HQ = (function () {
   }, {
     key: 'retire',
     value: function retire(unit) {
-      if (unit.commander.retired) this.replace(unit);
+      if (unit.commander.reserved) this.replace(unit);
     }
   }, {
     key: 'replace',
@@ -4191,7 +4191,7 @@ var Officer = (function () {
       this.militate(HQ);
       this.experience++;
       this.prestige += _config2['default'].random(_config2['default'].ranks[this.rank.alias].startpr);
-      if (this.experience > this.rank.maxxp) this.retire(HQ);
+      if (this.experience > this.rank.maxxp) this.reserve(HQ);
     }
   }, {
     key: 'drifts',
@@ -4234,10 +4234,10 @@ var Officer = (function () {
       }
     }
   }, {
-    key: 'retire',
-    value: function retire(HQ) {
-      this.retired = true;
-      this.history.push('Retired on ' + HQ.realDate);
+    key: 'reserve',
+    value: function reserve(HQ) {
+      this.reserved = true;
+      this.history.push('Moved to reserve on ' + HQ.realDate);
     }
   }]);
 
@@ -4311,7 +4311,7 @@ var Officers = (function () {
     key: 'retire',
     value: function retire() {
       this.active = this.active.filter(function (officer) {
-        return !officer.retired;
+        return !officer.reserved;
       });
     }
   }, {
@@ -4412,7 +4412,7 @@ var Operations = (function () {
     key: 'update',
     value: function update(HQ) {
       this.ongoing = this.ongoing.filter(function (operation) {
-        if (!operation.done && !operation.failed && !operation.lead.retired && !operation.target.retired) {
+        if (!operation.done && !operation.failed && !operation.lead.reserved && !operation.target.reserved) {
           return true;
         }
       });
@@ -4463,7 +4463,7 @@ var Operation = (function () {
           HQ.deassign(this.target.unitId);
           this.done = true;
           this.result = this[this.type.action](HQ.realDate);
-          this.target.retired = true;
+          this.target.reserved = true;
           this.target.history.push('Forced to retire by ' + this.lead.name());
         } else {
           this.failed = true;
