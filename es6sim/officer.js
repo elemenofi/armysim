@@ -14,9 +14,7 @@ class Officer {
     this.rank = config.ranks[spec.rank];
     this.experience = config.ranks[spec.rank].startxp + config.random(10);
     this.prestige = config.ranks[spec.rank].startpr + config.random(10);
-    this.traits = {
-      base: traits.random()
-    };
+    this.traits = { base: traits.random() };
     this.alignment = config.random(1000);
     this.militancy = config.random(10);
     this.drift = 0;
@@ -44,11 +42,7 @@ class Officer {
   }
 
   graduate (spec) {
-    let graduation = {
-      unit: spec.unitName,
-      date: spec.date
-    };
-
+    let graduation = { unit: spec.unitName, date: spec.date };
     this.history.push(config.graduated(graduation, this));
   }
 
@@ -85,21 +79,20 @@ class Officer {
   }
 
   militate (HQ) {
-    if (
-      (this.drift > 0 && this.alignment > 900) ||
-      (this.drift < 0 && this.alignment < 100)
-    ) {
+    if ((this.drift > 0 && this.alignment > 900) ||
+      (this.drift < 0 && this.alignment < 100)) {
       if (this.militancy < 10) this.militancy++;
     }
     if (this.militancy === 10 && !this.isPlayer) {
-      //
       this.operations.push(HQ.operations.add(this, HQ));
       this.militancy = 0;
     }
   }
 
   reserve (HQ) {
-    var lastUnit = HQ.units.filter(unit=>{return unit.id === this.unitId;})[0];
+    var lastUnit = HQ.units.filter(unit => {
+      return unit.id === this.unitId;
+    })[0];
     lastUnit.reserve.push(this);
     if (lastUnit.reserve.length > 3) lastUnit.reserve.pop();
     this.reserved = true;
