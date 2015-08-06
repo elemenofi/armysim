@@ -24,21 +24,29 @@ class HQ {
   }
 
   player () {
-    let squads = this.findByType('squad');
+    let squads = this.findUnitsByType('squad');
     let unit = squads[config.random(squads.length) + 1];
     unit.commander.reserved = true;
     unit.commander = this.officers.replaceForPlayer.call(this, unit.commander);
     this.player = unit.commander;
   }
 
-  findByType (type) {
+  findUnitsByType (type) {
     return this.units.filter(unit => { return unit.type === type; });
   }
 
-  findPeers (rank) {
+  findUnitById (id) {
+    return this.units.filter(unit => { return unit.id === id; })[0];
+  }
+
+  findOfficersByRank (rank) {
     return this.officers.active.filter(officer => {
       return officer.rank === rank;
     });
+  }
+
+  findActiveOfficers () {
+    return this.officers.active;
   }
 
   add (unit) {

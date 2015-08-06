@@ -2374,14 +2374,13 @@ var config = {
     return Math.round(Math.random() * n);
   },
 
-  speed: 150,
+  speed: 1000,
 
   unitDepth: 2,
 
   staffSize: 20,
 
   operations: {
-    administration: { action: 'deviate', area: 'administration' },
     commanding: { action: 'coup', area: 'commanding' },
     diplomacy: { action: 'influence', area: 'diplomacy' },
     intelligence: { action: 'spy', area: 'intelligence' }
@@ -4011,25 +4010,37 @@ var HQ = (function () {
   }, {
     key: 'player',
     value: function player() {
-      var squads = this.findByType('squad');
+      var squads = this.findUnitsByType('squad');
       var unit = squads[_config2['default'].random(squads.length) + 1];
       unit.commander.reserved = true;
       unit.commander = this.officers.replaceForPlayer.call(this, unit.commander);
       this.player = unit.commander;
     }
   }, {
-    key: 'findByType',
-    value: function findByType(type) {
+    key: 'findUnitsByType',
+    value: function findUnitsByType(type) {
       return this.units.filter(function (unit) {
         return unit.type === type;
       });
     }
   }, {
-    key: 'findPeers',
-    value: function findPeers(rank) {
+    key: 'findUnitById',
+    value: function findUnitById(id) {
+      return this.units.filter(function (unit) {
+        return unit.id === id;
+      })[0];
+    }
+  }, {
+    key: 'findOfficersByRank',
+    value: function findOfficersByRank(rank) {
       return this.officers.active.filter(function (officer) {
         return officer.rank === rank;
       });
+    }
+  }, {
+    key: 'findActiveOfficers',
+    value: function findActiveOfficers() {
+      return this.officers.active;
     }
   }, {
     key: 'add',
@@ -4144,7 +4155,6 @@ var Officer = (function () {
     this.militancy = _config2['default'].random(10);
     this.drift = 0;
     this.operations = [];
-    this.administration = this.traits.base.administration + _config2['default'].random(10);
     this.intelligence = this.traits.base.intelligence + _config2['default'].random(10);
     this.commanding = this.traits.base.commanding + _config2['default'].random(10);
     this.diplomacy = this.traits.base.diplomacy + _config2['default'].random(10);
@@ -4237,7 +4247,6 @@ var Officer = (function () {
       })[0];
       lastUnit.reserve.push(this);
       if (lastUnit.reserve.length > 3) lastUnit.reserve.pop();
-      console.log(lastUnit.reserve);
       this.reserved = true;
       this.history.push('Moved to reserve on ' + HQ.realDate);
     }
@@ -4649,7 +4658,6 @@ var Traits = (function () {
       name: 'Diplomat',
       area: 'diplomacy',
       school: 'the National Officer Candidate School',
-      administration: 1,
       intelligence: 3,
       commanding: 2,
       diplomacy: 4
@@ -4657,7 +4665,6 @@ var Traits = (function () {
       name: 'Warrior',
       area: 'commanding',
       school: 'the National Military Academy',
-      administration: 3,
       intelligence: 2,
       commanding: 4,
       diplomacy: 1
@@ -4665,25 +4672,16 @@ var Traits = (function () {
       name: 'Spy',
       area: 'intelligence',
       school: 'the Institute of Military Intelligence',
-      administration: 2,
       intelligence: 4,
       commanding: 1,
       diplomacy: 3
-    }, {
-      name: 'Administrator',
-      area: 'administration',
-      school: 'General Sutton University',
-      administration: 4,
-      intelligence: 1,
-      commanding: 3,
-      diplomacy: 2
     }];
   }
 
   _createClass(Traits, [{
     key: 'random',
     value: function random() {
-      var rnd = Math.round(Math.random() * 3);
+      var rnd = Math.round(Math.random() * 2);
       return this.base[rnd];
     }
   }]);
@@ -4765,9 +4763,14 @@ var Army = (function (_React$Component) {
       this.setState({ showArmy: !this.state.showArmy });
     }
   }, {
-    key: 'togglePeers',
-    value: function togglePeers() {
-      this.setState({ showPeers: !this.state.showPeers });
+    key: 'toggleOfficers',
+    value: function toggleOfficers() {
+      this.setState({ showOfficers: !this.state.showOfficers });
+    }
+  }, {
+    key: 'toggleUnit',
+    value: function toggleUnit() {
+      this.setState({ showUnit: !this.state.showUnit });
     }
   }, {
     key: 'render',
@@ -4775,7 +4778,8 @@ var Army = (function (_React$Component) {
       var army = this.state.army;
       var player = army.HQ.player;
       var corps = [];
-      var peers = [];
+      var officers = [];
+      var unit = [];
 
       if (this.state.showArmy) {
         army.units.corps.forEach(function (corp) {
@@ -4787,16 +4791,46 @@ var Army = (function (_React$Component) {
         });
       }
 
-      if (this.state.showPeers) {
-        army.HQ.findPeers(player.rank).sort(comparisons.byExperience).forEach(function (peer) {
-          peers.push(_react2['default'].createElement(
+      if (this.state.showOfficers) {
+        var activeOfficers = army.HQ.findActiveOfficers(player.rank);
+        if (this.state.engine.running) {
+          activeOfficers.sort(comparisons.byExperience);
+        };
+        activeOfficers.forEach(function (officer) {
+          officers.push(_react2['default'].createElement(
             'li',
             null,
-            peer.name(),
+            officer.name(),
             ', ',
-            peer.experience
+            officer.experience
           ));
         });
+      }
+
+      if (this.state.showUnit) {
+        var playerUnit = army.HQ.findUnitById(player.unitId);
+        var parentUnit = army.HQ.findUnitById(playerUnit.parentId);
+        var showReserve = function showReserve(playerUnit) {
+          playerUnit.reserve.forEach(function (officer) {
+            unit.push(_react2['default'].createElement(
+              'div',
+              null,
+              officer.name()
+            ));
+          });
+        };
+        if (playerUnit.reserve.length) {
+          showReserve(playerUnit);
+        };
+        unit.push(_react2['default'].createElement(
+          'div',
+          null,
+          'Commanding the ',
+          playerUnit.name,
+          ', attached to the ',
+          parentUnit.name,
+          '.'
+        ));
       }
 
       return _react2['default'].createElement(
@@ -4818,8 +4852,13 @@ var Army = (function (_React$Component) {
         ),
         _react2['default'].createElement(
           'button',
-          { onClick: this.togglePeers.bind(this) },
-          'Peers'
+          { onClick: this.toggleOfficers.bind(this) },
+          'Officers'
+        ),
+        _react2['default'].createElement(
+          'button',
+          { onClick: this.toggleUnit.bind(this) },
+          'Unit'
         ),
         _react2['default'].createElement(
           'div',
@@ -4829,7 +4868,12 @@ var Army = (function (_React$Component) {
         _react2['default'].createElement(
           'ul',
           null,
-          peers
+          officers
+        ),
+        _react2['default'].createElement(
+          'div',
+          null,
+          unit
         )
       );
     }
@@ -4992,12 +5036,6 @@ var Player = (function (_React$Component3) {
             null,
             'Intelligence ',
             player.intelligence
-          ),
-          _react2['default'].createElement(
-            'li',
-            null,
-            'Administration ',
-            player.administration
           )
         ),
         _react2['default'].createElement(
@@ -5095,12 +5133,6 @@ var Officer = (function (_React$Component4) {
             null,
             'Intelligence ',
             player.intelligence
-          ),
-          _react2['default'].createElement(
-            'li',
-            null,
-            'Administration ',
-            player.administration
           )
         ),
         _react2['default'].createElement(

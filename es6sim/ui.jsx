@@ -36,15 +36,20 @@ class Army extends React.Component {
     this.setState({showArmy: !this.state.showArmy});
   }
 
-  togglePeers () {
-    this.setState({showPeers: !this.state.showPeers});
+  toggleOfficers () {
+    this.setState({showOfficers: !this.state.showOfficers});
+  }
+
+  toggleUnit () {
+    this.setState({showUnit: !this.state.showUnit});
   }
 
   render () {
     let army = this.state.army;
     let player = army.HQ.player;
     let corps = [];
-    let peers = [];
+    let officers = [];
+    let unit = [];
 
     if (this.state.showArmy) {
       army.units.corps.forEach(corp => {
@@ -56,10 +61,28 @@ class Army extends React.Component {
       });
     }
 
-    if (this.state.showPeers) {
-      army.HQ.findPeers(player.rank).sort(comparisons.byExperience).forEach(peer => {
-        peers.push(<li>{peer.name()}, {peer.experience}</li>);
+    if (this.state.showOfficers) {
+      let activeOfficers = army.HQ.findActiveOfficers(player.rank);
+      if (this.state.engine.running) {
+        activeOfficers.sort(comparisons.byExperience);
+      };
+      activeOfficers.forEach(officer => {
+        officers.push(<li>{officer.name()}, {officer.experience}</li>);
       });
+    }
+
+    if (this.state.showUnit) {
+      let playerUnit = army.HQ.findUnitById(player.unitId);
+      let parentUnit = army.HQ.findUnitById(playerUnit.parentId);
+      let showReserve = (playerUnit) => {
+        playerUnit.reserve.forEach(officer => { unit.push(<div>{officer.name()}</div>)});
+      };
+      if (playerUnit.reserve.length) {showReserve(playerUnit)};
+      unit.push(
+        <div>
+          Commanding the {playerUnit.name}, attached to the {parentUnit.name}.
+        </div>
+      );
     }
 
     return(
@@ -70,13 +93,17 @@ class Army extends React.Component {
         <div className="clear"></div>
         <button onClick={this.pause.bind(this)}>Pause</button>
         <button onClick={this.toggleArmy.bind(this)}>Army</button>
-        <button onClick={this.togglePeers.bind(this)}>Peers</button>
+        <button onClick={this.toggleOfficers.bind(this)}>Officers</button>
+        <button onClick={this.toggleUnit.bind(this)}>Unit</button>
         <div>
           {corps}
         </div>
         <ul>
-          {peers}
+          {officers}
         </ul>
+        <div>
+          {unit}
+        </div>
       </div>
     );
   }
@@ -163,7 +190,6 @@ class Player extends React.Component {
           <li>Diplomacy {player.diplomacy}</li>
           <li>Commanding {player.commanding}</li>
           <li>Intelligence {player.intelligence}</li>
-          <li>Administration {player.administration}</li>
         </ul>
         <ul>
           <p>History</p>
@@ -202,7 +228,6 @@ class Officer extends React.Component {
           <li>Diplomacy {player.diplomacy}</li>
           <li>Commanding {player.commanding}</li>
           <li>Intelligence {player.intelligence}</li>
-          <li>Administration {player.administration}</li>
         </ul>
         <ul>
           <p>History</p>

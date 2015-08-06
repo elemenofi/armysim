@@ -21,7 +21,6 @@ class Officer {
     this.militancy = config.random(10);
     this.drift = 0;
     this.operations = [];
-    this.administration = this.traits.base.administration + config.random(10);
     this.intelligence = this.traits.base.intelligence + config.random(10);
     this.commanding = this.traits.base.commanding + config.random(10);
     this.diplomacy = this.traits.base.diplomacy + config.random(10);
@@ -103,7 +102,6 @@ class Officer {
     var lastUnit = HQ.units.filter(unit=>{return unit.id === this.unitId;})[0];
     lastUnit.reserve.push(this);
     if (lastUnit.reserve.length > 3) lastUnit.reserve.pop();
-    console.log(lastUnit.reserve);
     this.reserved = true;
     this.history.push('Moved to reserve on ' + HQ.realDate);
   }

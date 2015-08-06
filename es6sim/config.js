@@ -48,14 +48,13 @@ let config = {
     return Math.round(Math.random() * n);
   },
 
-  speed: 150,
+  speed: 1000,
 
   unitDepth: 2,
 
   staffSize: 20,
 
   operations: {
-      administration: {action: 'deviate', area: 'administration'},
       commanding: {action: 'coup', area: 'commanding'},
       diplomacy: {action: 'influence', area: 'diplomacy'},
       intelligence: {action: 'spy', area: 'intelligence'}
