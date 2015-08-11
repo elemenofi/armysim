@@ -4,25 +4,25 @@ import config from './config';
 class Operations {
   constructor () {
     this.__operationsID = 1;
-    this.ongoing = [];
+    this.active = [];
   }
 
   add (officer, HQ, target, type) {
     let operation = new Operation(officer, HQ, target);
     operation.id = this.__operationsID;
-    this.ongoing.push(operation);
+    this.active.push(operation);
     return operation;
   }
 
   update (HQ) {
-    this.ongoing = this.ongoing.filter(operation => {
+    this.active = this.active.filter(operation => {
       if (!operation.done && !operation.failed &&
         !operation.lead.reserved && !operation.target.reserved) {
         return true;
       }
     });
 
-    this.ongoing.forEach(operation => { operation.execute(HQ); });
+    this.active.forEach(operation => { operation.execute(HQ); });
   }
 }
 

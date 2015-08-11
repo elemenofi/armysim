@@ -1,5 +1,5 @@
 'use strict';
-import {} from './date.js';
+import {} from './lib/date.js';
 import config from './config';
 import Operations from './operations';
 

@@ -1,5 +1,5 @@
 /* jshint ignore:start */
-import React from './react';
+import React from './lib/react';
 import Comparisons from './comparisons';
 
 let comparisons = new Comparisons();

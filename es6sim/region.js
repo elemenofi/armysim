@@ -1,5 +1,5 @@
 'use strict';
-import {} from './chance';
+import {} from './lib/chance';
 let chance = new Chance();
 
 class Region {

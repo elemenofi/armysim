@@ -1,6 +1,6 @@
 /* global Chance */
 'use strict';
-import {} from './chance';
+import {} from './lib/chance';
 import config from './config';
 import Traits from './traits';
 
