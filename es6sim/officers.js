@@ -12,9 +12,7 @@ class Officers {
   }
 
   update (HQ) {
-    this.active.forEach(officer => {
-      officer.update(HQ);
-    });
+    this.active.forEach(officer => { officer.update(HQ); });
   }
 
   recruit (rank, unitId, isPlayer, unitName) {
