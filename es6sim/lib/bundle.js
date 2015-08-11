@@ -2056,8 +2056,8 @@ var Engine = (function () {
   function Engine(army) {
     _classCallCheck(this, Engine);
 
-    this.ui = new _uiJsx2['default'](this);
     this.army = army;
+    this.ui = new _uiJsx2['default'](this);
     this.turn = 0;
     this.running = true;
     this.start(this);
@@ -2087,6 +2087,7 @@ var Engine = (function () {
       if (this.running) setTimeout(function () {
         _this.update();
       }, _config2['default'].speed);
+      console.log("running");
     }
   }, {
     key: 'updateUI',
@@ -4810,7 +4811,6 @@ var Army = (function (_React$Component) {
     _classCallCheck(this, Army);
 
     _get(Object.getPrototypeOf(Army.prototype), 'constructor', this).call(this, props);
-
     this.state = {
       army: props.engine.army,
       engine: props.engine
@@ -4820,11 +4820,75 @@ var Army = (function (_React$Component) {
   _createClass(Army, [{
     key: 'render',
     value: function render() {
-      return _libReact2['default'].createElement('div', null);
+      var army = this.state.army;
+      var engine = this.state.engine;
+
+      return _libReact2['default'].createElement(
+        'div',
+        null,
+        _libReact2['default'].createElement(Date, { hq: army.HQ, engine: engine }),
+        _libReact2['default'].createElement(Player, { player: army.HQ.player })
+      );
     }
   }]);
 
   return Army;
+})(_libReact2['default'].Component);
+
+var Player = (function (_React$Component2) {
+  _inherits(Player, _React$Component2);
+
+  function Player(props) {
+    _classCallCheck(this, Player);
+
+    _get(Object.getPrototypeOf(Player.prototype), 'constructor', this).call(this, props);
+    this.state = this.props.player;
+  }
+
+  _createClass(Player, [{
+    key: 'render',
+    value: function render() {
+      return _libReact2['default'].createElement(
+        'div',
+        null,
+        this.state.name()
+      );
+    }
+  }]);
+
+  return Player;
+})(_libReact2['default'].Component);
+
+var Date = (function (_React$Component3) {
+  _inherits(Date, _React$Component3);
+
+  function Date(props) {
+    _classCallCheck(this, Date);
+
+    _get(Object.getPrototypeOf(Date.prototype), 'constructor', this).call(this, props);
+    this.state = {
+      hq: this.props.hq,
+      engine: this.props.engine
+    };
+  }
+
+  _createClass(Date, [{
+    key: 'pause',
+    value: function pause() {
+      this.state.engine.pause();
+    }
+  }, {
+    key: 'render',
+    value: function render() {
+      return _libReact2['default'].createElement(
+        'div',
+        { onClick: this.pause.bind(this) },
+        this.state.hq.realDate
+      );
+    }
+  }]);
+
+  return Date;
 })(_libReact2['default'].Component);
 
 exports['default'] = Ui;

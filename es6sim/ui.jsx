@@ -18,20 +18,59 @@ class Ui {
 }
 
 class Army extends React.Component {
-  constructor(props) {
-    super(props);
-
+  constructor (props) {
+    super (props);
     this.state = {
       army: props.engine.army,
       engine: props.engine
     }
   }
 
-  render() {
-    return(
-      <div></div>
+  render () {
+    var army = this.state.army;
+    var engine = this.state.engine;
+
+    return (
+      <div>
+        <Date hq={ army.HQ } engine={ engine } />
+        <Player player={ army.HQ.player } />
+      </div>
     );
   }
 }
+
+class Player extends React.Component {
+  constructor (props) {
+    super (props);
+    this.state = this.props.player;
+  }
+
+  render () {
+    return (
+      <div>{ this.state.name() }</div>
+    );
+  }
+}
+
+class Date extends React.Component {
+  constructor (props) {
+    super (props);
+    this.state = {
+      hq: this.props.hq,
+      engine: this.props.engine
+    };
+  }
+
+  pause () {
+    this.state.engine.pause();
+  }
+
+  render () {
+    return (
+      <div onClick={ this.pause.bind(this) }>{ this.state.hq.realDate }</div>
+    );
+  }
+}
+
 
 export default Ui;

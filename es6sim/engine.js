@@ -4,8 +4,8 @@ import config from './config';
 
 class Engine {
   constructor(army) {
-    this.ui = new Ui(this);
     this.army = army;
+    this.ui = new Ui(this);
     this.turn = 0;
     this.running = true;
     this.start(this);
@@ -27,6 +27,7 @@ class Engine {
     this.army.HQ.update();
 
     if (this.running) setTimeout(() => { this.update() }, config.speed);
+    console.log("running");
   }
 
   updateUI () {
