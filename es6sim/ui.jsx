@@ -80,7 +80,7 @@ class Army extends React.Component {
       if (playerUnit.reserve.length) {showReserve(playerUnit)};
       unit.push(
         <div>
-          Commanding the {playerUnit.name}, attached to the {parentUnit.name}.
+          {playerUnit.name}, {parentUnit.name}.
         </div>
       );
     }

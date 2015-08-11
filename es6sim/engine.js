@@ -26,18 +26,12 @@ class Engine {
     this.turn++;
     this.army.HQ.update();
 
-    if (this.running) {
-      setTimeout(() => {
-        this.update();
-      }, config.speed);
-    }
+    if (this.running) setTimeout(() => { this.update() }, config.speed);
   }
 
   updateUI () {
     this.ui.render(this.army);
-    setTimeout(() => {
-      this.updateUI();
-    }, config.speed);
+    setTimeout(() => { this.updateUI() }, config.speed);
   }
 }
 
