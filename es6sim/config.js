@@ -50,6 +50,8 @@ let config = {
 
   speed: 100,
 
+  bufferTurns: 500,
+
   unitDepth: 2,
 
   staffSize: 20,

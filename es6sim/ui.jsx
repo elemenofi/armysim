@@ -97,7 +97,8 @@ class Office extends React.Component {
     return (
       <div>
         <div>{ unit.name }</div>
-        <ul>{ reserve }</ul>
+        <div>STAFF OFFICERS</div>
+        <ul className="staffOfficers">{ reserve }</ul>
       </div>
     );
   }
@@ -112,7 +113,9 @@ class StaffOfficer extends React.Component {
   }
   render () {
     return (
-      <div>{ this.state.officer.name() }</div>
+      <div>
+        <div>{ this.state.officer.name() }</div>
+      </div>
     );
   }
 }

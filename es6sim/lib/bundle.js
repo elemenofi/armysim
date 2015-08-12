@@ -1943,6 +1943,8 @@ var config = {
 
   speed: 100,
 
+  bufferTurns: 500,
+
   unitDepth: 2,
 
   staffSize: 20,
@@ -2081,7 +2083,7 @@ var Engine = (function () {
     value: function update() {
       var _this = this;
 
-      while (this.turn < 300) {
+      while (this.turn < _config2['default'].bufferTurns) {
         this.army.HQ.update();
         this.turn++;
       }
@@ -4921,13 +4923,9 @@ var Office = (function (_React$Component4) {
     value: function render() {
       var army = this.state.engine.army;
       var unit = army.HQ.findUnitById(this.state.officer.unitId);
-      var staffOfficers = [];
+      var reserve = [];
       unit.reserve.forEach(function (officer) {
-        staffOfficers.push(_libReact2['default'].createElement(
-          'li',
-          null,
-          officer.name()
-        ));
+        reserve.push(_libReact2['default'].createElement(StaffOfficer, { officer: officer }));
       });
       return _libReact2['default'].createElement(
         'div',
@@ -4938,15 +4936,50 @@ var Office = (function (_React$Component4) {
           unit.name
         ),
         _libReact2['default'].createElement(
-          'ul',
+          'div',
           null,
-          staffOfficers
+          'STAFF OFFICERS'
+        ),
+        _libReact2['default'].createElement(
+          'ul',
+          { className: 'staffOfficers' },
+          reserve
         )
       );
     }
   }]);
 
   return Office;
+})(_libReact2['default'].Component);
+
+var StaffOfficer = (function (_React$Component5) {
+  _inherits(StaffOfficer, _React$Component5);
+
+  function StaffOfficer(props) {
+    _classCallCheck(this, StaffOfficer);
+
+    _get(Object.getPrototypeOf(StaffOfficer.prototype), 'constructor', this).call(this, props);
+    this.state = {
+      officer: this.props.officer
+    };
+  }
+
+  _createClass(StaffOfficer, [{
+    key: 'render',
+    value: function render() {
+      return _libReact2['default'].createElement(
+        'div',
+        null,
+        _libReact2['default'].createElement(
+          'div',
+          null,
+          this.state.officer.name()
+        )
+      );
+    }
+  }]);
+
+  return StaffOfficer;
 })(_libReact2['default'].Component);
 
 exports['default'] = Ui;

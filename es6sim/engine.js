@@ -23,7 +23,7 @@ class Engine {
   }
 
   update () {
-    while (this.turn < 500) {
+    while (this.turn < config.bufferTurns) {
       this.army.HQ.update();
       this.turn++;
     }
