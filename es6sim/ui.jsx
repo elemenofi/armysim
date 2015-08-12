@@ -39,19 +39,6 @@ class Army extends React.Component {
   }
 }
 
-class Player extends React.Component {
-  constructor (props) {
-    super (props);
-    this.state = this.props.player;
-  }
-
-  render () {
-    return (
-      <div>{ this.state.name() }</div>
-    );
-  }
-}
-
 class Date extends React.Component {
   constructor (props) {
     super (props);
@@ -71,6 +58,34 @@ class Date extends React.Component {
     );
   }
 }
+
+class Player extends React.Component {
+  constructor (props) {
+    super (props);
+    this.state = this.props.player;
+  }
+
+  render () {
+    return (
+      <div>{ this.state.name() }</div>
+      <Office officer={this.state} />
+    );
+  }
+}
+
+class Office extends React.Component {
+  constructor (props) {
+    super (props);
+    this.state = this.props.officer;
+  }
+
+  render () {
+    return (
+      <div>{ this.state.name() }</div>
+    );
+  }
+}
+
 
 
 export default Ui;

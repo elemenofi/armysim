@@ -2,18 +2,18 @@ ul {
   padding: 0;
   list-style-type: none;
 }
+
 .clear {
   clear: both;
 }
+
 .player, .corp, .division, .brigade {
   width: 50%;
   float: left;
 }
+
 .corp:after {
   content: ' ';
   display: block;
   clear: both;
 };
-.history {
-	font-size: 9px;
-}
