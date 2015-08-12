@@ -12,8 +12,8 @@ class Engine {
   }
 
   start (engine) {
-    this.army.HQ.player();
     this.update();
+    this.army.HQ.player();
     this.updateUI();
   }
 
@@ -23,11 +23,15 @@ class Engine {
   }
 
   update () {
-    this.turn++;
+    while (this.turn < 300) {
+      this.army.HQ.update();
+      this.turn++;
+    }
+
     this.army.HQ.update();
+    this.turn++;
 
     if (this.running) setTimeout(() => { this.update() }, config.speed);
-    console.log("running");
   }
 
   updateUI () {

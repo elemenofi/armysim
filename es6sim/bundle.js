@@ -2066,8 +2066,8 @@ var Engine = (function () {
   _createClass(Engine, [{
     key: 'start',
     value: function start(engine) {
-      this.update();
       this.army.HQ.player();
+      this.update();
       this.updateUI();
     }
   }, {
@@ -2081,17 +2081,13 @@ var Engine = (function () {
     value: function update() {
       var _this = this;
 
-      while (this.turn < 300) {
-        this.army.HQ.update();
-        this.turn++;
-      }
-
-      this.army.HQ.update();
       this.turn++;
+      this.army.HQ.update();
 
       if (this.running) setTimeout(function () {
         _this.update();
       }, _config2['default'].speed);
+      console.log("running");
     }
   }, {
     key: 'updateUI',
@@ -4831,7 +4827,7 @@ var Army = (function (_React$Component) {
         'div',
         null,
         _libReact2['default'].createElement(Date, { hq: army.HQ, engine: engine }),
-        _libReact2['default'].createElement(Player, { player: army.HQ.player, engine: engine })
+        _libReact2['default'].createElement(Player, { player: army.HQ.player })
       );
     }
   }]);
@@ -4878,10 +4874,8 @@ var Player = (function (_React$Component3) {
     _classCallCheck(this, Player);
 
     _get(Object.getPrototypeOf(Player.prototype), 'constructor', this).call(this, props);
-    this.state = {
-      player: this.props.player,
-      engine: this.props.engine
-    };
+    debugger;
+    this.state = this.props.player;
   }
 
   _createClass(Player, [{
@@ -4893,9 +4887,9 @@ var Player = (function (_React$Component3) {
         _libReact2['default'].createElement(
           'div',
           null,
-          this.state.player.name()
+          this.state.name()
         ),
-        _libReact2['default'].createElement(Office, { officer: this.state.player, engine: this.state.engine })
+        _libReact2['default'].createElement(Office, { officer: this.state })
       );
     }
   }]);
@@ -4910,38 +4904,17 @@ var Office = (function (_React$Component4) {
     _classCallCheck(this, Office);
 
     _get(Object.getPrototypeOf(Office.prototype), 'constructor', this).call(this, props);
-    this.state = {
-      officer: this.props.officer,
-      engine: this.props.engine
-    };
+    this.state = this.props.officer;
   }
 
   _createClass(Office, [{
     key: 'render',
     value: function render() {
-      var army = this.state.engine.army;
-      var unit = army.HQ.findUnitById(this.state.officer.unitId);
-      var staffOfficers = [];
-      unit.reserve.forEach(function (officer) {
-        staffOfficers.push(_libReact2['default'].createElement(
-          'li',
-          null,
-          officer.name()
-        ));
-      });
+      debugger;
       return _libReact2['default'].createElement(
         'div',
         null,
-        _libReact2['default'].createElement(
-          'div',
-          null,
-          unit.name
-        ),
-        _libReact2['default'].createElement(
-          'ul',
-          null,
-          staffOfficers
-        )
+        this.state.name()
       );
     }
   }]);

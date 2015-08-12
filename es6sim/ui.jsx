@@ -33,7 +33,7 @@ class Army extends React.Component {
     return (
       <div>
         <Date hq={ army.HQ } engine={ engine } />
-        <Player player={ army.HQ.player } />
+        <Player player={ army.HQ.player } engine={ engine }/>
       </div>
     );
   }
@@ -62,13 +62,18 @@ class Date extends React.Component {
 class Player extends React.Component {
   constructor (props) {
     super (props);
-    this.state = this.props.player;
+    this.state = {
+      player: this.props.player,
+      engine: this.props.engine
+    };
   }
 
   render () {
     return (
-      <div>{ this.state.name() }</div>
-      <Office officer={this.state} />
+      <div>
+        <div>{ this.state.player.name() }</div>
+        <Office officer={this.state.player} engine={ this.state.engine } />
+      </div>
     );
   }
 }
@@ -76,12 +81,24 @@ class Player extends React.Component {
 class Office extends React.Component {
   constructor (props) {
     super (props);
-    this.state = this.props.officer;
+    this.state = {
+      officer: this.props.officer,
+      engine: this.props.engine
+    };
   }
 
   render () {
+    var army = this.state.engine.army;
+    var unit = army.HQ.findUnitById(this.state.officer.unitId);
+    var staffOfficers = [];
+    unit.reserve.forEach(officer => {
+      staffOfficers.push(<li>{ officer.name() }</li>);
+    });
     return (
-      <div>{ this.state.name() }</div>
+      <div>
+        <div>{ unit.name }</div>
+        <ul>{ staffOfficers }</ul>
+      </div>
     );
   }
 }
