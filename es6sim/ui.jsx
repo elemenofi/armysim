@@ -80,7 +80,7 @@ class Player extends React.Component {
 
 class Office extends React.Component {
   constructor (props) {
-    super (props);
+    super(props);
     this.state = {
       officer: this.props.officer,
       engine: this.props.engine
@@ -90,15 +90,29 @@ class Office extends React.Component {
   render () {
     var army = this.state.engine.army;
     var unit = army.HQ.findUnitById(this.state.officer.unitId);
-    var staffOfficers = [];
+    var reserve = [];
     unit.reserve.forEach(officer => {
-      staffOfficers.push(<li>{ officer.name() }</li>);
+      reserve.push(<StaffOfficer officer={officer} />);
     });
     return (
       <div>
         <div>{ unit.name }</div>
-        <ul>{ staffOfficers }</ul>
+        <ul>{ reserve }</ul>
       </div>
+    );
+  }
+}
+
+class StaffOfficer extends React.Component {
+  constructor (props) {
+    super(props);
+    this.state = {
+      officer: this.props.officer
+    }
+  }
+  render () {
+    return (
+      <div>{ this.state.officer.name() }</div>
     );
   }
 }
