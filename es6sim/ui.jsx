@@ -94,14 +94,14 @@ class Office extends React.Component {
 
     var staff = [];
     army.HQ.findStaff(this.state.officer).forEach(staffOfficer => {
-      staff.push(<li>{ staffOfficer.name() }</li>);
+      staff.push(<li><Officer officer={ staffOfficer }/></li>);
     });
 
     var subordinates = [];
     army.HQ.findSubordinates(this.state.officer).forEach(subordinate => {
-      subordinates.push(<li>{ subordinate.name() }</li>);
+      subordinates.push(<li><Officer officer={ subordinate }/></li>);
     });
-    
+
     return (
       <div>
         <div>{ unit.name }</div>
@@ -119,14 +119,11 @@ class Office extends React.Component {
 class Officer extends React.Component {
   constructor (props) {
     super(props);
-    this.state = {
-      officer: this.props.officer
-    }
   }
   render () {
     return (
       <div>
-        <div>{ this.state.officer.name() }</div>
+        <div>{ this.props.officer.name() }</div>
       </div>
     );
   }
