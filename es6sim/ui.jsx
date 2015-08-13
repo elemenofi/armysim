@@ -10,10 +10,7 @@ class Ui {
   }
 
   render (army) {
-    React.render(
-      <Army engine={ this.engine } />,
-      document.body
-    );
+    React.render(<Army engine={ this.engine } />, document.body);
   }
 }
 
@@ -29,8 +26,7 @@ class Army extends React.Component {
   render () {
     var army = this.state.army;
     var engine = this.state.engine;
-
-    return (
+    return(
       <div>
         <Date hq={ army.HQ } engine={ engine } />
         <Player player={ army.HQ.player } engine={ engine }/>
@@ -53,7 +49,7 @@ class Date extends React.Component {
   }
 
   render () {
-    return (
+    return(
       <div onClick={ this.pause.bind(this) }>{ this.state.hq.realDate }</div>
     );
   }
@@ -69,16 +65,18 @@ class Player extends React.Component {
   }
 
   render () {
-    return (
+    return(
       <div>
         <div>{ this.state.player.name() }</div>
-        <Office officer={ this.state.player } engine={ this.state.engine } />
+        <Staff officer={ this.state.player } engine={ this.state.engine } />
+        <br></br>
+        <Unit officer={ this.state.player }  engine={ this.state.engine } />
       </div>
     );
   }
 }
 
-class Office extends React.Component {
+class Staff extends React.Component {
   constructor (props) {
     super(props);
     this.state = {
@@ -91,24 +89,27 @@ class Office extends React.Component {
     var army = this.state.engine.army;
     var unit = army.HQ.findUnitById(this.state.officer.unitId);
     var superior = army.HQ.findCommandingOfficer(this.state.officer);
-
     var staff = [];
-    army.HQ.findStaff(this.state.officer).forEach(staffOfficer => {
-      staff.push(<li><Officer officer={ staffOfficer }/></li>);
-    });
-
     var subordinates = [];
-    army.HQ.findSubordinates(this.state.officer).forEach(subordinate => {
-      subordinates.push(<li><Officer officer={ subordinate }/></li>);
+
+    army.HQ.findStaff(this.state.officer).forEach(staffOfficer => {
+      staff.push(<li><Officer officer={ staffOfficer } engine={ this.state.engine }/></li>);
     });
 
-    return (
+    army.HQ.findSubordinates(this.state.officer).forEach(subordinate => {
+      subordinates.push(<li><Officer officer={ subordinate } engine={ this.state.engine }/></li>);
+    });
+
+    return(
       <div>
         <div>{ unit.name }</div>
+        <br></br>
         <div>SUPERIOR OFFICER</div>
         <div>{ superior.name() }</div>
+        <br></br>
         <div>STAFF OFFICERS</div>
         <ul className="staffOfficers">{ staff }</ul>
+        <br></br>
         <div>SUBORDINATE OFFICERS</div>
         <ul className="staffOfficers">{ subordinates }</ul>
       </div>
@@ -119,9 +120,13 @@ class Office extends React.Component {
 class Officer extends React.Component {
   constructor (props) {
     super(props);
+    this.state = {
+      engine: this.props.engine
+    }
   }
+
   render () {
-    return (
+    return(
       <div>
         <div>{ this.props.officer.name() }</div>
       </div>
@@ -129,6 +134,27 @@ class Officer extends React.Component {
   }
 }
 
+class Unit extends React.Component {
+  constructor (props) {
+    super(props);
+    this.state = {
+      player: this.props.player,
+      engine: this.props.engine
+    }
+  }
 
+  giveOrder () {
+    console.log('Planning');
+  }
+
+  render () {
+    return(
+      <div>
+        <div>OPERATIONS</div>
+        <button onClick={ this.giveOrder.bind(this) }>Plan Operation</button>
+      </div>
+    );
+  }
+}
 
 export default Ui;

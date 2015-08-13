@@ -4528,9 +4528,10 @@ var Operations = (function () {
 
   _createClass(Operations, [{
     key: 'add',
-    value: function add(officer, HQ, target, type) {
-      var operation = new Operation(officer, HQ, target);
+    value: function add(HQ, officer, target, type) {
+      var operation = new Operation(HQ, officer, target);
       operation.id = this.__operationsID;
+      this.__operationsID++;
       this.active.push(operation);
       return operation;
     }
@@ -4538,96 +4539,84 @@ var Operations = (function () {
     key: 'update',
     value: function update(HQ) {
       this.active = this.active.filter(function (operation) {
-        if (!operation.done && !operation.failed && !operation.lead.reserved && !operation.target.reserved) {
-          return true;
-        }
+        // return (!operation.done && !operation.lead.reserved && !operation.target.reserved);
       });
-
-      this.active.forEach(function (operation) {
-        operation.execute(HQ);
-      });
+      // this.active.forEach(operation => { operation.execute(HQ); });
     }
   }]);
 
   return Operations;
 })();
 
-var Operation = (function () {
-  function Operation(officer, HQ, target, type) {
-    _classCallCheck(this, Operation);
+var Operation = function Operation(officer, HQ, target, type) {
+  _classCallCheck(this, Operation);
+}
+// this.lead = officer;
+// this.side = (officer.alignment > 500) ? 'right' : 'left';
+// this.target = (target) ? target : this.pick(officer, HQ);
+// this.type = (type) ? type : config.operations[officer.traits.base.area];
+// this.strength = 0;
+// this.failed = (this.target) ? null : true;
+// this.done = null;
 
-    this.lead = officer;
-    this.side = officer.alignment > 500 ? 'right' : 'left';
-    this.target = target ? target : this.pick(officer, HQ);
-    this.type = type ? type : _config2['default'].operations[officer.traits.base.area];
-    this.strength = 0;
-    this.failed = this.target ? null : true;
-    this.done = null;
-  }
-
-  _createClass(Operation, [{
-    key: 'pick',
-    value: function pick(officer, HQ) {
-      var _this = this;
-
-      this.targets = HQ.officers.active.filter(function (officer) {
-        if (officer.militancy > 5) {
-          if (officer.alignment > 500 && _this.side === 'left' || officer.alignment < 500 && _this.side === 'right') {
-            return true;
-          }
-        }
-      }) || [];
-
-      return this.targets[Math.ceil(Math.random() * this.targets.length)];
-    }
-  }, {
-    key: 'execute',
-    value: function execute(HQ) {
-      this.strength++;
-      if (this.strength > 5) {
-        if (this.target[this.type.area] < this.lead[this.type.area]) {
-          HQ.deassign(this.target.unitId);
-          this.done = true;
-          this.result = this[this.type.action](HQ.realDate);
-          this.target.reserved = true;
-          this.target.history.push('Forced on to reserve by ' + this.lead.name());
-        } else {
-          this.failed = true;
-        }
-      }
-    }
-  }, {
-    key: 'deviate',
-    value: function deviate(date) {
-      var result = 'Forced ' + this.target.name() + ' into reserve after revealing a fraudulent scheme on ' + date;
-      this.lead.history.push(result);
-      return result;
-    }
-  }, {
-    key: 'coup',
-    value: function coup(date) {
-      var result = 'Forced ' + this.target.name() + ' into reserve after taking control of his unit on ' + date;
-      this.lead.history.push(result);
-      return result;
-    }
-  }, {
-    key: 'influence',
-    value: function influence(date) {
-      var result = 'Forced ' + this.target.name() + ' into reserve after influencing key staff members on ' + date;
-      this.lead.history.push(result);
-      return result;
-    }
-  }, {
-    key: 'spy',
-    value: function spy(date) {
-      var result = 'Forced ' + this.target.name() + ' into reserve after revealing personal secrets on ' + date;
-      this.lead.history.push(result);
-      return result;
-    }
-  }]);
-
-  return Operation;
-})();
+// pick (officer, HQ) {
+//   this.targets = HQ.officers.active.filter(officer => {
+//     if (officer.militancy > 5)  {
+//       if (
+//         officer.alignment > 500 && this.side === 'left' ||
+//         officer.alignment < 500 && this.side === 'right'
+//       ) {
+//         return true;
+//       }
+//     }
+//   }) || [];
+//
+//   return this.targets[Math.ceil(Math.random() * this.targets.length)];
+// }
+//
+// execute (HQ) {
+//   this.strength++;
+//   if (this.strength > 5)  {
+//     if (this.target[this.type.area] < this.lead[this.type.area]) {
+//       HQ.deassign(this.target.unitId);
+//       this.done = true;
+//       this.result = this[this.type.action](HQ.realDate);
+//       this.target.reserved = true;
+//       this.target.history.push('Forced on to reserve by ' + this.lead.name());
+//     } else {
+//       this.failed = true;
+//     }
+//   }
+// }
+//
+// deviate (date) {
+//   let result = 'Forced ' + this.target.name() +
+//   ' into reserve after revealing a fraudulent scheme on ' + date;
+//   this.lead.history.push(result);
+//   return result;
+// }
+//
+// coup (date) {
+//   let result = 'Forced ' + this.target.name() +
+//   ' into reserve after taking control of his unit on ' + date;
+//   this.lead.history.push(result);
+//   return result;
+// }
+//
+// influence (date) {
+//   let result = 'Forced ' + this.target.name() +
+//   ' into reserve after influencing key staff members on ' + date;
+//   this.lead.history.push(result);
+//   return result;
+// }
+//
+// spy (date) {
+//   let result = 'Forced ' + this.target.name() +
+//   ' into reserve after revealing personal secrets on ' + date;
+//   this.lead.history.push(result);
+//   return result;
+// }
+;
 
 exports['default'] = Operations;
 module.exports = exports['default'];
@@ -4865,7 +4854,6 @@ var Army = (function (_React$Component) {
     value: function render() {
       var army = this.state.army;
       var engine = this.state.engine;
-
       return _libReact2['default'].createElement(
         'div',
         null,
@@ -4934,7 +4922,9 @@ var Player = (function (_React$Component3) {
           null,
           this.state.player.name()
         ),
-        _libReact2['default'].createElement(Office, { officer: this.state.player, engine: this.state.engine })
+        _libReact2['default'].createElement(Staff, { officer: this.state.player, engine: this.state.engine }),
+        _libReact2['default'].createElement('br', null),
+        _libReact2['default'].createElement(Unit, { officer: this.state.player, engine: this.state.engine })
       );
     }
   }]);
@@ -4942,41 +4932,43 @@ var Player = (function (_React$Component3) {
   return Player;
 })(_libReact2['default'].Component);
 
-var Office = (function (_React$Component4) {
-  _inherits(Office, _React$Component4);
+var Staff = (function (_React$Component4) {
+  _inherits(Staff, _React$Component4);
 
-  function Office(props) {
-    _classCallCheck(this, Office);
+  function Staff(props) {
+    _classCallCheck(this, Staff);
 
-    _get(Object.getPrototypeOf(Office.prototype), 'constructor', this).call(this, props);
+    _get(Object.getPrototypeOf(Staff.prototype), 'constructor', this).call(this, props);
     this.state = {
       officer: this.props.officer,
       engine: this.props.engine
     };
   }
 
-  _createClass(Office, [{
+  _createClass(Staff, [{
     key: 'render',
     value: function render() {
+      var _this = this;
+
       var army = this.state.engine.army;
       var unit = army.HQ.findUnitById(this.state.officer.unitId);
       var superior = army.HQ.findCommandingOfficer(this.state.officer);
-
       var staff = [];
+      var subordinates = [];
+
       army.HQ.findStaff(this.state.officer).forEach(function (staffOfficer) {
         staff.push(_libReact2['default'].createElement(
           'li',
           null,
-          _libReact2['default'].createElement(Officer, { officer: staffOfficer })
+          _libReact2['default'].createElement(Officer, { officer: staffOfficer, engine: _this.state.engine })
         ));
       });
 
-      var subordinates = [];
       army.HQ.findSubordinates(this.state.officer).forEach(function (subordinate) {
         subordinates.push(_libReact2['default'].createElement(
           'li',
           null,
-          _libReact2['default'].createElement(Officer, { officer: subordinate })
+          _libReact2['default'].createElement(Officer, { officer: subordinate, engine: _this.state.engine })
         ));
       });
 
@@ -4988,6 +4980,7 @@ var Office = (function (_React$Component4) {
           null,
           unit.name
         ),
+        _libReact2['default'].createElement('br', null),
         _libReact2['default'].createElement(
           'div',
           null,
@@ -4998,6 +4991,7 @@ var Office = (function (_React$Component4) {
           null,
           superior.name()
         ),
+        _libReact2['default'].createElement('br', null),
         _libReact2['default'].createElement(
           'div',
           null,
@@ -5008,6 +5002,7 @@ var Office = (function (_React$Component4) {
           { className: 'staffOfficers' },
           staff
         ),
+        _libReact2['default'].createElement('br', null),
         _libReact2['default'].createElement(
           'div',
           null,
@@ -5022,7 +5017,7 @@ var Office = (function (_React$Component4) {
     }
   }]);
 
-  return Office;
+  return Staff;
 })(_libReact2['default'].Component);
 
 var Officer = (function (_React$Component5) {
@@ -5032,6 +5027,9 @@ var Officer = (function (_React$Component5) {
     _classCallCheck(this, Officer);
 
     _get(Object.getPrototypeOf(Officer.prototype), 'constructor', this).call(this, props);
+    this.state = {
+      engine: this.props.engine
+    };
   }
 
   _createClass(Officer, [{
@@ -5050,6 +5048,47 @@ var Officer = (function (_React$Component5) {
   }]);
 
   return Officer;
+})(_libReact2['default'].Component);
+
+var Unit = (function (_React$Component6) {
+  _inherits(Unit, _React$Component6);
+
+  function Unit(props) {
+    _classCallCheck(this, Unit);
+
+    _get(Object.getPrototypeOf(Unit.prototype), 'constructor', this).call(this, props);
+    this.state = {
+      player: this.props.player,
+      engine: this.props.engine
+    };
+  }
+
+  _createClass(Unit, [{
+    key: 'giveOrder',
+    value: function giveOrder() {
+      console.log('Planning');
+    }
+  }, {
+    key: 'render',
+    value: function render() {
+      return _libReact2['default'].createElement(
+        'div',
+        null,
+        _libReact2['default'].createElement(
+          'div',
+          null,
+          'OPERATIONS'
+        ),
+        _libReact2['default'].createElement(
+          'button',
+          { onClick: this.giveOrder.bind(this) },
+          'Plan Operation'
+        )
+      );
+    }
+  }]);
+
+  return Unit;
 })(_libReact2['default'].Component);
 
 exports['default'] = Ui;
