@@ -90,21 +90,30 @@ class Office extends React.Component {
   render () {
     var army = this.state.engine.army;
     var unit = army.HQ.findUnitById(this.state.officer.unitId);
-    var reserve = [];
-    unit.reserve.forEach(officer => {
-      reserve.push(<StaffOfficer officer={officer} />);
+    var superior = army.HQ.findCommandingOfficer(this.state.officer);
+    var staff = [];
+    army.HQ.findStaff(this.state.officer).forEach(staffOfficer => {
+      staff.push(<li>{ staffOfficer.name() }</li>);
+    });
+    var subordinates = [];
+    army.HQ.findSubordinates(this.state.officer).forEach(subordinate => {
+      subordinates.push(<li>{ subordinate.name() }</li>);
     });
     return (
       <div>
         <div>{ unit.name }</div>
+        <div>SUPERIOR OFFICER</div>
+        <div>{ superior.name() }</div>
         <div>STAFF OFFICERS</div>
-        <ul className="staffOfficers">{ reserve }</ul>
+        <ul className="staffOfficers">{ staff }</ul>
+        <div>SUBORDINATE OFFICERS</div>
+        <ul className="staffOfficers">{ subordinates }</ul>
       </div>
     );
   }
 }
 
-class StaffOfficer extends React.Component {
+class Officer extends React.Component {
   constructor (props) {
     super(props);
     this.state = {

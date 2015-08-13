@@ -39,6 +39,30 @@ class HQ {
     return this.units.filter(unit => { return unit.id === id; })[0];
   }
 
+  findCommandingOfficer (officer) {
+    var officerUnit = this.units.filter(unit => { return unit.id === officer.unitId; })[0];
+    var superiorUnit = this.units.filter(unit => { return unit.id === officerUnit.parentId; })[0];
+    return superiorUnit.commander;
+  }
+
+  findStaff (officer) {
+    var staff = [];
+    var unit = this.units.filter(unit => { return unit.id === officer.unitId; })[0];
+    unit.reserve.forEach(officer => {
+      staff.push(officer);
+    });
+    return staff;
+  }
+
+  findSubordinates (officer) {
+    var subordinates = [];
+    var unit = this.units.filter(unit => { return unit.id === officer.unitId;})[0];
+    unit.subunits.forEach(subunit => {
+      subordinates.push(subunit.commander);
+    });
+    return subordinates;
+  }
+
   findOfficersByRank (rank) {
     return this.officers.active.filter(officer => {
       return officer.rank === rank;
