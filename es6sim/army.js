@@ -9,10 +9,12 @@ class Army {
   constructor () {
     this.HQ = new HQ();
     this.HQ.officers = new Officers(this.HQ);
+
     this._unitsId = 2;
     this.units = {
       corps: []
     };
+
     this.id = 1;
     this.generate('corp', config.unitDepth);
     this.HQ.world = new World(this.HQ);

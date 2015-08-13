@@ -72,7 +72,7 @@ class Player extends React.Component {
     return (
       <div>
         <div>{ this.state.player.name() }</div>
-        <Office officer={this.state.player} engine={ this.state.engine } />
+        <Office officer={ this.state.player } engine={ this.state.engine } />
       </div>
     );
   }
@@ -91,14 +91,17 @@ class Office extends React.Component {
     var army = this.state.engine.army;
     var unit = army.HQ.findUnitById(this.state.officer.unitId);
     var superior = army.HQ.findCommandingOfficer(this.state.officer);
+
     var staff = [];
     army.HQ.findStaff(this.state.officer).forEach(staffOfficer => {
       staff.push(<li>{ staffOfficer.name() }</li>);
     });
+
     var subordinates = [];
     army.HQ.findSubordinates(this.state.officer).forEach(subordinate => {
       subordinates.push(<li>{ subordinate.name() }</li>);
     });
+    
     return (
       <div>
         <div>{ unit.name }</div>
