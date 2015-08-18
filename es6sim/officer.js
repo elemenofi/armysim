@@ -78,15 +78,16 @@ class Officer {
     }
   }
 
+  // OPERATIONS REWORK
   militate (HQ) {
-    if ((this.drift > 0 && this.alignment > 900) ||
-      (this.drift < 0 && this.alignment < 100)) {
-      if (this.militancy < 10) this.militancy++;
-    }
-    if (this.militancy === 10 && !this.isPlayer) {
-      this.operations.push(HQ.operations.add(this, HQ));
-      this.militancy = 0;
-    }
+    // if ((this.drift > 0 && this.alignment > 900) ||
+    //   (this.drift < 0 && this.alignment < 100)) {
+    //   if (this.militancy < 10) this.militancy++;
+    // }
+    // if (this.militancy === 10 && !this.isPlayer) {
+    //   this.operations.push(HQ.operations.add(this, HQ));
+    //   this.militancy = 0;
+    // }
   }
 
   reserve (HQ) {

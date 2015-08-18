@@ -1,6 +1,7 @@
 /* jshint ignore:start */
 import React from './lib/react';
 import Comparisons from './comparisons';
+import Select from '../../../npm_modules/react-select';
 
 let comparisons = new Comparisons();
 
@@ -144,13 +145,18 @@ class Unit extends React.Component {
   }
 
   giveOrder () {
-    console.log('Planning');
+    this.state.engine.army.HQ.operations.push(this.state.engine.army.HQ.operations.add());
   }
 
   render () {
+    let targets = this.state.engine.army.HQ.findActiveOfficers();
+    let options = []
+    targets.forEach(target => { options.push(<option>{ target.name() }</option>); });
+
     return(
       <div>
         <div>OPERATIONS</div>
+        <select>{ options }</select>
         <button onClick={ this.giveOrder.bind(this) }>Plan Operation</button>
       </div>
     );
