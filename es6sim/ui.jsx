@@ -1,7 +1,6 @@
 /* jshint ignore:start */
 import React from './lib/react';
 import Comparisons from './comparisons';
-import Select from '../../../npm_modules/react-select';
 
 let comparisons = new Comparisons();
 
@@ -139,7 +138,7 @@ class Unit extends React.Component {
   constructor (props) {
     super(props);
     this.state = {
-      player: this.props.player,
+      player: this.props.officer,
       engine: this.props.engine
     }
   }
@@ -150,13 +149,23 @@ class Unit extends React.Component {
 
   render () {
     let targets = this.state.engine.army.HQ.findActiveOfficers();
-    let options = []
-    targets.forEach(target => { options.push(<option>{ target.name() }</option>); });
+    let officers = [];
+    let staffOfficers = [];
+
+    targets.forEach(target => { officers.push(<option>{ target.name() }</option>); });
+
+    let staff = this.state.engine.army.HQ.findStaff(this.props.officer);
+    staff.forEach(officer => { staffOfficers.push(<option>{ officer.name() }</option>); });
+
 
     return(
       <div>
         <div>OPERATIONS</div>
-        <select>{ options }</select>
+        <div>Target</div>
+        <select>{ officers }</select>
+        <div>Commander</div>
+        <select>{ staffOfficers }</select>
+        <br></br>
         <button onClick={ this.giveOrder.bind(this) }>Plan Operation</button>
       </div>
     );
