@@ -1,7 +1,7 @@
 /* jshint ignore:start */
 import React from './lib/react';
 import Comparisons from './comparisons';
-import Select from '../../../npm_modules/react-select';
+import Select from '../node_modules/react-select';
 
 let comparisons = new Comparisons();
 
