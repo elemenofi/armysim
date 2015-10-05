@@ -140,7 +140,8 @@ class Unit extends React.Component {
     super(props);
     this.state = {
       player: this.props.player,
-      engine: this.props.engine
+      engine: this.props.engine,
+      target: {}
     }
   }
 
@@ -148,7 +149,12 @@ class Unit extends React.Component {
     var army = this.state.engine.army;
     var spec = {};
     spec.commander = this.props.player;
-    army.HQ.operations.push(army.HQ.operations.add());
+    spec.target = this.state.target;
+    army.HQ.operations.push(army.HQ.operations.add(spec));
+  }
+
+  setTarget (target) {
+    this.setState({ target: target });
   }
 
   render () {

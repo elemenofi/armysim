@@ -26,11 +26,10 @@ class Operations {
 class Operation {
   constructor (spec) {
     this.commander = spec.commander;
-    this.deputy = spec.deputy;
     this.target = spec.target;
-    this.type = spec.type;
-    this.strength = spec.strength;
-    this.documents = spec.documents;
+    this.type = 'intelligence';
+    this.strength = 0;
+    this.documents = [];
     this.done = false;
     this.fail = false;
     this.success = false;

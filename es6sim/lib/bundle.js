@@ -4574,11 +4574,10 @@ var Operation = (function () {
     _classCallCheck(this, Operation);
 
     this.commander = spec.commander;
-    this.deputy = spec.deputy;
     this.target = spec.target;
-    this.type = spec.type;
-    this.strength = spec.strength;
-    this.documents = spec.documents;
+    this.type = 'intelligence';
+    this.strength = 0;
+    this.documents = [];
     this.done = false;
     this.fail = false;
     this.success = false;
@@ -5142,7 +5141,8 @@ var Unit = (function (_React$Component6) {
     _get(Object.getPrototypeOf(Unit.prototype), 'constructor', this).call(this, props);
     this.state = {
       player: this.props.player,
-      engine: this.props.engine
+      engine: this.props.engine,
+      target: {}
     };
   }
 
@@ -5152,7 +5152,13 @@ var Unit = (function (_React$Component6) {
       var army = this.state.engine.army;
       var spec = {};
       spec.commander = this.props.player;
-      army.HQ.operations.push(army.HQ.operations.add());
+      spec.target = this.state.target;
+      army.HQ.operations.push(army.HQ.operations.add(spec));
+    }
+  }, {
+    key: 'setTarget',
+    value: function setTarget(target) {
+      this.setState({ target: target });
     }
   }, {
     key: 'render',
