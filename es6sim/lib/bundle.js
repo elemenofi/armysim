@@ -4298,13 +4298,14 @@ var Officer = (function () {
     this.experience = _config2['default'].ranks[spec.rank].startxp + _config2['default'].random(10);
     this.prestige = _config2['default'].ranks[spec.rank].startpr + _config2['default'].random(10);
     this.traits = { base: traits.random() };
+    this.intelligence = this.traits.base.intelligence + _config2['default'].random(10);
+    this.commanding = this.traits.base.commanding + _config2['default'].random(10);
+    this.diplomacy = this.traits.base.diplomacy + _config2['default'].random(10);
     this.alignment = _config2['default'].random(1000);
     this.militancy = _config2['default'].random(10);
     this.drift = 0;
     this.operations = [];
-    this.intelligence = this.traits.base.intelligence + _config2['default'].random(10);
-    this.commanding = this.traits.base.commanding + _config2['default'].random(10);
-    this.diplomacy = this.traits.base.diplomacy + _config2['default'].random(10);
+    this.history = [];
     if (this.isPlayer) {
       this.lname = 'Richardson';
       this.fname = 'John';
@@ -4313,7 +4314,6 @@ var Officer = (function () {
       this.lname = chance.last();
       this.fname = chance.first({ gender: 'male' });
     }
-    this.history = [];
     this.graduate({
       date: _config2['default'].formatDate(HQ.rawDate),
       unitName: HQ.unitName(this.unitId, unitName)
@@ -4368,20 +4368,9 @@ var Officer = (function () {
         this.alignment += this.drift;
       }
     }
-
-    // OPERATIONS REWORK
   }, {
     key: 'militate',
-    value: function militate(HQ) {
-      // if ((this.drift > 0 && this.alignment > 900) ||
-      //   (this.drift < 0 && this.alignment < 100)) {
-      //   if (this.militancy < 10) this.militancy++;
-      // }
-      // if (this.militancy === 10 && !this.isPlayer) {
-      //   this.operations.push(HQ.operations.add(this, HQ));
-      //   this.militancy = 0;
-      // }
-    }
+    value: function militate(HQ) {}
   }, {
     key: 'reserve',
     value: function reserve(HQ) {
@@ -4580,19 +4569,35 @@ var Operations = (function () {
   return Operations;
 })();
 
-var Operation = function Operation(spec) {
-  _classCallCheck(this, Operation);
+var Operation = (function () {
+  function Operation(spec) {
+    _classCallCheck(this, Operation);
 
-  this.commander = spec.commander;
-  this.deputy = spec.deputy;
-  this.target = spec.target;
-  this.type = spec.type;
-  this.strength = spec.strength;
-  this.documents = spec.documents;
-  this.done = false;
-  this.fail = false;
-  this.success = false;
-};
+    this.commander = spec.commander;
+    this.deputy = spec.deputy;
+    this.target = spec.target;
+    this.type = spec.type;
+    this.strength = spec.strength;
+    this.documents = spec.documents;
+    this.done = false;
+    this.fail = false;
+    this.success = false;
+  }
+
+  _createClass(Operation, [{
+    key: 'execute',
+    value: function execute(HQ) {
+      var commanderRoll = this.commander[this.type] + _config2['default'].random(10);
+      var targetRoll = this.target[this.type] + _config2['default'].random(10);
+      if (commanderRoll > targetRoll) {
+        this.strength++;
+        console.log(this.strength);
+      }
+    }
+  }]);
+
+  return Operation;
+})();
 
 exports['default'] = Operations;
 
@@ -5144,7 +5149,10 @@ var Unit = (function (_React$Component6) {
   _createClass(Unit, [{
     key: 'giveOrder',
     value: function giveOrder() {
-      this.state.engine.army.HQ.operations.push(this.state.engine.army.HQ.operations.add());
+      var army = this.state.engine.army;
+      var spec = {};
+      spec.commander = this.props.player;
+      army.HQ.operations.push(army.HQ.operations.add());
     }
   }, {
     key: 'render',

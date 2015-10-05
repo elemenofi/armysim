@@ -145,13 +145,18 @@ class Unit extends React.Component {
   }
 
   giveOrder () {
-    this.state.engine.army.HQ.operations.push(this.state.engine.army.HQ.operations.add());
+    var army = this.state.engine.army;
+    var spec = {};
+    spec.commander = this.props.player;
+    army.HQ.operations.push(army.HQ.operations.add());
   }
 
   render () {
     let targets = this.state.engine.army.HQ.findActiveOfficers();
     let options = []
-    targets.forEach(target => { options.push(<option>{ target.name() }</option>); });
+    targets.forEach(target => {
+      options.push(<option>{ target.name() }</option>);
+    });
 
     return(
       <div>

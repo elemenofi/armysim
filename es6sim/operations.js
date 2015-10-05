@@ -36,10 +36,17 @@ class Operation {
     this.success = false;
   }
 
-
+  execute (HQ) {
+    var commanderRoll = this.commander[this.type] + config.random(10);
+    var targetRoll = this.target[this.type] + config.random(10);
+    if ((commanderRoll) > (targetRoll)) {
+      this.strength++;
+      console.log(this.strength);
+    }
+  }
 }
-
 export default Operations;
+
 
 
 // 'use strict';
