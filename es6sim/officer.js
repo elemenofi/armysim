@@ -15,13 +15,14 @@ class Officer {
     this.experience = config.ranks[spec.rank].startxp + config.random(10);
     this.prestige = config.ranks[spec.rank].startpr + config.random(10);
     this.traits = { base: traits.random() };
+    this.intelligence = this.traits.base.intelligence + config.random(10);
+    this.commanding = this.traits.base.commanding + config.random(10);
+    this.diplomacy = this.traits.base.diplomacy + config.random(10);
     this.alignment = config.random(1000);
     this.militancy = config.random(10);
     this.drift = 0;
     this.operations = [];
-    this.intelligence = this.traits.base.intelligence + config.random(10);
-    this.commanding = this.traits.base.commanding + config.random(10);
-    this.diplomacy = this.traits.base.diplomacy + config.random(10);
+    this.history = [];
     if (this.isPlayer) {
       this.lname = 'Richardson';
       this.fname = 'John';
@@ -30,7 +31,6 @@ class Officer {
       this.lname = chance.last();
       this.fname = chance.first({gender: 'male'});
     }
-    this.history = [];
     this.graduate({
       date: config.formatDate(HQ.rawDate),
       unitName: HQ.unitName(this.unitId, unitName)
@@ -78,16 +78,7 @@ class Officer {
     }
   }
 
-  // OPERATIONS REWORK
   militate (HQ) {
-    // if ((this.drift > 0 && this.alignment > 900) ||
-    //   (this.drift < 0 && this.alignment < 100)) {
-    //   if (this.militancy < 10) this.militancy++;
-    // }
-    // if (this.militancy === 10 && !this.isPlayer) {
-    //   this.operations.push(HQ.operations.add(this, HQ));
-    //   this.militancy = 0;
-    // }
   }
 
   reserve (HQ) {
