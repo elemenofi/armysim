@@ -16,6 +16,14 @@ class Operations {
   }
 
   update (HQ) {
+    this.active = this.active.filter(operation => {
+      if (!operation.done && !operation.target.reserved) {
+        return true;
+      } else {
+        alert('Operation against' + operation.target.name() + ' ended.');
+        return false;
+      }
+    });
     this.active.forEach(operation => { operation.execute(HQ); });
   }
 }

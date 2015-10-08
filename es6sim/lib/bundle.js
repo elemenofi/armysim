@@ -4547,6 +4547,14 @@ var Operations = (function () {
   }, {
     key: 'update',
     value: function update(HQ) {
+      this.active = this.active.filter(function (operation) {
+        if (!operation.done && !operation.target.reserved) {
+          return true;
+        } else {
+          alert('Operation against' + operation.target.name() + ' ended.');
+          return false;
+        }
+      });
       this.active.forEach(function (operation) {
         operation.execute(HQ);
       });
