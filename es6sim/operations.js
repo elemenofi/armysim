@@ -17,7 +17,7 @@ class Operations {
 
   update (HQ) {
     this.active = this.active.filter(operation => {
-      return (!operation.done && !operation.commander.reserved && !operation.target.reserved);
+      return (!operation.done && !operation.officer.reserved && !operation.target.reserved);
     });
     this.active.forEach(operation => { operation.execute(HQ); });
   }
@@ -25,9 +25,10 @@ class Operations {
 
 class Operation {
   constructor (spec) {
-    this.commander = spec.commander;
-    this.target = spec.target;
-    this.type = 'intelligence';
+    debugger;
+    this.officer = JSON.parse(spec.officer);
+    this.target = JSON.parse(spec.target);
+    this.type = spec.type;
     this.strength = 0;
     this.documents = [];
     this.done = false;
@@ -36,14 +37,16 @@ class Operation {
   }
 
   execute (HQ) {
-    var commanderRoll = this.commander[this.type] + config.random(10);
+    var officerRoll = this.officer[this.type] + config.random(10);
     var targetRoll = this.target[this.type] + config.random(10);
-    if ((commanderRoll) > (targetRoll)) {
+    debugger;
+    if ((officerRoll) > (targetRoll)) {
       this.strength++;
       console.log(this.strength);
     }
   }
 }
+
 export default Operations;
 
 

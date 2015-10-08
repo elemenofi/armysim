@@ -141,37 +141,58 @@ class Unit extends React.Component {
     this.state = {
       player: this.props.player,
       engine: this.props.engine,
-      target: {}
+      type: undefined,
+      officer: undefined,
+      target: undefined
     }
   }
 
-  giveOrder () {
+  startOperation (spec) {
+    if (!this.state.type || !this.state.officer || !this.state.target) alert('Complete operation details first.');
     var army = this.state.engine.army;
-    var spec = {};
-    spec.commander = this.props.player;
-    spec.target = this.state.target;
-    army.HQ.operations.push(army.HQ.operations.add(spec));
+    var spec = { type: this.state.type, officer: this.state.officer, target: this.state.target };
+    army.HQ.operations.add(spec);
+  }
+
+  handleType (event) {
+    this.setState({type: event.target.value});
+  }
+  handleOfficer (event) {
+    this.setState({officer: event.target.value});
+  }
+  handleTarget (event) {
+    this.setState({target: event.target.value});
   }
 
   render () {
     let army = this.state.engine.army;
-    let targets = army.HQ.findActiveOfficers();
     let officers = [];
     let staffOfficers = [];
+    let operationTypes = [];
+    let types = ['commanding', 'intelligence'];
+    let targets = army.HQ.findActiveOfficers();
     let staff = army.HQ.findStaff(this.props.officer);
 
-    targets.forEach(target => { officers.push(<option>{ target.name() }</option>); });
-    staff.forEach(officer => { staffOfficers.push(<option>{ officer.name() }</option>); });
+    types.forEach(type => { operationTypes.push(<option value={type}>{ type }</option>); });
+    targets.forEach(target => {
+      debugger;
+      delete target.unit.commander;
+      delete target.unit.subunits;
+      officers.push(<option value={JSON.stringify(target)}>{ target.name() }</option>);
+    });
+    staff.forEach(officer => { delete officer.unit.commander; staffOfficers.push(<option value={JSON.stringify(officer)}>{ officer.name() }</option>); });
 
     return(
       <div>
         <div>OPERATIONS</div>
-        <div>Target</div>
-        <select>{ officers }</select>
+        <div>Type</div>
+        <select onChange={ this.handleType.bind(this) }>{ operationTypes }</select>
         <div>Commander</div>
-        <select>{ staffOfficers }</select>
+        <select onChange={ this.handleOfficer.bind(this) }>{ staffOfficers }</select>
+        <div>Target</div>
+        <select onChange={ this.handleTarget.bind(this) }>{ officers }</select>
         <br></br>
-        <button onClick={ this.giveOrder.bind(this) }>Plan Operation</button>
+        <button onClick={ this.startOperation.bind(this) }>Start Operation</button>
       </div>
     );
   }
