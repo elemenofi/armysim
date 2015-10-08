@@ -45,12 +45,20 @@ class HQ {
     return superiorUnit.commander;
   }
 
+  findOfficerById (officerId) {
+    return this.officers.active.filter(officer => { return officer.id === Number(officerId); })[0];
+  }
+
+  findStaffById (officerId, playerUnitId) {
+    debugger;
+    var unit = this.units.filter(unit => { return unit.id === Number(playerUnitId); })[0];
+    return unit.reserve.filter(officer => { return officer.id === Number(officerId); })[0];
+  }
+
   findStaff (officer) {
     var staff = [];
     var unit = this.units.filter(unit => { return unit.id === officer.unitId; })[0];
-    unit.reserve.forEach(officer => {
-      staff.push(officer);
-    });
+    unit.reserve.forEach(officer => { staff.push(officer); });
     return staff;
   }
 

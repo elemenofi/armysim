@@ -1,7 +1,6 @@
 /* jshint ignore:start */
 import React from './lib/react';
 import Comparisons from './comparisons';
-import Select from '../node_modules/react-select';
 
 let comparisons = new Comparisons();
 
@@ -139,7 +138,7 @@ class Unit extends React.Component {
   constructor (props) {
     super(props);
     this.state = {
-      player: this.props.player,
+      player: this.props.officer,
       engine: this.props.engine,
       type: undefined,
       officer: undefined,
@@ -148,51 +147,76 @@ class Unit extends React.Component {
   }
 
   startOperation (spec) {
-    if (!this.state.type || !this.state.officer || !this.state.target) alert('Complete operation details first.');
+    if (!this.state.type || !this.state.officer || !this.state.target) {
+      alert('Complete operation details first.');
+      return;
+    }
     var army = this.state.engine.army;
-    var spec = { type: this.state.type, officer: this.state.officer, target: this.state.target };
+    var spec = {
+      type: this.state.type,
+      officer: army.HQ.findStaffById(this.state.officer[0], this.state.officer[1]), //officer id, player unit id
+      target: army.HQ.findOfficerById(this.state.target)
+    };
     army.HQ.operations.add(spec);
   }
 
   handleType (event) {
     this.setState({type: event.target.value});
   }
+
   handleOfficer (event) {
     this.setState({officer: event.target.value});
   }
+
   handleTarget (event) {
     this.setState({target: event.target.value});
   }
 
   render () {
     let army = this.state.engine.army;
-    let officers = [];
-    let staffOfficers = [];
-    let operationTypes = [];
+    let player = this.state.player;
+
     let types = ['commanding', 'intelligence'];
     let targets = army.HQ.findActiveOfficers();
     let staff = army.HQ.findStaff(this.props.officer);
 
-    types.forEach(type => { operationTypes.push(<option value={type}>{ type }</option>); });
-    targets.forEach(target => {
-      debugger;
-      delete target.unit.commander;
-      delete target.unit.subunits;
-      officers.push(<option value={JSON.stringify(target)}>{ target.name() }</option>);
+    let operationTypes = [];
+    let officers = [];
+    let staffOfficers = [];
+
+    types.forEach(type => {
+      operationTypes.push(<option>{ type }</option>);
     });
-    staff.forEach(officer => { delete officer.unit.commander; staffOfficers.push(<option value={JSON.stringify(officer)}>{ officer.name() }</option>); });
+
+    targets.forEach(target => {
+      officers.push( <option value={ target.id }>{ target.name() }</option> );
+    });
+
+    staff.forEach(officer => {
+      staffOfficers.push( <option value={ [officer.id, player.unitId] }>{ officer.name() }</option> );
+    });
+
+    types.push(<option></option>);
 
     return(
       <div>
-        <div>OPERATIONS</div>
+        <div>New Operation</div>
         <div>Type</div>
-        <select onChange={ this.handleType.bind(this) }>{ operationTypes }</select>
+        <select onChange={ this.handleType.bind(this) }>
+          { operationTypes }
+        </select>
         <div>Commander</div>
-        <select onChange={ this.handleOfficer.bind(this) }>{ staffOfficers }</select>
+        <select onChange={ this.handleOfficer.bind(this) }>
+          { staffOfficers }
+        </select>
         <div>Target</div>
-        <select onChange={ this.handleTarget.bind(this) }>{ officers }</select>
+        <select onChange={ this.handleTarget.bind(this) }>
+          { officers }
+        </select>
         <br></br>
-        <button onClick={ this.startOperation.bind(this) }>Start Operation</button>
+        <button onClick={ this.startOperation.bind(this) }>
+          Start Operation
+        </button>
       </div>
     );
   }

@@ -26,8 +26,8 @@ class Operations {
 class Operation {
   constructor (spec) {
     debugger;
-    this.officer = JSON.parse(spec.officer);
-    this.target = JSON.parse(spec.target);
+    this.officer = spec.officer;
+    this.target = spec.target;
     this.type = spec.type;
     this.strength = 0;
     this.documents = [];
