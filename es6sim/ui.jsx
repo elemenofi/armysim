@@ -155,19 +155,19 @@ class Unit extends React.Component {
 
   render () {
     let army = this.state.engine.army;
-    let targets = army.HQ.findActiveOfficers();
     let officers = [];
+    let targets = army.HQ.findActiveOfficers();
     let staffOfficers = [];
     let staff = army.HQ.findStaff(this.props.officer);
 
     targets.forEach(target => { officers.push(<option>{ target.name() }</option>); });
-    staff.forEach(officer => { staffOfficers.push(<option>{ officer.name() }</option>); });
+    staff.forEach(officer => { staffOfficers.push(<option value={officer}>{ officer.name() }</option>); });
 
     return(
       <div>
         <div>OPERATIONS</div>
         <div>Target</div>
-        <select>{ officers }</select>
+        <select value="A">{ officers }</select>
         <div>Commander</div>
         <select>{ staffOfficers }</select>
         <br></br>
