@@ -16,16 +16,12 @@ class Operations {
   }
 
   update (HQ) {
-    this.active = this.active.filter(operation => {
-      return (!operation.done && !operation.officer.reserved && !operation.target.reserved);
-    });
     this.active.forEach(operation => { operation.execute(HQ); });
   }
 }
 
 class Operation {
   constructor (spec) {
-    debugger;
     this.officer = spec.officer;
     this.target = spec.target;
     this.type = spec.type;
@@ -39,7 +35,6 @@ class Operation {
   execute (HQ) {
     var officerRoll = this.officer[this.type] + config.random(10);
     var targetRoll = this.target[this.type] + config.random(10);
-    debugger;
     if ((officerRoll) > (targetRoll)) {
       this.strength++;
       console.log(this.strength);
@@ -61,7 +56,6 @@ export default Operations;
 //   }
 //
 //   add (HQ, officer, target, type) {
-//     debugger;
 //     let operation = new Operation(HQ, officer, target);
 //     operation.id = this.__operationsID;
 //     this.__operationsID++;

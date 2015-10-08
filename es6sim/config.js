@@ -50,7 +50,7 @@ let config = {
 
   speed: 200,
 
-  bufferTurns: 500,
+  bufferTurns: 100,
 
   unitDepth: 2,
 

@@ -50,7 +50,6 @@ class HQ {
   }
 
   findStaffById (officerId, playerUnitId) {
-    debugger;
     var unit = this.units.filter(unit => { return unit.id === Number(playerUnitId); })[0];
     return unit.reserve.filter(officer => { return officer.id === Number(officerId); })[0];
   }

@@ -152,10 +152,13 @@ class Unit extends React.Component {
       return;
     }
     var army = this.state.engine.army;
+    var staffOfficerId = this.state.officer.split(',')[0];
+    var playerUnitId = this.state.officer.split(',')[1];
+    var targetId = this.state.target;
     var spec = {
       type: this.state.type,
-      officer: army.HQ.findStaffById(this.state.officer[0], this.state.officer[1]), //officer id, player unit id
-      target: army.HQ.findOfficerById(this.state.target)
+      officer: army.HQ.findStaffById(staffOfficerId, playerUnitId),
+      target: army.HQ.findOfficerById(targetId)
     };
     army.HQ.operations.add(spec);
   }

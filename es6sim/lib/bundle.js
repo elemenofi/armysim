@@ -1945,7 +1945,7 @@ var config = {
 
   speed: 200,
 
-  bufferTurns: 500,
+  bufferTurns: 100,
 
   unitDepth: 2,
 
@@ -2221,7 +2221,6 @@ var HQ = (function () {
   }, {
     key: 'findStaffById',
     value: function findStaffById(officerId, playerUnitId) {
-      debugger;
       var unit = this.units.filter(function (unit) {
         return unit.id === Number(playerUnitId);
       })[0];
@@ -4548,9 +4547,6 @@ var Operations = (function () {
   }, {
     key: 'update',
     value: function update(HQ) {
-      this.active = this.active.filter(function (operation) {
-        return !operation.done && !operation.officer.reserved && !operation.target.reserved;
-      });
       this.active.forEach(function (operation) {
         operation.execute(HQ);
       });
@@ -4564,7 +4560,6 @@ var Operation = (function () {
   function Operation(spec) {
     _classCallCheck(this, Operation);
 
-    debugger;
     this.officer = spec.officer;
     this.target = spec.target;
     this.type = spec.type;
@@ -4580,7 +4575,6 @@ var Operation = (function () {
     value: function execute(HQ) {
       var officerRoll = this.officer[this.type] + _config2['default'].random(10);
       var targetRoll = this.target[this.type] + _config2['default'].random(10);
-      debugger;
       if (officerRoll > targetRoll) {
         this.strength++;
         console.log(this.strength);
@@ -4603,7 +4597,6 @@ exports['default'] = Operations;
 //   }
 //
 //   add (HQ, officer, target, type) {
-//     debugger;
 //     let operation = new Operation(HQ, officer, target);
 //     operation.id = this.__operationsID;
 //     this.__operationsID++;
@@ -5145,10 +5138,13 @@ var Unit = (function (_React$Component6) {
         return;
       }
       var army = this.state.engine.army;
+      var staffOfficerId = this.state.officer.split(',')[0];
+      var playerUnitId = this.state.officer.split(',')[1];
+      var targetId = this.state.target;
       var spec = {
         type: this.state.type,
-        officer: army.HQ.findStaffById(this.state.officer[0], this.state.officer[1]), //officer id, player unit id
-        target: army.HQ.findOfficerById(this.state.target)
+        officer: army.HQ.findStaffById(staffOfficerId, playerUnitId),
+        target: army.HQ.findOfficerById(targetId)
       };
       army.HQ.operations.add(spec);
     }
