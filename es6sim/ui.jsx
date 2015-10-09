@@ -140,6 +140,7 @@ class Unit extends React.Component {
     this.state = {
       player: this.props.officer,
       engine: this.props.engine,
+      name: undefined,
       type: undefined,
       officer: undefined,
       target: undefined
@@ -156,11 +157,16 @@ class Unit extends React.Component {
     var playerUnitId = this.state.officer.split(',')[1];
     var targetId = this.state.target;
     var spec = {
+      name: this.state.name,
       type: this.state.type,
       officer: army.HQ.findStaffById(staffOfficerId, playerUnitId),
       target: army.HQ.findOfficerById(targetId)
     };
     army.HQ.operations.add(spec);
+  }
+
+  handleName (event) {
+    this.setState({name: event.target.value});
   }
 
   handleType (event) {
@@ -199,12 +205,15 @@ class Unit extends React.Component {
       staffOfficers.push( <option value={ [officer.id, player.unitId] }>{ officer.name() }</option> );
     });
 
-    types.push(<option></option>);
+    operationTypes.unshift(<option></option>);
+    officers.unshift(<option></option>);
+    staffOfficers.unshift(<option></option>);
 
     return(
       <div>
         <div>New Operation</div>
         <div>Type</div>
+        <input onChange={ this.handleName.bind(this) }/>
         <select onChange={ this.handleType.bind(this) }>
           { operationTypes }
         </select>

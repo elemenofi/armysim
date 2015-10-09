@@ -17,10 +17,10 @@ class Operations {
 
   update (HQ) {
     this.active = this.active.filter(operation => {
-      if (!operation.done && !operation.target.reserved) {
+      if (!operation.done && operation.target && !operation.target.reserved) {
         return true;
       } else {
-        alert('Operation against' + operation.target.name() + ' ended.');
+        alert(operation.name + ' ended.');
         return false;
       }
     });
@@ -33,6 +33,7 @@ class Operation {
     this.officer = spec.officer;
     this.target = spec.target;
     this.type = spec.type;
+    this.name = spec.name;
     this.strength = 0;
     this.documents = [];
     this.done = false;
