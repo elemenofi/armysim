@@ -147,6 +147,17 @@ class Unit extends React.Component {
     }
   }
 
+  getInitialState () {
+    return {
+      player: this.props.officer,
+      engine: this.props.engine,
+      name: undefined,
+      type: undefined,
+      officer: undefined,
+      target: undefined
+    }
+  }
+
   startOperation (spec) {
     if (!this.state.type || !this.state.officer || !this.state.target) {
       alert('Complete operation details first.');
@@ -163,6 +174,9 @@ class Unit extends React.Component {
       target: army.HQ.findOfficerById(targetId)
     };
     army.HQ.operations.add(spec);
+    document.getElementById('operationType').selectedIndex = '0';
+    document.getElementById('operationOfficer').selectedIndex = '0';
+    document.getElementById('operationTarget').selectedIndex = '0';
   }
 
   handleName (event) {
@@ -214,15 +228,15 @@ class Unit extends React.Component {
         <div>New Operation</div>
         <div>Type</div>
         <input onChange={ this.handleName.bind(this) }/>
-        <select onChange={ this.handleType.bind(this) }>
+        <select id="operationType"onChange={ this.handleType.bind(this) }>
           { operationTypes }
         </select>
         <div>Commander</div>
-        <select onChange={ this.handleOfficer.bind(this) }>
+        <select id="operationOfficer"onChange={ this.handleOfficer.bind(this) }>
           { staffOfficers }
         </select>
         <div>Target</div>
-        <select onChange={ this.handleTarget.bind(this) }>
+        <select id="operationTarget"onChange={ this.handleTarget.bind(this) }>
           { officers }
         </select>
         <br></br>
