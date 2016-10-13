@@ -377,7 +377,7 @@ var Engine = (function () {
         this.army.HQ.update();
         this.turn++;
       }
-
+      okok;
       this.army.HQ.update();
       this.turn++;
 

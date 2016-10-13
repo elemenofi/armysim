@@ -28,7 +28,7 @@
         <entry file="file://$PROJECT_DIR$/es6sim/engine.js">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="322">
-              <caret line="29" column="4" selection-start-line="29" selection-start-column="4" selection-end-line="29" selection-end-column="4" />
+              <caret line="29" column="8" selection-start-line="29" selection-start-column="8" selection-end-line="29" selection-end-column="8" />
               <folding>
                 <element signature="e#14#45#0" expanded="true" />
               </folding>
@@ -703,12 +703,12 @@
       <updated>1476311558254</updated>
       <workItem from="1476311559564" duration="637000" />
       <workItem from="1476312916297" duration="11000" />
-      <workItem from="1476312957713" duration="3536000" />
+      <workItem from="1476312957713" duration="3729000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="4184000" />
+    <option name="totallyTimeSpent" value="4377000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="23" width="1280" height="742" extended-state="6" />
@@ -1024,7 +1024,7 @@
     <entry file="file://$PROJECT_DIR$/es6sim/engine.js">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="322">
-          <caret line="29" column="4" selection-start-line="29" selection-start-column="4" selection-end-line="29" selection-end-column="4" />
+          <caret line="29" column="8" selection-start-line="29" selection-start-column="8" selection-end-line="29" selection-end-column="8" />
           <folding>
             <element signature="e#14#45#0" expanded="true" />
           </folding>
