@@ -378,8 +378,6 @@ var Engine = (function () {
         this.turn++;
       }
 
-      debugger;
-
       this.army.HQ.update();
       this.turn++;
 

@@ -27,9 +27,7 @@ class Engine {
       this.army.HQ.update();
       this.turn++;
     }
-
-    debugger;
-
+    
     this.army.HQ.update();
     this.turn++;
 
