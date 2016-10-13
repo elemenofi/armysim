@@ -1,5 +1,5 @@
 'use strict';
-import Ui from './ui.jsx';
+import Ui from './ui-game.jsx';
 import config from './config';
 
 class Engine {
@@ -11,7 +11,7 @@ class Engine {
     this.start(this);
   }
 
-  start (engine) {
+  start () {
     this.update();
     this.army.HQ.player();
     this.updateUI();
@@ -27,6 +27,8 @@ class Engine {
       this.army.HQ.update();
       this.turn++;
     }
+
+    debugger;
 
     this.army.HQ.update();
     this.turn++;
