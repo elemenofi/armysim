@@ -143,22 +143,12 @@ class Unit extends React.Component {
             name: undefined,
             type: undefined,
             officer: undefined,
-            target: undefined
+            target: undefined,
+            targets: undefined
         }
     }
 
-    getInitialState () {
-        return {
-            player: this.props.officer,
-            engine: this.props.engine,
-            name: undefined,
-            type: undefined,
-            officer: undefined,
-            target: undefined
-        }
-    }
-
-    startOperation (spec) {
+    startOperation () {
         if (!this.state.type || !this.state.officer || !this.state.target) {
             alert('Complete operation details first.');
             return;
@@ -195,12 +185,16 @@ class Unit extends React.Component {
         this.setState({target: event.target.value});
     }
 
+    handleSearch (event) {
+        this.setState({targets: this.state.engine.army.HQ.findOfficersByName(event.target.value) });
+    }
+
     render () {
         let army = this.state.engine.army;
         let player = this.state.player;
+        let targets = (this.state.targets) ? this.state.targets : army.HQ.findActiveOfficers();
 
         let types = ['commanding', 'intelligence'];
-        let targets = army.HQ.findActiveOfficers();
         let staff = army.HQ.findStaff(this.props.officer);
 
         let operationTypes = [];
@@ -228,15 +222,16 @@ class Unit extends React.Component {
                 <div>New Operation</div>
                 <div>Type</div>
                 <input onChange={ this.handleName.bind(this) }/>
-                <select id="operationType"onChange={ this.handleType.bind(this) }>
+                <select id="operationType" onChange={ this.handleType.bind(this) }>
                     { operationTypes }
                 </select>
                 <div>Commander</div>
-                <select id="operationOfficer"onChange={ this.handleOfficer.bind(this) }>
+                <select id="operationOfficer" onChange={ this.handleOfficer.bind(this) }>
                     { staffOfficers }
                 </select>
                 <div>Target</div>
-                <select id="operationTarget"onChange={ this.handleTarget.bind(this) }>
+                <input type="text" onChange={ this.handleSearch.bind(this) }/>
+                <select id="operationTarget" onChange={ this.handleTarget.bind(this) }>
                     { officers }
                 </select>
                 <br></br>

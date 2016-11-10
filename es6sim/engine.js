@@ -27,7 +27,7 @@ class Engine {
       this.army.HQ.update();
       this.turn++;
     }
-    okok
+
     this.army.HQ.update();
     this.turn++;
 

@@ -31,6 +31,12 @@ class HQ {
     this.player = unit.commander;
   }
 
+  findOfficersByName (name) {
+    return this.officers.active.filter(officer => {
+      return officer.lname.includes(name) || officer.fname.includes(name);
+    });
+  }
+
   findUnitsByType (type) {
     return this.units.filter(unit => { return unit.type === type; });
   }

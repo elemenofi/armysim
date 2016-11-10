@@ -377,7 +377,7 @@ var Engine = (function () {
         this.army.HQ.update();
         this.turn++;
       }
-      okok;
+
       this.army.HQ.update();
       this.turn++;
 
@@ -473,6 +473,13 @@ var HQ = (function () {
       unit.commander.reserved = true;
       unit.commander = this.officers.replaceForPlayer.call(this, unit.commander);
       this.player = unit.commander;
+    }
+  }, {
+    key: 'findOfficersByName',
+    value: function findOfficersByName(name) {
+      return this.officers.active.filter(function (officer) {
+        return officer.lname.includes(name) || officer.fname.includes(name);
+      });
     }
   }, {
     key: 'findUnitsByType',
@@ -3424,25 +3431,14 @@ var Unit = (function (_React$Component6) {
             name: undefined,
             type: undefined,
             officer: undefined,
-            target: undefined
+            target: undefined,
+            targets: undefined
         };
     }
 
     _createClass(Unit, [{
-        key: 'getInitialState',
-        value: function getInitialState() {
-            return {
-                player: this.props.officer,
-                engine: this.props.engine,
-                name: undefined,
-                type: undefined,
-                officer: undefined,
-                target: undefined
-            };
-        }
-    }, {
         key: 'startOperation',
-        value: function startOperation(spec) {
+        value: function startOperation() {
             if (!this.state.type || !this.state.officer || !this.state.target) {
                 alert('Complete operation details first.');
                 return;
@@ -3483,13 +3479,18 @@ var Unit = (function (_React$Component6) {
             this.setState({ target: event.target.value });
         }
     }, {
+        key: 'handleSearch',
+        value: function handleSearch(event) {
+            this.setState({ targets: this.state.engine.army.HQ.findOfficersByName(event.target.value) });
+        }
+    }, {
         key: 'render',
         value: function render() {
             var army = this.state.engine.army;
             var player = this.state.player;
+            var targets = this.state.targets ? this.state.targets : army.HQ.findActiveOfficers();
 
             var types = ['commanding', 'intelligence'];
-            var targets = army.HQ.findActiveOfficers();
             var staff = army.HQ.findStaff(this.props.officer);
 
             var operationTypes = [];
@@ -3558,6 +3559,7 @@ var Unit = (function (_React$Component6) {
                     null,
                     'Target'
                 ),
+                _libReact2['default'].createElement('input', { type: 'text', onChange: this.handleSearch.bind(this) }),
                 _libReact2['default'].createElement(
                     'select',
                     { id: 'operationTarget', onChange: this.handleTarget.bind(this) },
