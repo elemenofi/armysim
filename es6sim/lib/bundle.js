@@ -478,7 +478,7 @@ var HQ = (function () {
     key: 'findOfficersByName',
     value: function findOfficersByName(name) {
       return this.officers.active.filter(function (officer) {
-        return officer.lname.includes(name) || officer.fname.includes(name);
+        return officer.name().toLowerCase().includes(name.toLowerCase());
       });
     }
   }, {
@@ -2658,16 +2658,22 @@ var Officer = (function () {
     value: function militate(HQ) {}
   }, {
     key: 'reserve',
-    value: function reserve(HQ) {
+    value: function reserve(HQ, reason) {
       var _this2 = this;
 
       var lastUnit = HQ.units.filter(function (unit) {
         return unit.id === _this2.unitId;
       })[0];
+
       lastUnit.reserve.push(this);
       if (lastUnit.reserve.length > 3) lastUnit.reserve.pop();
+
       this.reserved = true;
+
       this.history.push('Moved to reserve on ' + HQ.realDate);
+      if (reason) this.history[this.history.length - 1] = this.history[this.history.length - 1] + ' after succesful operation by ' + reason.officer.name();
+
+      if (this.isPlayer || reason) console.log(this.history[this.history.length - 1]);
     }
   }]);
 
@@ -2712,6 +2718,7 @@ var Officers = (function () {
     this.active = [];
     this.__officersID = 1;
     this.secretary = new _secretary2['default']();
+    this.player = undefined;
   }
 
   _createClass(Officers, [{
@@ -2732,6 +2739,8 @@ var Officers = (function () {
       };
 
       var cadet = isPlayer ? new _player2['default'](options, this, unitName) : new _officer2['default'](options, this, unitName);
+
+      if (isPlayer) this.player = cadet;
 
       this.officers.active.push(cadet);
       this.officers.__officersID++;
@@ -2843,13 +2852,14 @@ var Operations = (function () {
     key: 'update',
     value: function update(HQ) {
       this.active = this.active.filter(function (operation) {
-        if (!operation.done && operation.target && !operation.target.reserved) {
+        if (!HQ.player.reserved && !operation.target.reserved && operation.turns > 0) {
           return true;
         } else {
           alert(operation.name + ' ended.');
           return false;
         }
       });
+
       this.active.forEach(function (operation) {
         operation.execute(HQ);
       });
@@ -2868,10 +2878,7 @@ var Operation = (function () {
     this.type = spec.type;
     this.name = spec.name;
     this.strength = 0;
-    this.documents = [];
-    this.done = false;
-    this.fail = false;
-    this.success = false;
+    this.turns = 10;
   }
 
   _createClass(Operation, [{
@@ -2879,10 +2886,18 @@ var Operation = (function () {
     value: function execute(HQ) {
       var officerRoll = this.officer[this.type] + _config2['default'].random(10);
       var targetRoll = this.target[this.type] + _config2['default'].random(10);
+
+      console.log(officerRoll, targetRoll);
+
       if (officerRoll > targetRoll) {
         this.strength++;
-        console.log(this.strength);
       }
+
+      if (this.strength >= 5) {
+        this.target.reserve(HQ, this);
+      }
+
+      this.turns--;
     }
   }]);
 
@@ -2890,103 +2905,6 @@ var Operation = (function () {
 })();
 
 exports['default'] = Operations;
-
-// 'use strict';
-// import config from './config';
-//
-// class Operations {
-//   constructor () {
-//     this.__operationsID = 1;
-//     this.active = [];
-//   }
-//
-//   add (HQ, officer, target, type) {
-//     let operation = new Operation(HQ, officer, target);
-//     operation.id = this.__operationsID;
-//     this.__operationsID++;
-//     this.active.push(operation);
-//     return operation;
-//   }
-//
-//   update (HQ) {
-//     this.active = this.active.filter(operation => {
-//       return (!operation.done && !operation.lead.reserved && !operation.target.reserved);
-//     });
-//     this.active.forEach(operation => { operation.execute(HQ); });
-//   }
-// }
-//
-// class Operation {
-//   constructor (officer, HQ, target, type) {
-//     this.lead = officer;
-//     this.side = (officer.alignment > 500) ? 'right' : 'left';
-//     this.target = (target) ? target : this.pick(officer, HQ);
-//     this.type = (type) ? type : config.operations[officer.traits.base.area];
-//     this.strength = 0;
-//     this.failed = (this.target) ? null : true;
-//     this.done = null;
-//   }
-//
-//   pick (officer, HQ) {
-//     this.targets = HQ.officers.active.filter(officer => {
-//       if (officer.militancy > 5)  {
-//         if (
-//           officer.alignment > 500 && this.side === 'left' ||
-//           officer.alignment < 500 && this.side === 'right'
-//         ) {
-//           return true;
-//         }
-//       }
-//     }) || [];
-//
-//     return this.targets[Math.ceil(Math.random() * this.targets.length)];
-//   }
-//
-//   execute (HQ) {
-//     this.strength++;
-//     if (this.strength > 5)  {
-//       if (this.target[this.type.area] < this.lead[this.type.area]) {
-//         HQ.deassign(this.target.unitId);
-//         this.done = true;
-//         this.result = this[this.type.action](HQ.realDate);
-//         this.target.reserved = true;
-//         this.target.history.push('Forced on to reserve by ' + this.lead.name());
-//       } else {
-//         this.failed = true;
-//       }
-//     }
-//   }
-//
-//   deviate (date) {
-//     let result = 'Forced ' + this.target.name() +
-//     ' into reserve after revealing a fraudulent scheme on ' + date;
-//     this.lead.history.push(result);
-//     return result;
-//   }
-//
-//   coup (date) {
-//     let result = 'Forced ' + this.target.name() +
-//     ' into reserve after taking control of his unit on ' + date;
-//     this.lead.history.push(result);
-//     return result;
-//   }
-//
-//   influence (date) {
-//     let result = 'Forced ' + this.target.name() +
-//     ' into reserve after influencing key staff members on ' + date;
-//     this.lead.history.push(result);
-//     return result;
-//   }
-//
-//   spy (date) {
-//     let result = 'Forced ' + this.target.name() +
-//     ' into reserve after revealing personal secrets on ' + date;
-//     this.lead.history.push(result);
-//     return result;
-//   }
-// }
-//
-// export default Operations;
 module.exports = exports['default'];
 
 },{"./config":3}],14:[function(require,module,exports){

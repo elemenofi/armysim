@@ -9,6 +9,7 @@ class Officers {
     this.active = [];
     this.__officersID = 1;
     this.secretary = new Secretary();
+    this.player = undefined;
   }
 
   update (HQ) {
@@ -24,6 +25,8 @@ class Officers {
     };
 
     let cadet = (isPlayer) ? new Player(options, this, unitName) : new Officer(options, this, unitName);
+
+    if (isPlayer) this.player = cadet;
 
     this.officers.active.push(cadet);
     this.officers.__officersID++;

@@ -81,14 +81,20 @@ class Officer {
   militate (HQ) {
   }
 
-  reserve (HQ) {
+  reserve (HQ, reason) {
     var lastUnit = HQ.units.filter(unit => {
       return unit.id === this.unitId;
     })[0];
+
     lastUnit.reserve.push(this);
     if (lastUnit.reserve.length > 3) lastUnit.reserve.pop();
+
     this.reserved = true;
+
     this.history.push('Moved to reserve on ' + HQ.realDate);
+    if (reason) this.history[this.history.length - 1] = this.history[this.history.length - 1] + ' after succesful operation by ' + reason.officer.name();
+
+    if (this.isPlayer || reason) console.log(this.history[this.history.length - 1]);
   }
 }
 

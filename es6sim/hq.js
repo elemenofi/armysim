@@ -33,7 +33,7 @@ class HQ {
 
   findOfficersByName (name) {
     return this.officers.active.filter(officer => {
-      return officer.lname.includes(name) || officer.fname.includes(name);
+      return officer.name().toLowerCase().includes(name.toLowerCase());
     });
   }
 

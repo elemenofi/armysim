@@ -1,15 +1,5 @@
-The player is prompted with dialogs which may be related to different events.
-Most of them will eventually become an order or maybe it is a quick, in the spot, decision.
 The game centers in the peace time hierarchical structure of an army.
-The player starts off as a Lieutenant but must first decide its specialization.
 The goal is to reach the highest possible rank and become the most prestigious commander in the army's history.
-The army is the martial institution of a parliamentary monarchy.
-The kingdom rules over an island.
 There are two attributes contributing to the effectiveness of an officer: commanding and intelligence.
 Prestige determines the seniority of equal rank officers.
 Operations basically represent the way in which the player interacts with the world.
-It can be an internal operation to the unit such as intensive training.
-But usually operations will have a commander, target/s, strength, type, documents, attached officers and so on.
-Officers which command over its previous superior's post have increased troop loyalty.
-Officers may be switched over to the far side of the structure when promotions happen.
-A smart officer will try to secure a spot close to where he was before in order to build strength.
