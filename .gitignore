@@ -30,6 +30,7 @@ build/Release
 # Dependency directories
 ../node_modules
 node_modules
+es6sim/lib/bundle.js
 jspm_packages
 .idea/workspace.xml
 
@@ -44,3 +45,5 @@ jspm_packages
 
 # Output of 'npm pack'
 *.tgz
+
+*.xml

@@ -11,9 +11,9 @@ var _hq = require('./hq');
 
 var _hq2 = _interopRequireDefault(_hq);
 
-var _unit2 = require('./unit');
+var _unit = require('./unit');
 
-var _unit3 = _interopRequireDefault(_unit2);
+var _unit2 = _interopRequireDefault(_unit);
 
 var _world = require('./world');
 
@@ -66,71 +66,71 @@ var Army = function () {
         switch (type) {
           case 'corp':
             spec.rank = 'lgeneral';
-            var _unit = new _unit3.default(spec, this.HQ);
-            this.units.corps.push(_unit);
+            unit = new _unit2.default(spec, this.HQ);
+            this.units.corps.push(unit);
 
-            this.generate('division', _config2.default.unitDepth, _unit);
+            this.generate('division', _config2.default.unitDepth, unit);
             this.generate('corp', quantity - 1, parent);
             break;
 
           case 'division':
             spec.rank = 'dgeneral';
-            _unit = new _unit3.default(spec, this.HQ);
-            parent.subunits.push(_unit);
+            unit = new _unit2.default(spec, this.HQ);
+            parent.subunits.push(unit);
 
-            this.generate('brigade', _config2.default.unitDepth, _unit);
+            this.generate('brigade', _config2.default.unitDepth, unit);
             this.generate('division', quantity - 1, parent);
             break;
 
           case 'brigade':
             spec.rank = 'bgeneral';
-            _unit = new _unit3.default(spec, this.HQ);
-            parent.subunits.push(_unit);
+            unit = new _unit2.default(spec, this.HQ);
+            parent.subunits.push(unit);
 
-            this.generate('regiment', _config2.default.unitDepth, _unit);
+            this.generate('regiment', _config2.default.unitDepth, unit);
             this.generate('brigade', quantity - 1, parent);
             break;
 
           case 'regiment':
             spec.rank = 'coronel';
-            _unit = new _unit3.default(spec, this.HQ);
-            parent.subunits.push(_unit);
+            unit = new _unit2.default(spec, this.HQ);
+            parent.subunits.push(unit);
 
-            this.generate('battalion', _config2.default.unitDepth, _unit);
+            this.generate('battalion', _config2.default.unitDepth, unit);
             this.generate('regiment', quantity - 1, parent);
             break;
 
           case 'battalion':
             spec.rank = 'lcoronel';
-            _unit = new _unit3.default(spec, this.HQ);
-            parent.subunits.push(_unit);
+            unit = new _unit2.default(spec, this.HQ);
+            parent.subunits.push(unit);
 
-            this.generate('company', _config2.default.unitDepth, _unit);
+            this.generate('company', _config2.default.unitDepth, unit);
             this.generate('battalion', quantity - 1, parent);
             break;
 
           case 'company':
             spec.rank = 'major';
-            _unit = new _unit3.default(spec, this.HQ);
-            parent.subunits.push(_unit);
+            unit = new _unit2.default(spec, this.HQ);
+            parent.subunits.push(unit);
 
-            this.generate('platoon', _config2.default.unitDepth, _unit);
+            this.generate('platoon', _config2.default.unitDepth, unit);
             this.generate('company', quantity - 1, parent);
             break;
 
           case 'platoon':
             spec.rank = 'captain';
-            _unit = new _unit3.default(spec, this.HQ);
-            parent.subunits.push(_unit);
+            unit = new _unit2.default(spec, this.HQ);
+            parent.subunits.push(unit);
 
-            this.generate('squad', _config2.default.unitDepth, _unit);
+            this.generate('squad', _config2.default.unitDepth, unit);
             this.generate('platoon', quantity - 1, parent);
             break;
 
           case 'squad':
             spec.rank = 'lieutenant';
-            _unit = new _unit3.default(spec, this.HQ);
-            parent.subunits.push(_unit);
+            unit = new _unit2.default(spec, this.HQ);
+            parent.subunits.push(unit);
 
             this.generate('squad', quantity - 1, parent);
             break;

@@ -36,7 +36,7 @@ class Army {
       switch (type) {
         case 'corp':
           spec.rank = 'lgeneral';
-          let unit = new Unit(spec, this.HQ);
+          unit = new Unit(spec, this.HQ);
           this.units.corps.push(unit);
 
           this.generate('division', config.unitDepth, unit);
@@ -107,6 +107,7 @@ class Army {
       }
 
       this.HQ.add(unit);
+
     }
   }
 }
