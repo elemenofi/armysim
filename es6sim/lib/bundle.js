@@ -279,7 +279,7 @@ var config = {
       hierarchy: 0,
       title: 'Lieutenant',
       alias: 'lieutenant',
-      startxp: 10,
+      startxp: 10 * gameLength,
       maxxp: 40 * gameLength,
       startpr: 100
     },
@@ -287,7 +287,7 @@ var config = {
       hierarchy: 1,
       title: 'Captain',
       alias: 'captain',
-      startxp: 40,
+      startxp: 40 * gameLength,
       maxxp: 60 * gameLength,
       startpr: 200
     },
@@ -295,7 +295,7 @@ var config = {
       hierarchy: 2,
       title: 'Major',
       alias: 'major',
-      startxp: 60,
+      startxp: 60 * gameLength,
       maxxp: 80 * gameLength,
       startpr: 300
     },
@@ -303,7 +303,7 @@ var config = {
       hierarchy: 3,
       title: 'Lieutenant Coronel',
       alias: 'lcoronel',
-      startxp: 80,
+      startxp: 80 * gameLength,
       maxxp: 100 * gameLength,
       startpr: 400
     },
@@ -311,7 +311,7 @@ var config = {
       hierarchy: 4,
       title: 'Coronel',
       alias: 'coronel',
-      startxp: 100,
+      startxp: 100 * gameLength,
       maxxp: 120 * gameLength,
       startpr: 500
     },
@@ -319,7 +319,7 @@ var config = {
       hierarchy: 5,
       title: 'Brigade General',
       alias: 'bgeneral',
-      startxp: 120,
+      startxp: 120 * gameLength,
       maxxp: 140 * gameLength,
       startpr: 600
     },
@@ -327,7 +327,7 @@ var config = {
       hierarchy: 6,
       title: 'Division General',
       alias: 'dgeneral',
-      startxp: 140,
+      startxp: 140 * gameLength,
       maxxp: 160 * gameLength,
       startpr: 700
     },
@@ -335,7 +335,7 @@ var config = {
       hierarchy: 7,
       title: 'Lieutenant General',
       alias: 'lgeneral',
-      startxp: 160,
+      startxp: 160 * gameLength,
       maxxp: 180 * gameLength,
       startpr: 800
     },
@@ -343,7 +343,7 @@ var config = {
       hierarchy: 8,
       title: 'General',
       alias: 'general',
-      startxp: 180,
+      startxp: 180 * gameLength,
       maxxp: 220 * gameLength,
       startpr: 900
     }
@@ -519,6 +519,13 @@ var HQ = function () {
       this.player = unit.commander;
     }
   }, {
+    key: 'findPlayer',
+    value: function findPlayer() {
+      return this.officers.pool.filter(function (officer) {
+        return officer.isPlayer;
+      })[0];
+    }
+  }, {
     key: 'findOfficersByName',
     value: function findOfficersByName(name) {
       return this.officers.active.filter(function (officer) {
@@ -570,6 +577,9 @@ var HQ = function () {
   }, {
     key: 'findStaffById',
     value: function findStaffById(officerId, playerUnitId) {
+      if (Number(officerId) === Number(this.findPlayer().id)) {
+        return this.findPlayer();
+      }
       var unit = this.units.filter(function (unit) {
         return unit.id === Number(playerUnitId);
       })[0];
@@ -588,6 +598,15 @@ var HQ = function () {
         if (!officer.isPLayer) staff.push(officer);
       });
       return staff;
+    }
+  }, {
+    key: 'findOperationalStaff',
+    value: function findOperationalStaff(officer) {
+      var operationalStaff = [];
+      operationalStaff.concat(this.findStaff(officer));
+      operationalStaff.push(officer);
+      operationalStaff.concat(this.findSubordinates(officer));
+      return operationalStaff;
     }
   }, {
     key: 'findSubordinates',
@@ -2704,7 +2723,7 @@ var Officer = function () {
     this.isPlayer = spec.isPlayer;
     this.unitId = spec.unitId;
     this.rank = _config2.default.ranks[spec.rank];
-    this.experience = _config2.default.ranks[spec.rank].startxp + _config2.default.random(10);
+    this.experience = _config2.default.ranks[spec.rank].startxp + _config2.default.random(500);
     this.prestige = _config2.default.ranks[spec.rank].startpr + _config2.default.random(10);
     this.traits = { base: traits.random() };
     this.intelligence = this.traits.base.intelligence + _config2.default.random(10);
@@ -2748,9 +2767,9 @@ var Officer = function () {
       this.militate(HQ);
       this.experience++;
       this.prestige += _config2.default.random(_config2.default.ranks[this.rank.alias].startpr);
-      if (this.isPlayer) {
-        console.log(this.experience, this.rank.maxxp);
-      }
+      // if (this.isPlayer) {
+      //     console.log(this.experience, this.rank.maxxp)
+      // }
       if (!this.reserved && this.experience > this.rank.maxxp) this.reserve(HQ);
     }
   }, {
@@ -3025,7 +3044,7 @@ var Operation = function () {
         this.strength++;
       }
 
-      if (this.strength >= 5) {
+      if (this.strength >= 3) {
         this.target.reserve(HQ, this);
       }
 
@@ -3594,7 +3613,7 @@ var Unit = function (_React$Component6) {
             var targets = this.state.targets ? this.state.targets : army.HQ.findActiveOfficers();
 
             var types = ['commanding', 'intelligence'];
-            var staff = army.HQ.findStaff(this.props.officer);
+            var staff = army.HQ.findOperationalStaff(this.props.officer);
 
             var operationTypes = [];
             var officers = [];
@@ -3608,19 +3627,19 @@ var Unit = function (_React$Component6) {
                 ));
             });
 
-            targets.forEach(function (target) {
-                officers.push(_react2.default.createElement(
-                    'option',
-                    { value: target.id },
-                    target.name()
-                ));
-            });
-
             staff.forEach(function (officer) {
                 staffOfficers.push(_react2.default.createElement(
                     'option',
                     { value: [officer.id, player.unitId] },
                     officer.name()
+                ));
+            });
+
+            targets.forEach(function (target) {
+                officers.push(_react2.default.createElement(
+                    'option',
+                    { value: target.id },
+                    target.name()
                 ));
             });
 

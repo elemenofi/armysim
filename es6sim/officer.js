@@ -12,7 +12,7 @@ class Officer {
     this.isPlayer = spec.isPlayer;
     this.unitId = spec.unitId;
     this.rank = config.ranks[spec.rank];
-    this.experience = config.ranks[spec.rank].startxp + config.random(10);
+    this.experience = config.ranks[spec.rank].startxp + config.random(500);
     this.prestige = config.ranks[spec.rank].startpr + config.random(10);
     this.traits = { base: traits.random() };
     this.intelligence = this.traits.base.intelligence + config.random(10);
@@ -47,7 +47,6 @@ class Officer {
   graduate (spec) {
     let graduation = { unit: spec.unitName, date: spec.date };
     this.history.push(config.graduated(graduation, this));
-    if (this.isPlayer) console.log(this)
   }
 
   update (HQ) {
@@ -55,8 +54,10 @@ class Officer {
     this.militate(HQ);
     this.experience++;
     this.prestige += config.random(config.ranks[this.rank.alias].startpr);
+    // if (this.isPlayer) {
+    //     console.log(this.experience, this.rank.maxxp)
+    // }
     if (!this.reserved && this.experience > this.rank.maxxp) this.reserve(HQ);
-    if (this.isPlayer) console.log(this)
   }
 
   drifts (officers, units) {

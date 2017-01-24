@@ -14,7 +14,7 @@ class HQ {
   }
 
   updateDate () {
-    this.rawDate = this.rawDate.addDays(config.random(150));
+    this.rawDate = this.rawDate.addDays(1);
     this.realDate = config.formatDate(this.rawDate);
   }
 
@@ -32,6 +32,12 @@ class HQ {
     unit.commander.reserved = true;
     unit.commander = this.officers.replaceForPlayer.call(this, unit.commander);
     this.player = unit.commander;
+  }
+
+  findPlayer () {
+    return this.officers.pool.filter(officer => {
+      return officer.isPlayer
+    })[0];
   }
 
   findOfficersByName (name) {
@@ -66,6 +72,9 @@ class HQ {
   }
 
   findStaffById (officerId, playerUnitId) {
+    if (Number(officerId) === Number(this.findPlayer().id)) {
+      return this.findPlayer();
+    }
     var unit = this.units.filter(unit => { return unit.id === Number(playerUnitId); })[0];
     return unit.reserve.filter(officer => { return officer.id === Number(officerId); })[0];
   }
@@ -75,6 +84,14 @@ class HQ {
     var unit = this.units.filter(unit => { return unit.id === officer.unitId; })[0];
     if (unit && unit.reserve) unit.reserve.forEach(officer => { if (!officer.isPLayer) staff.push(officer); });
     return staff;
+  }
+
+  findOperationalStaff (officer) {
+    var operationalStaff = [];
+    operationalStaff.concat(this.findStaff(officer));
+    operationalStaff.push(officer);
+    operationalStaff.concat(this.findSubordinates(officer));
+    return operationalStaff;
   }
 
   findSubordinates (officer) {

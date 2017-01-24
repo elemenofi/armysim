@@ -230,7 +230,7 @@ class Unit extends React.Component {
         let targets = (this.state.targets) ? this.state.targets : army.HQ.findActiveOfficers();
 
         let types = ['commanding', 'intelligence'];
-        let staff = army.HQ.findStaff(this.props.officer);
+        let staff = army.HQ.findOperationalStaff(this.props.officer);
 
         let operationTypes = [];
         let officers = [];
@@ -240,12 +240,12 @@ class Unit extends React.Component {
             operationTypes.push(<option>{ type }</option>);
         });
 
-        targets.forEach(target => {
-            officers.push( <option value={ target.id }>{ target.name() }</option> );
-        });
-
         staff.forEach(officer => {
             staffOfficers.push( <option value={ [officer.id, player.unitId] }>{ officer.name() }</option> );
+        });
+
+        targets.forEach(target => {
+            officers.push( <option value={ target.id }>{ target.name() }</option> );
         });
 
         operationTypes.unshift(<option></option>);

@@ -50,7 +50,7 @@ class Operation {
       this.strength++;
     }
 
-    if (this.strength >= 5) {
+    if (this.strength >= 3) {
       this.target.reserve(HQ, this)
     }
 

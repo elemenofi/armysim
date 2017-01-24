@@ -1,5 +1,7 @@
 'use strict';
 
+let gameLength = 30;
+
 let config = {
   promoted (promotion) {
     let message =
@@ -37,9 +39,10 @@ let config = {
 
   formatDate (rawDate) {
     let realDate;
-    realDate = rawDate.toFormat('DDDD the D of MMMM, YYYY');
+    realDate = rawDate.toFormat('D of MMMM, YYYY');
+    // realDate = rawDate.toFormat('DDDD the D of MMMM, YYYY');
     realDate = realDate.split(' ');
-    realDate[2] = rawDate.toFormat('D') + config.suffix(rawDate.toFormat('D'));
+    realDate[0] = rawDate.toFormat('D') + config.suffix(rawDate.toFormat('D'));
     realDate = realDate.join(' ');
     return realDate;
   },
@@ -67,72 +70,72 @@ let config = {
       hierarchy: 0,
       title: 'Lieutenant',
       alias: 'lieutenant',
-      startxp: 10,
-      maxxp: 40,
+      startxp: 10 * gameLength,
+      maxxp: 40 * gameLength,
       startpr: 100
     },
     captain: {
       hierarchy: 1,
       title: 'Captain',
       alias: 'captain',
-      startxp: 40,
-      maxxp: 60,
+      startxp: 40 * gameLength,
+      maxxp: 60 * gameLength,
       startpr: 200
     },
     major: {
       hierarchy: 2,
       title: 'Major',
       alias: 'major',
-      startxp: 60,
-      maxxp: 80,
+      startxp: 60 * gameLength,
+      maxxp: 80 * gameLength,
       startpr: 300
     },
     lcoronel: {
       hierarchy: 3,
       title: 'Lieutenant Coronel',
       alias: 'lcoronel',
-      startxp: 80,
-      maxxp: 100,
+      startxp: 80 * gameLength,
+      maxxp: 100 * gameLength,
       startpr: 400
     },
     coronel: {
       hierarchy: 4,
       title: 'Coronel',
       alias: 'coronel',
-      startxp: 100,
-      maxxp: 120,
+      startxp: 100 * gameLength,
+      maxxp: 120 * gameLength,
       startpr: 500
     },
     bgeneral: {
       hierarchy: 5,
       title: 'Brigade General',
       alias: 'bgeneral',
-      startxp: 120,
-      maxxp: 140,
+      startxp: 120 * gameLength,
+      maxxp: 140 * gameLength,
       startpr: 600
     },
     dgeneral: {
       hierarchy: 6,
       title: 'Division General',
       alias: 'dgeneral',
-      startxp: 140,
-      maxxp: 160,
+      startxp: 140 * gameLength,
+      maxxp: 160 * gameLength,
       startpr: 700
     },
     lgeneral: {
       hierarchy: 7,
       title: 'Lieutenant General',
       alias: 'lgeneral',
-      startxp: 160,
-      maxxp: 180,
+      startxp: 160 * gameLength,
+      maxxp: 180 * gameLength,
       startpr: 800
     },
     general: {
       hierarchy: 8,
       title: 'General',
       alias: 'general',
-      startxp: 180,
-      maxxp: 220,
+      startxp: 180 * gameLength,
+      maxxp: 220 * gameLength,
       startpr: 900
     }
   }
