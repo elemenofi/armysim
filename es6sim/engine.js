@@ -1,11 +1,14 @@
 'use strict';
 import Ui from './ui-game.jsx';
+import Actions from './actions';
 import config from './config';
 
+
 class Engine {
-  constructor(army) {
+  constructor (army) {
     this.army = army;
     this.ui = new Ui(this);
+    this.actions = new Actions(this);
     this.turn = 0;
     this.running = true;
     this.start(this);
@@ -36,7 +39,9 @@ class Engine {
 
   updateUI () {
     this.ui.render(this.army);
-    setTimeout(() => { this.updateUI() }, config.speed);
+    this.loop = setTimeout(() => {
+      this.updateUI()
+    }, config.speed);
   }
 }
 

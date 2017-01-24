@@ -3,12 +3,10 @@ import HQ from './hq';
 import Unit from './unit';
 import World from './world';
 import config from './config';
-import Officers from './officers';
 
 class Army {
   constructor () {
     this.HQ = new HQ();
-    this.HQ.officers = new Officers(this.HQ);
 
     this._unitsId = 2;
     this.units = {

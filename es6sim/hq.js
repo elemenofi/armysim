@@ -2,12 +2,15 @@
 import {} from './lib/date.js';
 import config from './config';
 import Operations from './operations';
+import Officers from './officers';
+
 
 class HQ {
   constructor () {
     this.operations = new Operations();
     this.rawDate = new Date();
     this.units = [];
+    this.officers = new Officers(this);
   }
 
   updateDate () {
@@ -47,12 +50,19 @@ class HQ {
 
   findCommandingOfficer (officer) {
     var officerUnit = this.units.filter(unit => { return unit.id === officer.unitId; })[0];
-    var superiorUnit = this.units.filter(unit => { return unit.id === officerUnit.parentId; })[0];
+    var superiorUnit = this.units.filter(unit => { return officerUnit && unit.id === officerUnit.parentId; })[0];
+    if (!superiorUnit) return { name: () => { return 'No name' } };
     return superiorUnit.commander;
   }
 
   findOfficerById (officerId) {
-    return this.officers.active.filter(officer => { return officer.id === Number(officerId); })[0];
+    return this.officers.pool.filter(officer => { return officer.id === Number(officerId); })[0];
+  }
+
+  inspectOfficer (officerId) {
+    var officer = this.findOfficerById(officerId);
+    this.officers.inspected = officer;
+    return officer;
   }
 
   findStaffById (officerId, playerUnitId) {
@@ -74,6 +84,11 @@ class HQ {
       subordinates.push(subunit.commander);
     });
     return subordinates;
+  }
+
+  findInspected () {
+    console.log('hq inspected', this.officers.inspected)
+    return this.officers.inspected;
   }
 
   findOfficersByRank (rank) {

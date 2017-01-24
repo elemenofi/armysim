@@ -91,6 +91,7 @@ class Staff extends React.Component {
         var superior = army.HQ.findCommandingOfficer(this.state.officer);
         var staff = [];
         var subordinates = [];
+        var inspecteds = [];
 
         army.HQ.findStaff(this.state.officer).forEach(staffOfficer => {
             staff.push(<li><Officer officer={ staffOfficer } engine={ this.state.engine }/></li>);
@@ -99,6 +100,12 @@ class Staff extends React.Component {
         army.HQ.findSubordinates(this.state.officer).forEach(subordinate => {
             subordinates.push(<li><Officer officer={ subordinate } engine={ this.state.engine }/></li>);
         });
+
+        if (army.HQ.findInspected() && army.HQ.findInspected().name) {
+            inspecteds.push(<li><Officer officer={ army.HQ.findInspected() } engine={ this.state.engine }/></li>);
+        }
+
+        console.log('ui inspected', inspecteds)
 
         return(
             <div>
@@ -112,6 +119,9 @@ class Staff extends React.Component {
                 <br></br>
                 <div>SUBORDINATE OFFICERS</div>
                 <ul className="staffOfficers">{ subordinates }</ul>
+                <div>INSPECTED OFFICER</div>
+                <ul className="staffOfficers">{ inspecteds }</ul>
+                <Staff officer={ inspecteds } engine={ this.state.engine } />
             </div>
         );
     }
@@ -121,14 +131,19 @@ class Officer extends React.Component {
     constructor (props) {
         super(props);
         this.state = {
-            engine: this.props.engine
+            engine: this.props.engine,
+            officer: this.props.officer
         }
+    }
+
+    inspect () {
+        this.props.engine.actions.inspect(this.props.officer.id);
     }
 
     render () {
         return(
             <div>
-                <div>{ this.props.officer.name() }</div>
+                <div onClick={ this.inspect.bind(this) }>{ this.props.officer.name() }</div>
             </div>
         );
     }

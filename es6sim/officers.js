@@ -6,14 +6,17 @@ import Player from './player';
 
 class Officers {
   constructor () {
+    this.pool = [];
     this.active = [];
     this.__officersID = 1;
     this.secretary = new Secretary();
     this.player = undefined;
+    this.inspected = undefined;
   }
 
   update (HQ) {
     this.active.forEach(officer => { officer.update(HQ); });
+    console.log(this.inspected);
   }
 
   recruit (rank, unitId, isPlayer, unitName) {
@@ -29,6 +32,7 @@ class Officers {
     if (isPlayer) this.player = cadet;
 
     this.officers.active.push(cadet);
+    this.officers.pool.push(cadet);
     this.officers.__officersID++;
     return cadet;
   }

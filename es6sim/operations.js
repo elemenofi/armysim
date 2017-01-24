@@ -26,6 +26,7 @@ class Operations {
     });
 
     this.active.forEach(operation => { operation.execute(HQ); });
+    if (this.active.length) console.log('active operations', this.active.length)
   }
 }
 
