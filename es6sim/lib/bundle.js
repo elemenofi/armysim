@@ -20,8 +20,10 @@ var Actions = function () {
         key: "inspect",
         value: function inspect(officerId) {
             this.HQ.inspectOfficer(officerId);
-            engine.update();
-            engine.updateUI();
+            if (!engine.running) {
+                engine.update();
+                engine.updateUI();
+            }
         }
     }]);
 
@@ -212,6 +214,8 @@ exports.default = Comparisons;
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
+var gameLength = 30;
+
 var config = {
   promoted: function promoted(promotion) {
     var message = 'Promoted to ' + this.ranks[promotion.rank].title + ' on ' + promotion.date + ', assigned to the ' + promotion.unit;
@@ -244,9 +248,10 @@ var config = {
   },
   formatDate: function formatDate(rawDate) {
     var realDate = void 0;
-    realDate = rawDate.toFormat('DDDD the D of MMMM, YYYY');
+    realDate = rawDate.toFormat('D of MMMM, YYYY');
+    // realDate = rawDate.toFormat('DDDD the D of MMMM, YYYY');
     realDate = realDate.split(' ');
-    realDate[2] = rawDate.toFormat('D') + config.suffix(rawDate.toFormat('D'));
+    realDate[0] = rawDate.toFormat('D') + config.suffix(rawDate.toFormat('D'));
     realDate = realDate.join(' ');
     return realDate;
   },
@@ -275,7 +280,7 @@ var config = {
       title: 'Lieutenant',
       alias: 'lieutenant',
       startxp: 10,
-      maxxp: 40,
+      maxxp: 40 * gameLength,
       startpr: 100
     },
     captain: {
@@ -283,7 +288,7 @@ var config = {
       title: 'Captain',
       alias: 'captain',
       startxp: 40,
-      maxxp: 60,
+      maxxp: 60 * gameLength,
       startpr: 200
     },
     major: {
@@ -291,7 +296,7 @@ var config = {
       title: 'Major',
       alias: 'major',
       startxp: 60,
-      maxxp: 80,
+      maxxp: 80 * gameLength,
       startpr: 300
     },
     lcoronel: {
@@ -299,7 +304,7 @@ var config = {
       title: 'Lieutenant Coronel',
       alias: 'lcoronel',
       startxp: 80,
-      maxxp: 100,
+      maxxp: 100 * gameLength,
       startpr: 400
     },
     coronel: {
@@ -307,7 +312,7 @@ var config = {
       title: 'Coronel',
       alias: 'coronel',
       startxp: 100,
-      maxxp: 120,
+      maxxp: 120 * gameLength,
       startpr: 500
     },
     bgeneral: {
@@ -315,7 +320,7 @@ var config = {
       title: 'Brigade General',
       alias: 'bgeneral',
       startxp: 120,
-      maxxp: 140,
+      maxxp: 140 * gameLength,
       startpr: 600
     },
     dgeneral: {
@@ -323,7 +328,7 @@ var config = {
       title: 'Division General',
       alias: 'dgeneral',
       startxp: 140,
-      maxxp: 160,
+      maxxp: 160 * gameLength,
       startpr: 700
     },
     lgeneral: {
@@ -331,7 +336,7 @@ var config = {
       title: 'Lieutenant General',
       alias: 'lgeneral',
       startxp: 160,
-      maxxp: 180,
+      maxxp: 180 * gameLength,
       startpr: 800
     },
     general: {
@@ -339,7 +344,7 @@ var config = {
       title: 'General',
       alias: 'general',
       startxp: 180,
-      maxxp: 220,
+      maxxp: 220 * gameLength,
       startpr: 900
     }
   }
@@ -492,7 +497,7 @@ var HQ = function () {
   _createClass(HQ, [{
     key: 'updateDate',
     value: function updateDate() {
-      this.rawDate = this.rawDate.addDays(_config2.default.random(150));
+      this.rawDate = this.rawDate.addDays(1);
       this.realDate = _config2.default.formatDate(this.rawDate);
     }
   }, {
@@ -2735,7 +2740,6 @@ var Officer = function () {
     value: function graduate(spec) {
       var graduation = { unit: spec.unitName, date: spec.date };
       this.history.push(_config2.default.graduated(graduation, this));
-      if (this.isPlayer) console.log(this);
     }
   }, {
     key: 'update',
@@ -2744,8 +2748,10 @@ var Officer = function () {
       this.militate(HQ);
       this.experience++;
       this.prestige += _config2.default.random(_config2.default.ranks[this.rank.alias].startpr);
+      if (this.isPlayer) {
+        console.log(this.experience, this.rank.maxxp);
+      }
       if (!this.reserved && this.experience > this.rank.maxxp) this.reserve(HQ);
-      if (this.isPlayer) console.log(this);
     }
   }, {
     key: 'drifts',
@@ -3303,7 +3309,7 @@ var Date = function (_React$Component2) {
         value: function render() {
             return _react2.default.createElement(
                 'div',
-                { onClick: this.pause.bind(this) },
+                { className: 'date', onClick: this.pause.bind(this) },
                 this.state.hq.realDate
             );
         }

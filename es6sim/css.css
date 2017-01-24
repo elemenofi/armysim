@@ -8,6 +8,10 @@ ul {
   clear: both;
 }
 
+.date {
+  width: 100%;
+  text-align: center;
+}
 .player, .corp, .division, .brigade {
   width: 50%;
   float: left;

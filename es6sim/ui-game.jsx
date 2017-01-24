@@ -50,7 +50,7 @@ class Date extends React.Component {
 
     render () {
         return(
-            <div onClick={ this.pause.bind(this) }>{ this.state.hq.realDate }</div>
+            <div className="date" onClick={ this.pause.bind(this) }>{ this.state.hq.realDate }</div>
         );
     }
 }

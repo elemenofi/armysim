@@ -5,8 +5,10 @@ class Actions {
 
     inspect (officerId) {
         this.HQ.inspectOfficer(officerId);
-        engine.update();
-        engine.updateUI();
+        if (!engine.running) {
+            engine.update();
+            engine.updateUI();
+        }
     }
 }
 
