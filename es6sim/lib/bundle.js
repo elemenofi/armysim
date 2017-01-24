@@ -20,6 +20,8 @@ var Actions = function () {
         key: "inspect",
         value: function inspect(officerId) {
             this.HQ.inspectOfficer(officerId);
+            engine.update();
+            engine.updateUI();
         }
     }]);
 
@@ -394,6 +396,7 @@ var Engine = function () {
     value: function pause() {
       this.running = !this.running;
       if (this.running) this.update();
+      if (this.running) this.updateUI();
     }
   }, {
     key: 'update',
@@ -408,9 +411,11 @@ var Engine = function () {
       this.army.HQ.update();
       this.turn++;
 
-      if (this.running) setTimeout(function () {
-        _this.update();
-      }, _config2.default.speed);
+      if (this.running) {
+        this.gameLoop = setTimeout(function () {
+          _this.update();
+        }, _config2.default.speed);
+      }
     }
   }, {
     key: 'updateUI',
@@ -418,9 +423,11 @@ var Engine = function () {
       var _this2 = this;
 
       this.ui.render(this.army);
-      this.loop = setTimeout(function () {
-        _this2.updateUI();
-      }, _config2.default.speed);
+      if (this.running) {
+        this.UILoop = setTimeout(function () {
+          _this2.updateUI();
+        }, _config2.default.speed);
+      }
     }
   }]);
 
@@ -442,8 +449,8 @@ var _army2 = _interopRequireDefault(_army);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-var army = new _army2.default();
-var engine = new _engine2.default(army);
+window.army = new _army2.default();
+window.engine = new _engine2.default(army);
 
 },{"./army":2,"./engine":5}],7:[function(require,module,exports){
 'use strict';
@@ -572,8 +579,8 @@ var HQ = function () {
       var unit = this.units.filter(function (unit) {
         return unit.id === officer.unitId;
       })[0];
-      unit.reserve.forEach(function (officer) {
-        staff.push(officer);
+      if (unit && unit.reserve) unit.reserve.forEach(function (officer) {
+        if (!officer.isPLayer) staff.push(officer);
       });
       return staff;
     }
@@ -584,7 +591,7 @@ var HQ = function () {
       var unit = this.units.filter(function (unit) {
         return unit.id === officer.unitId;
       })[0];
-      unit.subunits.forEach(function (subunit) {
+      if (unit && unit.subunits) unit.subunits.forEach(function (subunit) {
         subordinates.push(subunit.commander);
       });
       return subordinates;
@@ -592,7 +599,6 @@ var HQ = function () {
   }, {
     key: 'findInspected',
     value: function findInspected() {
-      console.log('hq inspected', this.officers.inspected);
       return this.officers.inspected;
     }
   }, {
@@ -2704,6 +2710,7 @@ var Officer = function () {
     this.drift = 0;
     this.operations = [];
     this.history = [];
+    this.reserved = false;
     if (this.isPlayer) {
       this.lname = 'Richardson';
       this.fname = 'John';
@@ -2721,13 +2728,14 @@ var Officer = function () {
   _createClass(Officer, [{
     key: 'name',
     value: function name() {
-      return this.rank.title + ' ' + this.fname + ' ' + this.lname;
+      return !this.reserved ? this.rank.title + ' ' + this.fname + ' ' + this.lname : this.rank.title + ' (R) ' + this.fname + ' ' + this.lname;
     }
   }, {
     key: 'graduate',
     value: function graduate(spec) {
       var graduation = { unit: spec.unitName, date: spec.date };
       this.history.push(_config2.default.graduated(graduation, this));
+      if (this.isPlayer) console.log(this);
     }
   }, {
     key: 'update',
@@ -2736,7 +2744,8 @@ var Officer = function () {
       this.militate(HQ);
       this.experience++;
       this.prestige += _config2.default.random(_config2.default.ranks[this.rank.alias].startpr);
-      if (this.experience > this.rank.maxxp) this.reserve(HQ);
+      if (!this.reserved && this.experience > this.rank.maxxp) this.reserve(HQ);
+      if (this.isPlayer) console.log(this);
     }
   }, {
     key: 'drifts',
@@ -2842,7 +2851,6 @@ var Officers = function () {
       this.active.forEach(function (officer) {
         officer.update(HQ);
       });
-      console.log(this.inspected);
     }
   }, {
     key: 'recruit',
@@ -3362,7 +3370,29 @@ var Staff = function (_React$Component4) {
 
             var army = this.state.engine.army;
             var unit = army.HQ.findUnitById(this.state.officer.unitId);
+            if (!unit) unit = { name: 'No unit' };
             var superior = army.HQ.findCommandingOfficer(this.state.officer);
+            var superiorHTML = !this.state.officer.reserved ? _react2.default.createElement(
+                'div',
+                null,
+                _react2.default.createElement(
+                    'div',
+                    null,
+                    'SUPERIOR OFFICER'
+                ),
+                _react2.default.createElement(Officer, { officer: superior, engine: this.state.engine }),
+                _react2.default.createElement('br', null)
+            ) : _react2.default.createElement('div', null);
+            var inspectedSuperiorHTML = army.HQ.findInspected() && !army.HQ.findInspected().reserved ? _react2.default.createElement(
+                'div',
+                null,
+                _react2.default.createElement(
+                    'div',
+                    null,
+                    'SUPERIOR OFFICER'
+                ),
+                _react2.default.createElement(Officer, { officer: army.HQ.findCommandingOfficer(army.HQ.findInspected()), engine: this.state.engine })
+            ) : _react2.default.createElement('div', null);
             var staff = [];
             var subordinates = [];
             var inspecteds = [];
@@ -3387,11 +3417,11 @@ var Staff = function (_React$Component4) {
                 inspecteds.push(_react2.default.createElement(
                     'li',
                     null,
-                    _react2.default.createElement(Officer, { officer: army.HQ.findInspected(), engine: this.state.engine })
+                    _react2.default.createElement(Officer, { officer: army.HQ.findInspected(), engine: this.state.engine }),
+                    _react2.default.createElement('br', null),
+                    inspectedSuperiorHTML
                 ));
             }
-
-            console.log('ui inspected', inspecteds);
 
             return _react2.default.createElement(
                 'div',
@@ -3402,17 +3432,7 @@ var Staff = function (_React$Component4) {
                     unit.name
                 ),
                 _react2.default.createElement('br', null),
-                _react2.default.createElement(
-                    'div',
-                    null,
-                    'SUPERIOR OFFICER'
-                ),
-                _react2.default.createElement(
-                    'div',
-                    null,
-                    superior.name()
-                ),
-                _react2.default.createElement('br', null),
+                superiorHTML,
                 _react2.default.createElement(
                     'div',
                     null,
@@ -3434,6 +3454,7 @@ var Staff = function (_React$Component4) {
                     { className: 'staffOfficers' },
                     subordinates
                 ),
+                _react2.default.createElement('br', null),
                 _react2.default.createElement(
                     'div',
                     null,
@@ -3443,8 +3464,7 @@ var Staff = function (_React$Component4) {
                     'ul',
                     { className: 'staffOfficers' },
                     inspecteds
-                ),
-                _react2.default.createElement(Staff, { officer: inspecteds, engine: this.state.engine })
+                )
             );
         }
     }]);
@@ -3470,12 +3490,13 @@ var Officer = function (_React$Component5) {
     _createClass(Officer, [{
         key: 'inspect',
         value: function inspect() {
-            this.props.engine.actions.inspect(this.props.officer.id);
+            if (this.props.engine) this.props.engine.actions.inspect(this.props.officer.id);
         }
     }, {
         key: 'render',
         value: function render() {
-            return _react2.default.createElement(
+
+            var html = this.props.officer ? _react2.default.createElement(
                 'div',
                 null,
                 _react2.default.createElement(
@@ -3483,7 +3504,9 @@ var Officer = function (_React$Component5) {
                     { onClick: this.inspect.bind(this) },
                     this.props.officer.name()
                 )
-            );
+            ) : _react2.default.createElement('div', null);
+
+            return html;
         }
     }]);
 

@@ -23,6 +23,7 @@ class Officer {
     this.drift = 0;
     this.operations = [];
     this.history = [];
+    this.reserved = false;
     if (this.isPlayer) {
       this.lname = 'Richardson';
       this.fname = 'John';
@@ -38,12 +39,15 @@ class Officer {
   }
 
   name () {
-    return this.rank.title + ' ' + this.fname + ' ' + this.lname;
+    return (!this.reserved) ?
+      this.rank.title + ' ' + this.fname + ' ' + this.lname :
+      this.rank.title + ' (R) ' + this.fname + ' ' + this.lname;
   }
 
   graduate (spec) {
     let graduation = { unit: spec.unitName, date: spec.date };
     this.history.push(config.graduated(graduation, this));
+    if (this.isPlayer) console.log(this)
   }
 
   update (HQ) {
@@ -51,7 +55,8 @@ class Officer {
     this.militate(HQ);
     this.experience++;
     this.prestige += config.random(config.ranks[this.rank.alias].startpr);
-    if (this.experience > this.rank.maxxp) this.reserve(HQ);
+    if (!this.reserved && this.experience > this.rank.maxxp) this.reserve(HQ);
+    if (this.isPlayer) console.log(this)
   }
 
   drifts (officers, units) {

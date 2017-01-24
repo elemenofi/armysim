@@ -14,6 +14,9 @@ class Engine {
     this.start(this);
   }
 
+  gameLoop;
+  UILoop;
+
   start () {
     this.update();
     this.army.HQ.player();
@@ -23,6 +26,7 @@ class Engine {
   pause () {
     this.running = !this.running;
     if (this.running) this.update();
+    if (this.running) this.updateUI();
   }
 
   update () {
@@ -34,14 +38,20 @@ class Engine {
     this.army.HQ.update();
     this.turn++;
 
-    if (this.running) setTimeout(() => { this.update() }, config.speed);
+    if (this.running) {
+      this.gameLoop = setTimeout(() => {
+        this.update()
+      }, config.speed);
+    }
   }
 
   updateUI () {
     this.ui.render(this.army);
-    this.loop = setTimeout(() => {
-      this.updateUI()
-    }, config.speed);
+    if (this.running) {
+      this.UILoop = setTimeout(() => {
+        this.updateUI()
+      }, config.speed);
+    }
   }
 }
 

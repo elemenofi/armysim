@@ -73,21 +73,20 @@ class HQ {
   findStaff (officer) {
     var staff = [];
     var unit = this.units.filter(unit => { return unit.id === officer.unitId; })[0];
-    unit.reserve.forEach(officer => { staff.push(officer); });
+    if (unit && unit.reserve) unit.reserve.forEach(officer => { if (!officer.isPLayer) staff.push(officer); });
     return staff;
   }
 
   findSubordinates (officer) {
     var subordinates = [];
     var unit = this.units.filter(unit => { return unit.id === officer.unitId;})[0];
-    unit.subunits.forEach(subunit => {
+    if (unit && unit.subunits) unit.subunits.forEach(subunit => {
       subordinates.push(subunit.commander);
     });
     return subordinates;
   }
 
   findInspected () {
-    console.log('hq inspected', this.officers.inspected)
     return this.officers.inspected;
   }
 

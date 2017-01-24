@@ -4,7 +4,9 @@ class Actions {
     }
 
     inspect (officerId) {
-        this.HQ.inspectOfficer(officerId)
+        this.HQ.inspectOfficer(officerId);
+        engine.update();
+        engine.updateUI();
     }
 }
 

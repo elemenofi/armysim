@@ -16,7 +16,6 @@ class Officers {
 
   update (HQ) {
     this.active.forEach(officer => { officer.update(HQ); });
-    console.log(this.inspected);
   }
 
   recruit (rank, unitId, isPlayer, unitName) {
