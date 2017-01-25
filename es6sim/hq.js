@@ -91,6 +91,7 @@ class HQ {
     operationalStaff.concat(this.findStaff(officer));
     operationalStaff.push(officer);
     operationalStaff.concat(this.findSubordinates(officer));
+    console.log(operationalStaff)
     return operationalStaff;
   }
 

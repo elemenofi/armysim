@@ -230,7 +230,7 @@ class Unit extends React.Component {
         let targets = (this.state.targets) ? this.state.targets : army.HQ.findActiveOfficers();
 
         let types = ['commanding', 'intelligence'];
-        let staff = army.HQ.findOperationalStaff(this.props.officer);
+        let staff = army.HQ.findOperationalStaff(player);
 
         let operationTypes = [];
         let officers = [];

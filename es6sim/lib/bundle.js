@@ -260,7 +260,7 @@ var config = {
   },
 
 
-  speed: 200,
+  speed: 10,
 
   bufferTurns: 100,
 
@@ -606,6 +606,7 @@ var HQ = function () {
       operationalStaff.concat(this.findStaff(officer));
       operationalStaff.push(officer);
       operationalStaff.concat(this.findSubordinates(officer));
+      console.log(operationalStaff);
       return operationalStaff;
     }
   }, {
@@ -3613,7 +3614,7 @@ var Unit = function (_React$Component6) {
             var targets = this.state.targets ? this.state.targets : army.HQ.findActiveOfficers();
 
             var types = ['commanding', 'intelligence'];
-            var staff = army.HQ.findOperationalStaff(this.props.officer);
+            var staff = army.HQ.findOperationalStaff(player);
 
             var operationTypes = [];
             var officers = [];
