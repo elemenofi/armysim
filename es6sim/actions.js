@@ -12,6 +12,15 @@ class Actions {
         engine.updateUI(true);
       }
     }
+
+    this.target = (officerId) => {
+      var target = engine.army.HQ.targetOfficer(officerId);
+      if (!engine.running) {
+        //pass true as triggeredByUserAction
+        engine.update(true);
+        engine.updateUI(true);
+      }
+    }
   }
 }
 

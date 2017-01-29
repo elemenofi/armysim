@@ -15,6 +15,7 @@ class HQ implements Army.HQ {
   realDate: string;
   player: Army.Officer;
   world: any;
+  target: Army.Officer;
 
   constructor () {
     this.operations = new Operations();
@@ -83,6 +84,12 @@ class HQ implements Army.HQ {
     return officer;
   }
 
+  targetOfficer (officerId: number) {
+    var officer = this.findOfficerById(officerId);
+    this.target = officer;
+    return officer;
+  }
+
   findStaffById (officerId: number, playerUnitId: number) {
     if (Number(officerId) === Number(this.findPlayer().id)) {
       return this.findPlayer();
@@ -98,10 +105,11 @@ class HQ implements Army.HQ {
     return staff;
   }
 
-  findOperationalStaff (officer: Army.Officer) {
+  findOperationalStaff (officer: Army.Officer, self?: boolean) {
     var operationalStaff: Army.Officer[] = [];
     operationalStaff = operationalStaff.concat(this.findStaff(officer));
     operationalStaff = operationalStaff.concat(this.findSubordinates(officer));
+    if (this.findPlayer() && self) operationalStaff.push(this.findPlayer())
     return operationalStaff;
   }
 

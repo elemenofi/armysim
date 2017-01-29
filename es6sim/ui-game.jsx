@@ -119,23 +119,29 @@ class VInspected extends React.Component {
     }
   }
 
+  target () {
+    if (this.props.engine) this.props.engine.actions.target(this.props.officer.id);
+  }
+
   render () {
     if (!this.props.officer) return (<div></div>)
     var army = this.state.engine.army;
-    var officer = this.props.officer;
+    let officer = this.props.officer;
     var engine = this.state.engine;
     var superior = army.HQ.findCommandingOfficer(officer)
-    var superiorHTML = (!this.props.officer.reserved && !this.props.officer.isPlayer && this.props.officer.rank.hierarchy < 7) ?
+
+    var superiorHTML = (!officer.reserved && !officer.isPlayer && officer.rank.hierarchy < 7) ?
     <div className="superior">
       <div>Commanding Officer</div>
-      <VOfficer officer={ superior } engine={ this.state.engine }/>
+      <VOfficer officer={ superior } engine={ engine }/>
     </div> :
     <div></div>;
-    var headerHTML = (!this.props.officer.isPlayer) ?
-    <div>
+
+    var headerHTML = (!officer.isPlayer) ?
+    <div onClick={this.target.bind(this)}>
       <h1>Officer</h1>
-      <VOfficer officer={ officer } engine={ this.state.engine }/>
-      <VStats officer={ officer } engine={ this.state.engine } />
+      <VOfficer officer={ officer } engine={ engine }/>
+      <VStats officer={ officer } engine={ engine } />
     </div> :
     <div></div>;
 
@@ -169,7 +175,7 @@ class VStaff extends React.Component {
     if (!unit) unit = { name: 'No unit' };
 
     army.HQ.findOperationalStaff(this.state.officer).forEach(officer => {
-      staff.push(<li><Officer officer={ officer } engine={ this.state.engine }/></li>);
+      staff.push(<li><VOfficer officer={ officer } engine={ this.state.engine }/></li>);
     });
 
     var superiorHTML = (!this.state.officer.reserved) ?
@@ -231,13 +237,17 @@ class VStats extends React.Component {
   }
 
   render () {
+    var html
 
-    var html = (this.props.officer) ? <div className="stats">
-                                        <div>INT { this.props.officer.intelligence }</div>
-                                        <div>MIL { this.props.officer.commanding }</div>
-                                        <div>DIP { this.props.officer.diplomacy }</div>
-                                      </div> :
-                                      <div className="stats"></div>;
+    if (this.props.officer) {
+      html = <div className="stats">
+        <div>INT { this.props.officer.intelligence }</div>
+        <div>MIL { this.props.officer.commanding }</div>
+        <div>DIP { this.props.officer.diplomacy }</div>
+      </div>
+    } else {
+      html = <div className="stats"></div>
+    }
 
     return(html);
   }
@@ -292,11 +302,11 @@ class VUnit extends React.Component {
     var army = this.state.engine.army;
     var staffOfficerId = this.state.officer.split(',')[0];
     var playerUnitId = this.state.officer.split(',')[1];
-    var targetId = (this.state.target) ? this.state.target : this.state.engine.army.HQ.target;
+    var targetId = this.state.target.id;
     var spec = {
       name: this.state.name,
       type: this.state.type,
-      officer: army.HQ.findStaffById(staffOfficerId, playerUnitId),
+      officer: army.HQ.findOfficerById(staffOfficerId),
       target: army.HQ.findOfficerById(targetId)
     };
     army.HQ.operations.add(spec);
@@ -321,8 +331,31 @@ class VUnit extends React.Component {
     this.setState({target: event.target.value});
   }
 
-  handleSearch (event) {
-    this.setState({targets: this.state.engine.army.HQ.findOfficersByName(event.target.value) });
+  handleClickTarget () {
+    this.setState({target: this.state.engine.army.HQ.target})
+  }
+
+  handleSearch (event, selected) {
+    if (!selected) {
+      this.state.engine.army.HQ.target = undefined;
+      this.setState({targets: this.state.engine.army.HQ.findOfficersByName(event.target.value) });
+    } else {
+      this.setState({targets: this.state.engine.army.HQ.findOfficersByName(selected) });
+    }
+  }
+
+  componentDidUpdate (prevProps, prevState) {
+    if (
+      prevState.target &&
+      this.state.engine.army.HQ.target &&
+      this.state.engine.army.HQ.target.lname !== prevState.target.lname
+    ) {
+      this.handleSearch(undefined, this.state.engine.army.HQ.target.name())
+    } else if (this.state.engine.army.HQ.target && !prevState.target) {
+      this.handleSearch(undefined, this.state.engine.army.HQ.target.name())
+    }
+
+    this.state.target = this.state.engine.army.HQ.target;
   }
 
   render () {
@@ -331,11 +364,13 @@ class VUnit extends React.Component {
     let targets = (this.state.targets) ? this.state.targets : army.HQ.findActiveOfficers();
 
     let types = ['commanding', 'intelligence', 'diplomacy'];
-    let staff = army.HQ.findOperationalStaff(player);
+    let staff = army.HQ.findOperationalStaff(player, self);
 
     let operationTypes = [];
     let officers = [];
     let staffOfficers = [];
+
+    let selectedTarget = (this.state.target && this.state.target.name) ? this.state.target.name() : '';
 
     types.forEach(type => {
       operationTypes.push(<option>{ type }</option>);
@@ -345,9 +380,13 @@ class VUnit extends React.Component {
       staffOfficers.push( <option value={ [officer.id, player.unitId] }>{ officer.name() }</option> );
     });
 
-    targets.forEach(target => {
-      officers.push( <option value={ target.id }>{ target.name() }</option> );
-    });
+    if (!this.state.target) {
+      targets.forEach(target => {
+        officers.push( <option value={ target.id }>{ target.name() }</option> );
+      });
+    } else if (this.state.target && this.state.target.name) {
+      officers.push( <option value={ this.state.target.id }>{ this.state.target.name() }</option> );
+    }
 
     operationTypes.unshift(<option></option>);
     officers.unshift(<option></option>);
@@ -367,7 +406,7 @@ class VUnit extends React.Component {
           { staffOfficers }
         </select>
         <div>Target</div>
-        <input type="text" onChange={ this.handleSearch.bind(this) }/>
+        <input type="text" value={selectedTarget} onChange={ this.handleSearch.bind(this) }/>
         <select id="operationTarget" onChange={ this.handleTarget.bind(this) }>
           { officers }
         </select>

@@ -3,7 +3,7 @@ import config from './config';
 import Officer from './officer';
 import Secretary from './secretary';
 import Player from './player';
-import Army from './typings'
+import Army from './typings';
 
 class Officers implements Army.Officers {
   realDate: string;
