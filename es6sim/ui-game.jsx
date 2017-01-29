@@ -107,8 +107,33 @@ class VPlayer extends React.Component {
         <VStats officer={ player } engine={ engine } />
         <VStaff officer={ player } engine={ engine } />
         <VUnit officer={ player }  engine={ engine } />
+        <VOperations officer={ player } engine={engine} />
       </div>
     );
+  }
+}
+
+class VOperations extends React.Component {
+  constructor (props) {
+    super(props);
+    this.state = {
+      officer: this.props.officer,
+      engine: this.props.engine
+    }
+  }
+  render () {
+    console.log(this.state.officer);
+    if (!this.state.officer || !this.state.officer.operations.length) return(<div></div>);
+
+    let operations = [];
+    let html = <div><ul>{operations}</ul></div>;
+    this.state.officer.operations.forEach(operation => {
+      operations.push(<li>
+        <div>{operation.strength}</div>
+      </li>)
+    })
+
+    return(html)
   }
 }
 
@@ -305,7 +330,7 @@ class VUnit extends React.Component {
     var playerUnitId = this.state.officer.split(',')[1];
     var targetId = this.state.target.id;
     var spec = {
-      name: this.state.name,
+      name: 'Operation ' + army.HQ.findOfficerById(staffOfficerId).lname,
       type: this.state.type,
       officer: army.HQ.findOfficerById(staffOfficerId),
       target: army.HQ.findOfficerById(targetId)
@@ -313,7 +338,6 @@ class VUnit extends React.Component {
     army.HQ.operations.add(spec);
     document.getElementById('operationType').selectedIndex = '0';
     document.getElementById('operationOfficer').selectedIndex = '0';
-    document.getElementById('operationTarget').selectedIndex = '0';
   }
 
   handleType (event) {

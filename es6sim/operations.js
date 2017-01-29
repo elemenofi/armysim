@@ -35,7 +35,7 @@ class Operation {
     this.type = spec.type;
     this.name = spec.name;
     this.strength = 0;
-    this.turns = 10;
+    this.turns = 1000;
   }
 
   execute (HQ) {
@@ -46,7 +46,7 @@ class Operation {
       this.strength++;
     }
 
-    if (this.strength >= 3) {
+    if (this.strength >= 300) {
       this.target.reserve(HQ, this)
     }
 
