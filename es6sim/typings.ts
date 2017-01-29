@@ -53,6 +53,7 @@ declare namespace Army {
     unit: Unit;
     commander: Officer;
     traits: { base: Trait };
+    couped: boolean;
     drifts(o: any, traits: any): any;
     reserve(HQ: HQ, context?: Operation)
   }
@@ -92,7 +93,6 @@ declare namespace Army {
   interface Officers {
     realDate: string;
     update(HQ): void;
-    reserve(): void;
     replaceForPlayer: (o: Officer) => Officer;
     replace(o: Officer): void;
     pool: Officer[];
@@ -102,7 +102,7 @@ declare namespace Army {
     secretary: Secretary
     officers: Officers;
     operations: Operation[];
-    candidate(s: any): any
+    candidate(s: any, forced?: boolean): any
     recruit(rank: string, unitId: number, isPlayer: boolean, unitName:string): Officer;
   }
   interface Secretary {

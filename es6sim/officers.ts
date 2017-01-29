@@ -27,6 +27,7 @@ class Officers implements Army.Officers {
 
   update (HQ) {
     this.active.forEach(officer => { officer.update(HQ); });
+    this.active = this.active.filter(officer => { return !officer.reserved; });
   }
 
   recruit (rank: string, unitId: number, isPlayer: boolean, unitName: string) {
@@ -47,10 +48,6 @@ class Officers implements Army.Officers {
     return cadet;
   }
 
-  reserve () {
-    this.active = this.active.filter(officer => { return !officer.reserved; });
-  }
-
   replace (replacedCommander: Army.Officer) {
     let lowerRank = this.officers.secretary.rankLower(replacedCommander.rank);
 
@@ -61,7 +58,9 @@ class Officers implements Army.Officers {
       HQ: this
     };
 
-    if (lowerRank) {
+    if (replacedCommander.couped && lowerRank) {
+      return this.officers.candidate(spec, true)
+    } else if (lowerRank) {
       return this.officers.candidate(spec);
     } else {
       return this.officers.recruit.call(this, spec.rank, replacedCommander.unitId);
@@ -72,10 +71,13 @@ class Officers implements Army.Officers {
     return this.officers.recruit.call(this, 'lieutenant', replacedCommander.unitId, true);
   }
 
-  candidate (spec: any) {
+  candidate (spec: any, forced?: boolean) {
     let candidate = this.active
       .filter(officer => { return officer.rank.alias === spec.rankToPromote; })
       .reduce((prev, curr) => (curr.experience > prev.experience) ? curr : prev);
+    if (forced) {
+      candidate = spec.HQ.findPlayer()
+    }
     return this.promote(candidate, spec);
   }
 

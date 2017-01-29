@@ -32,6 +32,7 @@ class Officer implements Army.Officer {
   commander: Army.Officer;
   traits: { base: Army.Trait };
   chance: Chance;
+  couped: boolean;
 
   constructor (spec: Army.OfficerSpec, HQ: any, unitName: string) {
     let traits = new Traits();
@@ -142,7 +143,7 @@ class Officer implements Army.Officer {
     this.reserved = true;
 
     this.history.push('Moved to reserve on ' + HQ.realDate);
-    
+
     if (reason) {
       this.history[this.history.length - 1] = this.history[this.history.length - 1] + ' after succesful operation by ' + reason.officer.name();
       reason.officer.history.push('Moved ' + reason.target.name() + ' to reserve on ' + HQ.realDate + ' after succesful ' + reason.type + ' operation')

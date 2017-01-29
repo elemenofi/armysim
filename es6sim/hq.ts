@@ -35,7 +35,6 @@ class HQ implements Army.HQ {
     this.units.map(this.reserve.bind(this));
     this.operations.update(this);
     this.officers.update(this);
-    this.officers.reserve();
   }
 
   makePlayer () {

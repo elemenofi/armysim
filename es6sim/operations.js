@@ -54,6 +54,8 @@ class Operation {
         else {
         }
         if (this.strength >= 300) {
+            if (this.type === 'commanding' && this.byPlayer)
+                this.target.couped = true;
             this.target.reserve(HQ, this);
             this.officer.operations.splice(this.officer.operations.indexOf(this), 1);
             if (this.byPlayer)
