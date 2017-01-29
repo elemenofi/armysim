@@ -75,6 +75,8 @@ declare namespace Army {
     officers: Officers;
     unitName(unitId: number, name: string): string;
     add(u: Unit): void;
+    makePlayer(): void;
+    update(triggeredByUserAction?: boolean): void;
   }
   interface Operations {
     operationsID: number;

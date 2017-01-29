@@ -2,16 +2,22 @@
 import VUi from './ui-game.jsx';
 import Actions from './actions';
 import config from './config';
+import Army from './army';
 
 
 class Engine {
+  army: Army;
+  running: boolean;
+  ui: VUi;
+  actions: Actions;
+  turn: number;
   constructor (army) {
     this.army = army;
     this.ui = new VUi(this);
     this.actions = new Actions(this);
     this.turn = 0;
     this.running = true;
-    this.start(this);
+    this.start();
   }
 
   gameLoop;
@@ -33,7 +39,7 @@ class Engine {
     if (this.running) this.updateUI();
   }
 
-  update (triggeredByUserAction) {
+  update (triggeredByUserAction?) {
     while (this.turn < config.bufferTurns) {
       this.army.HQ.update();
       this.turn++;

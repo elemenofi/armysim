@@ -30,7 +30,7 @@ class HQ implements Army.HQ {
     this.realDate = config.formatDate(this.rawDate);
   }
 
-  update (triggeredByUserAction: boolean) {
+  update (triggeredByUserAction?: boolean) {
     if (!triggeredByUserAction) this.updateDate();
     this.units.map(this.reserve.bind(this));
     this.operations.update(this);
