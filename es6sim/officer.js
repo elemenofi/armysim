@@ -20,8 +20,8 @@ class Officer {
         this.operations = [];
         this.history = [];
         this.reserved = false;
-        this.lname = 'aaaa';
-        this.fname = 'vvvvv';
+        this.lname = window.chance.last();
+        this.fname = window.chance.first({ gender: 'male' });
         if (this.isPlayer) {
             this.lname = (config_1.default.debug) ? 'Richardson' : prompt('Name?');
             this.fname = 'John';

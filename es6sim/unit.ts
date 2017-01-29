@@ -7,7 +7,7 @@ class Unit implements Army.Unit {
   parentId: number;
   type: string;
   name: string;
-  subunits: [Army.Unit, Army.Unit];
+  subunits?: Army.Unit[];
   reserve: Army.Officer[];
   commander: Army.Officer;
 
@@ -18,6 +18,7 @@ class Unit implements Army.Unit {
     this.name = names[spec.type][0];
     names[spec.type].shift();
     this.reserve = [];
+    this.subunits = [];
     this.commander = HQ.officers.recruit.call(HQ, spec.rank, this.id, false, this.name);
   }
 }

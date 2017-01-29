@@ -65,13 +65,13 @@ declare namespace Army {
     type?: string;
     id?: number;
     reserve?: Officer[];
-    subunits?: [Unit, Unit];
+    subunits?: Unit[];
   }
   interface HQ {
     operations: Operations;
     rawDate: Dater;
     realDate: string;
-    units: [Unit, Unit];
+    units: Unit[];
     officers: Officers;
     unitName(unitId: number, name: string): string;
     add(u: Unit): void;

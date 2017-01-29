@@ -41,7 +41,6 @@ let config = {
 
   formatDate (rawDate) {
     let realDate;
-    console.log(moment)
     realDate = moment(rawDate).format('D of MMMM, YYYY');
     // realDate = rawDate.toFormat('DDDD the D of MMMM, YYYY');
     realDate = realDate.split(' ');

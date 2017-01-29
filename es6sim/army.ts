@@ -51,7 +51,6 @@ class Army {
         case 'division':
           spec.rank = 'dgeneral';
           unit = new Unit(spec, this.HQ);
-          parent.subunits = []
           parent.subunits.push(unit);
 
           this.generate('brigade', config.unitDepth, unit);
@@ -61,7 +60,6 @@ class Army {
         case 'brigade':
           spec.rank = 'bgeneral';
           unit = new Unit(spec, this.HQ);
-          parent.subunits = []
           parent.subunits.push(unit);
 
           this.generate('regiment', config.unitDepth, unit);
@@ -71,7 +69,6 @@ class Army {
         case 'regiment':
           spec.rank = 'coronel';
           unit = new Unit(spec, this.HQ);
-          parent.subunits = []
           parent.subunits.push(unit);
 
           this.generate('battalion', config.unitDepth, unit);
@@ -81,7 +78,6 @@ class Army {
         case 'battalion':
           spec.rank = 'lcoronel';
           unit = new Unit(spec, this.HQ);
-          parent.subunits = []
           parent.subunits.push(unit);
 
           this.generate('company', config.unitDepth, unit);
@@ -91,7 +87,6 @@ class Army {
         case 'company':
           spec.rank = 'major';
           unit = new Unit(spec, this.HQ);
-          parent.subunits = []
           parent.subunits.push(unit);
 
           this.generate('platoon', config.unitDepth, unit);
@@ -101,7 +96,6 @@ class Army {
         case 'platoon':
           spec.rank = 'captain';
           unit = new Unit(spec, this.HQ);
-          parent.subunits = [];
           parent.subunits.push(unit);
 
           this.generate('squad', config.unitDepth, unit);
@@ -111,8 +105,6 @@ class Army {
         case 'squad':
           spec.rank = 'lieutenant';
           unit = new Unit(spec, this.HQ);
-          parent.subunits = [];
-          //aaaa
           parent.subunits.push(unit);
 
           this.generate('squad', quantity - 1, parent);

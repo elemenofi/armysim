@@ -70,6 +70,7 @@ class VStructure extends React.Component {
             || unit.commander.isPlayer) ? 'isRed' : '';
         });
 
+        debugger;
 
         return(
           <div>
