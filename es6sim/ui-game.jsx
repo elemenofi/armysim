@@ -1,5 +1,6 @@
 import * as React from './lib/react'
 import Army from './typings';
+import config from './config';
 
 class VUi extends React.Component {
   constructor (spec) {
@@ -122,15 +123,19 @@ class VOperations extends React.Component {
     }
   }
   render () {
-    console.log(this.state.officer);
     if (!this.state.officer || !this.state.officer.operations.length) return(<div></div>);
 
     let operations = [];
     let html = <div><ul>{operations}</ul></div>;
     this.state.officer.operations.forEach(operation => {
-      operations.push(<li>
-        <div>{operation.strength}</div>
-      </li>)
+      operations.push(
+        <li className="operation">
+          <div>{config.operationType[operation.type]} {operation.name}</div>
+          <div>{(operation.strength * 300)/1000} % complete</div>
+          <div>{operation.officer.name()} </div>
+          <div>{operation.target.name()} </div>
+        </li>
+      )
     })
 
     return(html)
@@ -329,13 +334,15 @@ class VUnit extends React.Component {
     var staffOfficerId = this.state.officer.split(',')[0];
     var playerUnitId = this.state.officer.split(',')[1];
     var targetId = this.state.target.id;
+
     var spec = {
-      name: 'Operation ' + army.HQ.findOfficerById(staffOfficerId).lname,
+      name: 'Operation ' + chance.word(),
       type: this.state.type,
       officer: army.HQ.findOfficerById(staffOfficerId),
-      target: army.HQ.findOfficerById(targetId)
+      target: army.HQ.findOfficerById(targetId),
+      byPlayer: true
     };
-    army.HQ.operations.add(spec);
+    army.HQ.operations.add(spec, true);
     document.getElementById('operationType').selectedIndex = '0';
     document.getElementById('operationOfficer').selectedIndex = '0';
   }
@@ -384,7 +391,7 @@ class VUnit extends React.Component {
     let player = this.state.player;
     let targets = (this.state.targets) ? this.state.targets : army.HQ.findActiveOfficers();
 
-    let types = ['military', 'intelligence', 'diplomacy'];
+    let types = ['intelligence', 'commanding', 'diplomacy'];
     let staff = army.HQ.findOperationalStaff(player, self);
 
     let operationTypes = [];

@@ -100,7 +100,7 @@ ul {
   margin-top: 8px;
   padding: 16px 0;
 }
-.inspected .superior {
+.inspected .superior, .operation {
   margin-top: 8px;
 }
 .isRed {

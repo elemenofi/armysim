@@ -1,6 +1,7 @@
 'use strict';
 const config_1 = require("./config");
 const traits_1 = require("./traits");
+const chance = require("./lib/chance");
 class Officer {
     constructor(spec, HQ, unitName) {
         let traits = new traits_1.default();
@@ -20,8 +21,9 @@ class Officer {
         this.operations = [];
         this.history = [];
         this.reserved = false;
-        this.lname = window.chance.last();
-        this.fname = window.chance.first({ gender: 'male' });
+        this.chance = chance(Math.random);
+        this.lname = this.chance.last();
+        this.fname = this.chance.first({ gender: 'male' });
         if (this.isPlayer) {
             this.lname = (config_1.default.debug) ? 'Richardson' : prompt('Name?');
             this.fname = 'John';
@@ -96,6 +98,9 @@ class Officer {
         if (reason) {
             this.history[this.history.length - 1] = this.history[this.history.length - 1] + ' after succesful operation by ' + reason.officer.name();
             reason.officer.history.push('Moved ' + reason.target.name() + ' to reserve on ' + HQ.realDate + ' after succesful ' + reason.type + ' operation');
+            if (reason.byPlayer && !reason.officer.isPlayer) {
+                HQ.findPlayer().history.push('Moved ' + reason.target.name() + ' to reserve with ' + reason.officer.name());
+            }
         }
     }
 }

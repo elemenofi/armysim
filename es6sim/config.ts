@@ -71,6 +71,12 @@ let config = {
       intelligence: {action: 'spy', area: 'intelligence'}
   },
 
+  operationType: {
+    'intelligence': 'Plot',
+    'commanding': 'Assault',
+    'diplomacy': 'Negotiation'
+  },
+
   ranks: {
     lieutenant: {
       hierarchy: 0,

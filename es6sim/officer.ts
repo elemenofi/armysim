@@ -142,9 +142,13 @@ class Officer implements Army.Officer {
     this.reserved = true;
 
     this.history.push('Moved to reserve on ' + HQ.realDate);
+    
     if (reason) {
       this.history[this.history.length - 1] = this.history[this.history.length - 1] + ' after succesful operation by ' + reason.officer.name();
       reason.officer.history.push('Moved ' + reason.target.name() + ' to reserve on ' + HQ.realDate + ' after succesful ' + reason.type + ' operation')
+      if (reason.byPlayer && !reason.officer.isPlayer) {
+        HQ.findPlayer().history.push('Moved ' + reason.target.name() + ' to reserve with ' + reason.officer.name())
+      }
     }
 
     // if (this.isPlayer || reason) console.log(this.history[this.history.length - 1]);

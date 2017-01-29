@@ -19,12 +19,16 @@ declare namespace Army {
     diplomacy: number;
   }
   interface Operation {
+    id: number;
+    execute(HQ: HQ): void;
     officer: Officer;
     target: Officer;
     type: string;
     name: string;
     strength: number;
     turns: number;
+    byPlayer: boolean;
+    logged: boolean;
   }
   interface Officer extends OfficerSpec {
     date?: string;
@@ -50,6 +54,7 @@ declare namespace Army {
     commander: Officer;
     traits: { base: Trait };
     drifts(o: any, traits: any): any;
+    reserve(HQ: HQ, context?: Operation)
   }
   interface OfficerSpec {
     date?: string;
@@ -77,6 +82,7 @@ declare namespace Army {
     add(u: Unit): void;
     makePlayer(): void;
     update(triggeredByUserAction?: boolean): void;
+    findPlayer(): Officer;
   }
   interface Operations {
     operationsID: number;
