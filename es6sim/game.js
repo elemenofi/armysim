@@ -1,8 +1,8 @@
 'use strict';
-import Engine from './engine';
-import Army from './army';
-import Keyboard from './keyboard';
-
-window.army = new Army();
-window.army.engine = new Engine(window.army);
-window.army.keyboard = new Keyboard(window.army.engine)
+const engine_1 = require("./engine");
+const army_1 = require("./army");
+const keyboard_1 = require("./keyboard");
+window.army;
+window['army'] = new army_1.default();
+window['army'].engine = new engine_1.default(window['army']);
+window['army'].keyboard = new keyboard_1.default(window['army'].engine);
