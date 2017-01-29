@@ -1,5 +1,5 @@
 'use strict';
-import Ui from './ui-game.jsx';
+import VUi from './ui-game.jsx';
 import Actions from './actions';
 import config from './config';
 
@@ -7,7 +7,7 @@ import config from './config';
 class Engine {
   constructor (army) {
     this.army = army;
-    this.ui = new Ui(this);
+    this.ui = new VUi(this);
     this.actions = new Actions(this);
     this.turn = 0;
     this.running = true;

@@ -1,5 +1,5 @@
 'use strict';
-class Comparisons {
+class Comparisons extends React.Component {
   byExperience (a, b) {
     if (a.experience > b.experience) {
       return -1;

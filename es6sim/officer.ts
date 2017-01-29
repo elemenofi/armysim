@@ -1,18 +1,15 @@
 /* global Chance */
 'use strict';
-import {} from './lib/chance';
 import config from './config';
 import Traits from './traits';
 import Army from './typings';
 
-let Chance: Chance;
-
-interface Chance {
-  new(): Chance;
-  lname(): string;
-  first(n: Army.FirstNameSpec): string;
-  last(): string
-}
+// interface Chance {
+//   new(): Chance;
+//   lname(): string;
+//   first(n: Army.FirstNameSpec): string;
+//   last(): string
+// }
 
 class Officer implements Army.Officer {
   lname: string;
@@ -37,7 +34,7 @@ class Officer implements Army.Officer {
   traits: { base: Army.Trait };
 
   constructor (spec: Army.OfficerSpec, HQ: any, unitName: string) {
-    let chance = new Chance() as Chance;
+    // let chance: Chance = new Chance();
     let traits = new Traits();
     this.id = spec.id;
     this.isPlayer = spec.isPlayer;
@@ -59,8 +56,10 @@ class Officer implements Army.Officer {
     this.operations = [];
     this.history = [];
     this.reserved = false;
-    this.lname = chance.last();
-    this.fname = chance.first({gender: 'male'});
+    // this.lname = chance.last();
+    this.lname = 'aaaa';
+    // this.fname = chance.first({gender: 'male'});
+    this.fname = 'vvvvv';
 
     if (this.isPlayer) {
       this.lname = (config.debug) ? 'Richardson' : prompt('Name?');

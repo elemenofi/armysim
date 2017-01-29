@@ -1,7 +1,9 @@
 'use strict';
-import {} from './lib/date.js';
+// import {} from './lib/date.js';
+import * as moment from 'moment'
 import config from './config';
 import Operations from './operations';
+import World from './world';
 import Officers from './officers';
 import Army from './typings';
 
@@ -12,16 +14,18 @@ class HQ implements Army.HQ {
   units: [Army.Unit, Army.Unit];
   realDate: string;
   player: Army.Officer;
+  world: any;
 
   constructor () {
     this.operations = new Operations();
     this.rawDate = new Date();
     this.units = [] as any;
     this.officers = new Officers();
+    this.world = new World(this);
   }
 
   updateDate () {
-    this.rawDate = this.rawDate.addDays(1);
+    this.rawDate = moment(this.rawDate).add(1, "days");
     this.realDate = config.formatDate(this.rawDate);
   }
 

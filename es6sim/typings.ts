@@ -59,13 +59,13 @@ declare namespace Army {
     isPlayer?: boolean;
   }
   interface Unit {
-    name: string;
-    parentId: number;
-    commander: Officer;
-    type: string;
-    id: number;
-    reserve: Officer[];
-    subunits: [Unit, Unit];
+    name?: string;
+    parentId?: number;
+    commander?: Officer;
+    type?: string;
+    id?: number;
+    reserve?: Officer[];
+    subunits?: [Unit, Unit];
   }
   interface HQ {
     operations: Operations;
@@ -74,6 +74,7 @@ declare namespace Army {
     units: [Unit, Unit];
     officers: Officers;
     unitName(unitId: number, name: string): string;
+    add(u: Unit): void;
   }
   interface Operations {
     operationsID: number;

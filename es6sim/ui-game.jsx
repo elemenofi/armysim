@@ -1,20 +1,22 @@
 /* jshint ignore:start */
-import React from './lib/react';
-import Comparisons from './comparisons';
+// import React from './lib/react';
+// import React from './lib/react';
+import * as React from './lib/react'
 
-let comparisons = new Comparisons();
+import Army from './typings';
 
-class Ui {
+class VUi extends React.Component {
     constructor (spec) {
+        super (spec);
         this.engine = spec;
     }
 
     render (army) {
-        React.render(<Army engine={ this.engine } />, document.body);
+        React.render(<VArmy engine={ this.engine } />, document.body);
     }
 }
 
-class Army extends React.Component {
+class VArmy extends React.Component {
     constructor (props) {
         super (props);
         this.state = {
@@ -30,17 +32,19 @@ class Army extends React.Component {
             <div className="army">
                 <p className="date" >{ army.HQ.realDate }</p>
                 <div>
-                  <Player player={ army.HQ.player } engine={ engine }/>
-                  <Inspected officer={ army.HQ.findInspected() } engine={ engine } />
+                  <VPlayer player={ army.HQ.player } engine={ engine }/>
+                  <VInspected officer={ army.HQ.findInspected() } engine={ engine } />
                 </div>
-                <Unit officer={ army.HQ.player }  engine={ engine } />
-                <Structure units={ army.units.corps } engine={ engine } />
+                <VUnit officer={ army.HQ.player }  engine={ engine } />
+                <VStructure units={ army.units.corps } engine={ engine } />
             </div>
         );
     }
 }
 
-class Structure extends React.Component {
+class VStructure extends React.Component {
+    props;
+    state;
     constructor (props) {
         super (props);
         this.state = {
@@ -55,8 +59,10 @@ class Structure extends React.Component {
 
     render () {
         let units = this.state.units;
-        if (!units.length) return(<div></div>)
+        if (units.length < 2) return(<div></div>)
         let names = [];
+
+
 
         units.forEach(unit => {
           unit.isRed = (this.state.engine.army.HQ.officers.inspected
@@ -69,18 +75,18 @@ class Structure extends React.Component {
           <div>
             <div className={units[0].type + ' ' + units[0].isRed}>
               <div onClick={ this.inspect.bind(this, [units[0].commander]) }>{units[0].name}</div>
-              <Structure units={units[0].subunits} engine={this.state.engine} />
+              <VStructure units={units[0].subunits} engine={this.state.engine} />
             </div>
             <div className={units[1].type  + ' ' + units[1].isRed}>
               <div onClick={ this.inspect.bind(this, [units[1].commander]) }>{units[1].name}</div>
-              <Structure units={units[1].subunits} engine={this.state.engine} />
+              <VStructure units={units[1].subunits} engine={this.state.engine} />
             </div>
           </div>
         );
     }
 }
 
-class Player extends React.Component {
+class VPlayer extends React.Component {
     constructor (props) {
         super (props);
         this.state = {
@@ -103,14 +109,14 @@ class Player extends React.Component {
             <div className="player">
                 <div onClick={ this.inspect.bind(this) }>{ player.name() }</div>
                 <div>{ this.state.engine.army.HQ.findUnitById(player.unitId).name }</div>
-                <Stats officer={ player } engine={ this.state.engine} />
-                <Staff officer={ player } engine={ this.state.engine } />
+                <VStats officer={ player } engine={ this.state.engine} />
+                <VStaff officer={ player } engine={ this.state.engine } />
             </div>
         );
     }
 }
 
-class Inspected extends React.Component {
+class VInspected extends React.Component {
     constructor (props) {
       super(props);
       this.state = {
@@ -128,14 +134,14 @@ class Inspected extends React.Component {
       var superiorHTML = (!this.props.officer.reserved && !this.props.officer.isPlayer && this.props.officer.rank.hierarchy < 7) ?
           <div className="superior">
               <div>Commanding Officer</div>
-              <Officer officer={ superior } engine={ this.state.engine }/>
+              <VOfficer officer={ superior } engine={ this.state.engine }/>
           </div> :
           <div></div>;
       var headerHTML = (!this.props.officer.isPlayer) ?
           <div>
               <h1>Officer</h1>
-              <Officer officer={ officer } engine={ this.state.engine }/>
-              <Stats officer={ officer } engine={ this.state.engine } />
+              <VOfficer officer={ officer } engine={ this.state.engine }/>
+              <VStats officer={ officer } engine={ this.state.engine } />
           </div> :
           <div></div>;
 
@@ -144,14 +150,14 @@ class Inspected extends React.Component {
           <div className="inspected">
               { headerHTML }
               { superiorHTML }
-              <History officer={ officer } engine={ this.state.engine } />
+              <VHistory officer={ officer } engine={ this.state.engine } />
           </div>
       );
 
     }
 }
 
-class Staff extends React.Component {
+class VStaff extends React.Component {
     constructor (props) {
         super(props);
         this.state = {
@@ -175,7 +181,7 @@ class Staff extends React.Component {
         var superiorHTML = (!this.state.officer.reserved) ?
             <div>
                 <div>Commanding Officer</div>
-                <Officer officer={ superior } engine={ this.state.engine }/>
+                <VOfficer officer={ superior } engine={ this.state.engine }/>
             </div> :
             <div></div>;
 
@@ -193,7 +199,7 @@ class Staff extends React.Component {
     }
 }
 
-class Officer extends React.Component {
+class VOfficer extends React.Component {
     constructor (props) {
         super(props);
         this.state = {
@@ -218,7 +224,7 @@ class Officer extends React.Component {
     }
 }
 
-class Stats extends React.Component {
+class VStats extends React.Component {
     constructor (props) {
         super(props);
         this.state = {
@@ -241,7 +247,7 @@ class Stats extends React.Component {
     }
 }
 
-class History extends React.Component {
+class VHistory extends React.Component {
     constructor (props) {
         super(props);
         this.state = {
@@ -271,7 +277,7 @@ class History extends React.Component {
     }
 }
 
-class Unit extends React.Component {
+class VUnit extends React.Component {
     constructor (props) {
         super(props);
         this.state = {
@@ -380,4 +386,4 @@ class Unit extends React.Component {
     }
 }
 
-export default Ui;
+export default VUi;
