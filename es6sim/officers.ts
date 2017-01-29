@@ -3,8 +3,19 @@ import config from './config';
 import Officer from './officer';
 import Secretary from './secretary';
 import Player from './player';
+import Army from './typings'
 
-class Officers {
+class Officers implements Army.Officers {
+  realDate: string;
+  active: Officer[];
+  pool: Officer[];
+  officers: Army.Officers;
+  inspected: Officer;
+  __officersID: number;
+  secretary: Army.Secretary;
+  player: Officer;
+  operations: Army.Operation[];
+
   constructor () {
     this.pool = [];
     this.active = [];
@@ -18,12 +29,12 @@ class Officers {
     this.active.forEach(officer => { officer.update(HQ); });
   }
 
-  recruit (rank, unitId, isPlayer, unitName) {
+  recruit (rank: string, unitId: number, isPlayer: boolean, unitName: string) {
     let options = {
       date: this.realDate,
       id: this.officers.__officersID,
       unitId: unitId,
-      rank: rank
+      rankName: rank
     };
 
     let cadet = (isPlayer) ? new Player(options, this, unitName) : new Officer(options, this, unitName);
@@ -40,7 +51,7 @@ class Officers {
     this.active = this.active.filter(officer => { return !officer.reserved; });
   }
 
-  replace (replacedCommander) {
+  replace (replacedCommander: Army.Officer) {
     let lowerRank = this.officers.secretary.rankLower(replacedCommander.rank);
 
     let spec = {
@@ -57,18 +68,18 @@ class Officers {
     }
   }
 
-  replaceForPlayer (replacedCommander) {
+  replaceForPlayer (replacedCommander: Army.Officer) {
     return this.officers.recruit.call(this, 'lieutenant', replacedCommander.unitId, true);
   }
 
-  candidate (spec) {
+  candidate (spec: any) {
     let candidate = this.active
       .filter(officer => { return officer.rank.alias === spec.rankToPromote; })
       .reduce((prev, curr) => (curr.experience > prev.experience) ? curr : prev);
     return this.promote(candidate, spec);
   }
 
-  promote (officer, spec) {
+  promote (officer: Army.Officer, spec: any) {
     spec.HQ.deassign(officer.unitId);
     let promotion = this.promotion(officer, spec);
     officer.history.push(config.promoted(promotion));
@@ -76,7 +87,7 @@ class Officers {
     return officer;
   }
 
-  promotion (officer, spec) {
+  promotion (officer: Army.Officer, spec: any) {
     officer.unitId = spec.unitId;
     officer.rank = config.ranks[spec.rank];
 

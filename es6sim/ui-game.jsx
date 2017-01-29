@@ -27,30 +27,55 @@ class Army extends React.Component {
         var army = this.state.army;
         var engine = this.state.engine;
         return(
-            <div>
-                <Date hq={ army.HQ } engine={ engine } />
-                <Player player={ army.HQ.player } engine={ engine }/>
+            <div className="army">
+                <p className="date" >{ army.HQ.realDate }</p>
+                <div>
+                  <Player player={ army.HQ.player } engine={ engine }/>
+                  <Inspected officer={ army.HQ.findInspected() } engine={ engine } />
+                </div>
+                <Unit officer={ army.HQ.player }  engine={ engine } />
+                <Structure units={ army.units.corps } engine={ engine } />
             </div>
         );
     }
 }
 
-class Date extends React.Component {
+class Structure extends React.Component {
     constructor (props) {
         super (props);
         this.state = {
-            hq: this.props.hq,
+            units: this.props.units,
             engine: this.props.engine
         };
     }
 
-    pause () {
-        this.state.engine.pause();
+    inspect (commander) {
+       if (this.props.engine) this.props.engine.actions.inspect(commander[0].id);
     }
 
     render () {
+        let units = this.state.units;
+        if (!units.length) return(<div></div>)
+        let names = [];
+
+        units.forEach(unit => {
+          unit.isRed = (this.state.engine.army.HQ.officers.inspected
+            && unit.commander.id === this.state.engine.army.HQ.officers.inspected.id
+            || unit.commander.isPlayer) ? 'isRed' : '';
+        });
+
+
         return(
-            <div className="date" onClick={ this.pause.bind(this) }>{ this.state.hq.realDate }</div>
+          <div>
+            <div className={units[0].type + ' ' + units[0].isRed}>
+              <div onClick={ this.inspect.bind(this, [units[0].commander]) }>{units[0].name}</div>
+              <Structure units={units[0].subunits} engine={this.state.engine} />
+            </div>
+            <div className={units[1].type  + ' ' + units[1].isRed}>
+              <div onClick={ this.inspect.bind(this, [units[1].commander]) }>{units[1].name}</div>
+              <Structure units={units[1].subunits} engine={this.state.engine} />
+            </div>
+          </div>
         );
     }
 }
@@ -64,15 +89,65 @@ class Player extends React.Component {
         };
     }
 
+    inspect () {
+       if (this.props.engine) this.props.engine.actions.inspect(this.props.player.id);
+    }
+
     render () {
+        if (!this.state.player) return
+
+        let army = this.state.engine.army;
+        let player = this.state.player;
+
         return(
-            <div>
-                <div>{ this.state.player.name() }</div>
-                <Staff officer={ this.state.player } engine={ this.state.engine } />
-                <br></br>
-                <Unit officer={ this.state.player }  engine={ this.state.engine } />
+            <div className="player">
+                <div onClick={ this.inspect.bind(this) }>{ player.name() }</div>
+                <div>{ this.state.engine.army.HQ.findUnitById(player.unitId).name }</div>
+                <Stats officer={ player } engine={ this.state.engine} />
+                <Staff officer={ player } engine={ this.state.engine } />
             </div>
         );
+    }
+}
+
+class Inspected extends React.Component {
+    constructor (props) {
+      super(props);
+      this.state = {
+        officer: this.props.officer,
+        engine: this.props.engine
+      }
+    }
+
+    render () {
+      if (!this.props.officer) return (<div></div>)
+      var army = this.state.engine.army;
+      var officer = this.props.officer;
+      var engine = this.state.engine;
+      var superior = army.HQ.findCommandingOfficer(officer)
+      var superiorHTML = (!this.props.officer.reserved && !this.props.officer.isPlayer && this.props.officer.rank.hierarchy < 7) ?
+          <div className="superior">
+              <div>Commanding Officer</div>
+              <Officer officer={ superior } engine={ this.state.engine }/>
+          </div> :
+          <div></div>;
+      var headerHTML = (!this.props.officer.isPlayer) ?
+          <div>
+              <h1>Officer</h1>
+              <Officer officer={ officer } engine={ this.state.engine }/>
+              <Stats officer={ officer } engine={ this.state.engine } />
+          </div> :
+          <div></div>;
+
+
+      return(
+          <div className="inspected">
+              { headerHTML }
+              { superiorHTML }
+              <History officer={ officer } engine={ this.state.engine } />
+          </div>
+      );
+
     }
 }
 
@@ -86,61 +161,35 @@ class Staff extends React.Component {
     }
 
     render () {
-        var army = this.state.engine.army;
-        var unit = army.HQ.findUnitById(this.state.officer.unitId);
-        if (!unit) unit = { name: 'No unit' };
-        var superior = army.HQ.findCommandingOfficer(this.state.officer);
-        var superiorHTML = (!this.state.officer.reserved) ?
-            <div>
-                <div>SUPERIOR OFFICER</div>
-                <Officer officer={ superior } engine={ this.state.engine }/>
-                <br></br>
-            </div> :
-            <div></div>;
-        var inspectedSuperiorHTML = (army.HQ.findInspected() && !army.HQ.findInspected().reserved) ?
-            <div>
-                <div>SUPERIOR OFFICER</div>
-                <Officer officer={ army.HQ.findCommandingOfficer(army.HQ.findInspected()) } engine={ this.state.engine }/>
-            </div> :
-            <div></div>;
         var staff = [];
         var subordinates = [];
-        var inspecteds = [];
+        var army = this.state.engine.army;
+        var unit = army.HQ.findUnitById(this.state.officer.unitId);
+        var superior = army.HQ.findCommandingOfficer(this.state.officer);
+        if (!unit) unit = { name: 'No unit' };
 
-        army.HQ.findStaff(this.state.officer).forEach(staffOfficer => {
-            staff.push(<li><Officer officer={ staffOfficer } engine={ this.state.engine }/></li>);
+        army.HQ.findOperationalStaff(this.state.officer).forEach(officer => {
+            staff.push(<li><Officer officer={ officer } engine={ this.state.engine }/></li>);
         });
 
-        army.HQ.findSubordinates(this.state.officer).forEach(subordinate => {
-            subordinates.push(<li><Officer officer={ subordinate } engine={ this.state.engine }/></li>);
-        });
-
-        if (army.HQ.findInspected() && army.HQ.findInspected().name) {
-            inspecteds.push(
-                <li>
-                    <Officer officer={ army.HQ.findInspected() } engine={ this.state.engine }/>
-                    <br/>
-                    { inspectedSuperiorHTML }
-                </li>
-            );
-        }
-
-        return(
+        var superiorHTML = (!this.state.officer.reserved) ?
             <div>
-                <div>{ unit.name }</div>
-                <br></br>
-                { superiorHTML }
-                <div>STAFF OFFICERS</div>
-                <ul className="staffOfficers">{ staff }</ul>
-                <br></br>
-                <div>SUBORDINATE OFFICERS</div>
-                <ul className="staffOfficers">{ subordinates }</ul>
-                <br></br>
-                <div>INSPECTED OFFICER</div>
-                <ul className="staffOfficers">{ inspecteds }</ul>
+                <div>Commanding Officer</div>
+                <Officer officer={ superior } engine={ this.state.engine }/>
+            </div> :
+            <div></div>;
 
-            </div>
-        );
+        var staffHTML = (staff.length && !this.state.officer.reserved) ?
+            <div>
+              { superiorHTML }
+              <h2>Staff</h2>
+              <ul className="staff">{ staff }</ul>
+            </div> :
+            <div>
+              { superiorHTML }
+            </div>;
+
+        return(staffHTML);
     }
 }
 
@@ -162,6 +211,59 @@ class Officer extends React.Component {
         var html = (this.props.officer) ?
             <div>
                 <div onClick={ this.inspect.bind(this) }>{ this.props.officer.name() }</div>
+            </div> :
+            <div></div>;
+
+        return(html);
+    }
+}
+
+class Stats extends React.Component {
+    constructor (props) {
+        super(props);
+        this.state = {
+            engine: this.props.engine,
+            officer: this.props.officer
+        }
+    }
+
+    render () {
+
+        var html = (this.props.officer) ?
+            <div className="stats">
+                <div>INT { this.props.officer.intelligence }</div>
+                <div>MIL { this.props.officer.commanding }</div>
+                <div>DIP { this.props.officer.diplomacy }</div>
+            </div> :
+            <div className="stats"></div>;
+
+        return(html);
+    }
+}
+
+class History extends React.Component {
+    constructor (props) {
+        super(props);
+        this.state = {
+            engine: this.props.engine,
+            officer: this.props.officer
+        }
+    }
+
+    render () {
+
+        var history = [];
+
+        if (this.props.officer) {
+            this.props.officer.history.forEach((event) =>{
+                history.push(<li className="log">{ event }</li>)
+            })
+        }
+
+        var html = (this.props.officer) ?
+            <div className="history">
+                <div>Record</div>
+                <ul>{ history }</ul>
             </div> :
             <div></div>;
 
@@ -229,7 +331,7 @@ class Unit extends React.Component {
         let player = this.state.player;
         let targets = (this.state.targets) ? this.state.targets : army.HQ.findActiveOfficers();
 
-        let types = ['commanding', 'intelligence'];
+        let types = ['commanding', 'intelligence', 'diplomacy'];
         let staff = army.HQ.findOperationalStaff(player);
 
         let operationTypes = [];
@@ -253,10 +355,11 @@ class Unit extends React.Component {
         staffOfficers.unshift(<option></option>);
 
         return(
-            <div>
-                <div>New Operation</div>
-                <div>Type</div>
+            <div className="unit">
+                <h1>Headquarters</h1>
+                <div>Operation name</div>
                 <input onChange={ this.handleName.bind(this) }/>
+                <div>Type</div>
                 <select id="operationType" onChange={ this.handleType.bind(this) }>
                     { operationTypes }
                 </select>
@@ -269,7 +372,6 @@ class Unit extends React.Component {
                 <select id="operationTarget" onChange={ this.handleTarget.bind(this) }>
                     { officers }
                 </select>
-                <br></br>
                 <button onClick={ this.startOperation.bind(this) }>
                     Start Operation
                 </button>

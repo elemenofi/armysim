@@ -17,9 +17,13 @@ class Engine {
   gameLoop;
   UILoop;
 
+  getTurns () {
+    return this.turn
+  }
+
   start () {
     this.update();
-    this.army.HQ.player();
+    this.army.HQ.makePlayer();
     this.updateUI();
   }
 
@@ -29,13 +33,13 @@ class Engine {
     if (this.running) this.updateUI();
   }
 
-  update () {
+  update (triggeredByUserAction) {
     while (this.turn < config.bufferTurns) {
       this.army.HQ.update();
       this.turn++;
     }
 
-    this.army.HQ.update();
+    this.army.HQ.update(triggeredByUserAction);
     this.turn++;
 
     if (this.running) {

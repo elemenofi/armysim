@@ -1,15 +1,18 @@
-class Actions {
-    constructor (engine) {
-        this.HQ = engine.army.HQ;
-    }
+//actions must have engine and that is why i cannot be within HQ.
+//we want the interface actions to run the engine even thought the date shouldnt
+//go forward
 
-    inspect (officerId) {
-        this.HQ.inspectOfficer(officerId);
-        if (!engine.running) {
-            engine.update();
-            engine.updateUI();
-        }
+class Actions {
+  constructor (engine) {
+    this.inspect = (officerId) => {
+      engine.army.HQ.inspectOfficer(officerId);
+      if (!engine.running) {
+        //pass true as triggeredByUserAction
+        engine.update(true);
+        engine.updateUI(true);
+      }
     }
+  }
 }
 
 export default Actions

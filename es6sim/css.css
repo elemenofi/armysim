@@ -1,28 +1,105 @@
+body, h1, h2, h3, h4, p, ul, li {
+  margin: 0;
+  padding: 0;
+  line-height: 18px;
+  font-weight: normal;
+  font-family: monospace !important;
+  font-size: 14px !important;
+}
+
+h1 {
+  text-transform: uppercase;
+}
+
 ul {
   padding: 0;
   margin: 0;
   list-style-type: none;
 }
 
+.corp, .division, .brigade  {
+  width: 50%;
+  float: left;
+  display: inline-block;
+}
+
+.corp, .division, .brigade, .regiment, .battalion, .company, .platoon, .squad {
+  position: relative;
+}
+
+.corp {
+  z-index: 3;
+}
+.division {
+  z-index: 4;
+}
+.brigade {
+  z-index: 5;
+}
+.regiment {
+  z-index: 6;
+}
+.battalion {
+  z-index: 7;
+}
+.company {
+  z-index: 8;
+}
+
+.platoon {
+  z-index: 9;
+}
+.squad {
+  z-index: 5;
+}
+
 .clear {
   clear: both;
 }
 
-.date {
-  width: 100%;
-  text-align: center;
+.army {
 }
-.player, .corp, .division, .brigade {
-  width: 50%;
+
+.player, .unit, .inspected {
+  margin: 8px;
+  max-width: 100%;
+  min-width: 100%;
+}
+
+.player, .inspected {
+  display: inline-block;
   float: left;
 }
 
-.corp:after {
-  content: ' ';
-  display: block;
-  clear: both;
-};
+.unit {
+  float: none;
+}
 
-ul.staffOfficers {
-  margin-top: 16px;
+.player h2 {
+  margin-top: 8px;
+}
+
+.player .stats {
+  margin-bottom: 8px;
+}
+
+.date {
+  margin: 0 8px;
+}
+
+.log {
+  margin: 4px 0;
+}
+
+.inspected .history {
+  margin-top: 8px;
+  height: 64px;
+  overflow-y: scroll;
+  padding: 16px;
+}
+.inspected .superior {
+  margin-top: 8px;
+}
+.isRed {
+  background-color: red;
 }

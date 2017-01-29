@@ -3,6 +3,7 @@
 let gameLength = 30;
 
 let config = {
+
   promoted (promotion) {
     let message =
     'Promoted to ' + this.ranks[promotion.rank].title +
@@ -53,7 +54,11 @@ let config = {
 
   speed: 10,
 
-  bufferTurns: 100,
+  debug: true,
+
+  // this in 10000 turns makes a better historical start,
+  // 100000 makes sure all staff officers are realistically old
+  bufferTurns: 10,
 
   unitDepth: 2,
 
@@ -71,7 +76,7 @@ let config = {
       title: 'Lieutenant',
       alias: 'lieutenant',
       startxp: 10 * gameLength,
-      maxxp: 40 * gameLength,
+      maxxp: 80 * gameLength,
       startpr: 100
     },
     captain: {
@@ -79,7 +84,7 @@ let config = {
       title: 'Captain',
       alias: 'captain',
       startxp: 40 * gameLength,
-      maxxp: 60 * gameLength,
+      maxxp: 120 * gameLength,
       startpr: 200
     },
     major: {
@@ -87,7 +92,7 @@ let config = {
       title: 'Major',
       alias: 'major',
       startxp: 60 * gameLength,
-      maxxp: 80 * gameLength,
+      maxxp: 160 * gameLength,
       startpr: 300
     },
     lcoronel: {
@@ -95,7 +100,7 @@ let config = {
       title: 'Lieutenant Coronel',
       alias: 'lcoronel',
       startxp: 80 * gameLength,
-      maxxp: 100 * gameLength,
+      maxxp: 200 * gameLength,
       startpr: 400
     },
     coronel: {
@@ -103,7 +108,7 @@ let config = {
       title: 'Coronel',
       alias: 'coronel',
       startxp: 100 * gameLength,
-      maxxp: 120 * gameLength,
+      maxxp: 240 * gameLength,
       startpr: 500
     },
     bgeneral: {
@@ -111,7 +116,7 @@ let config = {
       title: 'Brigade General',
       alias: 'bgeneral',
       startxp: 120 * gameLength,
-      maxxp: 140 * gameLength,
+      maxxp: 280 * gameLength,
       startpr: 600
     },
     dgeneral: {
@@ -119,7 +124,7 @@ let config = {
       title: 'Division General',
       alias: 'dgeneral',
       startxp: 140 * gameLength,
-      maxxp: 160 * gameLength,
+      maxxp: 320 * gameLength,
       startpr: 700
     },
     lgeneral: {
@@ -127,7 +132,7 @@ let config = {
       title: 'Lieutenant General',
       alias: 'lgeneral',
       startxp: 160 * gameLength,
-      maxxp: 180 * gameLength,
+      maxxp: 360 * gameLength,
       startpr: 800
     },
     general: {
@@ -135,7 +140,7 @@ let config = {
       title: 'General',
       alias: 'general',
       startxp: 180 * gameLength,
-      maxxp: 220 * gameLength,
+      maxxp: 440 * gameLength,
       startpr: 900
     }
   }

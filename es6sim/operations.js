@@ -17,16 +17,14 @@ class Operations {
 
   update (HQ) {
     this.active = this.active.filter(operation => {
-      if (!HQ.player.reserved && !operation.target.reserved && operation.turns > 0) {
+      if (!operation.target.reserved && operation.turns > 0) {
         return true;
       } else {
-        alert(operation.name + ' ended.');
         return false;
       }
     });
 
     this.active.forEach(operation => { operation.execute(HQ); });
-    if (this.active.length) console.log('active operations', this.active.length)
   }
 }
 
@@ -43,8 +41,6 @@ class Operation {
   execute (HQ) {
     var officerRoll = this.officer[this.type] + config.random(10);
     var targetRoll = this.target[this.type] + config.random(10);
-
-    console.log(officerRoll, targetRoll);
 
     if ((officerRoll) > (targetRoll)) {
       this.strength++;
