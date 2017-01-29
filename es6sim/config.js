@@ -1,21 +1,21 @@
 'use strict';
-var moment = require('moment');
-var gameLength = 30;
-var config = {
-    promoted: function (promotion) {
-        var message = 'Promoted to ' + this.ranks[promotion.rank].title +
+const moment = require("moment");
+let gameLength = 30;
+let config = {
+    promoted(promotion) {
+        let message = 'Promoted to ' + this.ranks[promotion.rank].title +
             ' on ' + promotion.date + ', assigned to the ' + promotion.unit;
         return message;
     },
-    graduated: function (graduation, officer) {
-        var when = '';
+    graduated(graduation, officer) {
+        let when = '';
         if (graduation.date && graduation.unit) {
             when = ' on ' + graduation.date + ', assigned to the ' + graduation.unit;
         }
-        var message = 'Graduated from ' + officer.traits.base.school + when;
+        let message = 'Graduated from ' + officer.traits.base.school + when;
         return message;
     },
-    suffix: function (i) {
+    suffix(i) {
         var j = i % 10, k = i % 100;
         if (j == 1 && k != 11) {
             return 'st';
@@ -28,23 +28,19 @@ var config = {
         }
         return 'th';
     },
-    formatDate: function (rawDate) {
-        var realDate;
-        console.log(moment);
+    formatDate(rawDate) {
+        let realDate;
         realDate = moment(rawDate).format('D of MMMM, YYYY');
-        // realDate = rawDate.toFormat('DDDD the D of MMMM, YYYY');
         realDate = realDate.split(' ');
         realDate[0] = moment(rawDate).format('D') + config.suffix(moment(rawDate).format('D'));
         realDate = realDate.join(' ');
         return realDate;
     },
-    random: function (n) {
+    random(n) {
         return Math.round(Math.random() * n);
     },
     speed: 10,
     debug: true,
-    // this in 10000 turns makes a better historical start,
-    // 100000 makes sure all staff officers are realistically old
     bufferTurns: 10,
     unitDepth: 2,
     staffSize: 20,
@@ -128,4 +124,5 @@ var config = {
         }
     }
 };
-exports["default"] = config;
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.default = config;

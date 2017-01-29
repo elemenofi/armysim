@@ -1,131 +1,133 @@
 'use strict';
-import * as moment from 'moment';
-import config from './config';
-import Operations from './operations';
-import World from './world';
-import Officers from './officers';
-class HQ {
-    constructor() {
-        this.operations = new Operations();
+var moment = require("moment");
+var config_1 = require("./config");
+var operations_1 = require("./operations");
+var world_1 = require("./world");
+var officers_1 = require("./officers");
+var HQ = (function () {
+    function HQ() {
+        this.operations = new operations_1.default();
         this.rawDate = new Date();
         this.units = [];
-        this.officers = new Officers();
-        this.world = new World(this);
+        this.officers = new officers_1.default();
+        this.world = new world_1.default(this);
     }
-    updateDate() {
+    HQ.prototype.updateDate = function () {
         this.rawDate = moment(this.rawDate).add(1, "days");
-        this.realDate = config.formatDate(this.rawDate);
-    }
-    update(triggeredByUserAction) {
+        this.realDate = config_1.default.formatDate(this.rawDate);
+    };
+    HQ.prototype.update = function (triggeredByUserAction) {
         if (!triggeredByUserAction)
             this.updateDate();
         this.units.map(this.reserve.bind(this));
         this.operations.update(this);
         this.officers.update(this);
         this.officers.reserve();
-    }
-    makePlayer() {
-        let squads = this.findUnitsByType('squad');
-        let unit = squads[config.random(squads.length) + 1];
+    };
+    HQ.prototype.makePlayer = function () {
+        var squads = this.findUnitsByType('squad');
+        var unit = squads[config_1.default.random(squads.length) + 1];
         unit.commander.reserved = true;
         unit.commander = this.officers.replaceForPlayer.call(this, unit.commander);
         this.player = unit.commander;
-    }
-    findPlayer() {
-        return this.officers.pool.filter(officer => {
+    };
+    HQ.prototype.findPlayer = function () {
+        return this.officers.pool.filter(function (officer) {
             return officer.isPlayer;
         })[0];
-    }
-    findOfficersByName(name) {
-        return this.officers.active.filter(officer => {
+    };
+    HQ.prototype.findOfficersByName = function (name) {
+        return this.officers.active.filter(function (officer) {
             return officer.name().toLowerCase().includes(name.toLowerCase());
         });
-    }
-    findUnitsByType(type) {
-        return this.units.filter(unit => { return unit.type === type; });
-    }
-    findUnitById(id) {
-        return this.units.filter(unit => { return unit.id === id; })[0];
-    }
-    findCommandingOfficer(officer) {
+    };
+    HQ.prototype.findUnitsByType = function (type) {
+        return this.units.filter(function (unit) { return unit.type === type; });
+    };
+    HQ.prototype.findUnitById = function (id) {
+        return this.units.filter(function (unit) { return unit.id === id; })[0];
+    };
+    HQ.prototype.findCommandingOfficer = function (officer) {
         if (!officer)
-            return { name: () => { return 'No name'; } };
-        var officerUnit = this.units.filter(unit => { return unit.id === officer.unitId; })[0];
-        var superiorUnit = this.units.filter(unit => { return officerUnit && unit.id === officerUnit.parentId; })[0];
+            return { name: function () { return 'No name'; } };
+        var officerUnit = this.units.filter(function (unit) { return unit.id === officer.unitId; })[0];
+        var superiorUnit = this.units.filter(function (unit) { return officerUnit && unit.id === officerUnit.parentId; })[0];
         if (!superiorUnit)
-            return { name: () => { return 'No name'; } };
+            return { name: function () { return 'No name'; } };
         return superiorUnit.commander;
-    }
-    findOfficerById(officerId) {
-        return this.officers.pool.filter(officer => { return officer.id === Number(officerId); })[0];
-    }
-    inspectOfficer(officerId) {
+    };
+    HQ.prototype.findOfficerById = function (officerId) {
+        return this.officers.pool.filter(function (officer) { return officer.id === Number(officerId); })[0];
+    };
+    HQ.prototype.inspectOfficer = function (officerId) {
         var officer = this.findOfficerById(officerId);
         this.officers.inspected = officer;
         return officer;
-    }
-    findStaffById(officerId, playerUnitId) {
+    };
+    HQ.prototype.findStaffById = function (officerId, playerUnitId) {
         if (Number(officerId) === Number(this.findPlayer().id)) {
             return this.findPlayer();
         }
-        var unit = this.units.filter(unit => { return unit.id === Number(playerUnitId); })[0];
-        return unit.reserve.filter(officer => { return officer.id === Number(officerId); })[0];
-    }
-    findStaff(officer) {
+        var unit = this.units.filter(function (unit) { return unit.id === Number(playerUnitId); })[0];
+        return unit.reserve.filter(function (officer) { return officer.id === Number(officerId); })[0];
+    };
+    HQ.prototype.findStaff = function (officer) {
         var staff = [];
-        var unit = this.units.filter(unit => { return unit.id === officer.unitId; })[0];
+        var unit = this.units.filter(function (unit) { return unit.id === officer.unitId; })[0];
         if (unit && unit.reserve)
-            unit.reserve.forEach(officer => { if (!officer.isPlayer)
+            unit.reserve.forEach(function (officer) { if (!officer.isPlayer)
                 staff.push(officer); });
         return staff;
-    }
-    findOperationalStaff(officer) {
+    };
+    HQ.prototype.findOperationalStaff = function (officer) {
         var operationalStaff = [];
         operationalStaff = operationalStaff.concat(this.findStaff(officer));
         operationalStaff = operationalStaff.concat(this.findSubordinates(officer));
         return operationalStaff;
-    }
-    findSubordinates(officer) {
+    };
+    HQ.prototype.findSubordinates = function (officer) {
         var subordinates = [];
-        var unit = this.units.filter(unit => { return unit.id === officer.unitId; })[0];
+        var unit = this.units.filter(function (unit) { return unit.id === officer.unitId; })[0];
         if (unit && unit.subunits)
-            unit.subunits.forEach(subunit => {
+            unit.subunits.forEach(function (subunit) {
                 subordinates.push(subunit.commander);
             });
         return subordinates;
-    }
-    findInspected() {
+    };
+    HQ.prototype.findInspected = function () {
         return this.officers.inspected;
-    }
-    findOfficersByRank(rank) {
-        return this.officers.active.filter(officer => {
+    };
+    HQ.prototype.findOfficersByRank = function (rank) {
+        return this.officers.active.filter(function (officer) {
             return officer.rank === rank;
         });
-    }
-    findActiveOfficers() {
+    };
+    HQ.prototype.findActiveOfficers = function () {
         return this.officers.active;
-    }
-    add(unit) {
+    };
+    HQ.prototype.add = function (unit) {
         this.units.push(unit);
-    }
-    reserve(unit) {
+    };
+    HQ.prototype.reserve = function (unit) {
         if (unit.commander.reserved)
             this.replace(unit);
-    }
-    replace(unit) {
+    };
+    HQ.prototype.replace = function (unit) {
         unit.commander = this.officers.replace.call(this, unit.commander);
-    }
-    deassign(id) {
-        this.replace(this.units.filter(unit => { return unit.id === id; })[0]);
-    }
-    inspect(officer) {
+    };
+    HQ.prototype.deassign = function (id) {
+        this.replace(this.units.filter(function (unit) { return unit.id === id; })[0]);
+    };
+    HQ.prototype.inspect = function (officer) {
         this.officers.inspected = officer;
-    }
-    unitName(unitId, unitName) {
-        let result = this.units.filter(unit => { return unit.id === unitId; })[0];
+    };
+    HQ.prototype.unitName = function (unitId, unitName) {
+        var result = this.units.filter(function (unit) { return unit.id === unitId; })[0];
         if (!result)
             return unitName;
         return result.name;
-    }
-}
-export default HQ;
+    };
+    return HQ;
+}());
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.default = HQ;

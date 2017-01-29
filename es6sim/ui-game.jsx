@@ -292,7 +292,7 @@ class VUnit extends React.Component {
     var army = this.state.engine.army;
     var staffOfficerId = this.state.officer.split(',')[0];
     var playerUnitId = this.state.officer.split(',')[1];
-    var targetId = this.state.target;
+    var targetId = (this.state.target) ? this.state.target : this.state.engine.army.HQ.target;
     var spec = {
       name: this.state.name,
       type: this.state.type,
