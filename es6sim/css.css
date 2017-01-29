@@ -62,17 +62,22 @@ ul {
 
 .player, .unit, .inspected {
   margin: 8px;
-  max-width: 100%;
-  min-width: 100%;
 }
 
 .player, .inspected {
   display: inline-block;
   float: left;
+  width: 48%;
+}
+
+.inspected {
+  float: right;
 }
 
 .unit {
   float: none;
+  display: block;
+  clear: both;
 }
 
 .player h2 {
@@ -93,9 +98,7 @@ ul {
 
 .inspected .history {
   margin-top: 8px;
-  height: 64px;
-  overflow-y: scroll;
-  padding: 16px;
+  padding: 16px 0;
 }
 .inspected .superior {
   margin-top: 8px;

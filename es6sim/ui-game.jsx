@@ -28,10 +28,10 @@ class VArmy extends React.Component {
       <div className="army">
         <p className="date" >{ army.HQ.realDate }</p>
         <div>
-          <VPlayer player={ army.HQ.player } engine={ engine }/>
-          <VInspected officer={ army.HQ.findInspected() } engine={ engine } />
+          <VPlayer className="player-box" player={ army.HQ.player } engine={ engine }/>
+          <VInspected className="target-box" officer={ army.HQ.findInspected() } engine={ engine } />
         </div>
-        <VUnit officer={ army.HQ.player }  engine={ engine } />
+        <div className="clear"></div>
         <VStructure units={ army.units.corps } engine={ engine } />
       </div>
     );
@@ -98,13 +98,15 @@ class VPlayer extends React.Component {
 
     let army = this.state.engine.army;
     let player = this.state.player;
+    let engine = this.state.engine;
 
     return(
       <div className="player">
         <div onClick={ this.inspect.bind(this) }>{ player.name() }</div>
         <div>{ this.state.engine.army.HQ.findUnitById(player.unitId).name }</div>
-        <VStats officer={ player } engine={ this.state.engine} />
-        <VStaff officer={ player } engine={ this.state.engine } />
+        <VStats officer={ player } engine={ engine } />
+        <VStaff officer={ player } engine={ engine } />
+        <VUnit officer={ player }  engine={ engine } />
       </div>
     );
   }
@@ -139,7 +141,6 @@ class VInspected extends React.Component {
 
     var headerHTML = (!officer.isPlayer) ?
     <div onClick={this.target.bind(this)}>
-      <h1>Officer</h1>
       <VOfficer officer={ officer } engine={ engine }/>
       <VStats officer={ officer } engine={ engine } />
     </div> :
@@ -315,10 +316,6 @@ class VUnit extends React.Component {
     document.getElementById('operationTarget').selectedIndex = '0';
   }
 
-  handleName (event) {
-    this.setState({name: event.target.value});
-  }
-
   handleType (event) {
     this.setState({type: event.target.value});
   }
@@ -363,7 +360,7 @@ class VUnit extends React.Component {
     let player = this.state.player;
     let targets = (this.state.targets) ? this.state.targets : army.HQ.findActiveOfficers();
 
-    let types = ['commanding', 'intelligence', 'diplomacy'];
+    let types = ['military', 'intelligence', 'diplomacy'];
     let staff = army.HQ.findOperationalStaff(player, self);
 
     let operationTypes = [];
@@ -394,21 +391,12 @@ class VUnit extends React.Component {
 
     return(
       <div className="unit">
-        <h1>Headquarters</h1>
-        <div>Operation name</div>
-        <input onChange={ this.handleName.bind(this) }/>
-        <div>Type</div>
+        <h1>Operation type and commander</h1>
         <select id="operationType" onChange={ this.handleType.bind(this) }>
           { operationTypes }
         </select>
-        <div>Commander</div>
         <select id="operationOfficer" onChange={ this.handleOfficer.bind(this) }>
           { staffOfficers }
-        </select>
-        <div>Target</div>
-        <input type="text" value={selectedTarget} onChange={ this.handleSearch.bind(this) }/>
-        <select id="operationTarget" onChange={ this.handleTarget.bind(this) }>
-          { officers }
         </select>
         <button onClick={ this.startOperation.bind(this) }>
           Start Operation
