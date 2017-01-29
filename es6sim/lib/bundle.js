@@ -1332,9 +1332,6 @@ exports.default = Traits;
 
 },{}],18:[function(require,module,exports){
 "use strict";
-/* jshint ignore:start */
-// import React from './lib/react';
-// import React from './lib/react';
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
@@ -1429,7 +1426,8 @@ var VStructure = function (_React$Component3) {
     _createClass(VStructure, [{
         key: "inspect",
         value: function inspect(commander) {
-            if (this.props.engine) this.props.engine.actions.inspect(commander[0].id);
+            var engine = this.props.engine;
+            if (engine) engine.actions.inspect(commander[0].id);
         }
     }, {
         key: "render",
@@ -1442,7 +1440,6 @@ var VStructure = function (_React$Component3) {
             units.forEach(function (unit) {
                 unit.isRed = _this4.state.engine.army.HQ.officers.inspected && unit.commander.id === _this4.state.engine.army.HQ.officers.inspected.id || unit.commander.isPlayer ? 'isRed' : '';
             });
-            debugger;
             return React.createElement(
                 "div",
                 null,
@@ -1620,7 +1617,7 @@ var VStaff = function (_React$Component6) {
                     "Commanding Officer"
                 ),
                 React.createElement(VOfficer, { officer: superior, engine: this.state.engine })
-            ) : React.createElement("div", null);
+            ) : null;
             var staffHTML = staff.length && !this.state.officer.reserved ? React.createElement(
                 "div",
                 null,
@@ -1670,15 +1667,20 @@ var VOfficer = function (_React$Component7) {
     }, {
         key: "render",
         value: function render() {
-            var html = this.props.officer ? React.createElement(
-                "div",
-                null,
-                React.createElement(
+            var html;
+            if (this.props.officer) {
+                html = React.createElement(
                     "div",
-                    { onClick: this.inspect.bind(this) },
-                    this.props.officer.name()
-                )
-            ) : React.createElement("div", null);
+                    null,
+                    React.createElement(
+                        "div",
+                        { onClick: this.inspect.bind(this) },
+                        this.props.officer.name()
+                    )
+                );
+            } else {
+                html = React.createElement("div", null);
+            }
             return html;
         }
     }]);
