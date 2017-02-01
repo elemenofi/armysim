@@ -31,6 +31,7 @@ build/Release
 ../node_modules
 node_modules
 es6sim/lib/bundle.js
+es6sim/lib/
 jspm_packages
 .idea/workspace.xml
 

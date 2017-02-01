@@ -13,14 +13,6 @@ class Actions {
         engine.updateUI(true);
       }
     }
-
-    // this.target = (officerId) => {
-    //   if (!engine.running) {
-    //     //pass true as triggeredByUserAction
-    //     engine.update(true);
-    //     engine.updateUI(true);
-    //   }
-    // }
   }
 }
 
