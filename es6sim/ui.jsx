@@ -1,4 +1,4 @@
-import React from './lib/react';
+// import React from './lib/react';
 
 class Ui {
     constructor (spec) {

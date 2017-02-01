@@ -1,18 +1,19 @@
 'use strict';
 import config from './config';
-import ArmyDef from './typings';
+import Army from './typings';
 
 class Operations {
   operationsID: number;
-  active: ArmyDef.Operation[];
+  active: Army.Operation[];
 
   constructor () {
     this.operationsID = 1;
     this.active = [];
   }
 
-  add (spec) {
+  add (spec: Operation) {
     if (spec.officer.operations.length >= spec.officer.rank.hierarchy + 1) return
+    if (spec.officer.id === spec.target.id) return
     let operation = new Operation(spec);
     operation.id = this.operationsID;
     this.operationsID++;
@@ -43,8 +44,8 @@ class Operations {
 
 class Operation {
   id: number;
-  officer: ArmyDef.Officer;
-  target: ArmyDef.Officer;
+  officer: Army.Officer;
+  target: Army.Officer;
   type: string;
   name: string;
   strength: number;
@@ -62,7 +63,7 @@ class Operation {
     this.byPlayer = spec.byPlayer;
   }
 
-  execute (HQ:ArmyDef.HQ): void {
+  execute (HQ:Army.HQ): void {
     var officerRoll = this.officer[this.type] + config.random(10);
     var targetRoll = this.target[this.type] + config.random(10);
 

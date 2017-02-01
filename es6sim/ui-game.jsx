@@ -1,4 +1,4 @@
-import * as React from './lib/react'
+// import * as React from './lib/react'
 import Army from './typings';
 import config from './config';
 
@@ -9,7 +9,7 @@ class VUi extends React.Component {
   }
 
   render (army) {
-    React.render(<VArmy engine={ this.engine } />, document.body);
+    ReactDOM.render(<VArmy engine={ this.engine } />, document.body);
   }
 }
 
@@ -152,7 +152,7 @@ class VInspected extends React.Component {
   }
 
   target () {
-    if (this.props.engine) this.props.engine.actions.target(this.props.officer.id);
+    if (this.props.engine) this.props.engine.actions.inspect(this.props.officer.id);
   }
 
   render () {

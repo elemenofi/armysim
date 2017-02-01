@@ -20,6 +20,7 @@ module.exports = {
     modulesDirectories: ['es6sim', 'node_modules'],
   },
   module: {
+    noParse: [/^react$/, /^chance$/, /^react-dom$/, /^date$/, /^bundle$/],
     loaders: [
       // .ts(x) files should first pass through the Typescript loader, and then through babel
       {
