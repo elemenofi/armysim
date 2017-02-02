@@ -87,18 +87,17 @@ class Officer implements Army.Officer {
 
   update (HQ: Army.HQ) {
     this.align();
-    this.drifts(HQ.officers.active);
+    this.drifts(HQ);
     this.militate(HQ);
     this.experience++;
     this.prestige += config.random(config.ranks[this.rank.alias].startpr);
     if (!this.reserved && this.experience > this.rank.maxxp) this.reserve(HQ);
   }
 
-  drifts (officers: any) {
-    this.commander = officers.filter(officer => {
-      if (!officer.unitId || !this.unit || officer.reserved) return false
-      return officer.unitId === this.unit.parentId;
-    })[0];
+  drifts (HQ: Army.HQ) {
+    let unit = HQ.findUnitById(this.unitId);
+    let parent = HQ.findUnitById(unit.id);
+    this.commander = parent.commander;
   }
 
   align () {

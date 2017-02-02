@@ -53,13 +53,13 @@ let config = {
     return Math.round(Math.random() * n);
   },
 
-  speed: 10,
+  speed: 1000/30,
 
   debug: true,
 
   // this in 10000 turns makes a better historical start,
   // 100000 makes sure all staff officers are realistically old
-  bufferTurns: 200,
+  bufferTurns: 30,
 
   unitDepth: 2,
 

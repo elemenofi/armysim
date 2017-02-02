@@ -96,6 +96,10 @@ ul {
   margin: 4px 0;
 }
 
+.inspectedStaff {
+  margin-top: 8px;
+}
+
 .inspected .history {
   margin-top: 8px;
   padding: 16px 0;

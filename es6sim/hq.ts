@@ -11,7 +11,7 @@ class HQ implements Army.HQ {
   rawDate: any;
   officers: Army.Officers;
   operations: Army.Operations;
-  units: [Army.Unit, Army.Unit];
+  units: Army.Unit[];
   realDate: string;
   player: Army.Officer;
   world: any;

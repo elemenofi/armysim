@@ -151,28 +151,22 @@ class VInspected extends React.Component {
     }
   }
 
-  target () {
-    if (this.props.engine) this.props.engine.actions.inspect(this.props.officer.id);
-  }
+  // target () {
+  //   if (this.props.engine) this.props.engine.actions.inspect(this.props.officer.id);
+  // }
 
   render () {
     if (!this.props.officer) return (<div></div>)
     var army = this.state.engine.army;
     let officer = this.props.officer;
-    var engine = this.state.engine;
+    var engine = this.props.engine;
     var superior = army.HQ.findCommandingOfficer(officer)
 
-    var superiorHTML = (!officer.reserved && !officer.isPlayer && officer.rank.hierarchy < 7) ?
-    <div className="superior">
-      <div>Commanding Officer</div>
-      <VOfficer officer={ superior } engine={ engine }/>
-    </div> :
-    <div></div>;
-
     var headerHTML = (!officer.isPlayer) ?
-    <div onClick={this.target.bind(this)}>
+    <div>
       <VOfficer officer={ officer } engine={ engine }/>
       <VStats officer={ officer } engine={ engine } />
+      <VStaff officer={ officer } engine={ engine } />
     </div> :
     <div></div>;
 
@@ -180,8 +174,7 @@ class VInspected extends React.Component {
     return(
       <div className="inspected">
         { headerHTML }
-        { superiorHTML }
-        <VHistory officer={ officer } engine={ this.state.engine } />
+        <VHistory officer={ officer } engine={ engine } />
       </div>
     );
 
@@ -201,23 +194,25 @@ class VStaff extends React.Component {
     var staff = [];
     var subordinates = [];
     var army = this.state.engine.army;
-    var unit = army.HQ.findUnitById(this.state.officer.unitId);
-    var superior = army.HQ.findCommandingOfficer(this.state.officer);
+    var engine = this.props.engine;
+    var officer = this.props.officer;
+    var unit = army.HQ.findUnitById(officer.unitId);
+    var superior = army.HQ.findCommandingOfficer(officer);
     if (!unit) unit = { name: 'No unit' };
 
-    army.HQ.findOperationalStaff(this.state.officer).forEach(officer => {
-      staff.push(<li><VOfficer officer={ officer } engine={ this.state.engine }/></li>);
+    army.HQ.findOperationalStaff(this.props.officer).forEach(officer => {
+      staff.push(<li><VOfficer officer={ officer } engine={ engine }/></li>);
     });
 
-    var superiorHTML = (!this.state.officer.reserved) ?
-    <div>
+    var superiorHTML = (!officer.reserved && officer.rank.hierarchy < 7) ?
+    <div className="superior">
       <div>Commanding Officer</div>
-      <VOfficer officer={ superior } engine={ this.state.engine }/>
+      <VOfficer officer={ superior } engine={ engine }/>
     </div> :
-    null;
+    <div></div>;
 
     var staffHTML = (staff.length && !this.state.officer.reserved) ?
-    <div>
+    <div className="inspectedStaff">
       { superiorHTML }
       <h2>Staff</h2>
       <ul className="staff">{ staff }</ul>
@@ -239,7 +234,8 @@ class VOfficer extends React.Component {
     }
   }
 
-  inspect () {
+  inspect (event) {
+    console.log('qqq')
     if (this.props.engine) this.props.engine.actions.inspect(this.props.officer.id);
   }
 
