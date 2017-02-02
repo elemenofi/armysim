@@ -272,6 +272,11 @@ class VStats extends React.Component {
 
     if (this.props.officer) {
       html = <div className="stats">
+        <div>EXP { this.props.officer.experience }</div>
+        <div>PRE { this.props.officer.prestige }</div>
+        <div>ALI { this.props.officer.alignment }</div>
+        <div>MIT { this.props.officer.militancy }</div>
+        <div>DRI { this.props.officer.drift }</div>
         <div>INT { this.props.officer.intelligence }</div>
         <div>MIL { this.props.officer.commanding }</div>
         <div>DIP { this.props.officer.diplomacy }</div>

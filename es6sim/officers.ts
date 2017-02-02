@@ -52,7 +52,7 @@ class Officers implements Army.Officers {
     let lowerRank = this.officers.secretary.rankLower(replacedCommander.rank);
 
     let spec = {
-      replacedCommander: (replacedCommander.reason) ? replacedCommander.reason.officer : undefined,
+      aggresor: (replacedCommander.reason) ? replacedCommander.reason.officer : undefined,
       unitId: replacedCommander.unitId,
       rank: replacedCommander.rank.alias,
       rankToPromote: lowerRank,
@@ -74,8 +74,8 @@ class Officers implements Army.Officers {
     let candidate = this.active
       .filter(officer => { return officer.rank.alias === spec.rankToPromote; })
       .reduce((prev, curr) => (curr.experience > prev.experience) ? curr : prev);
-    if (spec.replacedCommander && !spec.replacedCommander.reserved) {
-      candidate = spec.replacedCommander
+    if (spec.aggresor && !spec.aggresor.reserved) {
+      candidate = spec.aggresor
     }
     return this.promote(candidate, spec);
   }

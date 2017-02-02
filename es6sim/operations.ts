@@ -24,7 +24,7 @@ class Operations {
 
   update (HQ) {
     this.active = this.active.filter(operation => {
-      if (!operation.target.reserved && operation.turns > 0) {
+      if (!operation.target.reserved && operation.turns > 0 && operation.target.rank && operation.target.rank.hierarchy === operation.officer.rank.hierarchy + 1) {
         return true;
       } else {
         operation.officer.operations.splice(operation.officer.operations.indexOf(operation), 1)

@@ -87,6 +87,7 @@ class Officer implements Army.Officer {
 
   update (HQ: Army.HQ) {
     this.align();
+    this.drifts(HQ.officers.active);
     this.militate(HQ);
     this.experience++;
     this.prestige += config.random(config.ranks[this.rank.alias].startpr);
@@ -95,14 +96,9 @@ class Officer implements Army.Officer {
 
   drifts (officers: any) {
     this.commander = officers.filter(officer => {
+      if (!officer.unitId || !this.unit || officer.reserved) return false
       return officer.unitId === this.unit.parentId;
     })[0];
-
-    if (this.commander && this.commander.alignment > 500) {
-      this.drift++;
-    } else {
-      this.drift--;
-    }
   }
 
   align () {
@@ -114,7 +110,7 @@ class Officer implements Army.Officer {
   }
 
   militate (HQ: any) {
-    if (this.militancy > 9 && !this.reserved) {
+    if (this.militancy > 0 && !this.reserved) {
       let spec = {
         officer: this,
         target: HQ.findCommandingOfficer(this),
@@ -128,7 +124,10 @@ class Officer implements Army.Officer {
         }
       });
 
-      if (spec.target && !existed.length) HQ.operations.add(spec)
+      if (spec.target && !existed.length) {
+        HQ.operations.add(spec);
+        this.militancy--;
+      }
     }
   }
 
@@ -142,7 +141,9 @@ class Officer implements Army.Officer {
 
     this.reserved = true;
 
-    if (reason) this.reason = reason
+    if (reason) {
+      this.reason = reason;
+    }
 
     this.history.push('Moved to reserve on ' + HQ.realDate);
 

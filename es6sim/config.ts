@@ -59,7 +59,7 @@ let config = {
 
   // this in 10000 turns makes a better historical start,
   // 100000 makes sure all staff officers are realistically old
-  bufferTurns: 10,
+  bufferTurns: 200,
 
   unitDepth: 2,
 
