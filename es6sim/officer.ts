@@ -31,14 +31,16 @@ class Officer implements Army.Officer {
   unit: Army.Unit;
   commander: Army.Officer;
   traits: { base: Army.Trait };
-  chance: Chance;
+  chance: any;
   couped: boolean;
+  reason: Army.Operation;
 
   constructor (spec: Army.OfficerSpec, HQ: any, unitName: string) {
     let traits = new Traits();
     this.id = spec.id;
     this.isPlayer = spec.isPlayer;
     this.unitId = spec.unitId;
+    this.reserved = false;
 
     this.rank = config.ranks[spec.rankName];
     this.experience = config.ranks[spec.rankName].startxp + config.random(500);
@@ -50,17 +52,15 @@ class Officer implements Army.Officer {
     this.diplomacy = this.traits.base.diplomacy + config.random(10);
 
     this.alignment = config.random(1000);
-    this.militancy = config.random(10);
+    this.militancy = (this.isPlayer) ? 0 : config.random(10);
     this.drift = 0;
 
     this.operations = [];
     this.history = [];
-    this.reserved = false;
+
     this.chance = chance(Math.random);
     this.lname = this.chance.last();
-    // this.lname = 'aaaa';
     this.fname = this.chance.first({gender: 'male'});
-    // this.fname = 'vvvvv';
 
     if (this.isPlayer) {
       this.lname = (config.debug) ? 'Richardson' : prompt('Name?');
@@ -90,17 +90,10 @@ class Officer implements Army.Officer {
     this.militate(HQ);
     this.experience++;
     this.prestige += config.random(config.ranks[this.rank.alias].startpr);
-    // if (this.isPlayer) {
-    //     console.log(this.experience, this.rank.maxxp)
-    // }
     if (!this.reserved && this.experience > this.rank.maxxp) this.reserve(HQ);
   }
 
-  drifts (officers: any, units: any) {
-    this.unit = units.filter(unit => {
-      return unit.id === this.unitId;
-    })[0];
-
+  drifts (officers: any) {
     this.commander = officers.filter(officer => {
       return officer.unitId === this.unit.parentId;
     })[0];
@@ -121,18 +114,25 @@ class Officer implements Army.Officer {
   }
 
   militate (HQ: any) {
-    if (this.militancy > 8 && HQ.findCommandingOfficer(this).militancy < 2) {
+    if (this.militancy > 9 && !this.reserved) {
       let spec = {
         officer: this,
         target: HQ.findCommandingOfficer(this),
         type: this.traits.base.area,
         name: 'Operation ' + this.lname,
       };
-      if (spec.target) HQ.operations.add(spec)
+
+      let existed = this.operations.filter(operation => {
+        if (operation.target.id === spec.target.id) {
+          return true;
+        }
+      });
+
+      if (spec.target && !existed.length) HQ.operations.add(spec)
     }
   }
 
-  reserve (HQ, reason?) {
+  reserve (HQ, reason?: Army.Operation) {
     var lastUnit = HQ.units.filter(unit => {
       return unit.id === this.unitId;
     })[0];
@@ -141,6 +141,8 @@ class Officer implements Army.Officer {
     if (lastUnit.reserve.length > 3) lastUnit.reserve.pop();
 
     this.reserved = true;
+
+    if (reason) this.reason = reason
 
     this.history.push('Moved to reserve on ' + HQ.realDate);
 
@@ -151,8 +153,6 @@ class Officer implements Army.Officer {
         HQ.findPlayer().history.push('Moved ' + reason.target.name() + ' to reserve with ' + reason.officer.name())
       }
     }
-
-    // if (this.isPlayer || reason) console.log(this.history[this.history.length - 1]);
   }
 }
 

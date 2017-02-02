@@ -36,6 +36,7 @@ declare namespace Army {
     fname: string;
     name(): string;
     id: number;
+    chance: any;
     isPlayer: boolean;
     unitId: number;
     reserved: boolean;
@@ -56,6 +57,7 @@ declare namespace Army {
     couped: boolean;
     drifts(o: any, traits: any): any;
     reserve(HQ: HQ, context?: Operation): void;
+    reason: Operation;
   }
   interface OfficerSpec {
     date?: string;
@@ -102,7 +104,7 @@ declare namespace Army {
     secretary: Secretary
     officers: Officers;
     operations: Operation[];
-    candidate(s: any, forced?: boolean): any
+    candidate(s: any, replacedCommander?: Officer): any
     recruit(rank: string, unitId: number, isPlayer: boolean, unitName:string): Officer;
   }
   interface Secretary {

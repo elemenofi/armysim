@@ -52,15 +52,14 @@ class Officers implements Army.Officers {
     let lowerRank = this.officers.secretary.rankLower(replacedCommander.rank);
 
     let spec = {
+      replacedCommander: (replacedCommander.reason) ? replacedCommander.reason.officer : undefined,
       unitId: replacedCommander.unitId,
       rank: replacedCommander.rank.alias,
       rankToPromote: lowerRank,
       HQ: this
     };
 
-    if (replacedCommander.couped && lowerRank) {
-      return this.officers.candidate(spec, true)
-    } else if (lowerRank) {
+    if (lowerRank) {
       return this.officers.candidate(spec);
     } else {
       return this.officers.recruit.call(this, spec.rank, replacedCommander.unitId);
@@ -71,12 +70,12 @@ class Officers implements Army.Officers {
     return this.officers.recruit.call(this, 'lieutenant', replacedCommander.unitId, true);
   }
 
-  candidate (spec: any, forced?: boolean) {
+  candidate (spec: any) {
     let candidate = this.active
       .filter(officer => { return officer.rank.alias === spec.rankToPromote; })
       .reduce((prev, curr) => (curr.experience > prev.experience) ? curr : prev);
-    if (forced) {
-      candidate = spec.HQ.findPlayer()
+    if (spec.replacedCommander && !spec.replacedCommander.reserved) {
+      candidate = spec.replacedCommander
     }
     return this.promote(candidate, spec);
   }
@@ -85,7 +84,6 @@ class Officers implements Army.Officers {
     spec.HQ.deassign(officer.unitId);
     let promotion = this.promotion(officer, spec);
     officer.history.push(config.promoted(promotion));
-    officer.drifts(this.active, spec.HQ.units);
     return officer;
   }
 

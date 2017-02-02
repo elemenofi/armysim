@@ -63,18 +63,16 @@ class Operation {
     this.byPlayer = spec.byPlayer;
   }
 
-  execute (HQ:Army.HQ): void {
+  execute (HQ: Army.HQ): void {
     var officerRoll = this.officer[this.type] + config.random(10);
     var targetRoll = this.target[this.type] + config.random(10);
 
     if ((officerRoll) > (targetRoll)) {
       this.strength++;
-    } else {
-      // if (this.byPlayer) console.log(officerRoll, targetRoll)
     }
 
     if (this.strength >= 300) {
-      if (this.type==='commanding' && this.byPlayer) this.target.couped = true;
+      this.target.couped = true;
       this.target.reserve(HQ, this)
       this.officer.operations.splice(this.officer.operations.indexOf(this), 1)
       if (this.byPlayer) HQ.findPlayer().operations.splice(HQ.findPlayer().operations.indexOf(this), 1)
