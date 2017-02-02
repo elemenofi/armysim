@@ -235,7 +235,6 @@ class VOfficer extends React.Component {
   }
 
   inspect (event) {
-    console.log('qqq')
     if (this.props.engine) this.props.engine.actions.inspect(this.props.officer.id);
   }
 
