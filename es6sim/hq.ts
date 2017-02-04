@@ -89,7 +89,10 @@ class HQ implements Army.HQ {
     var officer = this.findOfficerById(officerId);
     var subordinates = this.findSubordinates(this.player) as any;
 
-    if (officer.isPlayer || subordinates.includes(officer)) {
+    if (this.planner.id === officer.id && !officer.isPlayer) {
+      this.target = officer;
+      this.planner = this.player;
+    } else if (officer.isPlayer || subordinates.includes(officer)) {
       this.planner = officer;
     } else {
       this.target = officer;
