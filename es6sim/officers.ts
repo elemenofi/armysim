@@ -75,7 +75,7 @@ class Officers implements Army.Officers {
     let candidate = this.active
       .filter(officer => { return officer.rank.alias === spec.rankToPromote && spec.HQ.findUnitById(officer.unitId).parentId === spec.unitId; })
       .reduce((prev, curr) => (curr.experience > prev.experience) ? curr : prev);
-    if (spec.aggresor && !spec.aggresor.reserved) {
+    if (spec.aggresor && !spec.aggresor.reserved && spec.replacedCommander.rank.hierarchy === spec.aggresor.rank.hierarchy + 1) {
       candidate = spec.aggresor
     }
     return this.promote(candidate, spec);
