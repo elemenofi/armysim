@@ -34,6 +34,7 @@ class Officer implements Army.Officer {
   chance: any;
   couped: boolean;
   reason: Army.Operation;
+  includes: boolean;
 
   constructor (spec: Army.OfficerSpec, HQ: any, unitName: string) {
     let traits = new Traits();
