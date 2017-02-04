@@ -103,11 +103,11 @@ class VPlayer extends React.Component {
 
     return(
       <div className="player">
+        <VUnit officer={ player }  engine={ engine } />
         <div onClick={ this.inspect.bind(this) }>{ player.name() }</div>
         <div>{ this.state.engine.army.HQ.findUnitById(player.unitId).name }</div>
         <VStats officer={ player } engine={ engine } />
         <VStaff officer={ player } engine={ engine } />
-        <VUnit officer={ player }  engine={ engine } />
         <VOperations officer={ player } engine={engine} />
       </div>
     );
@@ -186,7 +186,8 @@ class VStaff extends React.Component {
     super(props);
     this.state = {
       officer: this.props.officer,
-      engine: this.props.engine
+      engine: this.props.engine,
+      operations: this.props.operations
     };
   }
 
@@ -204,14 +205,14 @@ class VStaff extends React.Component {
       staff.push(<li><VOfficer officer={ officer } engine={ engine }/></li>);
     });
 
-    var superiorHTML = (!officer.reserved && officer.rank.hierarchy < 7) ?
+    var superiorHTML = (!officer.reserved && officer.rank.hierarchy < 7 && !this.state.operations) ?
     <div className="superior">
       <div>Commanding Officer</div>
       <VOfficer officer={ superior } engine={ engine }/>
     </div> :
     <div></div>;
 
-    var staffHTML = (staff.length && !this.state.officer.reserved) ?
+    var staffHTML = (staff.length && !this.state.officer.reserved && !this.state.operations) ?
     <div className="inspectedStaff">
       { superiorHTML }
       <h2>Staff</h2>
@@ -326,25 +327,18 @@ class VUnit extends React.Component {
   }
 
   startOperation () {
-    if (!this.state.type || !this.state.officer || !this.state.target) {
-      alert('Complete operation details first.');
-      return;
-    }
-    var army = this.state.engine.army;
-    var staffOfficerId = this.state.officer.split(',')[0];
-    var playerUnitId = this.state.officer.split(',')[1];
-    var targetId = this.state.target.id;
-
+    var army = this.props.engine.army;
     var spec = {
       name: 'Operation ' + chance.word(),
       type: this.state.type,
-      officer: army.HQ.findOfficerById(staffOfficerId),
-      target: army.HQ.findOfficerById(targetId),
+      officer: army.HQ.planner,
+      target: army.HQ.target,
       byPlayer: true
     };
-    army.HQ.operations.add(spec, true);
-    document.getElementById('operationType').selectedIndex = '0';
-    document.getElementById('operationOfficer').selectedIndex = '0';
+
+    if (!this.state.type) spec.type = 'commanding';
+
+    army.HQ.operations.add(spec, army.HQ);
   }
 
   handleType (event) {
@@ -401,12 +395,14 @@ class VUnit extends React.Component {
     let selectedTarget = (this.state.target && this.state.target.name) ? this.state.target.name() : '';
 
     types.forEach(type => {
-      operationTypes.push(<option>{ type }</option>);
+      operationTypes.push(<p onClick={() => {
+        this.state.type = type;
+      }}>{ type }</p>);
     });
 
-    staff.forEach(officer => {
-      staffOfficers.push( <option value={ [officer.id, player.unitId] }>{ officer.name() }</option> );
-    });
+    // staff.forEach(officer => {
+    //   staffOfficers.push( <p value={ [officer.id, player.unitId] }>{ officer.name() }</p> );
+    // });
 
     if (!this.state.target) {
       targets.forEach(target => {
@@ -422,15 +418,14 @@ class VUnit extends React.Component {
 
     return(
       <div className="unit">
-        <h1>Operation type and commander</h1>
-        <select id="operationType" onChange={ this.handleType.bind(this) }>
+        <h1>Operation type</h1>
           { operationTypes }
-        </select>
-        <select id="operationOfficer" onChange={ this.handleOfficer.bind(this) }>
-          { staffOfficers }
-        </select>
+        <br></br><br></br>
+        <h1>Operation commander</h1>
+        <VStaff officer={ player } engine={ this.props.engine } operations={ true } />
+        <br></br><br></br>
         <button onClick={ this.startOperation.bind(this) }>
-          Start Operation
+          Launch
         </button>
       </div>
     );

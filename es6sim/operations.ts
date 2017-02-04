@@ -2,23 +2,33 @@
 import config from './config';
 import Army from './typings';
 
+interface Window { army: any }
+
+declare var window: Window;
+
 class Operations {
   operationsID: number;
-  active: Army.Operation[];
+  active: Operation[];
 
   constructor () {
     this.operationsID = 1;
     this.active = [];
   }
 
-  add (spec: Operation) {
-    if (spec.officer.operations.length >= spec.officer.rank.hierarchy + 1) return
+  add (spec: Operation, HQ: Army.HQ) {
+    if (spec.officer.operations.length >= spec.officer.rank.hierarchy + 1) {
+      return
+    }
     if (spec.officer.id === spec.target.id) return
     let operation = new Operation(spec);
     operation.id = this.operationsID;
     this.operationsID++;
     this.active.push(operation);
     if (!spec.byPlayer) spec.officer.operations.push(operation);
+    if (spec.byPlayer && !spec.officer.isPlayer) {
+      spec.officer.operations.push(operation);
+      HQ.player.operations.push(operation);
+    }
     return operation;
   }
 
@@ -27,7 +37,7 @@ class Operations {
       if (
         !operation.target.reserved &&
         operation.turns > 0 && operation.target.rank
-        && operation.target.rank.hierarchy <= operation.officer.rank.hierarchy + 1
+        && (operation.target.rank.hierarchy <= operation.officer.rank.hierarchy + 2)
       ) {
         return true;
       } else {
@@ -68,8 +78,8 @@ class Operation {
   }
 
   execute (HQ: Army.HQ): void {
-    var officerRoll = this.officer[this.type] + config.random(10);
     var targetRoll = this.target[this.type] + config.random(10);
+    var officerRoll = this.officer[this.type] + config.random(10);
 
     if ((officerRoll) > (targetRoll)) {
       this.strength++;

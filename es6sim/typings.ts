@@ -81,6 +81,7 @@ declare namespace Army {
     realDate: string;
     units: Unit[];
     officers: Officers;
+    player: Officer;
     unitName(unitId: number, name: string): string;
     add(u: Unit): void;
     makePlayer(): void;

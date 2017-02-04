@@ -44,6 +44,7 @@ class HQ implements Army.HQ {
     unit.commander.reserved = true;
     unit.commander = this.officers.replaceForPlayer.call(this, unit.commander);
     this.player = unit.commander;
+    this.planner = this.player;
   }
 
   findPlayer () {
@@ -86,9 +87,14 @@ class HQ implements Army.HQ {
 
   targetOfficer (officerId: number) {
     var officer = this.findOfficerById(officerId);
-    this.target = officer;
-    var subordinates = this.findSubordinates(this.player) as any //ts es6 includes in array
-    if (subordinates.includes(officer)) this.planner = officer;
+    var subordinates = this.findSubordinates(this.player) as any;
+
+    if (officer.isPlayer || subordinates.includes(officer)) {
+      this.planner = officer;
+    } else {
+      this.target = officer;
+    }
+
     return officer;
   }
 
