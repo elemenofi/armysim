@@ -108,7 +108,7 @@ class VPlayer extends React.Component {
         <div>{ this.state.engine.army.HQ.findUnitById(player.unitId).name }</div>
         <VStats officer={ player } engine={ engine } />
         <VStaff officer={ player } engine={ engine } />
-        <VOperations officer={ player } engine={engine} />
+        <VOperations officer={ player } engine={ engine } />
       </div>
     );
   }
@@ -301,6 +301,8 @@ class VHistory extends React.Component {
       this.props.officer.history.forEach((event) => {
         history.push(<li className="log">{ event }</li>)
       })
+      if (!this.props.officer.reserved) history = history.slice(0, 2)
+      history.reverse()
     }
 
     var html = (this.props.officer) ? <div className="history">

@@ -97,8 +97,8 @@ class Officer implements Army.Officer {
 
   drifts (HQ: Army.HQ) {
     let unit = HQ.findUnitById(this.unitId);
-    let parent = HQ.findUnitById(unit.id);
-    this.commander = parent.commander;
+    let parent = HQ.findUnitById(unit.parentId);
+    if (parent) this.commander = parent.commander;
   }
 
   align () {

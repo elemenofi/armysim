@@ -86,6 +86,11 @@ class Operation {
     var targetRoll = this.target[this.type] + config.random(10);
     var officerRoll = this.officer[this.type] + config.random(10);
 
+    // commander help if its not the commander itself against a subordinate
+    if (this.target.commander && this.target.commander.id !== this.officer.id) {
+      targetRoll += Math.round(this.target.commander[this.type])
+    }
+
     if ((officerRoll) > (targetRoll)) {
       this.strength++;
     }
