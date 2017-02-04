@@ -91,7 +91,7 @@ class Officer implements Army.Officer {
     this.drifts(HQ);
     this.militate(HQ);
     this.experience++;
-    this.prestige += config.random(config.ranks[this.rank.alias].startpr);
+    this.prestige += Math.round((this.diplomacy/2 + this.commanding/2 + this.intelligence/2 + this.rank.hierarchy))
     if (!this.reserved && this.experience > this.rank.maxxp) this.reserve(HQ);
   }
 
@@ -125,7 +125,7 @@ class Officer implements Army.Officer {
         }
       });
 
-      if (spec.target && !existed.length) {
+      if (!this.isPlayer && spec.target && !existed.length && this.operations.length < this.rank.hierarchy) {
         HQ.operations.add(spec);
         this.militancy--;
       }

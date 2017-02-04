@@ -16,12 +16,8 @@ class Operations {
   }
 
   add (spec: Operation, HQ: Army.HQ) {
-    if (spec.officer.operations.length >= spec.officer.rank.hierarchy + 1 && !spec.byPlayer) {
-      return
-    }
-
     if (spec.byPlayer && spec.officer.isPlayer) {
-      if (spec.officer.operations.length < spec.officer.rank.hierarchy ) {
+      if (spec.officer.operations.length > spec.officer.rank.hierarchy ) {
         return
       }
     }
@@ -47,10 +43,10 @@ class Operations {
       ) {
         return true;
       } else {
-        // operation.officer.operations.splice(operation.officer.operations.indexOf(operation), 1)
-        // if (operation.byPlayer && !operation.officer.isPlayer) {
-        //   HQ.player.operations.splice(HQ.player.operations.indexOf(operation), 1)
-        // }
+        operation.officer.operations.splice(operation.officer.operations.indexOf(operation), 1)
+        if (operation.byPlayer && !operation.officer.isPlayer) {
+          HQ.player.operations.splice(HQ.player.operations.indexOf(operation), 1)
+        }
         return false;
       }
     });

@@ -212,7 +212,7 @@ class VStaff extends React.Component {
     </div> :
     <div></div>;
 
-    var staffHTML = (staff.length && !this.state.officer.reserved && !this.state.operations) ?
+    var staffHTML = (staff.length && !this.props.officer.reserved && !this.props.operations) ?
     <div className="inspectedStaff">
       { superiorHTML }
       <h2>Staff</h2>
@@ -420,8 +420,6 @@ class VUnit extends React.Component {
       <div className="unit">
         <h1>Operation type</h1>
           { operationTypes }
-        <br></br><br></br>
-        <h1>Operation commander</h1>
         <VStaff officer={ player } engine={ this.props.engine } operations={ true } />
         <br></br><br></br>
         <button onClick={ this.startOperation.bind(this) }>
