@@ -117,6 +117,7 @@ class Officer implements Army.Officer {
         name: 'Operation ' + this.lname,
       };
 
+      // cant target same officer with two operations
       let existed = this.operations.filter(operation => {
         if (operation.target.id === spec.target.id) {
           return true;
@@ -140,15 +141,14 @@ class Officer implements Army.Officer {
 
     this.reserved = true;
 
-    if (reason) {
-      this.reason = reason;
-    }
-
     this.history.push('Moved to reserve on ' + HQ.realDate);
 
     if (reason) {
+      this.reason = reason;
+
       this.history[this.history.length - 1] = this.history[this.history.length - 1] + ' after succesful operation by ' + reason.officer.name();
       reason.officer.history.push('Moved ' + reason.target.name() + ' to reserve on ' + HQ.realDate + ' after succesful ' + reason.type + ' operation')
+
       if (reason.byPlayer && !reason.officer.isPlayer) {
         HQ.findPlayer().history.push('Moved ' + reason.target.name() + ' to reserve with ' + reason.officer.name())
       }

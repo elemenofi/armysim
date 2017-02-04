@@ -24,7 +24,11 @@ class Operations {
 
   update (HQ) {
     this.active = this.active.filter(operation => {
-      if (!operation.target.reserved && operation.turns > 0 && operation.target.rank && operation.target.rank.hierarchy <= operation.officer.rank.hierarchy + 1) {
+      if (
+        !operation.target.reserved &&
+        operation.turns > 0 && operation.target.rank
+        && operation.target.rank.hierarchy <= operation.officer.rank.hierarchy + 1
+      ) {
         return true;
       } else {
         operation.officer.operations.splice(operation.officer.operations.indexOf(operation), 1)
@@ -75,7 +79,9 @@ class Operation {
       this.target.couped = true;
       this.target.reserve(HQ, this)
       this.officer.operations.splice(this.officer.operations.indexOf(this), 1)
-      if (this.byPlayer) HQ.findPlayer().operations.splice(HQ.findPlayer().operations.indexOf(this), 1)
+      if (this.byPlayer) {
+        HQ.findPlayer().operations.splice(HQ.findPlayer().operations.indexOf(this), 1)
+      }
     }
 
     this.turns--;

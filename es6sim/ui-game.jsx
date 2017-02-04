@@ -193,7 +193,7 @@ class VStaff extends React.Component {
   render () {
     var staff = [];
     var subordinates = [];
-    var army = this.state.engine.army;
+    var army = this.props.engine.army;
     var engine = this.props.engine;
     var officer = this.props.officer;
     var unit = army.HQ.findUnitById(officer.unitId);
