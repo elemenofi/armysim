@@ -16,6 +16,7 @@ class HQ implements Army.HQ {
   player: Army.Officer;
   world: any;
   target: Army.Officer;
+  planner: Army.Officer;
 
   constructor () {
     this.operations = new Operations();
@@ -86,6 +87,8 @@ class HQ implements Army.HQ {
   targetOfficer (officerId: number) {
     var officer = this.findOfficerById(officerId);
     this.target = officer;
+    var subordinates = this.findSubordinates(this.player) as any //ts es6 includes in array
+    if (subordinates.includes(officer)) this.planner = officer;
     return officer;
   }
 
