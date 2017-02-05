@@ -93,7 +93,7 @@ class Officer implements Army.Officer {
     if (this.reserved) HQ.officers.active[this.id] = undefined;
 
     this.align();
-    if (this.commander && this.commander.reserved || (this.commander && this.commander.rank.hierarchy > this.rank.hierarchy)) {
+    if (!this.commander || this.commander.reserved) {
       this.drifts(HQ);
       this.militate(HQ);
     }
