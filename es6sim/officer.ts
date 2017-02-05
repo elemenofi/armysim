@@ -124,49 +124,73 @@ class Officer implements Army.Officer {
   }
 
   militate (HQ: Army.HQ) {
-    this.militancy += (this.militant && this.militancy < 120) ? 1 : 0;
-    this.militant = (this.alignment > 9000 || this.alignment < 1000 || this.commander && this.commander.party !== this.party) ? true : false;
-    let targets = this.chooseTarget(HQ);
-    if (this.militancy === 120 && targets.length) {
-      this.militancy = 0;
-      targets.forEach((target) => {
-        if (!this.reserved && this.operations.length <= this.rank.hierarchy) {
-          let spec = {
-            officer: this,
-            target: target,
-            type: this.traits.base.area,
-            name: '',
-          };
+    this.militant = (
+      this.alignment > 9000 ||
+      this.alignment < 1000 ||
+      this.commander &&
+      this.commander.party !== this.party
+    ) ? true : false;
 
-          if (!this.isPlayer && spec.target && !this.targets[spec.target.id] && this.operations.length < this.rank.hierarchy) {
-            var word = this.chance.word();
-            word = word.replace(/\b\w/g, l => l.toUpperCase());
-            spec.name = 'Operation ' + word
-            HQ.operations.add(spec);
-            this.targets[spec.target.id] = spec.target.id;
-          }
-        }
-      })
+    this.militancy += (this.militant && this.militancy < 120) ? 1 : 0;
+
+    if (this.militancy === 120) {
+      this.startOperation(HQ);
+      this.militancy = 0; //cooldown
     }
+  }
+
+  startOperation (HQ) {
+    let targets = this.chooseTarget(HQ);
+    if (!targets.length) return;
+
+    targets.forEach((target) => {
+      if (
+        target &&
+        !this.isPlayer &&
+        !this.reserved &&
+        this.operations.length <= this.rank.hierarchy &&
+        !this.targets[target.id]
+      ) {
+        let spec = {
+          officer: this,
+          target: target,
+          type: this.traits.base.area,
+          name: '',
+        };
+
+        var word = this.chance.word();
+        word = word.replace(/\b\w/g, l => l.toUpperCase());
+        spec.name = 'Operation ' + word
+        HQ.operations.add(spec);
+        this.targets[target.id] = target.id;
+      }
+    })
   }
 
   chooseTarget (HQ: Army.HQ): Army.Officer[] {
     let targets = [];
     let commander = this.commander;
     if (this.commander && this.commander.party !== this.party) targets.push(commander);
-
-    let subunits = HQ.units[(this.commander) ? this.commander.unitId : this.unitId].subunits;
-    subunits.forEach((unit) => {
-      if (unit.commander.id !== this.id && unit.commander.party !== this.party) targets.push(unit.commander);
-      if (HQ.units[unit.commander.unitId]) {
-        HQ.units[unit.commander.unitId].subunits.forEach((unit2) => {
-          if (unit2.commander.id !== this.id && unit2.commander.party !== this.party) targets.push(unit2.commander);
-        })
+    
+    let allSubordinates = (HQ: Army.HQ, officer: Army.Officer, quantity: number): void => {
+      if (quantity === -1) return
+      if (HQ.units[officer.unitId]) {
+        let commander1 = HQ.units[officer.unitId].subunits[0].commander;
+        let commander2 = HQ.units[officer.unitId].subunits[1].commander;
+        targets.push(commander1)
+        targets.push(commander2)
+        allSubordinates(HQ, commander1, commander1.rank.hierarchy - 1)
+        allSubordinates(HQ, commander2, commander2.rank.hierarchy - 1)
       }
-    })
+    }
+
+    allSubordinates(HQ, this, this.rank.hierarchy -1 );
+    // })
 
     return targets;
   }
+
+
 
   reserve (HQ, reason?: Army.Operation) {
     var lastUnit = HQ.units[this.unitId]
@@ -182,7 +206,7 @@ class Officer implements Army.Officer {
       this.reason = reason;
       let lastRecord = this.history[this.history.length - 1];
       let success = reason.name + ' moved ' + reason.target.name() + ' to reserve on ' + config.formatDate(HQ.rawDate);
-      lastRecord = 'Retired by ' + reason.officer.name() + ' in' + reason.name + ', ' + config.formatDate(HQ.rawDate);
+      lastRecord = 'Retired by ' + reason.officer.name() + ' in ' + reason.name + ', ' + config.formatDate(HQ.rawDate);
       reason.officer.history.push(success)
       reason.target.history.push(lastRecord)
 
