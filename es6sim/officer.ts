@@ -8,6 +8,7 @@ import * as chance from './lib/chance';
 interface Chance {
   last(): string;
   first(o: Army.FirstNameSpec): string
+  word(l: number): string;
 }
 
 class Officer implements Army.Officer {
@@ -93,11 +94,10 @@ class Officer implements Army.Officer {
     if (this.reserved) HQ.officers.active[this.id] = undefined;
     this.drifts(HQ);
     this.militate(HQ);
-    if (!this.commander || this.commander.reserved) {
-      this.align();
-    }
+    this.align();
+
     this.experience++;
-    this.prestige += 1 + Math.round((this.diplomacy/100 + this.commanding/100 + this.intelligence/100 + this.rank.hierarchy/100))
+    this.prestige += Math.round(this.rank.hierarchy / 10) ;
     if (!this.reserved && this.experience > this.rank.maxxp) this.reserve(HQ);
   }
 
@@ -119,19 +119,31 @@ class Officer implements Army.Officer {
 
   militate (HQ: Army.HQ) {
     if (this.militancy > 0 && !this.reserved && this.operations.length <= this.rank.hierarchy) {
+      // var word = this.chance.word();
+      // word = word.replace(/\b\w/g, l => l.toUpperCase());
+
       let spec = {
         officer: this,
-        target: HQ.findCommandingOfficer(this),
+        target: this.chooseTarget(),
         type: this.traits.base.area,
-        name: 'Operation ' + this.lname,
+        name: '',
       };
 
       if (!this.isPlayer && spec.target && !this.targets[spec.target.id] && this.operations.length < this.rank.hierarchy) {
+        var word = this.chance.word();
+        word = word.replace(/\b\w/g, l => l.toUpperCase());
+        spec.name = 'Opertation ' + word
         HQ.operations.add(spec);
         this.militancy--;
         this.targets[spec.target.id] = spec.target.id;
       }
     }
+  }
+
+  chooseTarget (): Army.Officer {
+    // if () HQ.findCommandingOfficer(this)
+    // if (this.commander)
+    return this.commander
   }
 
   reserve (HQ, reason?: Army.Operation) {
@@ -146,12 +158,13 @@ class Officer implements Army.Officer {
 
     if (reason) {
       this.reason = reason;
-
-      this.history[this.history.length - 1] = this.history[this.history.length - 1] + ' after succesful operation by ' + reason.officer.name();
-      reason.officer.history.push('Moved ' + reason.target.name() + ' to reserve on ' + config.formatDate(HQ.rawDate) + ' after succesful ' + reason.type + ' operation')
+      let lastRecord = this.history[this.history.length - 1];
+      let success = reason.name + ' moved ' + reason.target.name() + ' to reserve on ' + config.formatDate(HQ.rawDate);
+      lastRecord = reason.name + ', ' + lastRecord + ' by ' + reason.officer.name();
+      reason.officer.history.push(success)
 
       if (reason.byPlayer && !reason.officer.isPlayer) {
-        HQ.findPlayer().history.push('Moved ' + reason.target.name() + ' to reserve with ' + reason.officer.name())
+        HQ.findPlayer().history.push(success)
       }
     }
   }

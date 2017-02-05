@@ -16,9 +16,7 @@ class Operations {
   }
 
   add (spec: Operation, HQ: Army.HQ) {
-    if (spec.byPlayer && HQ.player.operations.length > HQ.player.rank.hierarchy + 2) {
-      return
-    } else if (!spec.byPlayer && spec.officer.operations.length > spec.officer.rank.hierarchy) {
+    if (spec.officer.operations.length > spec.officer.rank.hierarchy) {
       return
     }
 
@@ -40,8 +38,9 @@ class Operations {
       if (
         !operation.officer.reserved &&
         !operation.target.reserved &&
-        operation.turns > 0 && operation.target.rank
-        && (operation.target.rank.hierarchy <= operation.officer.rank.hierarchy + 2)
+        operation.turns > 0 &&
+        operation.target.rank &&
+        operation.target.rank.hierarchy <= operation.officer.rank.hierarchy + 2
       ) {
         return true;
       } else {
@@ -85,8 +84,8 @@ class Operation {
   }
 
   execute (HQ: Army.HQ): void {
-    var targetRoll = this.target[this.type] + config.random(10);
-    var officerRoll = this.officer[this.type] + config.random(10);
+    var targetRoll = this.target[this.type] + this.target.intelligence + config.random(10);
+    var officerRoll = this.officer[this.type] + this.officer.intelligence + config.random(10);
 
     // commander help if its not the commander itself against a subordinate
     if (this.target.commander && this.target.commander.id !== this.officer.id) {
@@ -98,8 +97,6 @@ class Operation {
     }
 
     if (this.strength >= 300) {
-
-      this.target.couped = true;
       this.target.reserve(HQ, this)
       if (window.army.engine && window.army.engine.turn > config.bufferTurns) this.officer.operations.splice(this.officer.operations.indexOf(this), 1)
       if (this.byPlayer) {
