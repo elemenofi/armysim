@@ -68,7 +68,7 @@ class Officer implements Army.Officer {
     if (this.isPlayer) {
       this.lname = (config.debug) ? 'Richardson' : prompt('Name?');
       this.fname = 'John';
-      this.commanding = this.commanding + 50;
+      // this.commanding = this.commanding + 50;
     }
 
     this.graduate({
@@ -91,21 +91,22 @@ class Officer implements Army.Officer {
 
   update (HQ: Army.HQ) {
     if (this.reserved) HQ.officers.active[this.id] = undefined;
-
-    this.align();
+    this.drifts(HQ);
+    this.militate(HQ);
     if (!this.commander || this.commander.reserved) {
-      this.drifts(HQ);
-      this.militate(HQ);
+      this.align();
     }
     this.experience++;
-    this.prestige += Math.round((this.diplomacy/2 + this.commanding/2 + this.intelligence/2 + this.rank.hierarchy))
+    this.prestige += 1 + Math.round((this.diplomacy/100 + this.commanding/100 + this.intelligence/100 + this.rank.hierarchy/100))
     if (!this.reserved && this.experience > this.rank.maxxp) this.reserve(HQ);
   }
 
   drifts (HQ: Army.HQ) {
     let unit = HQ.findUnitById(this.unitId);
     let parent = HQ.findUnitById(unit.parentId);
-    if (parent) this.commander = parent.commander;
+    if (parent) {
+      this.commander = parent.commander;
+    }
   }
 
   align () {
@@ -116,7 +117,7 @@ class Officer implements Army.Officer {
     }
   }
 
-  militate (HQ: any) {
+  militate (HQ: Army.HQ) {
     if (this.militancy > 0 && !this.reserved && this.operations.length <= this.rank.hierarchy) {
       let spec = {
         officer: this,
@@ -147,7 +148,7 @@ class Officer implements Army.Officer {
       this.reason = reason;
 
       this.history[this.history.length - 1] = this.history[this.history.length - 1] + ' after succesful operation by ' + reason.officer.name();
-      reason.officer.history.push('Moved ' + reason.target.name() + ' to reserve on ' + HQ.realDate + ' after succesful ' + reason.type + ' operation')
+      reason.officer.history.push('Moved ' + reason.target.name() + ' to reserve on ' + config.formatDate(HQ.rawDate) + ' after succesful ' + reason.type + ' operation')
 
       if (reason.byPlayer && !reason.officer.isPlayer) {
         HQ.findPlayer().history.push('Moved ' + reason.target.name() + ' to reserve with ' + reason.officer.name())

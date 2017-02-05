@@ -16,11 +16,12 @@ class Operations {
   }
 
   add (spec: Operation, HQ: Army.HQ) {
-    if (spec.byPlayer && spec.officer.isPlayer) {
-      if (spec.officer.operations.length > spec.officer.rank.hierarchy ) {
-        return
-      }
+    if (spec.byPlayer && HQ.player.operations.length > HQ.player.rank.hierarchy + 2) {
+      return
+    } else if (!spec.byPlayer && spec.officer.operations.length > spec.officer.rank.hierarchy) {
+      return
     }
+
     if (spec.officer.id === spec.target.id) return
     let operation = new Operation(spec);
     operation.id = this.operationsID;
@@ -37,6 +38,7 @@ class Operations {
   update (HQ) {
     this.active = this.active.filter(operation => {
       if (
+        !operation.officer.reserved &&
         !operation.target.reserved &&
         operation.turns > 0 && operation.target.rank
         && (operation.target.rank.hierarchy <= operation.officer.rank.hierarchy + 2)
@@ -88,7 +90,7 @@ class Operation {
 
     // commander help if its not the commander itself against a subordinate
     if (this.target.commander && this.target.commander.id !== this.officer.id) {
-      targetRoll += Math.round(this.target.commander[this.type]/2)
+      targetRoll += Math.round(this.target.commander[this.type]/10)
     }
 
     if ((officerRoll) > (targetRoll)) {
@@ -96,6 +98,7 @@ class Operation {
     }
 
     if (this.strength >= 300) {
+
       this.target.couped = true;
       this.target.reserve(HQ, this)
       if (window.army.engine && window.army.engine.turn > config.bufferTurns) this.officer.operations.splice(this.officer.operations.indexOf(this), 1)

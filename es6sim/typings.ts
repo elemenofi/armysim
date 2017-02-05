@@ -89,11 +89,13 @@ declare namespace Army {
     update(triggeredByUserAction?: boolean): void;
     findPlayer(): Officer;
     findUnitById(id: number): Unit;
+    findCommandingOfficer(o: Officer): Officer;
   }
   interface Operations {
     operationsID: number;
     active: Operation[];
     update(HQ): void;
+    add(spec, HQ?): Operation;
   }
   interface Officers {
     realDate: string;
