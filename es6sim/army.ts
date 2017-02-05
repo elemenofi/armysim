@@ -37,7 +37,7 @@ class Army {
 
       let unit: ArmyDef.Unit = {};
       this._unitsId++;
-      spec.parentId = parent ? parent.id : 1;
+      spec.parentId = parent ? parent.id : undefined;
 
       switch (type) {
         case 'corp':

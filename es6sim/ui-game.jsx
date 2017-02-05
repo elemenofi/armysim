@@ -137,7 +137,7 @@ class VOperations extends React.Component {
 
     let operations = [];
     let html = <div><ul>{operations}</ul></div>;
-    this.state.officer.operations.forEach(operation => {
+    this.props.officer.operations.forEach(operation => {
       operations.push(
         <li className="operation">
           <div>{config.operationType[operation.type]} {operation.name}</div>
@@ -187,7 +187,7 @@ class VInspected extends React.Component {
 
   render () {
     if (!this.props.officer) return (<div></div>)
-    var army = this.state.engine.army;
+    var army = this.props.engine.army;
     let officer = this.props.officer;
     var engine = this.props.engine;
     var superior = army.HQ.findCommandingOfficer(officer)
@@ -195,11 +195,11 @@ class VInspected extends React.Component {
     var headerHTML = (!officer.isPlayer) ?
     <div>
       <VOfficer officer={ officer } engine={ engine }/>
-      <VStats officer={ officer } engine={ engine } />
-      <VStaff officer={ officer } engine={ engine } />
+      <VStats officer={ officer } engine={ engine }/>
+      <VStaff officer={ officer } engine={ engine }/>
+      <VOperations officer={ officer } engine={ engine }/>
     </div> :
     <div></div>;
-
 
     return(
       <div className="inspected">
@@ -305,10 +305,11 @@ class VStats extends React.Component {
 
     if (this.props.officer) {
       html = <div className="stats">
-        <div>EXP { this.props.officer.experience }</div>
+        <div>EXP { this.props.officer.experience } / {this.props.officer.rank.maxxp}</div>
         <div>PRE { this.props.officer.prestige }</div>
-        <div>ALI { this.props.officer.alignment }</div>
+        <div>PAR { this.props.officer.party }</div>
         <div>MIT { this.props.officer.militancy }</div>
+        <div>ALI { this.props.officer.alignment }</div>
         <div>DRI { this.props.officer.drift }</div>
         <div>INT { this.props.officer.intelligence }</div>
         <div>MIL { this.props.officer.commanding }</div>

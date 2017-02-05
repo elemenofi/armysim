@@ -59,6 +59,8 @@ declare namespace Army {
     reserve(HQ: HQ, context?: Operation): void;
     militate(HQ: HQ): void;
     reason: Operation;
+    party: string;
+    targets: number[];
   }
   interface OfficerSpec {
     date?: string;

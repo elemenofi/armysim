@@ -37,6 +37,8 @@ class Officer implements Army.Officer {
   reason: Army.Operation;
   includes: boolean;
   targets: number[];
+  party: string;
+  militant: boolean;
 
   constructor (spec: Army.OfficerSpec, HQ: any, unitName: string) {
     let traits = new Traits();
@@ -55,7 +57,8 @@ class Officer implements Army.Officer {
     this.diplomacy = this.traits.base.diplomacy + config.random(10);
 
     this.alignment = config.random(10000);
-    this.militancy = (this.isPlayer) ? 0 : config.random(10);
+    this.militancy = config.random(0);
+    this.militant = false;
     this.drift = Math.floor(Math.random() * 2) == 1 ? 1 : -1; //
 
     this.operations = [];
@@ -97,6 +100,7 @@ class Officer implements Army.Officer {
     this.align();
 
     this.experience++;
+    if (this.militancy < 60) this.militancy += (this.militant) ? 1 : 0;
     this.prestige += Math.round(this.rank.hierarchy / 10) ;
     if (!this.reserved && this.experience > this.rank.maxxp) this.reserve(HQ);
   }
@@ -106,7 +110,10 @@ class Officer implements Army.Officer {
     let parent = HQ.findUnitById(unit.parentId);
     if (parent) {
       this.commander = parent.commander;
+    } else {
+      this.commander = undefined
     }
+    this.party = (this.alignment > 5000) ? 'Conservative' : 'Radical';
   }
 
   align () {
@@ -118,13 +125,12 @@ class Officer implements Army.Officer {
   }
 
   militate (HQ: Army.HQ) {
-    if (this.militancy > 0 && !this.reserved && this.operations.length <= this.rank.hierarchy) {
-      // var word = this.chance.word();
-      // word = word.replace(/\b\w/g, l => l.toUpperCase());
+    this.militant = (this.alignment > 9000 || this.alignment < 1000) ? true : false;
 
+    if (this.militancy === 60 && !this.reserved && this.operations.length <= this.rank.hierarchy) {
       let spec = {
         officer: this,
-        target: this.chooseTarget(),
+        target: this.chooseTarget(HQ),
         type: this.traits.base.area,
         name: '',
       };
@@ -132,18 +138,25 @@ class Officer implements Army.Officer {
       if (!this.isPlayer && spec.target && !this.targets[spec.target.id] && this.operations.length < this.rank.hierarchy) {
         var word = this.chance.word();
         word = word.replace(/\b\w/g, l => l.toUpperCase());
-        spec.name = 'Opertation ' + word
+        spec.name = 'Operation ' + word
         HQ.operations.add(spec);
-        this.militancy--;
+        this.militancy = 0;
         this.targets[spec.target.id] = spec.target.id;
       }
     }
   }
 
-  chooseTarget (): Army.Officer {
-    // if () HQ.findCommandingOfficer(this)
-    // if (this.commander)
-    return this.commander
+  chooseTarget (HQ: Army.HQ): Army.Officer {
+    if (this.rank.hierarchy === 7 && this.commander) debugger;
+    let commander = this.commander;
+    if (this.commander && this.commander.party !== this.party) return commander;
+
+    let subunits = HQ.units[(this.commander) ? this.commander.unitId : this.unitId].subunits;
+    subunits.forEach((unit) => {
+      if (unit.commander.id !== this.id && unit.commander.party !== this.party) commander = unit.commander;
+    })
+
+    return commander
   }
 
   reserve (HQ, reason?: Army.Operation) {
@@ -154,14 +167,15 @@ class Officer implements Army.Officer {
 
     this.reserved = true;
 
-    this.history.push('Moved to reserve on ' + config.formatDate(HQ.rawDate));
+    if (!reason) this.history.push('Moved to reserve on ' + config.formatDate(HQ.rawDate));
 
     if (reason) {
       this.reason = reason;
       let lastRecord = this.history[this.history.length - 1];
       let success = reason.name + ' moved ' + reason.target.name() + ' to reserve on ' + config.formatDate(HQ.rawDate);
-      lastRecord = reason.name + ', ' + lastRecord + ' by ' + reason.officer.name();
+      lastRecord = reason.name + ' by ' + reason.officer.name() + ' moved to reserve on ' + config.formatDate(HQ.rawDate);
       reason.officer.history.push(success)
+      reason.target.history.push(lastRecord)
 
       if (reason.byPlayer && !reason.officer.isPlayer) {
         HQ.findPlayer().history.push(success)

@@ -98,6 +98,8 @@ class Officers implements Army.Officers {
     spec.HQ.deassign(officer.unitId);
     let promotion = this.promotion(officer, spec);
     officer.history.push(config.promoted(promotion));
+    officer.targets = [];
+    officer.commander = undefined;
     return officer;
   }
 
