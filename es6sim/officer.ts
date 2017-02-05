@@ -145,6 +145,7 @@ class Officer implements Army.Officer {
 
     targets.forEach((target) => {
       if (
+        this.militancy === 120 &&
         target &&
         !this.isPlayer &&
         !this.reserved &&
@@ -171,7 +172,7 @@ class Officer implements Army.Officer {
     let targets = [];
     let commander = this.commander;
     if (this.commander && this.commander.party !== this.party) targets.push(commander);
-    
+
     let allSubordinates = (HQ: Army.HQ, officer: Army.Officer, quantity: number): void => {
       if (quantity === -1) return
       if (HQ.units[officer.unitId]) {
@@ -184,8 +185,7 @@ class Officer implements Army.Officer {
       }
     }
 
-    allSubordinates(HQ, this, this.rank.hierarchy -1 );
-    // })
+    allSubordinates(HQ, this, this.rank.hierarchy - 1);
 
     return targets;
   }

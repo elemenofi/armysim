@@ -25,6 +25,7 @@ class Operations {
     operation.id = this.operationsID;
     this.operationsID++;
     this.active.push(operation);
+    operation.officer.militancy = 0;
     if (!spec.byPlayer) spec.officer.operations.push(operation);
     if (spec.byPlayer && !spec.officer.isPlayer) {
       spec.officer.operations.push(operation);
