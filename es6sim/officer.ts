@@ -72,7 +72,6 @@ class Officer implements Army.Officer {
     if (this.isPlayer) {
       this.lname = (config.debug) ? 'Richardson' : prompt('Name?');
       this.fname = 'John';
-      // this.commanding = this.commanding + 50;
     }
 
     this.graduate({
@@ -124,9 +123,11 @@ class Officer implements Army.Officer {
   }
 
   militate (HQ: Army.HQ) {
+    this.militancy += (this.militant) ? 1 : 0;
     this.militant = (this.alignment > 9000 || this.alignment < 1000) ? true : false;
     let targets = this.chooseTarget(HQ);
-    if (targets.length) {
+    if (this.militancy === 120 && targets.length) {
+      this.militancy = 0;
       targets.forEach((target) => {
         if (!this.reserved && this.operations.length <= this.rank.hierarchy) {
           let spec = {
@@ -180,7 +181,7 @@ class Officer implements Army.Officer {
       this.reason = reason;
       let lastRecord = this.history[this.history.length - 1];
       let success = reason.name + ' moved ' + reason.target.name() + ' to reserve on ' + config.formatDate(HQ.rawDate);
-      lastRecord = reason.name + ' by ' + reason.officer.name() + ' moved to reserve on ' + config.formatDate(HQ.rawDate);
+      lastRecord = 'Retired by ' + reason.officer.name() + ' in' + reason.name + ', ' + config.formatDate(HQ.rawDate);
       reason.officer.history.push(success)
       reason.target.history.push(lastRecord)
 
