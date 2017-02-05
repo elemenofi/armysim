@@ -156,6 +156,11 @@ class Officer implements Army.Officer {
     let subunits = HQ.units[(this.commander) ? this.commander.unitId : this.unitId].subunits;
     subunits.forEach((unit) => {
       if (unit.commander.id !== this.id && unit.commander.party !== this.party) targets.push(unit.commander);
+      if (HQ.units[unit.commander.unitId]) {
+        HQ.units[unit.commander.unitId].subunits.forEach((unit2) => {
+          if (unit2.commander.id !== this.id && unit2.commander.party !== this.party) targets.push(unit2.commander);
+        })
+      }
     })
 
     return targets;
