@@ -49,7 +49,8 @@ class Officer implements Army.Officer {
 
     this.rank = config.ranks[spec.rankName];
     this.experience = config.ranks[spec.rankName].startxp + config.random(500);
-    this.prestige = config.ranks[spec.rankName].startpr + config.random(10);
+    this.prestige = config.random(10);
+    // this.prestige = config.ranks[spec.rankName].startpr + config.random(10);
 
     this.traits = { base: traits.random() };
     this.intelligence = this.traits.base.intelligence + config.random(10);
@@ -99,7 +100,7 @@ class Officer implements Army.Officer {
     this.align();
 
     this.experience++;
-    this.prestige += Math.round(this.rank.hierarchy / 10) ;
+    this.prestige++;
     if (!this.reserved && this.experience > this.rank.maxxp) this.reserve(HQ);
   }
 
@@ -123,8 +124,8 @@ class Officer implements Army.Officer {
   }
 
   militate (HQ: Army.HQ) {
-    this.militancy += (this.militant) ? 1 : 0;
-    this.militant = (this.alignment > 9000 || this.alignment < 1000) ? true : false;
+    this.militancy += (this.militant && this.militancy < 120) ? 1 : 0;
+    this.militant = (this.alignment > 9000 || this.alignment < 1000 || this.commander && this.commander.party !== this.party) ? true : false;
     let targets = this.chooseTarget(HQ);
     if (this.militancy === 120 && targets.length) {
       this.militancy = 0;
