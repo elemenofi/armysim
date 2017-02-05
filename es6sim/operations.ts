@@ -98,9 +98,9 @@ class Operation {
     if (this.strength >= 300) {
       this.target.couped = true;
       this.target.reserve(HQ, this)
-      this.officer.operations.splice(this.officer.operations.indexOf(this), 1)
+      if (window.army.engine && window.army.engine.turn > config.bufferTurns) this.officer.operations.splice(this.officer.operations.indexOf(this), 1)
       if (this.byPlayer) {
-        HQ.findPlayer().operations.splice(HQ.findPlayer().operations.indexOf(this), 1)
+        if (window.army.engine && window.army.engine.turn > config.bufferTurns) HQ.findPlayer().operations.splice(HQ.findPlayer().operations.indexOf(this), 1)
       }
     }
 

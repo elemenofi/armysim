@@ -30,6 +30,7 @@ class Engine {
   start () {
     this.update();
     this.army.HQ.makePlayer();
+    this.army.HQ.player.drifts(this.army.HQ)
     this.updateUI();
   }
 

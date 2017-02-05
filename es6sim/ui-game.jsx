@@ -23,7 +23,8 @@ class VArmy extends React.Component {
   }
 
   render () {
-    var army = this.state.army;
+
+    var army = this.props.engine.army;
     var engine = this.state.engine;
     return(
       <div className="army">
@@ -204,6 +205,7 @@ class VStaff extends React.Component {
     army.HQ.findOperationalStaff(this.props.officer).forEach(officer => {
       staff.push(<li><VOfficer officer={ officer } engine={ engine }/></li>);
     });
+    staff.reverse()
 
     var superiorHTML = (!officer.reserved && officer.rank.hierarchy < 7 && !this.state.operations) ?
     <div className="superior">
@@ -301,7 +303,7 @@ class VHistory extends React.Component {
       this.props.officer.history.forEach((event) => {
         history.push(<li className="log">{ event }</li>)
       })
-      if (!this.props.officer.reserved) history = history.slice(0, 2)
+      // if (!this.props.officer.reserved) history = history.slice(0, 2)
       history.reverse()
     }
 
@@ -359,29 +361,6 @@ class VUnit extends React.Component {
     this.setState({target: this.state.engine.army.HQ.target})
   }
 
-  handleSearch (event, selected) {
-    if (!selected) {
-      this.state.engine.army.HQ.target = undefined;
-      this.setState({targets: this.state.engine.army.HQ.findOfficersByName(event.target.value) });
-    } else {
-      this.setState({targets: this.state.engine.army.HQ.findOfficersByName(selected) });
-    }
-  }
-
-  componentDidUpdate (prevProps, prevState) {
-    if (
-      prevState.target &&
-      this.state.engine.army.HQ.target &&
-      this.state.engine.army.HQ.target.lname !== prevState.target.lname
-    ) {
-      this.handleSearch(undefined, this.state.engine.army.HQ.target.name())
-    } else if (this.state.engine.army.HQ.target && !prevState.target) {
-      this.handleSearch(undefined, this.state.engine.army.HQ.target.name())
-    }
-
-    this.state.target = this.state.engine.army.HQ.target;
-  }
-
   render () {
     let army = this.state.engine.army;
     let player = this.state.player;
@@ -406,17 +385,17 @@ class VUnit extends React.Component {
     //   staffOfficers.push( <p value={ [officer.id, player.unitId] }>{ officer.name() }</p> );
     // });
 
-    if (!this.state.target) {
-      targets.forEach(target => {
-        officers.push( <option value={ target.id }>{ target.name() }</option> );
-      });
-    } else if (this.state.target && this.state.target.name) {
-      officers.push( <option value={ this.state.target.id }>{ this.state.target.name() }</option> );
-    }
+    // if (!this.state.target) {
+    //   targets.forEach(target => {
+    //     officers.push( <option value={ target.id }>{ target.name() }</option> );
+    //   });
+    // } else if (this.state.target && this.state.target.name) {
+    //   officers.push( <option value={ this.state.target.id }>{ this.state.target.name() }</option> );
+    // }
 
-    operationTypes.unshift(<option></option>);
-    officers.unshift(<option></option>);
-    staffOfficers.unshift(<option></option>);
+    // operationTypes.unshift(<option></option>);
+    // officers.unshift(<option></option>);
+    // staffOfficers.unshift(<option></option>);
 
     return(
       <div className="unit">

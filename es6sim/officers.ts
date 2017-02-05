@@ -5,6 +5,15 @@ import Secretary from './secretary';
 import Player from './player';
 import Army from './typings';
 
+interface ReplaceSpec {
+  aggresor?: Army.Officer;
+  replacedCommander: Army.Officer;
+  unitId: number;
+  rank: Army.Rank;
+  rankToPromote: string;
+  HQ: Army.HQ;
+}
+
 class Officers implements Army.Officers {
   realDate: string;
   active: Officer[];
@@ -26,8 +35,7 @@ class Officers implements Army.Officers {
   }
 
   update (HQ) {
-    this.active.forEach(officer => { officer.update(HQ); });
-    this.active = this.active.filter(officer => { return !officer.reserved; });
+    this.active.forEach(officer => { if (officer) officer.update(HQ); });
   }
 
   recruit (rank: string, unitId: number, isPlayer: boolean, unitName: string) {
@@ -42,7 +50,7 @@ class Officers implements Army.Officers {
 
     if (isPlayer) this.player = cadet;
 
-    this.officers.active.push(cadet);
+    this.officers.active[cadet.id] = cadet;
     this.officers.pool.push(cadet);
     this.officers.__officersID++;
     return cadet;
@@ -71,10 +79,15 @@ class Officers implements Army.Officers {
     return this.officers.recruit.call(this, 'lieutenant', replacedCommander.unitId, true);
   }
 
-  candidate (spec: any) {
-    let candidate = this.active
-      .filter(officer => { return officer.rank.alias === spec.rankToPromote && spec.HQ.findUnitById(officer.unitId).parentId === spec.unitId; })
-      .reduce((prev, curr) => (curr.experience > prev.experience) ? curr : prev);
+  candidate (spec: ReplaceSpec) {
+    // let candidate = this.active
+    //   .filter(officer => { return officer.rank.alias === spec.rankToPromote && spec.HQ.findUnitById(officer.unitId).parentId === spec.unitId; })
+    //   .reduce((prev, curr) => (curr.experience > prev.experience) ? curr : prev);
+    let candidate = spec.HQ.units[spec.replacedCommander.unitId].subunits[0].commander
+    let candidateB = spec.HQ.units[spec.replacedCommander.unitId].subunits[1].commander
+
+    candidate = (candidate.experience > candidateB.experience) ? candidate : candidateB;
+
     if (spec.aggresor && !spec.aggresor.reserved && spec.replacedCommander.rank.hierarchy === spec.aggresor.rank.hierarchy + 1) {
       candidate = spec.aggresor
     }
@@ -85,6 +98,8 @@ class Officers implements Army.Officers {
     spec.HQ.deassign(officer.unitId);
     let promotion = this.promotion(officer, spec);
     officer.history.push(config.promoted(promotion));
+    officer.drifts(spec.HQ);
+    officer.militate(spec.HQ);
     return officer;
   }
 
@@ -94,7 +109,7 @@ class Officers implements Army.Officers {
 
     return {
       rank: spec.rank,
-      date: spec.HQ.realDate,
+      date: config.formatDate(spec.HQ.rawDate),
       unit: spec.HQ.unitName(officer.unitId)
     };
   }

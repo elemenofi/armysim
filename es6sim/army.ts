@@ -14,13 +14,18 @@ class Army {
   constructor () {
     this.HQ = new HQ();
 
-    this._unitsId = 2;
+    this._unitsId = 0;
     this.units = {
       corps: []
     };
 
     this.id = 1;
     this.generate('corp', config.unitDepth);
+    this.HQ.units.sort(function(a, b) {return (a.id > b.id) ? 1 : ((b.id > a.id) ? -1 : 0);} );
+    this.HQ.officers.active.forEach((officer) => {
+      officer.drifts(this.HQ)
+      officer.militate(this.HQ)
+    })
   }
 
   generate (type, quantity, parent?) {

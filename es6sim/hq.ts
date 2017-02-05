@@ -7,6 +7,10 @@ import World from './world';
 import Officers from './officers';
 import Army from './typings';
 
+interface Window { army: any }
+
+declare var window: Window;
+
 class HQ implements Army.HQ {
   rawDate: any;
   officers: Army.Officers;
@@ -20,15 +24,18 @@ class HQ implements Army.HQ {
 
   constructor () {
     this.operations = new Operations();
-    this.rawDate = new Date();
+    this.rawDate = moment();
     this.units = [] as any;
     this.officers = new Officers();
     this.world = new World(this);
   }
 
   updateDate () {
-    this.rawDate = moment(this.rawDate).add(1, "days");
-    this.realDate = config.formatDate(this.rawDate);
+    this.rawDate = this.rawDate.add(1, "days");
+    if (window.army.engine && window.army.engine.turn > config.bufferTurns) {
+
+      this.realDate = config.formatDate(this.rawDate);
+    }
   }
 
   update (triggeredByUserAction?: boolean) {
@@ -63,16 +70,17 @@ class HQ implements Army.HQ {
     return this.units.filter(unit => { return unit.type === type; });
   }
 
-  findUnitById (id: number) {
-    return this.units.filter(unit => { return unit.id === id; })[0];
+  findUnitById (id: number): Army.Unit {
+    return this.units[id];
   }
 
   findCommandingOfficer (officer: Army.Officer) {
-    if (!officer) return { name: () => { return 'No name' } };
-    var officerUnit = this.units.filter(unit => { return unit.id === officer.unitId; })[0];
-    var superiorUnit = this.units.filter(unit => { return officerUnit && unit.id === officerUnit.parentId; })[0];
-    if (!superiorUnit) return { name: () => { return 'No name' } };
-    return superiorUnit.commander;
+    // if (!officer) return { name: () => { return 'No name' } };
+    // var officerUnit = this.units.filter(unit => { return unit.id === officer.unitId; })[0];
+    // var superiorUnit = this.units.filter(unit => { return officerUnit && unit.id === officerUnit.parentId; })[0];
+    // if (!superiorUnit) return { name: () => { return 'No name' } };
+    // return superiorUnit.commander;
+    return (officer.commander) ? officer.commander : { name: () => { return 'No name' } };
   }
 
   findOfficerById (officerId: number) {

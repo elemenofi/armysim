@@ -55,8 +55,9 @@ declare namespace Army {
     commander: Officer;
     traits: { base: Trait };
     couped: boolean;
-    drifts(o: any, traits: any): any;
+    drifts(o: any): any;
     reserve(HQ: HQ, context?: Operation): void;
+    militate(HQ: HQ): void;
     reason: Operation;
   }
   interface OfficerSpec {
