@@ -68,7 +68,7 @@ class Officer implements Army.Officer {
     if (this.isPlayer) {
       this.lname = (config.debug) ? 'Richardson' : prompt('Name?');
       this.fname = 'John';
-      this.commanding = this.commanding + 10;
+      this.commanding = this.commanding + 50;
     }
 
     this.graduate({

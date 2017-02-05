@@ -88,7 +88,7 @@ class Operation {
 
     // commander help if its not the commander itself against a subordinate
     if (this.target.commander && this.target.commander.id !== this.officer.id) {
-      targetRoll += Math.round(this.target.commander[this.type])
+      targetRoll += Math.round(this.target.commander[this.type]/2)
     }
 
     if ((officerRoll) > (targetRoll)) {
