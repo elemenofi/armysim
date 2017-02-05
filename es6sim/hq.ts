@@ -80,6 +80,7 @@ class HQ implements Army.HQ {
     // var superiorUnit = this.units.filter(unit => { return officerUnit && unit.id === officerUnit.parentId; })[0];
     // if (!superiorUnit) return { name: () => { return 'No name' } };
     // return superiorUnit.commander;
+    if (!officer.commander) debugger;
     return (officer.commander) ? officer.commander : { name: () => { return 'No name' } };
   }
 

@@ -53,9 +53,9 @@ class Officer implements Army.Officer {
     this.commanding = this.traits.base.commanding + config.random(10);
     this.diplomacy = this.traits.base.diplomacy + config.random(10);
 
-    this.alignment = config.random(1000);
+    this.alignment = config.random(10000);
     this.militancy = (this.isPlayer) ? 0 : config.random(10);
-    this.drift = 0;
+    this.drift = Math.floor(Math.random() * 2) == 1 ? 1 : -1; //
 
     this.operations = [];
     this.history = [];
@@ -90,13 +90,13 @@ class Officer implements Army.Officer {
   }
 
   update (HQ: Army.HQ) {
-    // this.active = this.active.filter(officer => { return !officer.reserved; });
-
     if (this.reserved) HQ.officers.active[this.id] = undefined;
 
     this.align();
-    if (this.commander && this.commander.reserved) this.drifts(HQ);
-    // this.militate(HQ);
+    if (this.commander && this.commander.reserved || (this.commander && this.commander.rank.hierarchy > this.rank.hierarchy)) {
+      this.drifts(HQ);
+      this.militate(HQ);
+    }
     this.experience++;
     this.prestige += Math.round((this.diplomacy/2 + this.commanding/2 + this.intelligence/2 + this.rank.hierarchy))
     if (!this.reserved && this.experience > this.rank.maxxp) this.reserve(HQ);
@@ -109,11 +109,11 @@ class Officer implements Army.Officer {
   }
 
   align () {
-  //   if (this.drift > 0 && this.alignment < 1000) {
-  //     this.alignment += this.drift;
-  //   } else if (this.drift < 0 && this.alignment > 0) {
-  //     this.alignment += this.drift;
-  //   }
+    if (this.drift > 0 && this.alignment < 10000) {
+      this.alignment += this.drift;
+    } else if (this.drift < 0 && this.alignment > 0) {
+      this.alignment += this.drift;
+    }
   }
 
   militate (HQ: any) {
@@ -125,7 +125,7 @@ class Officer implements Army.Officer {
         name: 'Operation ' + this.lname,
       };
 
-      if (!this.isPlayer && spec.target && this.targets[spec.target.id] && this.operations.length < this.rank.hierarchy) {
+      if (!this.isPlayer && spec.target && !this.targets[spec.target.id] && this.operations.length < this.rank.hierarchy) {
         HQ.operations.add(spec);
         this.militancy--;
         this.targets[spec.target.id] = spec.target.id;
