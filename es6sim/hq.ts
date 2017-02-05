@@ -126,7 +126,7 @@ class HQ implements Army.HQ {
 
   findOperationalStaff (officer: Army.Officer, self?: boolean) {
     var operationalStaff: Army.Officer[] = [];
-    operationalStaff = operationalStaff.concat(this.findStaff(officer));
+    // operationalStaff = operationalStaff.concat(this.findStaff(officer));
     operationalStaff = operationalStaff.concat(this.findSubordinates(officer));
     if (this.findPlayer() && self) operationalStaff.push(this.findPlayer())
     return operationalStaff;

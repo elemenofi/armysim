@@ -133,7 +133,7 @@ class VOperations extends React.Component {
     }
   }
   render () {
-    if (!this.state.officer || !this.state.officer.operations.length) return(<div></div>);
+    if (!this.props.officer || !this.props.officer.operations.length) return(<div></div>);
 
     let operations = [];
     let html = <div><ul>{operations}</ul></div>;
@@ -200,6 +200,7 @@ class VInspected extends React.Component {
       <VOperations officer={ officer } engine={ engine }/>
     </div> :
     <div></div>;
+
 
     return(
       <div className="inspected">
@@ -349,86 +350,6 @@ class VHistory extends React.Component {
                                       </div> : <div></div>;
 
     return(html);
-  }
-}
-
-class VUnit extends React.Component {
-  constructor (props) {
-    super(props);
-    this.state = {
-      player: this.props.officer,
-      engine: this.props.engine,
-      name: undefined,
-      type: undefined,
-      officer: undefined,
-      target: undefined,
-      targets: undefined
-    }
-  }
-
-
-
-  handleType (event) {
-    this.setState({type: event.target.value});
-  }
-
-  handleOfficer (event) {
-    this.setState({officer: event.target.value});
-  }
-
-  handleTarget (event) {
-    this.setState({target: event.target.value});
-  }
-
-  handleClickTarget () {
-    this.setState({target: this.state.engine.army.HQ.target})
-  }
-
-  render () {
-    let army = this.state.engine.army;
-    let player = this.state.player;
-    let targets = (this.state.targets) ? this.state.targets : army.HQ.findActiveOfficers();
-
-    let types = ['intelligence', 'commanding', 'diplomacy'];
-    let staff = army.HQ.findOperationalStaff(player, self);
-
-    let operationTypes = [];
-    let officers = [];
-    let staffOfficers = [];
-
-    let selectedTarget = (this.state.target && this.state.target.name) ? this.state.target.name() : '';
-
-    types.forEach(type => {
-      operationTypes.push(<p onClick={() => {
-        this.state.type = type;
-      }}>{ type }</p>);
-    });
-
-    // staff.forEach(officer => {
-    //   staffOfficers.push( <p value={ [officer.id, player.unitId] }>{ officer.name() }</p> );
-    // });
-
-    // if (!this.state.target) {
-    //   targets.forEach(target => {
-    //     officers.push( <option value={ target.id }>{ target.name() }</option> );
-    //   });
-    // } else if (this.state.target && this.state.target.name) {
-    //   officers.push( <option value={ this.state.target.id }>{ this.state.target.name() }</option> );
-    // }
-
-    // operationTypes.unshift(<option></option>);
-    // officers.unshift(<option></option>);
-    // staffOfficers.unshift(<option></option>);
-
-    return(
-      <div className="unit">
-        <h1>Operation type</h1>
-          { operationTypes }
-        <VStaff officer={ player } engine={ this.props.engine } operations={ true } />
-        <br></br><br></br>
-
-      </div>
-    );
   }
 }
 

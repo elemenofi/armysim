@@ -57,8 +57,8 @@ class Officer implements Army.Officer {
     this.diplomacy = this.traits.base.diplomacy + config.random(10);
 
     this.alignment = config.random(10000);
-    this.militancy = config.random(0);
     this.militant = false;
+    this.militancy = 0;
     this.drift = Math.floor(Math.random() * 2) == 1 ? 1 : -1; //
 
     this.operations = [];
@@ -100,7 +100,6 @@ class Officer implements Army.Officer {
     this.align();
 
     this.experience++;
-    if (this.militancy < 60) this.militancy += (this.militant) ? 1 : 0;
     this.prestige += Math.round(this.rank.hierarchy / 10) ;
     if (!this.reserved && this.experience > this.rank.maxxp) this.reserve(HQ);
   }
@@ -126,37 +125,40 @@ class Officer implements Army.Officer {
 
   militate (HQ: Army.HQ) {
     this.militant = (this.alignment > 9000 || this.alignment < 1000) ? true : false;
+    let targets = this.chooseTarget(HQ);
+    if (targets.length) {
+      targets.forEach((target) => {
+        if (!this.reserved && this.operations.length <= this.rank.hierarchy) {
+          let spec = {
+            officer: this,
+            target: target,
+            type: this.traits.base.area,
+            name: '',
+          };
 
-    if (this.militancy === 60 && !this.reserved && this.operations.length <= this.rank.hierarchy) {
-      let spec = {
-        officer: this,
-        target: this.chooseTarget(HQ),
-        type: this.traits.base.area,
-        name: '',
-      };
-
-      if (!this.isPlayer && spec.target && !this.targets[spec.target.id] && this.operations.length < this.rank.hierarchy) {
-        var word = this.chance.word();
-        word = word.replace(/\b\w/g, l => l.toUpperCase());
-        spec.name = 'Operation ' + word
-        HQ.operations.add(spec);
-        this.militancy = 0;
-        this.targets[spec.target.id] = spec.target.id;
-      }
+          if (!this.isPlayer && spec.target && !this.targets[spec.target.id] && this.operations.length < this.rank.hierarchy) {
+            var word = this.chance.word();
+            word = word.replace(/\b\w/g, l => l.toUpperCase());
+            spec.name = 'Operation ' + word
+            HQ.operations.add(spec);
+            this.targets[spec.target.id] = spec.target.id;
+          }
+        }
+      })
     }
   }
 
-  chooseTarget (HQ: Army.HQ): Army.Officer {
-    if (this.rank.hierarchy === 7 && this.commander) debugger;
+  chooseTarget (HQ: Army.HQ): Army.Officer[] {
+    let targets = [];
     let commander = this.commander;
-    if (this.commander && this.commander.party !== this.party) return commander;
+    if (this.commander && this.commander.party !== this.party) targets.push(commander);
 
     let subunits = HQ.units[(this.commander) ? this.commander.unitId : this.unitId].subunits;
     subunits.forEach((unit) => {
-      if (unit.commander.id !== this.id && unit.commander.party !== this.party) commander = unit.commander;
+      if (unit.commander.id !== this.id && unit.commander.party !== this.party) targets.push(unit.commander);
     })
 
-    return commander
+    return targets;
   }
 
   reserve (HQ, reason?: Army.Operation) {

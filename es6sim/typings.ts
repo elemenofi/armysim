@@ -92,6 +92,7 @@ declare namespace Army {
     findPlayer(): Officer;
     findUnitById(id: number): Unit;
     findCommandingOfficer(o: Officer): Officer;
+    findSubordinates(o: Officer)
   }
   interface Operations {
     operationsID: number;
