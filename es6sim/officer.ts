@@ -100,7 +100,6 @@ class Officer implements Army.Officer {
     this.align();
 
     this.experience++;
-    this.prestige++;
     if (!this.reserved && this.experience > this.rank.maxxp) this.reserve(HQ);
   }
 
@@ -123,6 +122,10 @@ class Officer implements Army.Officer {
     }
   }
 
+  operationDelay (): number {
+    return 1000;
+  }
+
   militate (HQ: Army.HQ) {
     this.militant = (
       this.alignment > 9000 ||
@@ -131,11 +134,10 @@ class Officer implements Army.Officer {
       this.commander.party !== this.party
     ) ? true : false;
 
-    this.militancy += (this.militant && this.militancy < 120) ? 1 : 0;
+    this.militancy += (this.militant && this.militancy < this.operationDelay()) ? 1 : 0;
 
-    if (this.militancy === 120) {
+    if (this.militancy === this.operationDelay()) {
       this.startOperation(HQ);
-      this.militancy = 0; //cooldown
     }
   }
 
@@ -145,7 +147,7 @@ class Officer implements Army.Officer {
 
     targets.forEach((target) => {
       if (
-        this.militancy === 120 &&
+        this.militancy > 249 &&
         target &&
         !this.isPlayer &&
         !this.reserved &&

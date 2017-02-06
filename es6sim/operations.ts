@@ -25,7 +25,7 @@ class Operations {
     operation.id = this.operationsID;
     this.operationsID++;
     this.active.push(operation);
-    operation.officer.militancy = 0;
+    operation.officer.militancy = operation.officer.militancy - 250;
     if (!spec.byPlayer) spec.officer.operations.push(operation);
     if (spec.byPlayer && !spec.officer.isPlayer) {
       spec.officer.operations.push(operation);
@@ -85,12 +85,28 @@ class Operation {
   }
 
   execute (HQ: Army.HQ): void {
-    var targetRoll = this.target[this.type] + this.target.intelligence + config.random(10);
-    var officerRoll = this.officer[this.type] + this.officer.intelligence + config.random(10);
+    var targetRoll =
+      this.target[this.type] +
+      this.target.intelligence +
+      this.target.rank.hierarchy +
+      config.random(10);
+    var officerRoll =
+      this.officer[this.type] +
+      this.officer.intelligence +
+      this.officer.rank.hierarchy +
+      config.random(10);
 
     // commander help if its not the commander itself against a subordinate
     if (this.target.commander && this.target.commander.id !== this.officer.id) {
-      targetRoll += Math.round(this.target.commander[this.type]/10)
+      targetRoll += this.target.commander.rank.hierarchy
+    }
+
+    if (this.target.commander && this.target.commander.party === this.target.party) {
+      targetRoll += this.target.commander.rank.hierarchy
+    }
+
+    if (this.officer.commander && this.officer.commander.party === this.officer.party) {
+      officerRoll += this.officer.commander.rank.hierarchy
     }
 
     if ((officerRoll) > (targetRoll)) {
@@ -99,6 +115,8 @@ class Operation {
 
     if (this.strength >= 300) {
       this.target.reserve(HQ, this)
+      this.officer.prestige += 10
+      this.officer.prestige += this.target.prestige
       if (window.army.engine && window.army.engine.turn > config.bufferTurns) this.officer.operations.splice(this.officer.operations.indexOf(this), 1)
       if (this.byPlayer) {
         if (window.army.engine && window.army.engine.turn > config.bufferTurns) HQ.findPlayer().operations.splice(HQ.findPlayer().operations.indexOf(this), 1)
