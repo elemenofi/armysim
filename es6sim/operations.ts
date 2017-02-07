@@ -16,19 +16,20 @@ class Operations {
   }
 
   add (spec: Operation, HQ: Army.HQ) {
-    if (spec.officer.operations.length > spec.officer.rank.hierarchy) {
+    let o = spec.officer
+    if (o.operations.length > o.rank.hierarchy) {
       return
     }
 
-    if (spec.officer.id === spec.target.id) return
+    if (o.id === spec.target.id) return
     let operation = new Operation(spec);
     operation.id = this.operationsID;
     this.operationsID++;
     this.active.push(operation);
     operation.officer.militancy = operation.officer.militancy - 250;
-    if (!spec.byPlayer) spec.officer.operations.push(operation);
-    if (spec.byPlayer && !spec.officer.isPlayer) {
-      spec.officer.operations.push(operation);
+    if (!spec.byPlayer) o.operations.push(operation);
+    if (spec.byPlayer && !o.isPlayer) {
+      o.operations.push(operation);
       HQ.player.operations.push(operation);
     }
     return operation;
