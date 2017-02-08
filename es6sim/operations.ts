@@ -37,17 +37,19 @@ class Operations {
 
   update (HQ) {
     this.active = this.active.filter(operation => {
+      let o = operation.officer
+      let t = operation.target
       if (
-        !operation.officer.reserved &&
-        !operation.target.reserved &&
+        !o.reserved &&
+        !t.reserved &&
         operation.turns > 0 &&
-        operation.target.rank &&
-        operation.target.rank.hierarchy <= operation.officer.rank.hierarchy + 2
+        t.rank &&
+        t.rank.hierarchy <= o.rank.hierarchy + 2
       ) {
         return true;
       } else {
-        operation.officer.operations.splice(operation.officer.operations.indexOf(operation), 1)
-        if (operation.byPlayer && !operation.officer.isPlayer) {
+        o.operations.splice(o.operations.indexOf(operation), 1)
+        if (operation.byPlayer && !o.isPlayer) {
           HQ.player.operations.splice(HQ.player.operations.indexOf(operation), 1)
         }
         return false;
@@ -118,9 +120,11 @@ class Operation {
       this.target.reserve(HQ, this)
       this.officer.prestige += 10
       this.officer.prestige += this.target.prestige
-      if (window.army.engine && window.army.engine.turn > config.bufferTurns) this.officer.operations.splice(this.officer.operations.indexOf(this), 1)
+      // if (window.army.engine && window.army.engine.turn > config.bufferTurns) this.officer.operations.splice(this.officer.operations.indexOf(this), 1)
+      this.officer.operations[this.officer.operations.indexOf(this)] = undefined;
       if (this.byPlayer) {
-        if (window.army.engine && window.army.engine.turn > config.bufferTurns) HQ.findPlayer().operations.splice(HQ.findPlayer().operations.indexOf(this), 1)
+        // if (window.army.engine && window.army.engine.turn > config.bufferTurns) HQ.findPlayer().operations.splice(HQ.findPlayer().operations.indexOf(this), 1)
+        HQ.findPlayer().operations[HQ.findPlayer().operations.indexOf(this)] = undefined;
       }
     }
 
