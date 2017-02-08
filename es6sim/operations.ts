@@ -120,10 +120,8 @@ class Operation {
       this.target.reserve(HQ, this)
       this.officer.prestige += 10
       this.officer.prestige += this.target.prestige
-      // if (window.army.engine && window.army.engine.turn > config.bufferTurns) this.officer.operations.splice(this.officer.operations.indexOf(this), 1)
       this.officer.operations[this.officer.operations.indexOf(this)] = undefined;
       if (this.byPlayer) {
-        // if (window.army.engine && window.army.engine.turn > config.bufferTurns) HQ.findPlayer().operations.splice(HQ.findPlayer().operations.indexOf(this), 1)
         HQ.findPlayer().operations[HQ.findPlayer().operations.indexOf(this)] = undefined;
       }
     }
