@@ -49,8 +49,7 @@ class Officer implements Army.Officer {
 
     this.rank = config.ranks[spec.rankName];
     this.experience = config.ranks[spec.rankName].startxp + config.random(500);
-    this.prestige = config.random(10);
-    // this.prestige = config.ranks[spec.rankName].startpr + config.random(10);
+    this.prestige = 0;
 
     this.traits = { base: traits.random() };
     this.intelligence = this.traits.base.intelligence + config.random(10);
@@ -122,9 +121,7 @@ class Officer implements Army.Officer {
     }
   }
 
-  operationDelay (): number {
-    return 1000;
-  }
+  private operationDelay: number = 1000;
 
   militate (HQ: Army.HQ) {
     this.militant = (
@@ -134,9 +131,9 @@ class Officer implements Army.Officer {
       this.commander.party !== this.party
     ) ? true : false;
 
-    this.militancy += (this.militant && this.militancy < this.operationDelay()) ? 1 : 0;
+    this.militancy += (this.militant && this.militancy < this.operationDelay) ? 1 : 0;
 
-    if (this.militancy === this.operationDelay()) {
+    if (this.militancy === this.operationDelay) {
       this.startOperation(HQ);
     }
   }
@@ -173,7 +170,10 @@ class Officer implements Army.Officer {
   chooseTarget (HQ: Army.HQ): Army.Officer[] {
     let targets = [];
     let commander = this.commander;
-    if (this.commander && this.commander.party !== this.party) targets.push(commander);
+    
+    if (this.commander && this.commander.party !== this.party) {
+      targets.push(commander);
+    }
 
     let allSubordinates = (HQ: Army.HQ, officer: Army.Officer, quantity: number): void => {
       if (quantity === -1) return
@@ -204,19 +204,36 @@ class Officer implements Army.Officer {
 
     this.reserved = true;
 
-    if (!reason) this.history.push('Moved to reserve on ' + config.formatDate(HQ.rawDate));
+    if (!reason) {
+      this.history.push('Moved to reserve on ' + config.formatDate(HQ.rawDate));
+    }
 
     if (reason) {
-      this.reason = reason;
-      let lastRecord = this.history[this.history.length - 1];
-      let success = reason.name + ' moved ' + reason.target.name() + ' to reserve on ' + config.formatDate(HQ.rawDate);
-      lastRecord = 'Retired by ' + reason.officer.name() + ' in ' + reason.name + ', ' + config.formatDate(HQ.rawDate);
-      reason.officer.history.push(success)
-      reason.target.history.push(lastRecord)
+      this.logRetirement(HQ, reason)
+    }
+  }
 
-      if (reason.byPlayer && !reason.officer.isPlayer) {
-        HQ.findPlayer().history.push(success)
-      }
+  logRetirement (HQ: Army.HQ, reason: Army.Operation) {
+    this.reason = reason;
+
+    let lastRecord = this.history[this.history.length - 1];
+
+    lastRecord =
+      'Retired by ' + reason.officer.name() +
+      ' in ' + reason.name + ', '
+      + config.formatDate(HQ.rawDate);
+
+    reason.target.history.push(lastRecord)
+
+    let successRecord =
+      reason.name + ' moved ' +
+      reason.target.name() + ' to reserve on ' +
+      config.formatDate(HQ.rawDate);
+
+    reason.officer.history.push(successRecord)
+
+    if (reason.byPlayer && !reason.officer.isPlayer) {
+      HQ.findPlayer().history.push(successRecord)
     }
   }
 }
