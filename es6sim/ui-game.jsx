@@ -186,6 +186,12 @@ class VInspected extends React.Component {
     };
 
     army.HQ.operations.add(spec, army.HQ);
+
+    if (!this.props.engine.running) {
+      //pass true as triggeredByUserAction
+      this.props.engine.update(true);
+      this.props.engine.updateUI(true);
+    }
   }
 
   render () {
@@ -198,6 +204,7 @@ class VInspected extends React.Component {
     var headerHTML = (!officer.isPlayer) ?
     <div>
       <VOfficer officer={ officer } engine={ engine }/>
+      <div>{ army.HQ.findUnitById(officer.unitId).name }</div>
       <VStats officer={ officer } engine={ engine }/>
       <VStaff officer={ officer } engine={ engine }/>
       <VOperations officer={ officer } engine={ engine }/>
@@ -207,6 +214,8 @@ class VInspected extends React.Component {
 
     return(
       <div className="inspected">
+        <p>{engine.army.HQ.planner.name() || 'planner'}</p>
+        <p>{engine.army.HQ.target.name() || 'target'}</p>
         <p onClick={ this.startCoup.bind(this) }>
           Coup
         </p>
