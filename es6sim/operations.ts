@@ -17,21 +17,24 @@ class Operations {
 
   add (spec: Operation, HQ: Army.HQ) {
     let o = spec.officer
-    if (o.operations.length > o.rank.hierarchy) {
-      return
-    }
 
     if (o.id === spec.target.id) return
+    if (!spec.byPlayer && o.rank.hierarchy < 5 && o.party === spec.target.party) return
+    if (o.operations.length > o.rank.hierarchy + 1) return
+
     let operation = new Operation(spec);
+
     operation.id = this.operationsID;
     this.operationsID++;
     this.active.push(operation);
-    operation.officer.militancy = operation.officer.militancy - 250;
+
     if (!spec.byPlayer) o.operations.push(operation);
+
     if (spec.byPlayer && !o.isPlayer) {
       o.operations.push(operation);
       HQ.player.operations.push(operation);
     }
+
     return operation;
   }
 
@@ -93,16 +96,12 @@ class Operation {
       this.target.intelligence +
       this.target.rank.hierarchy +
       config.random(10);
+
     var officerRoll =
       this.officer[this.type] +
       this.officer.intelligence +
       this.officer.rank.hierarchy +
       config.random(10);
-
-    // commander help if its not the commander itself against a subordinate
-    if (this.target.commander && this.target.commander.id !== this.officer.id) {
-      targetRoll += this.target.commander.rank.hierarchy
-    }
 
     if (this.target.commander && this.target.commander.party === this.target.party) {
       targetRoll += this.target.commander.rank.hierarchy

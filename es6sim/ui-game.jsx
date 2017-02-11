@@ -137,9 +137,9 @@ class VOperations extends React.Component {
 
     let operations = [];
     let html = <div><ul>{operations}</ul></div>;
-      
+
     this.props.officer.operations.forEach(operation => {
-      if (operation.turns) {
+      if (operation && operation.turns) {
         operations.push(
           <li className="operation">
             <div>{config.operationType[operation.type]} {operation.name}</div>

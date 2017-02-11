@@ -131,7 +131,10 @@ class Officer implements Army.Officer {
       this.commander.party !== this.party
     ) ? true : false;
 
-    this.militancy += (this.militant && this.militancy < this.operationDelay) ? 1 : 0;
+    this.militancy += (
+      this.militant &&
+      this.militancy < this.operationDelay
+    ) ? 1 : 0;
 
     if (this.militancy === this.operationDelay) {
       this.startOperation(HQ);
@@ -149,8 +152,11 @@ class Officer implements Army.Officer {
         !this.isPlayer &&
         !this.reserved &&
         this.operations.length <= this.rank.hierarchy &&
-        !this.targets[target.id]
+        !this.targets[target.id] &&
+        this.rank.hierarchy < target.rank.hierarchy + 2
       ) {
+        this.militancy = 0;
+
         let spec = {
           officer: this,
           target: target,
@@ -170,7 +176,7 @@ class Officer implements Army.Officer {
   chooseTarget (HQ: Army.HQ): Army.Officer[] {
     let targets = [];
     let commander = this.commander;
-    
+
     if (this.commander && this.commander.party !== this.party) {
       targets.push(commander);
     }
