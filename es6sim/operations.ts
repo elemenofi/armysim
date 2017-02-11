@@ -19,7 +19,6 @@ class Operations {
     let o = spec.officer
 
     if (o.id === spec.target.id) return
-    if (!spec.byPlayer && o.rank.hierarchy < 5 && o.party === spec.target.party) return
     if (o.operations.length > o.rank.hierarchy + 1) return
 
     let operation = new Operation(spec);

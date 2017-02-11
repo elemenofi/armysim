@@ -121,7 +121,7 @@ class Officer implements Army.Officer {
     }
   }
 
-  private operationDelay: number = 1000;
+  operationDelay: number = 500;
 
   militate (HQ: Army.HQ) {
     this.militant = (
@@ -138,24 +138,23 @@ class Officer implements Army.Officer {
 
     if (this.militancy === this.operationDelay) {
       this.startOperation(HQ);
+      this.militancy -= this.operationDelay;
     }
   }
 
   startOperation (HQ) {
     let targets = this.chooseTarget(HQ);
     if (!targets.length) return;
-
     targets.forEach((target) => {
       if (
-        this.militancy > 249 &&
         target &&
-        !this.isPlayer &&
+        // !this.isPlayer &&
         !this.reserved &&
         this.operations.length <= this.rank.hierarchy &&
         !this.targets[target.id] &&
         this.rank.hierarchy < target.rank.hierarchy + 2
       ) {
-        this.militancy = 0;
+        // this.militancy = 0;
 
         let spec = {
           officer: this,
@@ -181,13 +180,31 @@ class Officer implements Army.Officer {
       targets.push(commander);
     }
 
+    if (this.commander) {
+      let commander1 = HQ.units[commander.unitId].subunits[0].commander;
+      let commander2 = HQ.units[commander.unitId].subunits[1].commander;
+
+      if (
+        commander1.id !== this.id &&
+        (commander1.party !== this.party || commander1.experience > this.experience)
+      ) {
+        targets.push(commander1)
+      }
+      if (
+        commander2.id !== this.id &&
+        (commander2.party !== this.party || commander2.experience > this.experience)
+      ) {
+        targets.push(commander2)
+      }
+    }
+
     let allSubordinates = (HQ: Army.HQ, officer: Army.Officer, quantity: number): void => {
       if (quantity === -1) return
       if (HQ.units[officer.unitId]) {
         let commander1 = HQ.units[officer.unitId].subunits[0].commander;
         let commander2 = HQ.units[officer.unitId].subunits[1].commander;
-        targets.push(commander1)
-        targets.push(commander2)
+        if (commander1.party !== this.party) targets.push(commander1)
+        if (commander2.party !== this.party) targets.push(commander2)
         allSubordinates(HQ, commander1, commander1.rank.hierarchy - 1)
         allSubordinates(HQ, commander2, commander2.rank.hierarchy - 1)
       }
@@ -226,15 +243,11 @@ class Officer implements Army.Officer {
 
     lastRecord =
       'Retired by ' + reason.officer.name() +
-      ' in ' + reason.name + ', '
-      + config.formatDate(HQ.rawDate);
+      ' in ' + reason.name;
 
     reason.target.history.push(lastRecord)
 
-    let successRecord =
-      reason.name + ' moved ' +
-      reason.target.name() + ' to reserve on ' +
-      config.formatDate(HQ.rawDate);
+    let successRecord = reason.name;
 
     reason.officer.history.push(successRecord)
 

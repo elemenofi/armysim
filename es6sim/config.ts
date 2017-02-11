@@ -7,8 +7,8 @@ let config = {
 
   promoted (promotion) {
     let message =
-    'Promoted to ' + this.ranks[promotion.rank].title +
-    ' on ' + promotion.date + ', assigned to the ' + promotion.unit;
+    'Promoted to ' + this.ranks[promotion.rank].title;
+    // ' on ' + promotion.date + ', assigned to the ' + promotion.unit;
 
     return message;
   },

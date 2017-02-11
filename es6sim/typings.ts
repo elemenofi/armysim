@@ -61,6 +61,7 @@ declare namespace Army {
     reason: Operation;
     party: string;
     targets: number[];
+    operationDelay: number;
   }
   interface OfficerSpec {
     date?: string;
