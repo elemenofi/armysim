@@ -137,15 +137,18 @@ class VOperations extends React.Component {
 
     let operations = [];
     let html = <div><ul>{operations}</ul></div>;
+      
     this.props.officer.operations.forEach(operation => {
-      operations.push(
-        <li className="operation">
-          <div>{config.operationType[operation.type]} {operation.name}</div>
-          <div>{(operation.strength * 300)/1000} % complete</div>
-          <div>{operation.officer.name()} </div>
-          <div>{operation.target.name()} </div>
-        </li>
-      )
+      if (operation.turns) {
+        operations.push(
+          <li className="operation">
+            <div>{config.operationType[operation.type]} {operation.name}</div>
+            <div>{(operation.strength * 300)/1000} % complete</div>
+            <div>{operation.officer.name()} </div>
+            <div>{operation.target.name()} </div>
+          </li>
+        )
+      }
     })
 
     return(html)

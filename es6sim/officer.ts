@@ -192,7 +192,9 @@ class Officer implements Army.Officer {
     return targets;
   }
 
-
+  isAlly(officer: Army.Officer): boolean {
+      return this.party === officer.party
+  }
 
   reserve (HQ, reason?: Army.Operation) {
     var lastUnit = HQ.units[this.unitId]
