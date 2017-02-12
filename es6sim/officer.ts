@@ -241,9 +241,7 @@ class Officer implements Army.Officer {
 
     let lastRecord = this.history[this.history.length - 1];
 
-    lastRecord =
-      'Retired by ' + reason.officer.name() +
-      ' in ' + reason.name;
+    lastRecord = 'Retired by ' + reason.name + ', ' + HQ.realDate;
 
     reason.target.history.push(lastRecord)
 
