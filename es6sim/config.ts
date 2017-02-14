@@ -5,11 +5,9 @@ let gameLength = 30;
 
 let config = {
 
-  promoted (promotion) {
-    let message =
-    'Promoted to ' + this.ranks[promotion.rank].title;
-    // ' on ' + promotion.date + ', assigned to the ' + promotion.unit;
-
+  promoted (promotion, HQ) {
+    let message;
+    if (HQ) message = this.formatDate(HQ.rawDate) + ', promoted to ' + this.ranks[promotion.rank].title;
     return message;
   },
 

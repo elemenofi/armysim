@@ -200,8 +200,7 @@ class VInspected extends React.Component {
     let officer = this.props.officer;
     var engine = this.props.engine;
     var superior = army.HQ.findCommandingOfficer(officer)
-    var target = (army.HQ.target) ? army.HQ.target.name() : ''
-
+    var target = (army.HQ.target) ? army.HQ.target.name() : '';
     var headerHTML = (!officer.isPlayer) ?
     <div>
       <VOfficer officer={ officer } engine={ engine }/>
@@ -216,7 +215,7 @@ class VInspected extends React.Component {
     return(
       <div className="inspected">
         <p>{engine.army.HQ.planner.name() || 'planner'}</p>
-        <p>{target}</p>
+        {target}
         <p onClick={ this.startCoup.bind(this) }>
           Coup
         </p>
