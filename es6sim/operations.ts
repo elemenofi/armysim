@@ -95,11 +95,12 @@ class Operation {
   roll (officer: Army.Officer): number {
     let o = officer;
     let roll;
-    
+
     roll =
       o[this.type] +
       o.intelligence +
       o.rank.hierarchy +
+      (o.commander && o.commander.party === o.party) ? o.commander.rank.hierarchy : 0;
       config.random(10);
 
     return roll;
@@ -108,14 +109,6 @@ class Operation {
   execute (HQ: Army.HQ): void {
     var targetRoll = this.roll(this.target)
     var officerRoll = this.roll(this.officer)
-
-    if (this.target.commander && this.target.commander.party === this.target.party) {
-      targetRoll += this.target.commander.rank.hierarchy
-    }
-
-    if (this.officer.commander && this.officer.commander.party === this.officer.party) {
-      officerRoll += this.officer.commander.rank.hierarchy
-    }
 
     if ((officerRoll) > (targetRoll)) {
       this.strength++;
