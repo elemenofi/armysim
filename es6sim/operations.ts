@@ -30,6 +30,7 @@ class Operations {
     if (!spec.byPlayer) o.operations.push(operation);
 
     if (spec.byPlayer && !o.isPlayer) {
+      //add proxy operation
       o.operations.push(operation);
       HQ.player.operations.push(operation);
     }
@@ -50,6 +51,7 @@ class Operations {
       ) {
         return true;
       } else {
+        // remove proxy operation
         o.operations.splice(o.operations.indexOf(operation), 1)
         if (operation.byPlayer && !o.isPlayer) {
           HQ.player.operations.splice(HQ.player.operations.indexOf(operation), 1)
@@ -60,6 +62,7 @@ class Operations {
 
     this.active.forEach(operation => {
       if (!operation.logged && operation.byPlayer && operation.officer.isPlayer) {
+        // push only main ops to players array
         HQ.findPlayer().operations.push(operation)
         operation.logged = true;
       }
@@ -89,18 +92,22 @@ class Operation {
     this.byPlayer = spec.byPlayer;
   }
 
-  execute (HQ: Army.HQ): void {
-    var targetRoll =
-      this.target[this.type] +
-      this.target.intelligence +
-      this.target.rank.hierarchy +
+  roll (officer: Army.Officer): number {
+    let o = officer;
+    let roll;
+    
+    roll =
+      o[this.type] +
+      o.intelligence +
+      o.rank.hierarchy +
       config.random(10);
 
-    var officerRoll =
-      this.officer[this.type] +
-      this.officer.intelligence +
-      this.officer.rank.hierarchy +
-      config.random(10);
+    return roll;
+  }
+
+  execute (HQ: Army.HQ): void {
+    var targetRoll = this.roll(this.target)
+    var officerRoll = this.roll(this.officer)
 
     if (this.target.commander && this.target.commander.party === this.target.party) {
       targetRoll += this.target.commander.rank.hierarchy
