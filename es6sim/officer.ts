@@ -29,6 +29,7 @@ class Officer implements Army.Officer {
   history: string[];
   rank: Army.Rank;
   operations: Army.Operation[];
+  completed: Army.Operation[];
   unit: Army.Unit;
   commander: Army.Officer;
   traits: { base: Army.Trait };
@@ -39,6 +40,7 @@ class Officer implements Army.Officer {
   targets: number[];
   party: string;
   militant: boolean;
+  badges: any[];
 
   constructor (spec: Army.OfficerSpec, HQ: any, unitName: string) {
     let traits = new Traits();
@@ -62,6 +64,7 @@ class Officer implements Army.Officer {
     this.drift = Math.floor(Math.random() * 2) == 1 ? 1 : -1; //
 
     this.operations = [];
+    this.completed = [];
     this.history = [];
     this.targets = []
 
@@ -79,6 +82,8 @@ class Officer implements Army.Officer {
       unitName: HQ.unitName(this.unitId, unitName),
       HQ: HQ
     });
+
+    this.badges = [];
   }
 
   name () {

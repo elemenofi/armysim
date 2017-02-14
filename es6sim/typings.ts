@@ -51,6 +51,7 @@ declare namespace Army {
     history: string[];
     rank: Rank;
     operations: Operation[];
+    completed: Operation[];
     unit: Unit;
     commander: Officer;
     traits: { base: Trait };

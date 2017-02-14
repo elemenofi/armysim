@@ -17,6 +17,12 @@ ul {
   list-style-type: none;
 }
 
+.badge {
+  line-height: 3px;
+  height: 3px;
+  float: left;
+}
+
 .corp, .division, .brigade  {
   width: 50%;
   float: left;

@@ -92,6 +92,39 @@ class VStructure extends React.Component {
   }
 }
 
+class VBadges extends React.Component {
+  constructor (props) {
+    super(props);
+  }
+
+  render () {
+    let officer = this.props.officer;
+    let number = officer.operations.length;
+    function badge () {
+      return <div className="badge" style={
+          {
+            backgroundColor: getRandomColor(),
+            width: config.random(5) + 1
+          }
+        }></div>;
+    }
+    function getRandomColor() {
+      var letters = '0123456789ABCDEF';
+      var color = '#';
+      for (var i = 0; i < 6; i++ ) {
+          color += letters[Math.floor(Math.random() * 16)];
+      }
+      return color;
+    }
+
+    if (officer.badges.length < officer.completed.length * 3) {
+      officer.badges.push(badge())
+    }
+
+    return (<div style={{maxWidth: 65}}>{officer.badges}<div className="clear"> </div></div>)
+  }
+}
+
 class VPlayer extends React.Component {
   constructor (props) {
     super (props);
@@ -205,6 +238,7 @@ class VInspected extends React.Component {
     <div>
       <VOfficer officer={ officer } engine={ engine }/>
       <div>{ army.HQ.findUnitById(officer.unitId).name }</div>
+      <VBadges officer={ officer } />
       <VStats officer={ officer } engine={ engine }/>
       <VStaff officer={ officer } engine={ engine }/>
       <VOperations officer={ officer } engine={ engine }/>
