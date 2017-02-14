@@ -95,13 +95,13 @@ class Operation {
   roll (officer: Army.Officer): number {
     let o = officer;
     let roll;
-
     roll =
       o[this.type] +
       o.intelligence +
       o.rank.hierarchy +
-      (o.commander && o.commander.party === o.party) ? o.commander.rank.hierarchy : 0;
       config.random(10);
+
+    roll += (o.commander && o.commander.party === o.party) ? o.commander.rank.hierarchy : 0;
 
     return roll;
   }
