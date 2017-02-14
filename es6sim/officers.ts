@@ -87,7 +87,8 @@ class Officers implements Army.Officers {
     let candidateB = spec.HQ.units[spec.replacedCommander.unitId].subunits[1].commander
 
     candidate = (candidate.experience > candidateB.experience) ? candidate : candidateB;
-
+    // if the retirement of the previous office was because of an operation then the planner will be the promoted one if it is only
+    // one rank below
     if (spec.aggresor && !spec.aggresor.reserved && spec.replacedCommander.rank.hierarchy === spec.aggresor.rank.hierarchy + 1) {
       candidate = spec.aggresor
     }
