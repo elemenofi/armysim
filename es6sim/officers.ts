@@ -80,16 +80,18 @@ class Officers implements Army.Officers {
   }
 
   candidate (spec: ReplaceSpec) {
-    // let candidate = this.active
-    //   .filter(officer => { return officer.rank.alias === spec.rankToPromote && spec.HQ.findUnitById(officer.unitId).parentId === spec.unitId; })
-    //   .reduce((prev, curr) => (curr.experience > prev.experience) ? curr : prev);
-    let candidate = spec.HQ.units[spec.replacedCommander.unitId].subunits[0].commander
-    let candidateB = spec.HQ.units[spec.replacedCommander.unitId].subunits[1].commander
+    let parentUnit = spec.HQ.units[spec.replacedCommander.unitId]
+    let candidate = parentUnit.subunits[0].commander
+    let candidateB = parentUnit.subunits[1].commander
 
     candidate = (candidate.experience > candidateB.experience) ? candidate : candidateB;
     // if the retirement of the previous office was because of an operation then the planner will be the promoted one if it is only
     // one rank below
-    if (spec.aggresor && !spec.aggresor.reserved && spec.replacedCommander.rank.hierarchy === spec.aggresor.rank.hierarchy + 1) {
+    if (
+      spec.aggresor &&
+      !spec.aggresor.reserved &&
+      spec.replacedCommander.rank.hierarchy === spec.aggresor.rank.hierarchy + 1
+    ) {
       candidate = spec.aggresor
     }
     return this.promote(candidate, spec);

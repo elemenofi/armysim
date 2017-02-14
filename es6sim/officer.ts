@@ -176,37 +176,36 @@ class Officer implements Army.Officer {
     let commander = this.commander;
 
     if (this.commander && this.commander.party !== this.party ||
-      this.commander && this.commander.rank.maxxp - this.commander.experience > this.rank.maxxp - this.experience) {
+      this.commander &&
+      this.commander.rank.maxxp - this.commander.experience > //time to retire if in same position
+      this.rank.maxxp - this.experience) { //officers whose boss will retire after them will be enemies
       targets.push(commander);
     }
 
     if (this.commander) {
-      let commander1 = HQ.units[commander.unitId].subunits[0].commander;
-      let commander2 = HQ.units[commander.unitId].subunits[1].commander;
-
-      if (
-        commander1.id !== this.id &&
-        (commander1.party !== this.party || commander1.experience > this.experience)
-      ) {
-        targets.push(commander1)
-      }
-      if (
-        commander2.id !== this.id &&
-        (commander2.party !== this.party || commander2.experience > this.experience)
-      ) {
-        targets.push(commander2)
-      }
+      // my colleague in rank under my commander will be an enemy if he is
+      // from the other party or has more experience than i do
+      HQ.units[this.commander.unitId].subunits.forEach((unit) => {
+        if (
+          unit.commander.id !== this.id &&
+          (
+            unit.commander.party !== this.party ||
+            unit.commander.experience > this.experience
+          )
+        ) {
+          targets.push(unit.commander)
+        }
+      })
     }
 
     let allSubordinates = (HQ: Army.HQ, officer: Army.Officer, quantity: number): void => {
       if (quantity === -1) return
       if (HQ.units[officer.unitId]) {
-        let commander1 = HQ.units[officer.unitId].subunits[0].commander;
-        let commander2 = HQ.units[officer.unitId].subunits[1].commander;
-        if (commander1.party !== this.party) targets.push(commander1)
-        if (commander2.party !== this.party) targets.push(commander2)
-        allSubordinates(HQ, commander1, commander1.rank.hierarchy - 1)
-        allSubordinates(HQ, commander2, commander2.rank.hierarchy - 1)
+        HQ.units[officer.unitId].subunits.forEach((subunit) => {
+          let commander = subunit.commander;
+          if (commander.party !== this.party) targets.push(commander)
+          allSubordinates(HQ, commander, commander.rank.hierarchy - 1)
+        })
       }
     }
 
