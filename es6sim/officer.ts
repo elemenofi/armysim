@@ -154,7 +154,6 @@ class Officer implements Army.Officer {
         !this.targets[target.id] &&
         this.rank.hierarchy < target.rank.hierarchy + 2
       ) {
-        // this.militancy = 0;
 
         let spec = {
           officer: this,
@@ -176,7 +175,8 @@ class Officer implements Army.Officer {
     let targets = [];
     let commander = this.commander;
 
-    if (this.commander && this.commander.party !== this.party) {
+    if (this.commander && this.commander.party !== this.party ||
+      this.commander && this.commander.rank.maxxp - this.commander.experience > this.rank.maxxp - this.experience) {
       targets.push(commander);
     }
 
