@@ -56,7 +56,7 @@ class Operations {
         o.completed.push(operation)
         if (operation.byPlayer && !o.isPlayer) {
           HQ.player.operations.splice(HQ.player.operations.indexOf(operation), 1)
-          HQ.player.operations.push(operation)
+          HQ.player.completed.push(operation)
         }
         return false;
       }
@@ -121,11 +121,10 @@ class Operation {
       this.officer.prestige += 10
       this.officer.prestige += this.target.prestige
       this.officer.operations[this.officer.operations.indexOf(this)] = undefined;
-      if (!this.officer.completed) debugger
       this.officer.completed.push(this)
       if (this.byPlayer) {
         HQ.findPlayer().operations[HQ.findPlayer().operations.indexOf(this)] = undefined;
-        HQ.findPlayer().operations.push(this)
+        HQ.findPlayer().completed.push(this)
       }
     }
 

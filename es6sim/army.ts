@@ -4,23 +4,43 @@ import Unit from './unit';
 import World from './world';
 import config from './config';
 import ArmyDef from './typings'
+interface Window { army: any }
+
 
 class Army {
   HQ: ArmyDef.HQ;
   _unitsId: number;
   units: any;
   id: number;
+  command: ArmyDef.Unit;
 
   constructor () {
     this.HQ = new HQ();
 
     this._unitsId = 0;
-    this.units = {
-      corps: []
+
+    let spec = {
+      id: this._unitsId,
+      type: 'army',
+      parentId: undefined,
+      rank: undefined
     };
 
-    this.id = 0;
+    let unit: ArmyDef.Unit = {};
+    spec.parentId = undefined;
+
+    spec.rank = 'general';
+    unit = new Unit(spec, this.HQ);
+
+    unit.subunits = []
+
+    this.command = unit;
+    this.HQ.add(unit);
+
+    this._unitsId++;
+
     this.generate('corp', config.unitDepth);
+
     this.HQ.units.sort(function(a, b) {return (a.id > b.id) ? 1 : ((b.id > a.id) ? -1 : 0);} );
   }
 
@@ -37,13 +57,13 @@ class Army {
 
       let unit: ArmyDef.Unit = {};
       this._unitsId++;
-      spec.parentId = parent ? parent.id : undefined;
+      spec.parentId = parent ? parent.id : 0;
 
       switch (type) {
         case 'corp':
           spec.rank = 'lgeneral';
           unit = new Unit(spec, this.HQ);
-          this.units.corps.push(unit);
+          this.command.subunits.push(unit);
 
           this.generate('division', config.unitDepth, unit);
           this.generate('corp', quantity - 1, parent);

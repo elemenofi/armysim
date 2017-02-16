@@ -1,7 +1,7 @@
 'use strict';
 class Secretary {
 	constructor () {
-		
+
 	}
 
   rankLower(rank) {
@@ -30,6 +30,9 @@ class Secretary {
       break;
       case 'lgeneral':
         lowerRank = 'dgeneral';
+      break;
+			case 'general':
+        lowerRank = 'lgeneral';
       break;
     }
 

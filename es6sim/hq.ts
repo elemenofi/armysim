@@ -41,6 +41,7 @@ class HQ implements Army.HQ {
   update (triggeredByUserAction?: boolean) {
     if (!triggeredByUserAction) this.updateDate();
     this.units.map(this.reserve.bind(this));
+    this.reserve(window.army.command)
     this.operations.update(this);
     this.officers.update(this);
   }

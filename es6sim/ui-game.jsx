@@ -30,11 +30,12 @@ class VArmy extends React.Component {
       <div className="army">
         <p className="date" >{ army.HQ.realDate }</p>
         <div className="client">
+          <VOfficer officer={ army.command.commander } engine={ engine }/>
           <VPlayer className="player-box" player={ army.HQ.player } engine={ engine }/>
           <VInspected className="target-box" officer={ army.HQ.findInspected() } engine={ engine } />
         </div>
         <div className="clear"></div>
-        <VStructure units={ army.units.corps } engine={ engine } />
+        <VStructure units={ army.command.subunits } engine={ engine } />
       </div>
     );
   }

@@ -2,6 +2,10 @@
 
 let names = {};
 
+names.army = [
+  'National Army Headquarters'
+]
+
 names.corp = [
   '1st Corp', '2nd Corp'
 ];
@@ -111,11 +115,11 @@ names.platoon = [
   '71th Platoon', '72th Platoon', '73th Platoon',
   '74th Platoon', '75th Platoon', '76th Platoon',
   '77th Platoon', '78th Platoon', '79th Platoon',
-  '80th Platton', '81th Platoon', '82th Platoon', 
+  '80th Platton', '81th Platoon', '82th Platoon',
   '83th Platoon', '84th Platoon', '85th Platoon',
   '86th Platoon', '87th Platoon', '88th Platoon',
-  '89th Platoon', '90th Platoon', '91th Platoon', 
-  '92th Platoon', '93th Platoon', '94th Platoon', 
+  '89th Platoon', '90th Platoon', '91th Platoon',
+  '92th Platoon', '93th Platoon', '94th Platoon',
   '95th Platoon', '96th Platoon', '97th Platoon',
   '98th Platoon', '99th Platoon', '100th Platoon',
   '101th Platoon', '102th Platoon', '103th Platoon',
@@ -161,11 +165,11 @@ names.squad = [
   '71th A Squad', '72th A Squad', '73th A Squad',
   '74th A Squad', '75th A Squad', '76th A Squad',
   '77th A Squad', '78th A Squad', '79th A Squad',
-  '80th Platton', '81th A Squad', '82th A Squad', 
+  '80th Platton', '81th A Squad', '82th A Squad',
   '83th A Squad', '84th A Squad', '85th A Squad',
   '86th A Squad', '87th A Squad', '88th A Squad',
-  '89th A Squad', '90th A Squad', '91th A Squad', 
-  '92th A Squad', '93th A Squad', '94th A Squad', 
+  '89th A Squad', '90th A Squad', '91th A Squad',
+  '92th A Squad', '93th A Squad', '94th A Squad',
   '95th A Squad', '96th A Squad', '97th A Squad',
   '98th A Squad', '99th A Squad', '100th A Squad',
   '101th A Squad', '102th A Squad', '103th A Squad',
@@ -208,11 +212,11 @@ names.squad = [
   '71th B Squad', '72th B Squad', '73th B Squad',
   '74th B Squad', '75th B Squad', '76th B Squad',
   '77th B Squad', '78th B Squad', '79th B Squad',
-  '80th Platton', '81th B Squad', '82th B Squad', 
+  '80th Platton', '81th B Squad', '82th B Squad',
   '83th B Squad', '84th B Squad', '85th B Squad',
   '86th B Squad', '87th B Squad', '88th B Squad',
-  '89th B Squad', '90th B Squad', '91th B Squad', 
-  '92th B Squad', '93th B Squad', '94th B Squad', 
+  '89th B Squad', '90th B Squad', '91th B Squad',
+  '92th B Squad', '93th B Squad', '94th B Squad',
   '95th B Squad', '96th B Squad', '97th B Squad',
   '98th B Squad', '99th B Squad', '100th B Squad',
   '101th B Squad', '102th B Squad', '103th B Squad',

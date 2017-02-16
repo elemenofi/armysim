@@ -4,6 +4,9 @@ import config from './config';
 import Traits from './traits';
 import Army from './typings';
 import * as chance from './lib/chance';
+interface Window { army: any }
+declare var window: Window;
+
 
 interface Chance {
   last(): string;
@@ -89,9 +92,9 @@ class Officer implements Army.Officer {
   }
 
   name () {
-    return (!this.reserved) ?
-      this.rank.title + ' ' + this.fname + ' ' + this.lname :
-      this.rank.title + ' (R) ' + this.fname + ' ' + this.lname;
+    if (this.reserved && !this.dead) return this.rank.title + ' (R) ' + this.fname + ' ' + this.lname;
+    else if (!this.reserved) return this.rank.title + ' ' + this.fname + ' ' + this.lname;
+    else if (this.dead) return this.rank.title + ' (D) ' + this.fname + ' ' + this.lname;
   }
 
   graduate (spec: any) {
@@ -120,8 +123,9 @@ class Officer implements Army.Officer {
   }
 
   drifts (HQ: Army.HQ) {
+    let parent;
     let unit = HQ.findUnitById(this.unitId);
-    let parent = HQ.findUnitById(unit.parentId);
+    if (unit) parent = HQ.findUnitById(unit.parentId);
     if (parent) {
       this.commander = parent.commander;
     } else {
@@ -153,7 +157,7 @@ class Officer implements Army.Officer {
       this.militancy < this.operationDelay
     ) ? 1 : 0;
 
-    if (this.militancy === this.operationDelay) {
+    if (this.militancy === this.operationDelay) {      
       this.startOperation(HQ);
       this.militancy -= this.operationDelay;
     }
@@ -237,6 +241,9 @@ class Officer implements Army.Officer {
 
   reserve (HQ, reason?: Army.Operation) {
     var lastUnit = HQ.units[this.unitId]
+    if (this.rank.alias === 'general') {
+      lastUnit = window.army.command
+    }
 
     if (this.rank.hierarchy >= 4) lastUnit.reserve.unshift(this);
     if (lastUnit.reserve.length > 3) lastUnit.reserve.pop();
