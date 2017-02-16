@@ -41,6 +41,8 @@ class Officer implements Army.Officer {
   party: string;
   militant: boolean;
   badges: any[];
+  dead: boolean;
+
 
   constructor (spec: Army.OfficerSpec, HQ: any, unitName: string) {
     let traits = new Traits();
@@ -99,12 +101,22 @@ class Officer implements Army.Officer {
 
   update (HQ: Army.HQ) {
     if (this.reserved) HQ.officers.active[this.id] = undefined;
+
     this.drifts(HQ);
     this.militate(HQ);
     this.align();
 
     this.experience++;
+
     if (!this.reserved && this.experience > this.rank.maxxp) this.reserve(HQ);
+    if (this.experience > 16000) this.death(HQ);
+  }
+
+  death (HQ) {
+    if (config.random(100) === 1) {
+      this.dead = true;
+      this.reserve(HQ);
+    }
   }
 
   drifts (HQ: Army.HQ) {
@@ -231,11 +243,11 @@ class Officer implements Army.Officer {
 
     this.reserved = true;
 
-    if (!reason) {
+    if (this.dead) {
+      this.history.push(config.formatDate(HQ.rawDate) + ' buried with full Military Honors')
+    } else if (!reason) {
       this.history.push('Moved to reserve on ' + config.formatDate(HQ.rawDate));
-    }
-
-    if (reason) {
+    } else if (reason) {
       this.logRetirement(HQ, reason)
     }
   }

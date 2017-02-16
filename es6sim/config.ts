@@ -145,7 +145,7 @@ let config = {
       title: 'General',
       alias: 'general',
       startxp: 180 * gameLength,
-      maxxp: 440 * gameLength,
+      maxxp: 1000000 * gameLength,
       startpr: 900
     }
   }
