@@ -33,6 +33,7 @@ class VArmy extends React.Component {
           <VOfficer officer={ army.command.commander } engine={ engine }/>
           <VPlayer className="player-box" player={ army.HQ.player } engine={ engine }/>
           <VInspected className="target-box" officer={ army.HQ.findInspected() } engine={ engine } />
+          <VOperation className="target-box" operation={ army.HQ.inspectedOperation } engine={ engine } />
         </div>
         <div className="clear"></div>
         <VStructure units={ army.command.subunits } engine={ engine } />
@@ -158,6 +159,31 @@ class VPlayer extends React.Component {
   }
 }
 
+class VOperation extends React.Component {
+  constructor (props) {
+    super(props);
+    this.state = {
+      operation: this.props.operation,
+      engine: this.props.engine
+    }
+  }
+
+  render () {
+    if (!this.props.operation) return (<div></div>)
+    let op = this.props.operation;
+    
+    let operation = <div>
+      <div>{op.name}</div>
+      <div>{op.officer.name()}</div>
+      <div>{op.target.name()}</div>
+    </div>
+
+    return (
+      <div>{operation}</div>
+    )
+  }
+}
+
 class VOperations extends React.Component {
   constructor (props) {
     super(props);
@@ -166,6 +192,11 @@ class VOperations extends React.Component {
       engine: this.props.engine
     }
   }
+
+  inspectOperation (operation) {
+    this.props.engine.army.HQ.inspectedOperation = operation
+  }
+
   render () {
     if (!this.props.officer || !this.props.officer.operations.length) return(<div></div>);
 
@@ -175,7 +206,7 @@ class VOperations extends React.Component {
     this.props.officer.operations.forEach(operation => {
       if (operation && operation.turns) {
         operations.push(
-          <li className="operation">
+          <li onClick={this.inspectOperation.call(this, operation)} className="operation">
             <div>{config.operationType[operation.type]} {operation.name}</div>
             <div>{(operation.strength * 300)/1000} % complete</div>
             <div>{operation.officer.name()} </div>
