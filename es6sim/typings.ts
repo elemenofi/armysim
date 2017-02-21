@@ -49,7 +49,7 @@ declare namespace Army {
     alignment: number;
     militancy: number;
     drift: number;
-    history: {events: string[], reason: Army.Operation};
+    history: {events: string[], reason?: Army.Operation};
     rank: Rank;
     operations: Operation[];
     completed: Operation[];

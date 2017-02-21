@@ -29,7 +29,7 @@ class Officer implements Army.Officer {
   alignment: number;
   militancy: number;
   drift: number;
-  history: string[];
+  history: {events: string[], reason?: Army.Operation};
   rank: Army.Rank;
   operations: Army.Operation[];
   completed: Army.Operation[];
@@ -70,7 +70,9 @@ class Officer implements Army.Officer {
 
     this.operations = [];
     this.completed = [];
-    this.history = [];
+    this.history = {
+      events: []
+    }
     this.targets = []
 
     this.chance = chance(Math.random);
@@ -99,7 +101,7 @@ class Officer implements Army.Officer {
 
   graduate (spec: any) {
     let graduation = { unit: spec.unitName, date: spec.date };
-    this.history.push(config.graduated(graduation, this));
+    this.history.events.push(config.graduated(graduation, this));
   }
 
   update (HQ: Army.HQ) {
@@ -251,9 +253,9 @@ class Officer implements Army.Officer {
     this.reserved = true;
 
     if (this.dead) {
-      this.history.push(config.formatDate(HQ.rawDate) + ' buried with full Military Honors')
+      this.history.events.push(config.formatDate(HQ.rawDate) + ' buried with full Military Honors')
     } else if (!reason) {
-      this.history.push('Moved to reserve on ' + config.formatDate(HQ.rawDate));
+      this.history.events.push('Moved to reserve on ' + config.formatDate(HQ.rawDate));
     } else if (reason) {
       this.logRetirement(HQ, reason)
     }
@@ -264,18 +266,18 @@ class Officer implements Army.Officer {
 
     this.reason = reason;
 
-    let lastRecord = this.history[this.history.length - 1];
+    let lastRecord = this.history.events[this.history.events.length - 1];
 
     lastRecord = 'Retired by ' + reason.name + ', ' + HQ.realDate;
 
-    reason.target.history.push(lastRecord)
+    reason.target.history.events.push(lastRecord)
 
     let successRecord = reason.name;
 
-    reason.officer.history.push(successRecord)
+    reason.officer.history.events.push(successRecord)
 
     if (reason.byPlayer && !reason.officer.isPlayer) {
-      HQ.findPlayer().history.push(successRecord)
+      HQ.findPlayer().history.events.push(successRecord)
     }
   }
 }

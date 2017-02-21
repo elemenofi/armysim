@@ -26,6 +26,7 @@ class VArmy extends React.Component {
 
     var army = this.props.engine.army;
     var engine = this.state.engine;
+    if (army.HQ.inspectedOperation) console.log(army.HQ.inspectedOperation)
     return(
       <div className="army">
         <p className="date" >{ army.HQ.realDate }</p>
@@ -224,24 +225,6 @@ class VOperations extends React.Component {
   }
 }
 
-class VReason extends React.Component {
-  constructor (props) {
-    super(props);
-    this.state = {
-      officer: this.props.officer,
-      engine: this.props.engine
-    }
-  }
-  render () {
-    if (!this.props.officer.reason) return (<div></div>)
-    let r = this.props.officer.reason;
-    
-    return (<div>
-      {reason}
-    </div>)
-  }
-}
-
 class VInspected extends React.Component {
   constructor (props) {
     super(props);
@@ -295,7 +278,6 @@ class VInspected extends React.Component {
       <VBadges officer={ officer } />
       <VStats officer={ officer } engine={ engine }/>
       <VStaff officer={ officer } engine={ engine }/>
-      <VReason officer={ officer } engine={ engine }/>
       <VOperations officer={ officer } engine={ engine }/>
     </div> :
     <div></div>;
@@ -438,7 +420,7 @@ class VHistory extends React.Component {
     var history = [];
 
     if (this.props.officer) {
-      this.props.officer.history.forEach((event) => {
+      this.props.officer.history.events.forEach((event) => {
         history.push(<li className="log">{ event }</li>)
       })
       // if (!this.props.officer.reserved) history = history.slice(0, 2)
