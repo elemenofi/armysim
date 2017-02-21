@@ -29,6 +29,7 @@ declare namespace Army {
     turns: number;
     byPlayer: boolean;
     logged: boolean;
+    completed: string;
   }
   interface Officer extends OfficerSpec {
     date?: string;
@@ -48,7 +49,7 @@ declare namespace Army {
     alignment: number;
     militancy: number;
     drift: number;
-    history: string[];
+    history: {events: string[], reason: Army.Operation};
     rank: Rank;
     operations: Operation[];
     completed: Operation[];

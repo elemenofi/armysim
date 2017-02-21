@@ -171,11 +171,15 @@ class VOperation extends React.Component {
   render () {
     if (!this.props.operation) return (<div></div>)
     let op = this.props.operation;
-    
+
     let operation = <div>
       <div>{op.name}</div>
-      <div>{op.officer.name()}</div>
-      <div>{op.target.name()}</div>
+      <div><VOfficer officer={op.officer} engine={this.props.engine}/></div>
+      <div><VOfficer officer={op.target} engine={this.props.engine}/></div>
+      <div>{op.completed}</div>
+      <div>{config.operationType[op.type]} {op.name}</div>
+      <div>{(op.strength * 300)/1000} % complete</div>
+
     </div>
 
     return (
@@ -217,6 +221,24 @@ class VOperations extends React.Component {
     })
 
     return(html)
+  }
+}
+
+class VReason extends React.Component {
+  constructor (props) {
+    super(props);
+    this.state = {
+      officer: this.props.officer,
+      engine: this.props.engine
+    }
+  }
+  render () {
+    if (!this.props.officer.reason) return (<div></div>)
+    let r = this.props.officer.reason;
+    
+    return (<div>
+      {reason}
+    </div>)
   }
 }
 
@@ -273,6 +295,7 @@ class VInspected extends React.Component {
       <VBadges officer={ officer } />
       <VStats officer={ officer } engine={ engine }/>
       <VStaff officer={ officer } engine={ engine }/>
+      <VReason officer={ officer } engine={ engine }/>
       <VOperations officer={ officer } engine={ engine }/>
     </div> :
     <div></div>;

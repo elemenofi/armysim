@@ -157,7 +157,7 @@ class Officer implements Army.Officer {
       this.militancy < this.operationDelay
     ) ? 1 : 0;
 
-    if (this.militancy === this.operationDelay) {      
+    if (this.militancy === this.operationDelay) {
       this.startOperation(HQ);
       this.militancy -= this.operationDelay;
     }
@@ -260,6 +260,8 @@ class Officer implements Army.Officer {
   }
 
   logRetirement (HQ: Army.HQ, reason: Army.Operation) {
+    reason.completed = config.formatDate(HQ.rawDate)
+
     this.reason = reason;
 
     let lastRecord = this.history[this.history.length - 1];
