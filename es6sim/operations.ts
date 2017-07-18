@@ -83,6 +83,7 @@ class Operation {
   turns: number;
   logged: boolean;
   byPlayer: boolean;
+  completed: string;
 
   constructor (spec) {
     this.officer = spec.officer;

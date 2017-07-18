@@ -26,7 +26,6 @@ class VArmy extends React.Component {
 
     var army = this.props.engine.army;
     var engine = this.state.engine;
-    if (army.HQ.inspectedOperation) console.log(army.HQ.inspectedOperation)
     return(
       <div className="army">
         <p className="date" >{ army.HQ.realDate }</p>
@@ -211,7 +210,7 @@ class VOperations extends React.Component {
     this.props.officer.operations.forEach(operation => {
       if (operation && operation.turns) {
         operations.push(
-          <li onClick={this.inspectOperation.call(this, operation)} className="operation">
+          <li onClick={this.inspectOperation.bind(this, operation)} className="operation">
             <div>{config.operationType[operation.type]} {operation.name}</div>
             <div>{(operation.strength * 300)/1000} % complete</div>
             <div>{operation.officer.name()} </div>

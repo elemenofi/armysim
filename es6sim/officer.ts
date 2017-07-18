@@ -268,16 +268,14 @@ class Officer implements Army.Officer {
 
     let lastRecord = this.history.events[this.history.events.length - 1];
 
-    lastRecord = 'Retired by ' + reason.name + ', ' + HQ.realDate;
+    lastRecord = HQ.realDate + ', retired by ' + reason.name + ', directed by ' + reason.officer.name()
 
     reason.target.history.events.push(lastRecord)
 
-    let successRecord = reason.name;
-
-    reason.officer.history.events.push(successRecord)
+    reason.officer.history.events.push(reason.name)
 
     if (reason.byPlayer && !reason.officer.isPlayer) {
-      HQ.findPlayer().history.events.push(successRecord)
+      HQ.findPlayer().history.events.push(reason.name)
     }
   }
 }
