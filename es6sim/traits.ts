@@ -1,6 +1,16 @@
 'use strict';
 
-class Traits {
+export interface Trait {
+  name: string;
+  area: string;
+  school: string;
+  intelligence: number;
+  commanding: number;
+  diplomacy: number;
+}
+
+export class Traits {
+  base: Trait[]
   constructor() {
     this.base = [
       {

@@ -42,6 +42,8 @@ class World {
         }
       }
     });
+
+    console.log(HQ.units)
   }
 }
 

@@ -1,23 +1,18 @@
-'use strict';
-// import {} from './lib/chance';
-// let chance = new Chance();
 import * as chance from './lib/chance';
+import Unit from './unit'
 
 interface Chance {
   last(): string;
-  first(o: Army.FirstNameSpec): string
+  first(o: Object): string
   city(): string;
 }
-
-import Army from './typings'
 
 class Region {
   id: number;
   name: string;
-  units: Army.Unit[];
+  units: Unit[];
   chance: Chance;
   constructor (id) {
-    this.chance = chance(Math.random);
     this.id = id;
     this.chance = chance(Math.random)
     this.name = this.chance.city();

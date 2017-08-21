@@ -1,12 +1,14 @@
 'use strict';
 import config from './config';
-import Army from './typings';
+import Officer from './officer';
+import HQ from './HQ'
+import Operation from './operation'
 
 interface Window { army: any }
 
 declare var window: Window;
 
-class Operations {
+export class Operations {
   operationsID: number;
   active: Operation[];
 
@@ -15,7 +17,7 @@ class Operations {
     this.active = [];
   }
 
-  add (spec: Operation, HQ: Army.HQ) {
+  add (spec: Operation, HQ: HQ) {
     let o = spec.officer
 
     if (o.id === spec.target.id) return
@@ -70,66 +72,6 @@ class Operations {
       }
       operation.execute(HQ);
     });
-  }
-}
-
-class Operation {
-  id: number;
-  officer: Army.Officer;
-  target: Army.Officer;
-  type: string;
-  name: string;
-  strength: number;
-  turns: number;
-  logged: boolean;
-  byPlayer: boolean;
-  completed: string;
-
-  constructor (spec) {
-    this.officer = spec.officer;
-    this.target = spec.target;
-    this.type = spec.type;
-    this.name = spec.name;
-    this.strength = 0;
-    this.turns = 1000;
-    this.byPlayer = spec.byPlayer;
-  }
-
-  roll (officer: Army.Officer): number {
-    let o = officer;
-    let roll;
-    roll =
-      o[this.type] +
-      o.intelligence +
-      o.rank.hierarchy +
-      config.random(10);
-
-    roll += (o.commander && o.commander.party === o.party) ? o.commander.rank.hierarchy : 0;
-
-    return roll;
-  }
-
-  execute (HQ: Army.HQ): void {
-    var targetRoll = this.roll(this.target)
-    var officerRoll = this.roll(this.officer)
-
-    if ((officerRoll) > (targetRoll)) {
-      this.strength++;
-    }
-
-    if (this.strength >= 300) {
-      this.target.reserve(HQ, this)
-      this.officer.prestige += 10
-      this.officer.prestige += this.target.prestige
-      this.officer.operations[this.officer.operations.indexOf(this)] = undefined;
-      this.officer.completed.push(this)
-      if (this.byPlayer) {
-        HQ.findPlayer().operations[HQ.findPlayer().operations.indexOf(this)] = undefined;
-        HQ.findPlayer().completed.push(this)
-      }
-    }
-
-    this.turns--;
   }
 }
 

@@ -1,20 +1,30 @@
 /* global Chance */
 'use strict';
 import config from './config';
-import Traits from './traits';
-import Army from './typings';
+import {Traits, Trait} from './traits';
 import * as chance from './lib/chance';
-interface Window { army: any }
+import Operation from './operation';
+import Unit from './unit';
+import HQ from './HQ'
+interface Window { army: any, command: any }
 declare var window: Window;
-
 
 interface Chance {
   last(): string;
-  first(o: Army.FirstNameSpec): string
+  first(o: Object): string
   word(l: number): string;
 }
 
-class Officer implements Army.Officer {
+export interface Rank {
+  hierarchy: number;
+  title: string;
+  alias: string;
+  startxp: number;
+  maxxp: number;
+  startpr: number;
+}
+
+export class Officer implements Officer {
   lname: string;
   fname: string;
   id: number;
@@ -29,16 +39,17 @@ class Officer implements Army.Officer {
   alignment: number;
   militancy: number;
   drift: number;
-  history: {events: string[], reason?: Army.Operation};
-  rank: Army.Rank;
-  operations: Army.Operation[];
-  completed: Army.Operation[];
-  unit: Army.Unit;
-  commander: Army.Officer;
-  traits: { base: Army.Trait };
+  history: {events: string[], reason?: Operation};
+  rank: Rank;
+  rankName: string;
+  operations: Operation[];
+  completed: Operation[];
+  unit: Unit;
+  commander: Officer;
+  traits: { base: Trait };
   chance: any;
   couped: boolean;
-  reason: Army.Operation;
+  reason: Operation;
   includes: boolean;
   targets: number[];
   party: string;
@@ -47,7 +58,7 @@ class Officer implements Army.Officer {
   dead: boolean;
 
 
-  constructor (spec: Army.OfficerSpec, HQ: any, unitName: string) {
+  constructor (spec: Partial<Officer>, HQ: any, unitName: string) {
     let traits = new Traits();
     this.id = spec.id;
     this.isPlayer = spec.isPlayer;
@@ -104,7 +115,7 @@ class Officer implements Army.Officer {
     this.history.events.push(config.graduated(graduation, this));
   }
 
-  update (HQ: Army.HQ) {
+  update (HQ: HQ) {
     if (this.reserved) HQ.officers.active[this.id] = undefined;
 
     this.drifts(HQ);
@@ -124,7 +135,7 @@ class Officer implements Army.Officer {
     }
   }
 
-  drifts (HQ: Army.HQ) {
+  drifts (HQ: HQ) {
     let parent;
     let unit = HQ.findUnitById(this.unitId);
     if (unit) parent = HQ.findUnitById(unit.parentId);
@@ -146,7 +157,7 @@ class Officer implements Army.Officer {
 
   operationDelay: number = 500;
 
-  militate (HQ: Army.HQ) {
+  militate (HQ: HQ) {
     this.militant = (
       this.alignment > 9000 ||
       this.alignment < 1000 ||
@@ -194,7 +205,7 @@ class Officer implements Army.Officer {
     })
   }
 
-  chooseTarget (HQ: Army.HQ): Army.Officer[] {
+  chooseTarget (HQ: HQ): Officer[] {
     let targets = [];
     let commander = this.commander;
 
@@ -221,7 +232,7 @@ class Officer implements Army.Officer {
       })
     }
 
-    let allSubordinates = (HQ: Army.HQ, officer: Army.Officer, quantity: number): void => {
+    let allSubordinates = (HQ: HQ, officer: Officer, quantity: number): void => {
       if (quantity === -1) return
       if (HQ.units[officer.unitId]) {
         HQ.units[officer.unitId].subunits.forEach((subunit) => {
@@ -237,11 +248,11 @@ class Officer implements Army.Officer {
     return targets;
   }
 
-  isAlly(officer: Army.Officer): boolean {
+  isAlly(officer: Officer): boolean {
       return this.party === officer.party
   }
 
-  reserve (HQ, reason?: Army.Operation) {
+  reserve (HQ, reason?: Operation) {
     var lastUnit = HQ.units[this.unitId]
     if (this.rank.alias === 'general') {
       lastUnit = window.army.command
@@ -261,7 +272,7 @@ class Officer implements Army.Officer {
     }
   }
 
-  logRetirement (HQ: Army.HQ, reason: Army.Operation) {
+  logRetirement (HQ: HQ, reason: Operation) {
     reason.completed = config.formatDate(HQ.rawDate)
 
     this.reason = reason;

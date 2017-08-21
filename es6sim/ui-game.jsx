@@ -1,5 +1,3 @@
-// import * as React from './lib/react'
-import Army from './typings';
 import config from './config';
 
 class VUi extends React.Component {
@@ -23,9 +21,9 @@ class VArmy extends React.Component {
   }
 
   render () {
-
     var army = this.props.engine.army;
     var engine = this.state.engine;
+
     return(
       <div className="army">
         <p className="date" >{ army.HQ.realDate }</p>
@@ -45,6 +43,7 @@ class VArmy extends React.Component {
 class VStructure extends React.Component {
   props;
   state;
+
   constructor (props) {
     super (props);
     this.state = {

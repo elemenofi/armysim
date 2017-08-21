@@ -1,29 +1,30 @@
 'use strict';
 import config from './config';
-import Officer from './officer';
+import {Officer, Rank} from './officer';
+import HQ from './HQ'
+import Operation from './operations'
 import Secretary from './secretary';
 import Player from './player';
-import Army from './typings';
 
 interface ReplaceSpec {
-  aggresor?: Army.Officer;
-  replacedCommander: Army.Officer;
+  aggresor?: Officer;
+  replacedCommander: Officer;
   unitId: number;
-  rank: Army.Rank;
+  rank: string;
   rankToPromote: string;
-  HQ: Army.HQ;
+  HQ: HQ;
 }
 
-class Officers implements Army.Officers {
+class Officers implements Officers {
   realDate: string;
   active: Officer[];
   pool: Officer[];
-  officers: Army.Officers;
+  officers: Officers;
   inspected: Officer;
   __officersID: number;
-  secretary: Army.Secretary;
+  secretary: Secretary;
   player: Officer;
-  operations: Army.Operation[];
+  operations: Operation[];
 
   constructor () {
     this.pool = [];
@@ -36,47 +37,6 @@ class Officers implements Army.Officers {
 
   update (HQ) {
     this.active.forEach(officer => { if (officer) officer.update(HQ); });
-  }
-
-  recruit (rank: string, unitId: number, isPlayer: boolean, unitName: string) {
-    let options = {
-      date: this.realDate,
-      id: this.officers.__officersID,
-      unitId: unitId,
-      rankName: rank
-    };
-
-    let cadet = (isPlayer) ? new Player(options, this, unitName) : new Officer(options, this, unitName);
-
-    if (isPlayer) this.player = cadet;
-
-    this.officers.active[cadet.id] = cadet;
-    this.officers.pool.push(cadet);
-    this.officers.__officersID++;
-    return cadet;
-  }
-
-  replace (replacedCommander: Army.Officer) {
-    let lowerRank = this.officers.secretary.rankLower(replacedCommander.rank);
-
-    let spec = {
-      aggresor: (replacedCommander.reason) ? replacedCommander.reason.officer : undefined,
-      replacedCommander: replacedCommander,
-      unitId: replacedCommander.unitId,
-      rank: replacedCommander.rank.alias,
-      rankToPromote: lowerRank,
-      HQ: this
-    };
-
-    if (lowerRank) {
-      return this.officers.candidate(spec);
-    } else {
-      return this.officers.recruit.call(this, spec.rank, replacedCommander.unitId);
-    }
-  }
-
-  replaceForPlayer (replacedCommander: Army.Officer) {
-    return this.officers.recruit.call(this, 'lieutenant', replacedCommander.unitId, true);
   }
 
   candidate (spec: ReplaceSpec) {
@@ -97,7 +57,7 @@ class Officers implements Army.Officers {
     return this.promote(candidate, spec);
   }
 
-  promote (officer: Army.Officer, spec: any) {
+  promote (officer: Officer, spec: any) {
     spec.HQ.deassign(officer.unitId);
     let promotion = this.promotion(officer, spec);
     officer.history.events.push(config.promoted(promotion, spec.HQ));
@@ -106,7 +66,7 @@ class Officers implements Army.Officers {
     return officer;
   }
 
-  promotion (officer: Army.Officer, spec: any) {
+  promotion (officer: Officer, spec: any) {
     officer.unitId = spec.unitId;
     officer.rank = config.ranks[spec.rank];
 

@@ -1,17 +1,15 @@
 'use strict';
 import HQ from './hq';
 import Unit from './unit';
-import World from './world';
 import config from './config';
-import ArmyDef from './typings'
+import World from './world'
 interface Window { army: any }
 
-
 class Army {
-  HQ: ArmyDef.HQ;
+  HQ: HQ;
   _unitsId: number;
   units: any;
-  command: ArmyDef.Unit;
+  command: Unit;
 
   constructor () {
     this.HQ = new HQ();
@@ -27,7 +25,7 @@ class Army {
 
     spec.parentId = undefined;
     spec.rank = 'general';
-    let unit: ArmyDef.Unit = {};
+    let unit: Unit = {} as any;
     unit = new Unit(spec, this.HQ);
 
     unit.subunits = []
@@ -40,6 +38,8 @@ class Army {
     this.generate('corp', config.unitDepth);
 
     this.HQ.units.sort(function(a, b) {return (a.id > b.id) ? 1 : ((b.id > a.id) ? -1 : 0);} );
+
+    this.HQ.world = new World(this.HQ);
   }
 
   generate (type, quantity, parent?) {
@@ -53,7 +53,7 @@ class Army {
         rank: undefined
       };
 
-      let unit: ArmyDef.Unit = {};
+      let unit: Unit = {} as any;
       this._unitsId++;
       spec.parentId = parent ? parent.id : 0;
 

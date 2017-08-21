@@ -1,17 +1,18 @@
 'use strict';
 import names from './names';
-import Army from './typings'
+import Officer from './officer';
+import HQ from './HQ'
 
-class Unit implements Army.Unit {
+class Unit {
   id: number;
   parentId: number;
   type: string;
   name: string;
-  subunits?: Army.Unit[];
-  reserve: Army.Officer[];
-  commander: Army.Officer;
+  subunits?: Unit[];
+  reserve: Officer[];
+  commander: Officer;
 
-  constructor (spec: any, HQ: Army.HQ) {
+  constructor (spec: any, HQ: HQ) {
     this.id = spec.id;
     this.parentId = spec.parentId;
     this.type = spec.type;
@@ -19,7 +20,7 @@ class Unit implements Army.Unit {
     names[spec.type].shift();
     this.reserve = [];
     this.subunits = [];
-    this.commander = HQ.officers.recruit.call(HQ, spec.rank, this.id, false, this.name);
+    this.commander = HQ.recruit(spec.rank, this.id, false, this.name);
   }
 }
 

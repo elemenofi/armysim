@@ -5,29 +5,31 @@ import config from './config';
 import Operations from './operations';
 import World from './world';
 import Officers from './officers';
-import Army from './typings';
+import Officer from './officer';
+import Player from './player';
+import Unit from './unit';
 
-interface Window { army: any }
+interface Window { army: any, engine: any, command: any }
 
 declare var window: Window;
 
-class HQ implements Army.HQ {
+export class HQ implements HQ {
   rawDate: any;
-  officers: Army.Officers;
-  operations: Army.Operations;
-  units: Army.Unit[];
+  officers: Officers;
+  operations: Operations;
+  units: Unit[];
   realDate: string;
-  player: Army.Officer;
-  world: any;
-  target: Army.Officer;
-  planner: Army.Officer;
+  player: Officer;
+  world: World;
+  target: Officer;
+  planner: Officer;
 
   constructor () {
     this.operations = new Operations();
     this.rawDate = moment();
     this.units = [] as any;
     this.officers = new Officers();
-    this.world = new World(this);
+    this.world = undefined;
   }
 
   updateDate () {
@@ -50,7 +52,7 @@ class HQ implements Army.HQ {
     let squads = this.findUnitsByType('squad');
     let unit = squads[config.random(squads.length) + 1];
     unit.commander.reserved = true;
-    unit.commander = this.officers.replaceForPlayer.call(this, unit.commander);
+    unit.commander = this.replaceForPlayer(unit.commander);
     this.player = unit.commander;
     this.planner = this.player;
   }
@@ -65,11 +67,11 @@ class HQ implements Army.HQ {
     return this.units.filter(unit => { return unit.type === type; });
   }
 
-  findUnitById (id: number): Army.Unit {
+  findUnitById (id: number): Unit {
     return this.units[id];
   }
 
-  findCommandingOfficer (officer: Army.Officer): any {
+  findCommandingOfficer (officer: Officer): any {
     return (officer.commander) ? officer.commander : { name: () => { return 'No name' } };
   }
 
@@ -100,15 +102,15 @@ class HQ implements Army.HQ {
     return officer;
   }
 
-  findOperationalStaff (officer: Army.Officer, self?: boolean) {
-    var operationalStaff: Army.Officer[] = [];
+  findOperationalStaff (officer: Officer, self?: boolean) {
+    var operationalStaff: Officer[] = [];
     operationalStaff = operationalStaff.concat(this.findSubordinates(officer));
     if (this.findPlayer() && self) operationalStaff.push(this.findPlayer())
     return operationalStaff;
   }
 
-  findSubordinates (officer: Army.Officer) {
-    var subordinates: Army.Officer[] = [];
+  findSubordinates (officer: Officer) {
+    var subordinates: Officer[] = [];
     var unit = this.units.filter(unit => { return unit.id === officer.unitId;})[0];
     if (unit && unit.subunits) unit.subunits.forEach(subunit => {
       subordinates.push(subunit.commander);
@@ -120,23 +122,64 @@ class HQ implements Army.HQ {
     return this.officers.inspected;
   }
 
-  add (unit: Army.Unit) {
+  add (unit: Unit) {
     this.units.push(unit);
   }
 
-  reserve (unit: Army.Unit) {
+  reserve (unit: Unit) {
     if (unit.commander.reserved) this.replace(unit);
   }
 
-  replace (unit: Army.Unit) {
-    unit.commander = this.officers.replace.call(this, unit.commander);
+  replace (unit: Unit) {
+    unit.commander = this.replaceOfficer(unit.commander);
+  }
+
+  replaceOfficer (replacedCommander: Officer) {
+    let lowerRank = this.officers.secretary.rankLower(replacedCommander.rank);
+
+    let spec = {
+      aggresor: (replacedCommander.reason) ? replacedCommander.reason.officer : undefined,
+      replacedCommander: replacedCommander,
+      unitId: replacedCommander.unitId,
+      rank: replacedCommander.rank.alias,
+      rankToPromote: lowerRank,
+      HQ: this
+    };
+
+    if (lowerRank) {
+      return this.officers.candidate(spec);
+    } else {
+      return this.recruit(spec.rank, replacedCommander.unitId);
+    }
+  }
+
+  replaceForPlayer (replacedCommander: Officer) {
+    return this.recruit('lieutenant', replacedCommander.unitId, true);
+  }
+
+  recruit (rank: string, unitId: number, isPlayer?: boolean, unitName?: string) {
+    let options = {
+      date: this.realDate,
+      id: this.officers.__officersID,
+      unitId: unitId,
+      rankName: rank
+    };
+
+    let cadet = (isPlayer) ? new Player(options, this, unitName) : new Officer(options, this, unitName);
+
+    if (isPlayer) this.player = cadet;
+
+    this.officers.active[cadet.id] = cadet;
+    this.officers.pool.push(cadet);
+    this.officers.__officersID++;
+    return cadet;
   }
 
   deassign (id: number) {
     this.replace(this.units.filter(unit => { return unit.id === id; })[0]);
   }
 
-  inspect (officer: Army.Officer) {
+  inspect (officer: Officer) {
     this.officers.inspected = officer;
   }
 
