@@ -11,7 +11,6 @@ class Army {
   HQ: ArmyDef.HQ;
   _unitsId: number;
   units: any;
-  id: number;
   command: ArmyDef.Unit;
 
   constructor () {
@@ -26,10 +25,9 @@ class Army {
       rank: undefined
     };
 
-    let unit: ArmyDef.Unit = {};
     spec.parentId = undefined;
-
     spec.rank = 'general';
+    let unit: ArmyDef.Unit = {};
     unit = new Unit(spec, this.HQ);
 
     unit.subunits = []

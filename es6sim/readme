@@ -1,5 +1,41 @@
-The game centers in the peace time hierarchical structure of an army.
-The goal is to reach the highest possible rank and become the most prestigious commander in the army's history.
-There are two attributes contributing to the effectiveness of an officer: commanding and intelligence.
-Prestige determines the seniority of equal rank officers.
-Operations basically represent the way in which the player interacts with the world.
+1. The Dirty War
+
+This is a RPG game in which you find yourself starting a military career in a fictional 
+nation within the political climate of the 1960’s/70’s. The objective is to become Commander in Chief.
+
+The focus of the game is to simulate the internal conflict within an army in which 
+different factions plot against each other to accumulate as much power as possible.
+External factors are simplified and streamlined to narrow gameplay to the world of 
+military progression through diplomacy and intrigue. Conventional military engagements 
+are a last resort and often the worst possible outcome.
+
+2. Officers
+
+Officers are the core element of the game. Each officer has a set of attributes and 
+traits that defines their motivations and the way they interact with the rest. 
+
+3. Actions and Events
+
+Actions and events move the game forward. Sometimes an action triggers an event or 
+sometimes an event gives the opportunity to take an action. Some actions are only 
+available to the player and some are only available to the NPCs.
+
+4. Attributes
+
+Diplomacy: Determines the effectiveness of the officer at creating relationships.
+Intrigue: Determines the effectiveness of the officer at plotting and scheming.
+Administration: Determines the effectiveness of the officer at administering resources.
+Military: Determines the effectiveness of the officer at executing military operations.
+
+5. Traits
+
+Traits mainly affect NPC’s and determine the way in which they relate with the rest of the army.
+
+6. Style
+
+Officers can choose to have a hands-on or hands-off approach to commanding their unit. 
+Each style has different pros and cons but generally hands-on command makes the officer 
+progress faster in whichever attribute they are focusing and hands-off command frees the 
+officer from daily duties in order to focus in gaining power and climbing the ranks.
+
+
