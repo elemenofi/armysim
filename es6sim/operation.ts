@@ -13,7 +13,7 @@ export class Operation {
   turns: number;
   logged: boolean;
   byPlayer: boolean;
-  completed: moment.Moment;
+  completed: string;
 
   constructor (spec) {
     this.officer = spec.officer;

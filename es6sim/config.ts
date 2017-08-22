@@ -5,28 +5,6 @@ import { Officer } from './officer';
 let gameLength = 30;
 
 let config = {
-
-  promoted (promotion, HQ) {
-    let message;
-    if (HQ) message = this.formatDate(HQ.rawDate) + ', promoted to ' + this.ranks[promotion.rank].title;
-    return message;
-  },
-
-  graduated (graduation: {unit: string, date: moment.Moment}, officer: Officer) {
-    let when = '';
-
-    if (graduation.date && graduation.unit) {
-      when = ' on ' + graduation.date + ', assigned to the ' + graduation.unit;
-    }
-
-    let message = 'Graduated from ' + officer.personality.base.school + when;
-    return message;
-  },
-
-  school (school: { name: string, date: moment.Moment }) {
-    return `Finished High School at St. ${school.name}'s  in ${school.date}`;
-  },
-
   suffix (i) {
     var j = i % 10,
         k = i % 100;
@@ -40,16 +18,6 @@ let config = {
       return 'rd';
     }
     return 'th';
-  },
-
-  formatDate (rawDate): moment.Moment {
-    let realDate;
-    realDate = moment(rawDate).format('D of MMMM YYYY');
-    // realDate = rawDate.toFormat('DDDD the D of MMMM, YYYY');
-    realDate = realDate.split(' ');
-    realDate[0] = moment(rawDate).format('D') + config.suffix(moment(rawDate).format('D'));
-    realDate = realDate.join(' ');
-    return realDate;
   },
 
   random (n) {

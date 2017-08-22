@@ -6,6 +6,7 @@ import Operations from './operations';
 import World from './world';
 import Officer from './officer';
 import Player from './player';
+import Journal from './journal'
 import Unit from './unit';
 import Secretary from './secretary';
 import { Operation } from './operation';
@@ -24,11 +25,11 @@ interface ReplaceSpec {
 }
 
 export class HQ implements HQ {
-  rawDate: any;
+  rawDate: moment.Moment;
   operations: Operations;
   activeOperations: Operation[];
   units: Unit[];
-  realDate: moment.Moment;
+  realDate: string;
   player: Officer;
   world: World;
   target: Officer;
@@ -56,10 +57,14 @@ export class HQ implements HQ {
     this.rawDate = this.rawDate.add(1, "days");
     if (window.army.engine && window.army.engine.turn > config.bufferTurns) {
       // perf trick
-      this.realDate = config.formatDate(this.rawDate);
+      this.realDate = Journal.formatDate(this.rawDate);
     }
   }
 
+  getDate (): moment.Moment {
+    return this.rawDate
+  }
+ 
   update (triggeredByUserAction?: boolean) {
     if (!triggeredByUserAction) this.updateDate();
     this.units.map(this.reserve.bind(this));
@@ -233,7 +238,7 @@ export class HQ implements HQ {
   promote (officer: Officer, spec: any) {
     spec.HQ.deassign(officer.unitId);
     let promotion = this.promotion(officer, spec);
-    officer.history.events.push(config.promoted(promotion, spec.HQ));
+    officer.history.events.push(Journal.promoted(promotion));
     officer.targets = [];
     officer.commander = undefined;
     return officer;
@@ -245,7 +250,7 @@ export class HQ implements HQ {
 
     return {
       rank: spec.rank,
-      date: config.formatDate(spec.HQ.rawDate),
+      date: Journal.formatDate(spec.HQ.rawDate),
       unit: spec.HQ.unitName(officer.unitId)
     };
   }

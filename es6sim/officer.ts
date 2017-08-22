@@ -4,6 +4,7 @@ import * as moment from 'moment'
 import {Traits, Trait} from './traits';
 import * as chance from './lib/chance';
 import Operation from './operation';
+import Journal from './journal'
 import Unit from './unit';
 import HQ from './HQ'
 interface Window { army: any, command: any }
@@ -108,7 +109,7 @@ export class Officer implements Officer {
     }
 
     this.graduate({
-      date: config.formatDate(HQ.rawDate),
+      date: Journal.formatDate(HQ.rawDate),
       unitName: HQ.unitName(this.unitId, unitName),
       HQ: HQ
     });
@@ -122,11 +123,11 @@ export class Officer implements Officer {
     else if (this.dead) return this.rank.title + ' (D) ' + this.fname + ' ' + this.lname;
   }
 
-  graduate (spec: { date: moment.Moment, unitName: string, HQ: HQ}) {
+  graduate (spec: { date: string, unitName: string, HQ: HQ}) {
     let graduation = { unit: spec.unitName, date: spec.date };
-    let school = { name: this.chance.first({gender: 'male'}), date: config.formatDate(spec.HQ.rawDate.clone().subtract(5, 'years')) }
-    this.history.events.push(config.school(school));
-    this.history.events.push(config.graduated(graduation, this));
+    let school = { name: this.chance.first({gender: 'male'}), date: Journal.formatDate(spec.HQ.rawDate.clone().subtract(5, 'years')) }
+    this.history.events.push(Journal.graduated('school'));
+    this.history.events.push(Journal.graduated('academy'));
   }
 
   update (HQ: HQ) {
@@ -273,16 +274,16 @@ export class Officer implements Officer {
     this.reserved = true;
 
     if (this.dead) {
-      this.history.events.push(config.formatDate(HQ.rawDate) + ' buried with full Military Honors')
+      this.history.events.push(Journal.formatDate(HQ.rawDate) + ' buried with full Military Honors')
     } else if (!reason) {
-      this.history.events.push('Moved to reserve on ' + config.formatDate(HQ.rawDate));
+      this.history.events.push('Moved to reserve on ' + Journal.formatDate(HQ.rawDate));
     } else if (reason) {
       this.logRetirement(HQ, reason)
     }
   }
 
   logRetirement (HQ: HQ, reason: Operation) {
-    reason.completed = config.formatDate(HQ.rawDate)
+    reason.completed = Journal.formatDate(HQ.rawDate)
 
     this.reason = reason;
 
