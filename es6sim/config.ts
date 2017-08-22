@@ -19,7 +19,7 @@ let config = {
       when = ' on ' + graduation.date + ', assigned to the ' + graduation.unit;
     }
 
-    let message = 'Graduated from ' + officer.traits.base.school + when;
+    let message = 'Graduated from ' + officer.personality.base.school + when;
     return message;
   },
 

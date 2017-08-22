@@ -24,6 +24,17 @@ export interface Rank {
   startpr: number;
 }
 
+export interface Personality {
+  base: Trait
+  childhood: any
+  teenhood: any
+  college: any
+  company: any
+  field: any
+  physical: any
+  special: any
+}
+
 export class Officer implements Officer {
   lname: string;
   fname: string;
@@ -46,7 +57,7 @@ export class Officer implements Officer {
   completed: Operation[];
   unit: Unit;
   commander: Officer;
-  traits: { base: Trait };
+  personality: Personality;
   chance: any;
   couped: boolean;
   reason: Operation;
@@ -69,10 +80,10 @@ export class Officer implements Officer {
     this.experience = config.ranks[spec.rankName].startxp + config.random(500);
     this.prestige = 0;
 
-    this.traits = { base: traits.random() };
-    this.intelligence = this.traits.base.intelligence + config.random(10);
-    this.commanding = this.traits.base.commanding + config.random(10);
-    this.diplomacy = this.traits.base.diplomacy + config.random(10);
+    this.personality.base = traits.random()
+    this.intelligence = this.personality.base.intelligence + config.random(10);
+    this.commanding = this.personality.base.commanding + config.random(10);
+    this.diplomacy = this.personality.base.diplomacy + config.random(10);
 
     this.alignment = config.random(10000);
     this.militant = false;
@@ -192,7 +203,7 @@ export class Officer implements Officer {
         let spec = {
           officer: this,
           target: target,
-          type: this.traits.base.area,
+          type: this.personality.base.area,
           name: '',
         };
 
