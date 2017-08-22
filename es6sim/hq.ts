@@ -60,10 +60,6 @@ export class HQ implements HQ {
       this.realDate = this.journal.formatDate();
     }
   }
-
-  getDate (): moment.Moment {
-    return this.rawDate
-  }
  
   update (triggeredByUserAction?: boolean) {
     if (!triggeredByUserAction) this.updateDate();
@@ -163,7 +159,7 @@ export class HQ implements HQ {
     let lowerRank = this.secretary.rankLower(replacedCommander.rank);
 
     let spec = {
-      aggresor: (replacedCommander.reason) ? replacedCommander.reason.officer : undefined,
+      aggresor: (replacedCommander.retiredByOperation) ? replacedCommander.retiredByOperation.officer : undefined,
       replacedCommander: replacedCommander,
       unitId: replacedCommander.unitId,
       rank: replacedCommander.rank.alias,
@@ -201,13 +197,6 @@ export class HQ implements HQ {
 
   deassign (id: number) {
     this.replace(this.units.filter(unit => { return unit.id === id; })[0]);
-  }
-
-  inspect (officer: Officer) {
-    this.inspected = officer;
-  }
-
-  updateOfficers (HQ) {
   }
 
   candidate (spec: ReplaceSpec) {

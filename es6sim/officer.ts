@@ -60,7 +60,7 @@ export class Officer implements Officer {
   commander: Officer;
   personality: Partial<Personality>;
   chance: any;
-  reason: Operation;
+  retiredByOperation: Operation;
   targets: number[];
   party: string;
   militant: boolean;
@@ -259,8 +259,9 @@ export class Officer implements Officer {
     return this.party === officer.party
   }
 
-  reserve (HQ, reason?: Operation) {
+  reserve (HQ, operation?: Operation) {
     var lastUnit = HQ.units[this.unitId]
+
     if (this.rank.alias === 'general') {
       lastUnit = window.army.command
     }
@@ -272,28 +273,29 @@ export class Officer implements Officer {
 
     if (this.dead) {
       this.history.events.push(this.HQ.journal.formatDate() + ' buried with full Military Honors')
-    } else if (!reason) {
+    } else if (!operation) {
       this.history.events.push('Moved to reserve on ' + this.HQ.journal.formatDate());
-    } else if (reason) {
-      this.logRetirement(HQ, reason)
+    } else if (operation) {
+      this.logRetirement(HQ, operation)
     }
   }
 
-  logRetirement (HQ: HQ, reason: Operation) {
-    reason.completed = this.HQ.journal.formatDate()
+  logRetirement (HQ: HQ, operation: Operation) {
+    operation.completed = this.HQ.journal.formatDate()
 
-    this.reason = reason;
+    this.retiredByOperation = operation;
 
     let lastRecord = this.history.events[this.history.events.length - 1];
 
-    lastRecord = HQ.realDate + ', retired by ' + reason.name + ', directed by ' + reason.officer.name()
+    lastRecord = HQ.realDate + ', retired by ' + operation.name + ', directed by ' + operation.officer.name()
 
-    reason.target.history.events.push(lastRecord)
+    operation.target.history.events.push(lastRecord)
 
-    reason.officer.history.events.push(reason.name)
+    operation.officer.history.events.push(HQ.journal.operated(operation))
 
-    if (reason.byPlayer && !reason.officer.isPlayer) {
-      HQ.findPlayer().history.events.push(reason.name)
+    // operation planned by player but carried out by someone else
+    if (operation.byPlayer && !operation.officer.isPlayer) {
+      HQ.findPlayer().history.events.push(operation.name)
     }
   }
 }

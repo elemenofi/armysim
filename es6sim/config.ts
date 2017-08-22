@@ -43,9 +43,9 @@ let config = {
   },
 
   operationType: {
-    'intelligence': 'Plot',
-    'commanding': 'Assault',
-    'diplomacy': 'Negotiation'
+    'intelligence': 'infiltrating',
+    'commanding': 'assaulting',
+    'diplomacy': 'negotiating with'
   },
 
   ranks: {
