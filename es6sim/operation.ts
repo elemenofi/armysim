@@ -1,6 +1,7 @@
 import config from './config';
 import Officer from './officer';
 import HQ from './HQ'
+import * as moment from 'moment';
 
 export class Operation {
   id: number;
@@ -12,7 +13,7 @@ export class Operation {
   turns: number;
   logged: boolean;
   byPlayer: boolean;
-  completed: string;
+  completed: moment.Moment;
 
   constructor (spec) {
     this.officer = spec.officer;

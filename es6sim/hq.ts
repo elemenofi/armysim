@@ -18,7 +18,7 @@ export class HQ implements HQ {
   officers: Officers;
   operations: Operations;
   units: Unit[];
-  realDate: string;
+  realDate: moment.Moment;
   player: Officer;
   world: World;
   target: Officer;

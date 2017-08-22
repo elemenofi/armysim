@@ -1,5 +1,6 @@
 'use strict';
 import * as moment from 'moment'
+import { Officer } from './officer';
 
 let gameLength = 30;
 
@@ -11,7 +12,7 @@ let config = {
     return message;
   },
 
-  graduated (graduation, officer) {
+  graduated (graduation: {unit: string, date: moment.Moment}, officer: Officer) {
     let when = '';
 
     if (graduation.date && graduation.unit) {
@@ -20,6 +21,10 @@ let config = {
 
     let message = 'Graduated from ' + officer.traits.base.school + when;
     return message;
+  },
+
+  school (school: { name: string, date: moment.Moment }) {
+    return `Finished High School at St. ${school.name}'s  in ${school.date}`;
   },
 
   suffix (i) {
@@ -37,7 +42,7 @@ let config = {
     return 'th';
   },
 
-  formatDate (rawDate) {
+  formatDate (rawDate): moment.Moment {
     let realDate;
     realDate = moment(rawDate).format('D of MMMM YYYY');
     // realDate = rawDate.toFormat('DDDD the D of MMMM, YYYY');

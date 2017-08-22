@@ -1,6 +1,6 @@
 /* global Chance */
-'use strict';
 import config from './config';
+import * as moment from 'moment'
 import {Traits, Trait} from './traits';
 import * as chance from './lib/chance';
 import Operation from './operation';
@@ -56,9 +56,9 @@ export class Officer implements Officer {
   militant: boolean;
   badges: any[];
   dead: boolean;
+  operationDelay: number = 500;
 
-
-  constructor (spec: Partial<Officer>, HQ: any, unitName: string) {
+  constructor (spec: Partial<Officer>, HQ: HQ, unitName: string) {
     let traits = new Traits();
     this.id = spec.id;
     this.isPlayer = spec.isPlayer;
@@ -110,8 +110,10 @@ export class Officer implements Officer {
     else if (this.dead) return this.rank.title + ' (D) ' + this.fname + ' ' + this.lname;
   }
 
-  graduate (spec: any) {
+  graduate (spec: { date: moment.Moment, unitName: string, HQ: HQ}) {
     let graduation = { unit: spec.unitName, date: spec.date };
+    let school = { name: this.chance.first({gender: 'male'}), date: config.formatDate(spec.HQ.rawDate.clone().subtract(5, 'years')) }
+    this.history.events.push(config.school(school));
     this.history.events.push(config.graduated(graduation, this));
   }
 
@@ -155,8 +157,6 @@ export class Officer implements Officer {
     }
   }
 
-  operationDelay: number = 500;
-
   militate (HQ: HQ) {
     this.militant = (
       this.alignment > 9000 ||
@@ -165,10 +165,10 @@ export class Officer implements Officer {
       this.commander.party !== this.party
     ) ? true : false;
 
-    this.militancy += (
+    if (
       this.militant &&
       this.militancy < this.operationDelay
-    ) ? 1 : 0;
+    ) this.militancy ++
 
     if (this.militancy === this.operationDelay) {
       this.startOperation(HQ);
