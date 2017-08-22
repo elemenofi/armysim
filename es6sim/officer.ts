@@ -57,11 +57,9 @@ export class Officer implements Officer {
   completed: Operation[];
   unit: Unit;
   commander: Officer;
-  personality: Personality;
+  personality: Partial<Personality>;
   chance: any;
-  couped: boolean;
   reason: Operation;
-  includes: boolean;
   targets: number[];
   party: string;
   militant: boolean;
@@ -80,7 +78,10 @@ export class Officer implements Officer {
     this.experience = config.ranks[spec.rankName].startxp + config.random(500);
     this.prestige = 0;
 
-    this.personality.base = traits.random()
+    this.personality = {
+      base: traits.random()
+    }
+    
     this.intelligence = this.personality.base.intelligence + config.random(10);
     this.commanding = this.personality.base.commanding + config.random(10);
     this.diplomacy = this.personality.base.diplomacy + config.random(10);
@@ -171,9 +172,7 @@ export class Officer implements Officer {
   militate (HQ: HQ) {
     this.militant = (
       this.alignment > 9000 ||
-      this.alignment < 1000 ||
-      this.commander &&
-      this.commander.party !== this.party
+      this.alignment < 1000
     ) ? true : false;
 
     if (
@@ -218,13 +217,12 @@ export class Officer implements Officer {
 
   chooseTarget (HQ: HQ): Officer[] {
     let targets = [];
-    let commander = this.commander;
 
     if (this.commander && this.commander.party !== this.party ||
       this.commander &&
       this.commander.rank.maxxp - this.commander.experience > //time to retire if in same position
       this.rank.maxxp - this.experience) { //officers whose boss will retire after them will be enemies
-      targets.push(commander);
+      targets.push(this.commander);
     }
 
     if (this.commander) {
@@ -260,7 +258,7 @@ export class Officer implements Officer {
   }
 
   isAlly(officer: Officer): boolean {
-      return this.party === officer.party
+    return this.party === officer.party
   }
 
   reserve (HQ, reason?: Operation) {
