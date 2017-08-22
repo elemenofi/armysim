@@ -130,7 +130,7 @@ export class Officer implements Officer {
   }
 
   update (HQ: HQ) {
-    if (this.reserved) HQ.officers.active[this.id] = undefined;
+    if (this.reserved) HQ.activeOfficers[this.id] = undefined;
 
     this.drifts(HQ);
     this.militate(HQ);

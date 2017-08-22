@@ -63,8 +63,8 @@ class VStructure extends React.Component {
     let names = [];
 
     units.forEach(unit => {
-      unit.isRed = (this.state.engine.army.HQ.officers.inspected
-      && unit.commander.id === this.state.engine.army.HQ.officers.inspected.id
+      unit.isRed = (this.state.engine.army.HQ.inspected
+      && unit.commander.id === this.state.engine.army.HQ.inspected.id
       || unit.commander.isPlayer) ? 'isRed' : '';
       unit.isTarget = (this.state.engine.army.HQ.target
       && unit.commander.id === this.state.engine.army.HQ.target.id) ? 'isTarget' : '';

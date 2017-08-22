@@ -4,32 +4,52 @@ import * as moment from 'moment'
 import config from './config';
 import Operations from './operations';
 import World from './world';
-import Officers from './officers';
 import Officer from './officer';
 import Player from './player';
 import Unit from './unit';
+import Secretary from './secretary';
+import { Operation } from './operation';
 
 interface Window { army: any, engine: any, command: any }
 
 declare var window: Window;
 
+interface ReplaceSpec {
+  aggresor?: Officer;
+  replacedCommander: Officer;
+  unitId: number;
+  rank: string;
+  rankToPromote: string;
+  HQ: HQ;
+}
+
 export class HQ implements HQ {
   rawDate: any;
-  officers: Officers;
   operations: Operations;
+  activeOperations: Operation[];
   units: Unit[];
   realDate: moment.Moment;
   player: Officer;
   world: World;
   target: Officer;
   planner: Officer;
+  activeOfficers: Officer[];
+  officersPool: Officer[];
+  inspected: Officer;
+  __officersID: number;
+  secretary: Secretary;
 
   constructor () {
     this.operations = new Operations();
     this.rawDate = moment();
-    this.units = [] as any;
-    this.officers = new Officers();
+    this.units = [];
     this.world = undefined;
+    this.officersPool = [];
+    this.activeOfficers = [];
+    this.__officersID = 1;
+    this.secretary = new Secretary();
+    this.player = undefined;
+    this.inspected = undefined;
   }
 
   updateDate () {
@@ -45,7 +65,7 @@ export class HQ implements HQ {
     this.units.map(this.reserve.bind(this));
     this.reserve(window.army.command)
     this.operations.update(this);
-    this.officers.update(this);
+    this.activeOfficers.forEach(officer => { if (officer) officer.update(this); });
   }
 
   makePlayer () {
@@ -58,7 +78,7 @@ export class HQ implements HQ {
   }
 
   findPlayer () {
-    return this.officers.pool.filter(officer => {
+    return this.officersPool.filter(officer => {
       return officer.isPlayer
     })[0];
   }
@@ -76,12 +96,12 @@ export class HQ implements HQ {
   }
 
   findOfficerById (officerId: number) {
-    return this.officers.pool.filter(officer => { return officer.id === Number(officerId); })[0];
+    return this.officersPool.filter(officer => { return officer.id === Number(officerId); })[0];
   }
 
   inspectOfficer (officerId: number) {
     var officer = this.findOfficerById(officerId);
-    this.officers.inspected = officer;
+    this.inspected = officer;
     return officer;
   }
 
@@ -119,7 +139,7 @@ export class HQ implements HQ {
   }
 
   findInspected () {
-    return this.officers.inspected;
+    return this.inspected;
   }
 
   add (unit: Unit) {
@@ -135,7 +155,7 @@ export class HQ implements HQ {
   }
 
   replaceOfficer (replacedCommander: Officer) {
-    let lowerRank = this.officers.secretary.rankLower(replacedCommander.rank);
+    let lowerRank = this.secretary.rankLower(replacedCommander.rank);
 
     let spec = {
       aggresor: (replacedCommander.reason) ? replacedCommander.reason.officer : undefined,
@@ -147,7 +167,7 @@ export class HQ implements HQ {
     };
 
     if (lowerRank) {
-      return this.officers.candidate(spec);
+      return this.candidate(spec);
     } else {
       return this.recruit(spec.rank, replacedCommander.unitId);
     }
@@ -160,7 +180,7 @@ export class HQ implements HQ {
   recruit (rank: string, unitId: number, isPlayer?: boolean, unitName?: string) {
     let options = {
       date: this.realDate,
-      id: this.officers.__officersID,
+      id: this.__officersID,
       unitId: unitId,
       rankName: rank
     };
@@ -169,9 +189,9 @@ export class HQ implements HQ {
 
     if (isPlayer) this.player = cadet;
 
-    this.officers.active[cadet.id] = cadet;
-    this.officers.pool.push(cadet);
-    this.officers.__officersID++;
+    this.activeOfficers[cadet.id] = cadet;
+    this.officersPool.push(cadet);
+    this.__officersID++;
     return cadet;
   }
 
@@ -180,13 +200,54 @@ export class HQ implements HQ {
   }
 
   inspect (officer: Officer) {
-    this.officers.inspected = officer;
+    this.inspected = officer;
   }
 
   unitName (unitId: number, unitName: string) {
     let result = this.units.filter(unit => { return unit.id === unitId; })[0];
     if (!result) return unitName;
     return result.name;
+  }
+
+  updateOfficers (HQ) {
+  }
+
+  candidate (spec: ReplaceSpec) {
+    let parentUnit = spec.HQ.units[spec.replacedCommander.unitId]
+    let candidate = parentUnit.subunits[0].commander
+    let candidateB = parentUnit.subunits[1].commander
+
+    candidate = (candidate.experience > candidateB.experience) ? candidate : candidateB;
+    // if the retirement of the previous office was because of an operation then the planner will be the promoted one if it is only
+    // one rank below
+    if (
+      spec.aggresor &&
+      !spec.aggresor.reserved &&
+      spec.replacedCommander.rank.hierarchy === spec.aggresor.rank.hierarchy + 1
+    ) {
+      candidate = spec.aggresor
+    }
+    return this.promote(candidate, spec);
+  }
+
+  promote (officer: Officer, spec: any) {
+    spec.HQ.deassign(officer.unitId);
+    let promotion = this.promotion(officer, spec);
+    officer.history.events.push(config.promoted(promotion, spec.HQ));
+    officer.targets = [];
+    officer.commander = undefined;
+    return officer;
+  }
+
+  promotion (officer: Officer, spec: any) {
+    officer.unitId = spec.unitId;
+    officer.rank = config.ranks[spec.rank];
+
+    return {
+      rank: spec.rank,
+      date: config.formatDate(spec.HQ.rawDate),
+      unit: spec.HQ.unitName(officer.unitId)
+    };
   }
 }
 
