@@ -1,5 +1,4 @@
-'use strict';
-// import {} from './lib/date.js';
+
 import * as moment from 'moment'
 import config from './config';
 import Operations from './operations';
@@ -21,7 +20,6 @@ interface ReplaceSpec {
   unitId: number;
   rank: string;
   rankToPromote: string;
-  HQ: HQ;
 }
 
 export class HQ implements HQ {
@@ -39,9 +37,11 @@ export class HQ implements HQ {
   inspected: Officer;
   __officersID: number;
   secretary: Secretary;
+  journal: Journal;
 
   constructor () {
     this.operations = new Operations();
+    this.journal = new Journal(this);
     this.rawDate = moment();
     this.units = [];
     this.world = undefined;
@@ -57,7 +57,7 @@ export class HQ implements HQ {
     this.rawDate = this.rawDate.add(1, "days");
     if (window.army.engine && window.army.engine.turn > config.bufferTurns) {
       // perf trick
-      this.realDate = Journal.formatDate(this.rawDate);
+      this.realDate = this.journal.formatDate();
     }
   }
 
@@ -168,18 +168,17 @@ export class HQ implements HQ {
       unitId: replacedCommander.unitId,
       rank: replacedCommander.rank.alias,
       rankToPromote: lowerRank,
-      HQ: this
     };
 
     if (lowerRank) {
       return this.candidate(spec);
     } else {
-      return this.recruit(spec.rank, replacedCommander.unitId);
+      return this.recruit(spec.rank, replacedCommander.unitId, false, this.findUnitById(spec.unitId).name);
     }
   }
 
   replaceForPlayer (replacedCommander: Officer) {
-    return this.recruit('lieutenant', replacedCommander.unitId, true);
+    return this.recruit('lieutenant', replacedCommander.unitId, true, this.findUnitById(replacedCommander.unitId).name);
   }
 
   recruit (rank: string, unitId: number, isPlayer?: boolean, unitName?: string) {
@@ -208,17 +207,11 @@ export class HQ implements HQ {
     this.inspected = officer;
   }
 
-  unitName (unitId: number, unitName: string) {
-    let result = this.units.filter(unit => { return unit.id === unitId; })[0];
-    if (!result) return unitName;
-    return result.name;
-  }
-
   updateOfficers (HQ) {
   }
 
   candidate (spec: ReplaceSpec) {
-    let parentUnit = spec.HQ.units[spec.replacedCommander.unitId]
+    let parentUnit = this.units[spec.replacedCommander.unitId]
     let candidate = parentUnit.subunits[0].commander
     let candidateB = parentUnit.subunits[1].commander
 
@@ -235,10 +228,10 @@ export class HQ implements HQ {
     return this.promote(candidate, spec);
   }
 
-  promote (officer: Officer, spec: any) {
-    spec.HQ.deassign(officer.unitId);
+  promote (officer: Officer, spec: ReplaceSpec) {
+    this.deassign(officer.unitId);
     let promotion = this.promotion(officer, spec);
-    officer.history.events.push(Journal.promoted(promotion));
+    officer.history.events.push(this.journal.promoted(spec.rank, spec.unitId));
     officer.targets = [];
     officer.commander = undefined;
     return officer;
@@ -250,8 +243,8 @@ export class HQ implements HQ {
 
     return {
       rank: spec.rank,
-      date: Journal.formatDate(spec.HQ.rawDate),
-      unit: spec.HQ.unitName(officer.unitId)
+      date: this.journal.formatDate(),
+      unit: this.findUnitById(officer.unitId).name
     };
   }
 }

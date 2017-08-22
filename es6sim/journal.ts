@@ -1,17 +1,25 @@
 import * as moment from 'moment'
 import Army from './army'
+import HQ from './HQ'
+import config from './config'
 
 class Journal {
-  formatDate (rawDate: moment.Moment): string {
-    return moment(rawDate).format('YYYY, D of MMMM ');
+  HQ: HQ;
+
+  constructor (HQ: HQ) {
+    this.HQ = HQ
   }
 
-  promoted (promotion) {
-    return 'Promoted'
+  formatDate (): string {
+    return moment(this.HQ.rawDate).format('YYYY, Do of MMMM ');
   }
 
-  graduated (graduation) {
-    return 'Graduated from ' + graduation
+  promoted (rank: string, unitId: number): string {
+    return `${this.formatDate()} promoted to ${config.ranks[rank].title}, ${this.HQ.findUnitById(unitId).name}`
+  }
+
+  graduated (unitName: string) {
+    return `${this.formatDate()} graduated and assigned to ${unitName}`
   }
 
   // school () {
@@ -19,4 +27,4 @@ class Journal {
   // }
 }
 
-export default new Journal()
+export default Journal
