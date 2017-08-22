@@ -210,7 +210,11 @@ class VOperations extends React.Component {
       if (operation && operation.turns) {
         operations.push(
           <li onClick={this.inspectOperation.bind(this, operation)} className="operation">
-            <div>{config.operationType[operation.type]} {operation.name}</div>
+            <div>
+              {operation.name}&nbsp; 
+              {config.operationType[operation.type]}&nbsp; 
+              {this.props.engine.army.HQ.findUnitById(operation.target.unitId).name}
+            </div>
             <div>{(operation.strength * 300)/1000} % complete</div>
             <div>{operation.officer.name()} </div>
             <div>{operation.target.name()} </div>
