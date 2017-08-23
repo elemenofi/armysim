@@ -204,9 +204,6 @@ export class Officer implements Officer {
           name: '',
         };
 
-        var word = this.chance.word();
-        word = word.replace(/\b\w/g, l => l.toUpperCase());
-        spec.name = 'Operation ' + word
         HQ.operations.add(spec);
         this.targets[target.id] = target.id;
       }

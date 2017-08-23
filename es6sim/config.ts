@@ -1,52 +1,20 @@
 'use strict';
 import * as moment from 'moment'
-import { Officer } from './officer';
 
 let gameLength = 30;
 
 let config = {
-  suffix (i) {
-    var j = i % 10,
-        k = i % 100;
-    if (j == 1 && k != 11) {
-      return 'st';
-    }
-    if (j == 2 && k != 12) {
-      return 'nd';
-    }
-    if (j == 3 && k != 13) {
-      return 'rd';
-    }
-    return 'th';
-  },
-
   random (n) {
     return Math.round(Math.random() * n);
   },
 
   speed: 50,
-
   debug: true,
-
   // this in 10000 turns makes a better historical start,
   // 15000 makes sure all staff officers are realistically old
   bufferTurns: 12000,
-
+  
   unitDepth: 2,
-
-  staffSize: 20,
-
-  operations: {
-      commanding: {action: 'coup', area: 'commanding'},
-      diplomacy: {action: 'influence', area: 'diplomacy'},
-      intelligence: {action: 'spy', area: 'intelligence'}
-  },
-
-  operationType: {
-    'intelligence': 'infiltrating',
-    'commanding': 'assaulting',
-    'diplomacy': 'negotiating with'
-  },
 
   ranks: {
     lieutenant: {

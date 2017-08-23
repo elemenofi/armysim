@@ -246,11 +246,8 @@ class VInspected extends React.Component {
 
   startOperation (type) {
     var army = this.props.engine.army;
-    var word = chance.word(4)
-    word = word.replace(/\b\w/g, l => l.toUpperCase())
 
     var spec = {
-      name: 'Operation ' + word,
       type: type,
       officer: army.HQ.planner,
       target: army.HQ.target,

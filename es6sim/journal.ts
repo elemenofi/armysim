@@ -18,7 +18,7 @@ class Journal {
   operated (operation: Operation): string {
     return `
       ${this.formatDate()} completed ${operation.name} 
-      ${config.operationType[operation.type]} the ${this.HQ.findUnitById(operation.target.unitId).name} 
+      ${operation.description} the ${this.HQ.findUnitById(operation.target.unitId).name} 
       and forcing ${operation.target.name()} into retirement
     `
   }

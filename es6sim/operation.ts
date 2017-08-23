@@ -14,15 +14,22 @@ export class Operation {
   logged: boolean;
   byPlayer: boolean;
   completed: string;
+  description: string;
+  descriptions = {
+    intelligence: 'infiltrating',
+    commanding: 'assaulting',
+    diplomacy: 'negotiating with'
+  }
 
   constructor (spec) {
     this.officer = spec.officer;
     this.target = spec.target;
     this.type = spec.type;
-    this.name = spec.name;
+    this.name = 'Operation Lazzarus';
     this.strength = 0;
     this.turns = 1000;
     this.byPlayer = spec.byPlayer;
+    this.description = this.descriptions[spec.type]
   }
 
   roll (officer: Officer): number {
