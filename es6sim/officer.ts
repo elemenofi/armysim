@@ -1,4 +1,3 @@
-/* global Chance */
 import * as moment from 'moment'
 import config from './config'
 import hq from './hq'

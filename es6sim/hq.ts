@@ -64,8 +64,7 @@ export class Hq {
 
   update (triggeredByUserAction?: boolean) {
     if (!triggeredByUserAction) this.updateDate()
-    this.units.map(this.reserve.bind(this))
-    this.reserve(window.army.command)
+    this.units.map((unit) => this.reserve(unit))
     this.operations.update(this)
     this.activeOfficers.forEach((officer) => { if (officer) officer.update() })
   }

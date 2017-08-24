@@ -29,12 +29,12 @@ class VArmy extends React.Component {
       <div className="army">
         <p className="date" >{ army.hq.realDate }</p>
         <div className="client">
-          <VOfficer officer={ army.command.commander } engine={ engine }/>
           <VPlayer className="player-box" player={ army.hq.player } engine={ engine }/>
           <VInspected className="target-box" officer={ army.hq.findInspected() } engine={ engine } />
           <VOperation className="target-box" operation={ army.hq.inspectedOperation } engine={ engine } />
         </div>
         <div className="clear"></div>
+        <VOfficer officer={ army.command.commander } engine={ engine }/>
         <VStructure units={ army.command.subunits } engine={ engine } />
       </div>
     );
@@ -426,10 +426,12 @@ class VHistory extends React.Component {
       history.reverse()
     }
 
-    const html = (this.props.officer) ? <div className='history'>
-                                        <div>Record</div>
-                                        <ul>{ history }</ul>
-                                      </div> : <div></div>
+    const html = (this.props.officer) 
+      ? <div className='history'>
+          <div>Record</div>
+          <ul>{ history }</ul>
+        </div> 
+      : <div></div>
 
     return(html)
   }

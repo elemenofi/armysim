@@ -43,8 +43,6 @@ class World {
         }
       }
     })
-
-    console.log(hq.units)
   }
 }
 
