@@ -4800,4 +4800,4 @@ names.nouns = [
   'Zucchini'
 ]
 
-export default names;
+export default names

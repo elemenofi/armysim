@@ -20,51 +20,51 @@ class Engine {
     this.start();
   }
 
-  gameLoop;
-  UILoop;
+  gameLoop
+  UILoop
 
   getTurns () {
     return this.turn
   }
 
   start () {
-    this.update();
-    this.army.HQ.makePlayer();
-    this.army.HQ.player.drifts(this.army.HQ)
-    this.updateUI();
-    this.pause();
+    this.update()
+    this.army.hq.makePlayer()
+    this.army.hq.player.drifts(this.army.hq)
+    this.updateUI()
+    this.pause()
   }
 
   pause () {
-    this.running = !this.running;
-    if (this.running) this.update();
-    if (this.running) this.updateUI();
+    this.running = !this.running
+    if (this.running) this.update()
+    if (this.running) this.updateUI()
   }
 
   update (triggeredByUserAction?) {
     while (this.turn < config.bufferTurns) {
-      this.army.HQ.update();
-      this.turn++;
+      this.army.hq.update()
+      this.turn++
     }
 
-    this.army.HQ.update(triggeredByUserAction);
-    this.turn++;
+    this.army.hq.update(triggeredByUserAction)
+    this.turn++
 
     if (this.running) {
       this.gameLoop = setTimeout(() => {
         this.update()
-      }, config.speed);
+      }, config.speed)
     }
   }
 
   updateUI () {
-    this.ui.render(this.army);
+    this.ui.render(this.army)
     if (this.running) {
       this.UILoop = setTimeout(() => {
         this.updateUI()
-      }, config.speed);
+      }, config.speed)
     }
   }
 }
 
-export default Engine;
+export default Engine

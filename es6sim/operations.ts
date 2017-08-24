@@ -1,7 +1,7 @@
 
 import config from './config';
 import Officer from './officer';
-import HQ from './HQ'
+import hq from './hq'
 import Operation from './operation'
 
 interface Window { army: any }
@@ -17,13 +17,13 @@ export class Operations {
     this.active = [];
   }
 
-  add (spec: Operation, HQ: HQ) {
+  add (spec: Operation, hq: hq) {
     let o = spec.officer
 
     if (o.id === spec.target.id) return
     if (o.operations.length > o.rank.hierarchy + 1) return
 
-    let operation = new Operation(spec);
+    let operation = new Operation(spec)
 
     operation.id = this.operationsID;
     this.operationsID++;
@@ -34,16 +34,16 @@ export class Operations {
     if (spec.byPlayer && !o.isPlayer) {
       //add proxy operation
       o.operations.push(operation);
-      HQ.player.operations.push(operation);
+      hq.player.operations.push(operation);
     }
 
     return operation;
   }
 
-  update (HQ) {
-    this.active = this.active.filter(operation => {
-      let o = operation.officer
-      let t = operation.target
+  update (hq) {
+    this.active = this.active.filter((operation) => {
+      const o = operation.officer
+      const t = operation.target
       if (
         !o.reserved &&
         !t.reserved &&
@@ -57,22 +57,22 @@ export class Operations {
         o.operations.splice(o.operations.indexOf(operation), 1)
         o.completed.push(operation)
         if (operation.byPlayer && !o.isPlayer) {
-          HQ.player.operations.splice(HQ.player.operations.indexOf(operation), 1)
-          HQ.player.completed.push(operation)
+          hq.player.operations.splice(hq.player.operations.indexOf(operation), 1)
+          hq.player.completed.push(operation)
         }
         return false;
       }
     });
 
-    this.active.forEach(operation => {
+    this.active.forEach((operation) => {
       if (!operation.logged && operation.byPlayer && operation.officer.isPlayer) {
         // push only main ops to players array
-        HQ.findPlayer().operations.push(operation)
+        hq.findPlayer().operations.push(operation)
         operation.logged = true;
       }
-      operation.execute(HQ);
-    });
+      operation.execute(hq);
+    })
   }
 }
 
-export default Operations;
+export default Operations

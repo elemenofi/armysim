@@ -1,12 +1,12 @@
 
-import config from './config';
-import Officer from './officer';
+import config from './config'
+import Officer from './officer'
 
 class Player extends Officer {
-  constructor(spec, HQ, unitName) {
-    spec.isPlayer = true;
-    super(spec, HQ, unitName);
+  constructor(spec, hq, unitName) {
+    spec.isPlayer = true
+    super(spec, hq, unitName)
   }
 }
 
-export default Player;
+export default Player
