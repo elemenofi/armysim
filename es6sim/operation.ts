@@ -1,7 +1,9 @@
 import config from './config';
+import util from './util';
 import Officer from './officer';
 import HQ from './HQ'
 import * as moment from 'moment';
+import names from './names'
 
 export class Operation {
   id: number;
@@ -25,7 +27,7 @@ export class Operation {
     this.officer = spec.officer;
     this.target = spec.target;
     this.type = spec.type;
-    this.name = 'Operation Lazzarus';
+    this.name = 'Operation ' + names.nouns[util.random(names.nouns.length)];
     this.strength = 0;
     this.turns = 1000;
     this.byPlayer = spec.byPlayer;
@@ -39,7 +41,7 @@ export class Operation {
       o[this.type] +
       o.intelligence +
       o.rank.hierarchy +
-      config.random(10);
+      util.random(10);
 
     roll += (o.commander && o.commander.party === o.party) ? o.commander.rank.hierarchy : 0;
 

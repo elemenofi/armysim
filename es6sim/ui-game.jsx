@@ -1,4 +1,5 @@
 import config from './config';
+import util from './util';
 
 class VUi extends React.Component {
   constructor (spec) {
@@ -105,7 +106,7 @@ class VBadges extends React.Component {
       return <div className="badge" style={
           {
             backgroundColor: getRandomColor(),
-            width: config.random(5) + 1
+            width: util.random(5) + 1
           }
         }></div>;
     }
@@ -211,9 +212,11 @@ class VOperations extends React.Component {
         operations.push(
           <li onClick={this.inspectOperation.bind(this, operation)} className="operation">
             <div>
-              {operation.name}&nbsp; 
-              {config.operationType[operation.type]}&nbsp; 
-              {this.props.engine.army.HQ.findUnitById(operation.target.unitId).name}
+              <ul>
+              <li>{operation.name}</li>
+              <li>{operation.description}</li>
+              <li>{this.props.engine.army.HQ.findUnitById(operation.target.unitId).name}</li>
+              </ul>
             </div>
             <div>{(operation.strength * 300)/1000} % complete</div>
             <div>{operation.officer.name()} </div>

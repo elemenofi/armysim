@@ -1,6 +1,7 @@
 
 import * as moment from 'moment'
 import config from './config';
+import util from './util';
 import Operations from './operations';
 import World from './world';
 import Officer from './officer';
@@ -71,7 +72,7 @@ export class HQ implements HQ {
 
   makePlayer () {
     let squads = this.findUnitsByType('squad');
-    let unit = squads[config.random(squads.length) + 1];
+    let unit = squads[util.random(squads.length) + 1];
     unit.commander.reserved = true;
     unit.commander = this.replaceForPlayer(unit.commander);
     this.player = unit.commander;
@@ -228,7 +229,7 @@ export class HQ implements HQ {
 
   promotion (officer: Officer, spec: any) {
     officer.unitId = spec.unitId;
-    officer.rank = config.ranks[spec.rank];
+    officer.rank = this.secretary.ranks[spec.rank];
 
     return {
       rank: spec.rank,

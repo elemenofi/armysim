@@ -24,7 +24,7 @@ class Journal {
   }
 
   promoted (rank: string, unitId: number): string {
-    return `${this.formatDate()} promoted to ${config.ranks[rank].title}, ${this.HQ.findUnitById(unitId).name}`
+    return `${this.formatDate()} promoted to ${this.HQ.secretary.ranks[rank].title}, ${this.HQ.findUnitById(unitId).name}`
   }
 
   graduated (unitName: string): string {

@@ -1,5 +1,6 @@
 /* global Chance */
 import config from './config';
+import util from './util';
 import * as moment from 'moment'
 import {Traits, Trait} from './traits';
 import * as chance from './lib/chance';
@@ -77,19 +78,19 @@ export class Officer implements Officer {
     this.unitId = spec.unitId;
     this.reserved = false;
 
-    this.rank = config.ranks[spec.rankName];
-    this.experience = config.ranks[spec.rankName].startxp + config.random(500);
+    this.rank = this.HQ.secretary.ranks[spec.rankName];
+    this.experience = this.HQ.secretary.ranks[spec.rankName].startxp + util.random(500);
     this.prestige = 0;
 
     this.personality = {
       base: traits.random()
     }
     
-    this.intelligence = this.personality.base.intelligence + config.random(10);
-    this.commanding = this.personality.base.commanding + config.random(10);
-    this.diplomacy = this.personality.base.diplomacy + config.random(10);
+    this.intelligence = this.personality.base.intelligence + util.random(10);
+    this.commanding = this.personality.base.commanding + util.random(10);
+    this.diplomacy = this.personality.base.diplomacy + util.random(10);
 
-    this.alignment = config.random(10000);
+    this.alignment = util.random(10000);
     this.militant = false;
     this.militancy = 0;
     this.drift = Math.floor(Math.random() * 2) == 1 ? 1 : -1; //
@@ -141,7 +142,7 @@ export class Officer implements Officer {
   }
 
   death (HQ) {
-    if (config.random(100) === 1) {
+    if (util.random(100) === 1) {
       this.dead = true;
       this.reserve(HQ);
     }

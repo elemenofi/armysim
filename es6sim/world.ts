@@ -1,5 +1,6 @@
 'use strict';
 import config from './config';
+import util from './util';
 import Region from './region';
 
 class World {
@@ -15,7 +16,7 @@ class World {
   }
 
   generate (HQ) {
-    let amount = config.random(10) + 5;
+    let amount = util.random(10) + 5;
     for (var i = 0; i < amount; i++) {
       this.addRegion();
     }
