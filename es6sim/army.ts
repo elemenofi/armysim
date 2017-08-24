@@ -1,6 +1,8 @@
 
 import config from './config'
+import Engine from './engine'
 import hq from './hq'
+import Keyboard from './keyboard'
 import Unit from './unit'
 
 interface Window { army: any }
@@ -10,8 +12,12 @@ class Army {
   _unitsId: number
   units: any
   command: Unit
+  engine: Engine
+  keyboard: Keyboard
 
   constructor () {
+    this.engine = new Engine(this)
+    this.keyboard = new Keyboard(this.engine)
     this.hq = new hq()
 
     this._unitsId = 0
