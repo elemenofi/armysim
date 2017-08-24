@@ -264,7 +264,6 @@ export class Officer implements Officer {
     this.reserved = true
 
     if (this.dead) {
-      alert('a')
       this.history.events.push(this.hq.journal.formatDate() + ' buried with full Military Honors')
     } else if (!operation) {
       this.history.events.push('Moved to reserve on ' + this.hq.journal.formatDate())
