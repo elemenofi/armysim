@@ -1,4 +1,4 @@
-'use strict';
+
 import Engine from './engine';
 import Army from './army';
 import Keyboard from './keyboard';

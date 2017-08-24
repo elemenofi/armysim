@@ -1,4 +1,4 @@
-'use strict';
+
 import names from './names';
 import Officer from './officer';
 import HQ from './HQ'

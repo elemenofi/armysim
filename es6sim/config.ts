@@ -1,4 +1,4 @@
-'use strict';
+
 import * as moment from 'moment'
 
 let config = {

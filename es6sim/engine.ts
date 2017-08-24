@@ -1,4 +1,4 @@
-'use strict';
+
 import VUi from './ui-game.jsx';
 import Actions from './actions';
 import config from './config';

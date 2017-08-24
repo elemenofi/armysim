@@ -1,4 +1,4 @@
-'use strict';
+
 import HQ from './hq';
 import Unit from './unit';
 import config from './config';

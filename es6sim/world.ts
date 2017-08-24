@@ -1,4 +1,4 @@
-'use strict';
+
 import config from './config';
 import util from './util';
 import Region from './region';
