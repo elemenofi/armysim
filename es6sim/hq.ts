@@ -96,6 +96,10 @@ export class Hq {
     return (officer.commander) ? officer.commander : { name: () => 'No name' }
   }
 
+  sendToReserve (officer: Officer) {
+    if (officer.reserved) this.activeOfficers[officer.id] = undefined
+  }
+
   findCommander (officer: Officer): Officer {
     let commander
     const unit = this.findUnitById(officer.unitId)

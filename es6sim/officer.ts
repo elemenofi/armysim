@@ -123,17 +123,26 @@ export class Officer implements Officer {
 
   update () {
     this.experience++
-    this.commander = this.hq.findCommander(this)
-    if (this.reserved) this.hq.activeOfficers[this.id] = undefined
+    this.findCommander()
+    this.sendToReserve()
     if (!this.reserved && this.experience > this.rank.maxxp) this.reserve()
-    if (this.experience > 16000) this.death()
+    this.death()
   }
 
   death () {
+    if (this.experience < 16000) return
     if (util.random(100) === 1) {
       this.dead = true
       this.reserve()
     }
+  }
+
+  sendToReserve () {
+    this.hq.sendToReserve(this)
+  }
+
+  findCommander () {
+    this.commander = this.hq.findCommander(this)
   }
 
   drifts () {
