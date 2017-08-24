@@ -96,6 +96,15 @@ export class Hq {
     return (officer.commander) ? officer.commander : { name: () => 'No name' }
   }
 
+  findCommander (officer: Officer): Officer {
+    let commander
+    const unit = this.findUnitById(officer.unitId)
+    const parentUnit = this.findUnitById(unit.parentId)
+    if (parentUnit) commander = parentUnit.commander
+    else commander = undefined
+    return commander
+  }
+
   findOfficerById (officerId: number) {
     return this.officersPool.filter((officer) => officer.id === Number(officerId))[0]
   }

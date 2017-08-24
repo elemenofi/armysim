@@ -270,7 +270,7 @@ class VInspected extends React.Component {
     let army = this.props.engine.army;
     let officer = this.props.officer;
     let engine = this.props.engine;
-    let superior = army.hq.findCommandingOfficer(officer)
+    let superior = army.hq.findCommander(officer)
     let target = (army.hq.target) ? army.hq.target.name() : '';
     let headerHTML = (!officer.isPlayer) ?
     <div>
@@ -326,7 +326,7 @@ class VStaff extends React.Component {
     });
     staff.reverse()
 
-    const superiorHTML = (!officer.reserved && officer.rank.hierarchy < 7 && !this.state.operations) ?
+    const superiorHTML = (!officer.reserved && officer.rank.hierarchy < 8) ?
     <div className='superior'>
       <div>Commanding Officer</div>
       <VOfficer officer={ superior } engine={ engine }/>

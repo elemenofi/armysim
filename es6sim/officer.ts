@@ -122,14 +122,9 @@ export class Officer implements Officer {
   }
 
   update () {
-    if (this.reserved) this.hq.activeOfficers[this.id] = undefined
-
-    this.drifts()
-    this.militate()
-    this.align()
-
     this.experience++
-
+    this.commander = this.hq.findCommander(this)
+    if (this.reserved) this.hq.activeOfficers[this.id] = undefined
     if (!this.reserved && this.experience > this.rank.maxxp) this.reserve()
     if (this.experience > 16000) this.death()
   }
@@ -142,90 +137,90 @@ export class Officer implements Officer {
   }
 
   drifts () {
-    let parent
-    const unit = this.hq.findUnitById(this.unitId)
-    if (unit) parent = this.hq.findUnitById(unit.parentId)
-    if (parent) this.commander = parent.commander
-    else this.commander = undefined
+    // let parent
+    // const unit = this.hq.findUnitById(this.unitId)
+    // if (unit) parent = this.hq.findUnitById(unit.parentId)
+    // if (parent) this.commander = parent.commander
+    // else this.commander = undefined
   }
 
   align () {
-    if (
-      this.drift > 0 && this.alignment < 10000 ||
-      this.drift < 0 && this.alignment > 0
-    ) {
-      this.alignment += this.drift
-    }
+    // if (
+    //   this.drift > 0 && this.alignment < 10000 ||
+    //   this.drift < 0 && this.alignment > 0
+    // ) {
+    //   this.alignment += this.drift
+    // }
 
-    this.party = (this.alignment > 5000) ? 'Conservative' : 'Radical'
+    // this.party = (this.alignment > 5000) ? 'Conservative' : 'Radical'
   }
 
   militate () {
-    this.militant = this.alignment > 9000 || this.alignment < 1000
+    // this.militant = this.alignment > 9000 || this.alignment < 1000
 
-    if (this.militant && this.militancy < this.operationDelay) this.militancy++
+    // if (this.militant && this.militancy < this.operationDelay) this.militancy++
 
-    if (this.militancy === this.operationDelay) {
-      this.startOperation()
-      this.militancy -= this.operationDelay
-    }
+    // if (this.militancy === this.operationDelay) {
+    //   this.startOperation()
+    //   this.militancy -= this.operationDelay
+    // }
   }
 
   startOperation () {
-    const targets = this.chooseTarget()
-    if (!targets.length) return
-    targets.forEach((target) => {
-      if (
-        target &&
-        // !this.isPlayer &&
-        !this.reserved &&
-        this.operations.length <= this.rank.hierarchy &&
-        !this.targets[target.id] &&
-        this.rank.hierarchy < target.rank.hierarchy + 2
-      ) {
+    // const targets = this.chooseTarget()
+    // if (!targets.length) return
+    // targets.forEach((target) => {
+    //   if (
+    //     target &&
+    //     // !this.isPlayer &&
+    //     !this.reserved &&
+    //     this.operations.length <= this.rank.hierarchy &&
+    //     !this.targets[target.id] &&
+    //     this.rank.hierarchy < target.rank.hierarchy + 2
+    //   ) {
 
-        const spec = {
-          name: '',
-          officer: this,
-          target,
-          type: this.personality.base.area,
-        }
+    //     const spec = {
+    //       name: '',
+    //       officer: this,
+    //       target,
+    //       type: this.personality.base.area,
+    //     }
 
-        this.hq.operations.add(spec, this.hq)
-        this.targets[target.id] = target.id
-      }
-    })
+    //     this.hq.operations.add(spec, this.hq)
+    //     this.targets[target.id] = target.id
+    //   }
+    // })
   }
 
-  chooseTarget (): Officer[] {
-    const targets = []
+  chooseTarget () {
+    // const targets = []
 
-    if (this.commander && this.commander.party !== this.party ||
-      this.commander &&
-      this.commander.rank.maxxp - this.commander.experience > // time to retire if in same position
-      this.rank.maxxp - this.experience) { // officers whose boss will retire after them will be enemies
-      targets.push(this.commander)
-    }
+    // if (this.commander && this.commander.party !== this.party ||
+    //   this.commander &&
+    //   this.commander.rank.maxxp - this.commander.experience > // time to retire if in same position
+    //   this.rank.maxxp - this.experience) { // officers whose boss will retire after them will be enemies
+    //   targets.push(this.commander)
+    // }
 
-    if (this.commander) {
-      // my colleague in rank under my commander will be an enemy if he is
-      // from the other party or has more experience than i do
-      this.hq.units[this.commander.unitId].subunits.forEach((unit) => {
-        if (
-          unit.commander.id !== this.id &&
-          (
-            unit.commander.party !== this.party ||
-            unit.commander.experience > this.experience
-          )
-        ) {
-          targets.push(unit.commander)
-        }
-      })
-    }
+    // if (this.commander) {
+    //   // my colleague in rank under my commander will be an enemy if he is
+    //   // from the other party or has more experience than i do
+    //   this.hq.units[this.commander.unitId].subunits.forEach((unit) => {
+    //     if (
+    //       unit.commander.id !== this.id &&
+    //       (
+    //         unit.commander.party !== this.party ||
+    //         unit.commander.experience > this.experience
+    //       )
+    //     ) {
+    //       targets.push(unit.commander)
+    //     }
+    //   })
+    // }
 
-    this.allSubordinates(this, this.rank.hierarchy - 1, targets)
+    // this.allSubordinates(this, this.rank.hierarchy - 1, targets)
 
-    return targets
+    // return targets
   }
 
   allSubordinates = (officer: Officer, quantity: number, targets: Officer[]): void => {
