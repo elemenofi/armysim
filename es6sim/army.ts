@@ -1,80 +1,80 @@
 
-import hq from './hq';
-import Unit from './unit';
-import config from './config';
+import config from './config'
+import hq from './hq'
+import Unit from './unit'
 import World from './world'
 
 interface Window { army: any }
 
 class Army {
-  hq: hq;
-  _unitsId: number;
-  units: any;
-  command: Unit;
+  hq: hq
+  _unitsId: number
+  units: any
+  command: Unit
 
   constructor () {
-    this.hq = new hq();
+    this.hq = new hq()
 
-    this._unitsId = 0;
+    this._unitsId = 0
 
-    let spec = {
+    const spec = {
       id: this._unitsId,
       type: 'army',
       parentId: undefined,
-      rank: undefined
-    };
+      rank: undefined,
+    }
 
-    spec.parentId = undefined;
-    spec.rank = 'general';
-    let unit: Unit = {} as any;
-    unit = new Unit(spec, this.hq);
+    spec.parentId = undefined
+    spec.rank = 'general'
+    let unit: Unit = {} as any
+    unit = new Unit(spec, this.hq)
 
     unit.subunits = []
 
-    this.command = unit;
-    this.hq.add(unit);
+    this.command = unit
+    this.hq.add(unit)
 
-    this._unitsId++;
+    this._unitsId++
 
-    this.generate('corp', config.unitDepth);
+    this.generate('corp', config.unitDepth)
 
-    this.hq.units.sort(function(a, b) {return (a.id > b.id) ? 1 : ((b.id > a.id) ? -1 : 0);} );
+    this.hq.units.sort((a, b) => (a.id > b.id) ? 1 : ((b.id > a.id) ? -1 : 0) )
 
-    this.hq.world = new World(this.hq);
+    this.hq.world = new World(this.hq)
   }
 
   generate (type, quantity, parent?) {
     if (quantity === 0) {
-      return;
+      return
     } else {
-      let spec = {
+      const spec = {
         id: this._unitsId,
-        type: type,
+        type,
         parentId: undefined,
-        rank: undefined
-      };
+        rank: undefined,
+      }
 
-      let unit: Unit = {} as any;
-      this._unitsId++;
-      spec.parentId = parent ? parent.id : 0;
+      let unit: Unit = {} as any
+      this._unitsId++
+      spec.parentId = parent ? parent.id : 0
 
       switch (type) {
         case 'corp':
-          spec.rank = 'lgeneral';
-          unit = new Unit(spec, this.hq);
-          this.command.subunits.push(unit);
+          spec.rank = 'lgeneral'
+          unit = new Unit(spec, this.hq)
+          this.command.subunits.push(unit)
 
-          this.generate('division', config.unitDepth, unit);
-          this.generate('corp', quantity - 1, parent);
-        break;
+          this.generate('division', config.unitDepth, unit)
+          this.generate('corp', quantity - 1, parent)
+        break
 
         case 'division':
-          spec.rank = 'dgeneral';
-          unit = new Unit(spec, this.hq);
-          parent.subunits.push(unit);
+          spec.rank = 'dgeneral'
+          unit = new Unit(spec, this.hq)
+          parent.subunits.push(unit)
 
-          this.generate('brigade', config.unitDepth, unit);
-          this.generate('division', quantity - 1, parent);
+          this.generate('brigade', config.unitDepth, unit)
+          this.generate('division', quantity - 1, parent)
         break
 
         case 'brigade':
