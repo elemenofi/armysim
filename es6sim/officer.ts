@@ -125,7 +125,7 @@ export class Officer implements Officer {
     this.experience++
     this.findCommander()
     this.sendToReserve()
-    if (!this.reserved && this.experience > this.rank.maxxp) this.reserve()
+    this.reserve()
     this.death()
   }
 
@@ -133,7 +133,7 @@ export class Officer implements Officer {
     if (this.experience < 16000) return
     if (util.random(100) === 1) {
       this.dead = true
-      this.reserve()
+      this.reserve(this.dead)
     }
   }
 
@@ -247,7 +247,11 @@ export class Officer implements Officer {
     return this.party === officer.party
   }
 
-  reserve (operation ?: Operation) {
+  reserve (death?: boolean, operation?: Operation) {
+    // officers can only be reserved if they are above their experience
+    // for the rank or if it is because of an operation that reserves them
+    if (!operation && this.experience < this.rank.maxxp && !death) return
+
     let lastUnit = this.hq.units[this.unitId]
 
     if (this.rank.alias === 'general') {
