@@ -3,6 +3,7 @@ import Army from './army'
 import HQ from './HQ'
 import config from './config'
 import { Operation } from './operation';
+import { Officer } from './officer';
 
 class Journal {
   HQ: HQ;
@@ -27,8 +28,8 @@ class Journal {
     return `${this.formatDate()} promoted to ${this.HQ.secretary.ranks[rank].title}, ${this.HQ.findUnitById(unitId).name}`
   }
 
-  graduated (unitName: string): string {
-    return `${this.formatDate()} graduated and assigned to ${unitName}`
+  graduated (officer: Officer, unitName: string): string {
+    return `${this.formatDate()} graduated from the ${officer.school.name} and assigned to ${unitName}`
   }
 
   // school () {

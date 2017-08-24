@@ -8,6 +8,8 @@ import Operation from './operation';
 import Journal from './journal'
 import Unit from './unit';
 import HQ from './HQ'
+import { School } from './secretary';
+
 interface Window { army: any, command: any }
 declare var window: Window;
 
@@ -70,6 +72,7 @@ export class Officer implements Officer {
   operationDelay: number = 500;
   HQ: HQ;
   unitName: string;
+  school: School;
 
   constructor (spec: Partial<Officer>, HQ: HQ, unitName: string) {
     this.HQ = HQ; 
@@ -84,12 +87,13 @@ export class Officer implements Officer {
     this.prestige = 0;
 
     this.personality = {
-      base: traits.random()
+      base: traits.random('base')
     }
-    
-    this.intelligence = this.personality.base.intelligence + util.random(10);
-    this.commanding = this.personality.base.commanding + util.random(10);
-    this.diplomacy = this.personality.base.diplomacy + util.random(10);
+
+    this.school = this.HQ.secretary.schools[this.personality.base.area]
+    this.intelligence = this.personality.base.intelligence + this.school.intelligence + util.random(10);
+    this.commanding = this.personality.base.commanding + this.school.commanding + util.random(10);
+    this.diplomacy = this.personality.base.diplomacy + this.school.diplomacy + util.random(10);
 
     this.alignment = util.random(10000);
     this.militant = false;
@@ -125,7 +129,7 @@ export class Officer implements Officer {
   }
 
   graduate (unitName: string) {
-    this.history.events.push(this.HQ.journal.graduated(unitName));
+    this.history.events.push(this.HQ.journal.graduated(this, unitName));
   }
 
   update (HQ: HQ) {
