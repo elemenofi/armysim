@@ -74,12 +74,12 @@ export class Officer implements Officer {
   unitName: string
   school: School
 
-  constructor (spec: Partial<Officer>, headquarters: hq, unitName: string) {
+  constructor (spec: Partial<Officer>, headquarters: hq, unitName: string, isPlayer: boolean) {
     this.isPlayer = spec.isPlayer
     this.chance = chance(Math.random)
     this.lname = this.chance.last()
     this.fname = this.chance.first({gender: 'male'})
-    if (this.isPlayer) {
+    if (isPlayer) {
       this.lname = (config.debug) ? 'Richardson' : prompt('Name?')
       this.fname = 'John'
     }

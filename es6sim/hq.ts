@@ -9,7 +9,6 @@ import Player from './player'
 import Secretary from './secretary'
 import Unit from './unit'
 import util from './util'
-import World from './world'
 
 interface Window { army: any, engine: any, command: any }
 
@@ -30,7 +29,6 @@ export class Hq {
   units: Unit[]
   realDate: string
   player: Officer
-  world: World
   target: Officer
   planner: Officer
   activeOfficers: Officer[]
@@ -45,7 +43,6 @@ export class Hq {
     this.journal = new Journal(this)
     this.rawDate = moment()
     this.units = []
-    this.world = undefined
     this.officersPool = []
     this.activeOfficers = []
     this.OFFICERSID = 1
@@ -200,9 +197,11 @@ export class Hq {
       unitId,
     }
 
-    const cadet = (isPlayer) ? new Player(options, this, unitName) : new Officer(options, this, unitName)
+    const cadet = new Officer(options, this, unitName, isPlayer)
 
-    if (isPlayer) this.player = cadet
+    if (isPlayer) {
+      this.player = cadet
+    }
 
     this.activeOfficers[cadet.id] = cadet
     this.officersPool.push(cadet)

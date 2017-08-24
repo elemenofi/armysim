@@ -2,7 +2,6 @@
 import config from './config'
 import hq from './hq'
 import Unit from './unit'
-import World from './world'
 
 interface Window { army: any }
 
@@ -39,8 +38,6 @@ class Army {
     this.generate('corp', config.unitDepth)
 
     this.hq.units.sort((a, b) => (a.id > b.id) ? 1 : ((b.id > a.id) ? -1 : 0) )
-
-    this.hq.world = new World(this.hq)
   }
 
   generate (type, quantity, parent?) {
