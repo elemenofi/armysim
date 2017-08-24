@@ -1,25 +1,25 @@
 import * as moment from 'moment'
 import Army from './army'
-import hq from './hq'
 import config from './config'
-import { Operation } from './operation';
-import { Officer } from './officer';
+import hq from './hq'
+import { Officer } from './officer'
+import { Operation } from './operation'
 
 class Journal {
-  hq: hq;
+  hq: hq
 
-  constructor (hq: hq) {
-    this.hq = hq
+  constructor (HQ: hq) {
+    this.hq = HQ
   }
 
   formatDate (): string {
-    return moment(this.hq.rawDate).format('YYYY, Do of MMMM ');
+    return moment(this.hq.rawDate).format('YYYY, Do of MMMM ')
   }
 
   operated (operation: Operation): string {
     return `
-      ${this.formatDate()} completed ${operation.name} 
-      ${operation.description} the ${this.hq.findUnitById(operation.target.unitId).name} 
+      ${this.formatDate()} completed ${operation.name}
+      ${operation.description} the ${this.hq.findUnitById(operation.target.unitId).name}
       and forcing ${operation.target.name()} into retirement
     `
   }
@@ -31,10 +31,6 @@ class Journal {
   graduated (officer: Officer, unitName: string): string {
     return `${this.formatDate()} graduated from the ${officer.school.name} and assigned to ${unitName}`
   }
-
-  // school () {
-  //   return `Finished High School at St. ${school.name}'s  in ${school.date}`;
-  // }
 }
 
 export default Journal

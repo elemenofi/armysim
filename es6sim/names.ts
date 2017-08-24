@@ -12,27 +12,27 @@ export interface Names {
   nouns: string []
 }
 
-let names: Partial<Names> = {};
+const names: Partial<Names> = {}
 
 names.army = [
-  'National Army Headquarters'
+  'National Army Headquarters',
 ]
 
 names.corp = [
-  '1st Corp', '2nd Corp'
-];
+  '1st Corp', '2nd Corp',
+]
 
 names.division = [
   '1st Division', '2nd Division',
-  '3rd Division', '4th Division'
-];
+  '3rd Division', '4th Division',
+]
 
 names.brigade = [
   '1st Brigade', '2nd Brigade',
   '3rd Brigade', '4th Brigade',
   '5th Brigade', '6th Brigade',
-  '7th Brigade', '8th Brigade'
-];
+  '7th Brigade', '8th Brigade',
+]
 
 names.regiment = [
   '1st Regiment', '2nd Regiment', '3rd Regiment',
@@ -40,8 +40,8 @@ names.regiment = [
   '7th Regiment', '8th Regiment', '9th Regiment',
   '10th Regiment', '11th Regiment', '12th Regiment',
   '13th Regiment', '14th Regiment', '15th Regiment',
-  '16th Regiment'
-];
+  '16th Regiment',
+]
 
 names.company = [
   '1st A Company', '2nd A Company', '3rd A Company',
@@ -67,8 +67,8 @@ names.company = [
   '23th B Company', '24th B Company', '25th B Company',
   '26th B Company', '27th B Company', '28th B Company',
   '29th B Company', '30th B Company', '31th B Company',
-  '32th B Company'
-];
+  '32th B Company',
+]
 
 names.battalion = [
   '1st Battalion', '2nd Battalion', '3rd Battalion',
@@ -94,8 +94,8 @@ names.battalion = [
   '55th Battalion', '56th Battalion', '57th Battalion',
   '58th Battalion', '59th Battalion', '60th Battalion',
   '61th Battalion', '62th Battalion', '63th Battalion',
-  '64th Battalion'
-];
+  '64th Battalion',
+]
 
 names.platoon = [
   '1st Platoon', '2nd Platoon', '3rd Platoon',
@@ -144,8 +144,8 @@ names.platoon = [
   '120th Platoon', '121th Platoon', '122th Platoon',
   '123th Platoon', '124th Platoon', '125th Platoon',
   '126th Platoon', '127th Platoon', '128th Platoon',
-  '129th Platoon'
-];
+  '129th Platoon',
+]
 
 names.squad = [
   '1st A Squad', '2nd A Squad', '3rd A Squad',
@@ -241,8 +241,8 @@ names.squad = [
   '120th B Squad', '121th B Squad', '122th B Squad',
   '123th B Squad', '124th B Squad', '125th B Squad',
   '126th B Squad', '127th B Squad', '128th B Squad',
-  '129th B Squad'
-];
+  '129th B Squad',
+]
 
 names.nouns = [
   'Abacus',
@@ -4797,7 +4797,7 @@ names.nouns = [
   'Zoologist',
   'Zoology',
   'Zoot-suit',
-  'Zucchini'
+  'Zucchini',
 ]
 
 export default names

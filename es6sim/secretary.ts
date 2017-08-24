@@ -1,13 +1,34 @@
-import { Rank } from './officer';
-import config from './config';
+import config from './config'
+import { Rank } from './officer'
+
 export interface School {
   name: string,
   intelligence: number,
   commanding: number,
   diplomacy: number
 }
+
 class Secretary {
-	constructor () {}
+  schools: { [key: string]: School; } = {
+    diplomacy: {
+      name: 'National Officer Candidate School',
+      intelligence: 1,
+      commanding: 1,
+      diplomacy: 4,
+    },
+    commanding: {
+      name: 'National Military Academy',
+      intelligence: 1,
+      commanding: 4,
+      diplomacy: 1,
+    },
+    intelligence: {
+      name: 'National Institute of Military Intelligence',
+      intelligence: 4,
+      commanding: 1,
+      diplomacy: 1,
+    },
+  }
 
   ranks = {
     lieutenant: {
@@ -16,7 +37,7 @@ class Secretary {
       alias: 'lieutenant',
       startxp: 10 * config.gameLength,
       maxxp: 80 * config.gameLength,
-      startpr: 100
+      startpr: 100,
     },
     captain: {
       hierarchy: 1,
@@ -24,7 +45,7 @@ class Secretary {
       alias: 'captain',
       startxp: 40 * config.gameLength,
       maxxp: 120 * config.gameLength,
-      startpr: 200
+      startpr: 200,
     },
     major: {
       hierarchy: 2,
@@ -32,7 +53,7 @@ class Secretary {
       alias: 'major',
       startxp: 60 * config.gameLength,
       maxxp: 160 * config.gameLength,
-      startpr: 300
+      startpr: 300,
     },
     lcoronel: {
       hierarchy: 3,
@@ -40,7 +61,7 @@ class Secretary {
       alias: 'lcoronel',
       startxp: 80 * config.gameLength,
       maxxp: 200 * config.gameLength,
-      startpr: 400
+      startpr: 400,
     },
     coronel: {
       hierarchy: 4,
@@ -48,7 +69,7 @@ class Secretary {
       alias: 'coronel',
       startxp: 100 * config.gameLength,
       maxxp: 240 * config.gameLength,
-      startpr: 500
+      startpr: 500,
     },
     bgeneral: {
       hierarchy: 5,
@@ -56,7 +77,7 @@ class Secretary {
       alias: 'bgeneral',
       startxp: 120 * config.gameLength,
       maxxp: 280 * config.gameLength,
-      startpr: 600
+      startpr: 600,
     },
     dgeneral: {
       hierarchy: 6,
@@ -64,7 +85,7 @@ class Secretary {
       alias: 'dgeneral',
       startxp: 140 * config.gameLength,
       maxxp: 320 * config.gameLength,
-      startpr: 700
+      startpr: 700,
     },
     lgeneral: {
       hierarchy: 7,
@@ -72,7 +93,7 @@ class Secretary {
       alias: 'lgeneral',
       startxp: 160 * config.gameLength,
       maxxp: 360 * config.gameLength,
-      startpr: 800
+      startpr: 800,
     },
     general: {
       hierarchy: 8,
@@ -80,65 +101,44 @@ class Secretary {
       alias: 'general',
       startxp: 180 * config.gameLength,
       maxxp: 1000000 * config.gameLength,
-      startpr: 900
-    }
+      startpr: 900,
+    },
   }
 
   rankLower (rank: Rank) {
-    let lowerRank = null;
+    let lowerRank
 
     switch (rank.alias) {
       case 'lieutenant':
-        return lowerRank;
+        return lowerRank
       case 'captain':
-        lowerRank = 'lieutenant';
-      break;
+        lowerRank = 'lieutenant'
+      break
       case 'major':
-        lowerRank = 'captain';
-      break;
+        lowerRank = 'captain'
+      break
       case 'lcoronel':
-        lowerRank = 'major';
-      break;
+        lowerRank = 'major'
+      break
       case 'coronel':
-        lowerRank = 'lcoronel';
-      break;
+        lowerRank = 'lcoronel'
+      break
       case 'bgeneral':
-        lowerRank = 'coronel';
-      break;
+        lowerRank = 'coronel'
+      break
       case 'dgeneral':
-        lowerRank = 'bgeneral';
-      break;
+        lowerRank = 'bgeneral'
+      break
       case 'lgeneral':
-        lowerRank = 'dgeneral';
-      break;
-			case 'general':
-        lowerRank = 'lgeneral';
-      break;
+        lowerRank = 'dgeneral'
+      break
+      case 'general':
+        lowerRank = 'lgeneral'
+      break
     }
 
-    return lowerRank;
+    return lowerRank
   }
-
-  schools: { [key: string]: School; } = {
-    diplomacy: {
-      name: 'National Officer Candidate School',
-      intelligence: 1,
-      commanding: 1,
-      diplomacy: 4
-    },
-    commanding: {
-      name: 'National Military Academy',
-      intelligence: 1,
-      commanding: 4,
-      diplomacy: 1
-    },
-    intelligence: {
-      name: 'National Institute of Military Intelligence',
-      intelligence: 4,
-      commanding: 1,
-      diplomacy: 1
-    }
-  } 
 }
 
-export default Secretary;
+export default Secretary

@@ -1,45 +1,45 @@
 
-import config from './config';
-import util from './util';
-import Region from './region';
+import config from './config'
+import Region from './region'
+import util from './util'
 
 class World {
-  regions;
+  regions
   constructor (hq) {
-    this.regions = [];
-    this.generate(hq);
+    this.regions = []
+    this.generate(hq)
   }
 
   addRegion () {
-    let regionId = this.regions.length;
+    const regionId = this.regions.length
     this.regions.push(new Region(regionId))
   }
 
   generate (hq) {
-    let amount = util.random(10) + 5;
-    for (var i = 0; i < amount; i++) {
-      this.addRegion();
+    const amount = util.random(10) + 5
+    for (let i = 0; i < amount; i++) {
+      this.addRegion()
     }
-    this.mapUnitsAndRegions(hq);
+    this.mapUnitsAndRegions(hq)
   }
 
   mapUnitsAndRegions (hq) {
-    let unitsPerRegion = Math.ceil(hq.units.length / this.regions.length) + 1;
-    let unitIndex = 0;
+    const unitsPerRegion = Math.ceil(hq.units.length / this.regions.length) + 1
+    let unitIndex = 0
 
     this.regions.map((region) => {
-      let count = 0;
+      let count = 0
 
       while (count < unitsPerRegion) {
-        const unit = hq.units[unitIndex];
+        const unit = hq.units[unitIndex]
 
         if (unit) {
-          region.units.push(unit);
-          unit.regionId = region.id;
-          unitIndex++;
-          count++;
+          region.units.push(unit)
+          unit.regionId = region.id
+          unitIndex++
+          count++
         } else {
-          return;
+          return
         }
       }
     })

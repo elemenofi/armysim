@@ -65,6 +65,7 @@
         "no-var-requires": true,
         "no-with-statement": true,
         "object-literal-key-quotes": [true, "as-needed"],
+        "object-literal-sort-keys": false,
         "one-line": [true, "check-open-brace", "check-catch", "check-else", "check-whitespace"],
         "one-variable-per-declaration": true,
         "ordered-imports": true,

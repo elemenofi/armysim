@@ -1,27 +1,26 @@
 
-import VUi from './ui-game.jsx';
-import Actions from './actions';
-import config from './config';
-import Army from './army';
-
+import Actions from './actions'
+import Army from './army'
+import config from './config'
+import VUi from './ui-game.jsx'
 
 class Engine {
-  army: Army;
-  running: boolean;
-  ui: VUi;
-  actions: Actions;
-  turn: number;
-  constructor (army) {
-    this.army = army;
-    this.ui = new VUi(this);
-    this.actions = new Actions(this);
-    this.turn = 0;
-    this.running = true;
-    this.start();
-  }
-
+  army: Army
+  running: boolean
+  ui: VUi
+  actions: Actions
+  turn: number
   gameLoop
-  UILoop
+  uiLoop
+
+  constructor (army) {
+    this.army = army
+    this.ui = new VUi(this)
+    this.actions = new Actions(this)
+    this.turn = 0
+    this.running = true
+    this.start()
+  }
 
   getTurns () {
     return this.turn
@@ -60,7 +59,7 @@ class Engine {
   updateUI () {
     this.ui.render(this.army)
     if (this.running) {
-      this.UILoop = setTimeout(() => {
+      this.uiLoop = setTimeout(() => {
         this.updateUI()
       }, config.speed)
     }

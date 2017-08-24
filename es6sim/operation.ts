@@ -48,7 +48,7 @@ export class Operation {
     return roll
   }
 
-  execute (hq: hq): void {
+  execute (HQ: hq): void {
     const targetRoll = this.roll(this.target)
     const officerRoll = this.roll(this.officer)
 
@@ -57,14 +57,14 @@ export class Operation {
     }
 
     if (this.strength >= 300) {
-      this.target.reserve(hq, this)
+      this.target.reserve(HQ, this)
       this.officer.prestige += 10
       this.officer.prestige += this.target.prestige
       this.officer.operations[this.officer.operations.indexOf(this)] = undefined
       this.officer.completed.push(this)
       if (this.byPlayer) {
-        hq.findPlayer().operations[hq.findPlayer().operations.indexOf(this)] = undefined
-        hq.findPlayer().completed.push(this)
+        HQ.findPlayer().operations[HQ.findPlayer().operations.indexOf(this)] = undefined
+        HQ.findPlayer().completed.push(this)
       }
     }
 

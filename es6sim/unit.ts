@@ -1,18 +1,18 @@
 
-import names from './names';
-import Officer from './officer';
 import hq from './hq'
+import names from './names'
+import Officer from './officer'
 
 class Unit {
-  id: number;
-  parentId: number;
-  type: string;
-  name: string;
-  subunits?: Unit[];
-  reserve: Officer[];
+  id: number
+  parentId: number
+  type: string
+  name: string
+  subunits?: Unit[]
+  reserve: Officer[]
   commander: Officer
 
-  constructor (spec: any, hq: hq) {
+  constructor (spec: any, HQ: hq) {
     this.id = spec.id
     this.parentId = spec.parentId
     this.type = spec.type
@@ -20,7 +20,7 @@ class Unit {
     names[spec.type].shift()
     this.reserve = []
     this.subunits = []
-    this.commander = hq.recruit(spec.rank, this.id, false, this.name)
+    this.commander = HQ.recruit(spec.rank, this.id, false, this.name)
   }
 }
 

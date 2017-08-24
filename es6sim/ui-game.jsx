@@ -66,7 +66,7 @@ class VStructure extends React.Component {
     units.forEach(unit => {
       unit.isRed = (this.state.engine.army.hq.inspected
       && unit.commander.id === this.state.engine.army.hq.inspected.id
-      || unit.commander.isPlayer) ? 'isRed' : '';
+      || unit.commander.isPlayer) ? 'isRed' : ''
       unit.isTarget = (this.state.engine.army.hq.target
       && unit.commander.id === this.state.engine.army.hq.target.id) ? 'isTarget' : '';
 
@@ -76,7 +76,7 @@ class VStructure extends React.Component {
       if (unit.type === 'platoon') unit.displayName = unit.name.split(' ')[0] + '★★'
       if (unit.type === 'company') unit.displayName = unit.name.split(' ')[0] + '★★★'
       if (unit.type === 'battalion') unit.displayName = unit.name.split(' ')[0] + '★★★★'
-    });
+    })
 
 
     return(
@@ -100,7 +100,7 @@ class VBadges extends React.Component {
   }
 
   render () {
-    let officer = this.props.officer;
+    let officer = this.props.officer
     let number = officer.operations.length;
     function badge () {
       return <div className="badge" style={
@@ -111,9 +111,9 @@ class VBadges extends React.Component {
         }></div>;
     }
     function getRandomColor() {
-      var letters = '0123456789ABCDEF';
-      var color = '#';
-      for (var i = 0; i < 6; i++ ) {
+      let letters = '0123456789ABCDEF';
+      let color = '#';
+      for (let i = 0; i < 6; i++ ) {
           color += letters[Math.floor(Math.random() * 16)];
       }
       return color;
@@ -213,9 +213,7 @@ class VOperations extends React.Component {
           <li onClick={this.inspectOperation.bind(this, operation)} className="operation">
             <div>
               <ul>
-              <li>{operation.name}</li>
-              <li>{operation.description}</li>
-              <li>{this.props.engine.army.hq.findUnitById(operation.target.unitId).name}</li>
+              <li>{operation.name} {operation.description} {this.props.engine.army.hq.findUnitById(operation.target.unitId).name}</li>
               </ul>
             </div>
             <div>{(operation.strength * 300)/1000} % complete</div>
@@ -248,9 +246,9 @@ class VInspected extends React.Component {
   }
 
   startOperation (type) {
-    var army = this.props.engine.army;
+    let army = this.props.engine.army;
 
-    var spec = {
+    let spec = {
       type: type,
       officer: army.hq.planner,
       target: army.hq.target,
@@ -260,7 +258,7 @@ class VInspected extends React.Component {
     army.hq.operations.add(spec, army.hq);
 
     if (!this.props.engine.running) {
-      //pass true as triggeredByUserAction
+      // pass true as triggeredByUserAction
       this.props.engine.update(true);
       this.props.engine.updateUI(true);
     }
@@ -268,12 +266,12 @@ class VInspected extends React.Component {
 
   render () {
     if (!this.props.officer) return (<div></div>)
-    var army = this.props.engine.army;
+    let army = this.props.engine.army;
     let officer = this.props.officer;
-    var engine = this.props.engine;
-    var superior = army.hq.findCommandingOfficer(officer)
-    var target = (army.hq.target) ? army.hq.target.name() : '';
-    var headerHTML = (!officer.isPlayer) ?
+    let engine = this.props.engine;
+    let superior = army.hq.findCommandingOfficer(officer)
+    let target = (army.hq.target) ? army.hq.target.name() : '';
+    let headerHTML = (!officer.isPlayer) ?
     <div>
       <VOfficer officer={ officer } engine={ engine }/>
       <div>{ army.hq.findUnitById(officer.unitId).name }</div>
@@ -283,7 +281,6 @@ class VInspected extends React.Component {
       <VOperations officer={ officer } engine={ engine }/>
     </div> :
     <div></div>;
-
 
     return(
       <div className="inspected">
@@ -314,32 +311,32 @@ class VStaff extends React.Component {
   }
 
   render () {
-    var staff = [];
-    var subordinates = [];
-    var army = this.props.engine.army;
-    var engine = this.props.engine;
-    var officer = this.props.officer;
-    var unit = army.hq.findUnitById(officer.unitId);
-    var superior = this.props.officer.commander;
+    const staff = [];
+    const subordinates = [];
+    const army = this.props.engine.army;
+    const engine = this.props.engine;
+    const officer = this.props.officer;
+    let unit = army.hq.findUnitById(officer.unitId);
+    const superior = this.props.officer.commander;
     if (!unit) unit = { name: 'No unit' };
 
-    army.hq.findOperationalStaff(this.props.officer).forEach(officer => {
+    army.hq.findOperationalStaff(this.props.officer).forEach((officer) => {
       staff.push(<li><VOfficer officer={ officer } engine={ engine }/></li>);
     });
     staff.reverse()
 
-    var superiorHTML = (!officer.reserved && officer.rank.hierarchy < 7 && !this.state.operations) ?
-    <div className="superior">
+    const superiorHTML = (!officer.reserved && officer.rank.hierarchy < 7 && !this.state.operations) ?
+    <div className='superior'>
       <div>Commanding Officer</div>
       <VOfficer officer={ superior } engine={ engine }/>
     </div> :
     <div></div>;
 
-    var staffHTML = (staff.length && !this.props.officer.reserved && !this.props.operations) ?
-    <div className="inspectedStaff">
+    const staffHTML = (staff.length && !this.props.officer.reserved && !this.props.operations) ?
+    <div className='inspectedStaff'>
       { superiorHTML }
       <h2>Staff</h2>
-      <ul className="staff">{ staff }</ul>
+      <ul className='staff'>{ staff }</ul>
     </div> :
     <div>
       { superiorHTML }
@@ -363,7 +360,7 @@ class VOfficer extends React.Component {
   }
 
   render () {
-    var html;
+    let html;
 
     if (this.props.officer) {
       html = <div>
@@ -387,10 +384,10 @@ class VStats extends React.Component {
   }
 
   render () {
-    var html
+    let html
 
     if (this.props.officer) {
-      html = <div className="stats">
+      html = <div className='stats'>
         <div>EXP { this.props.officer.experience } / {this.props.officer.rank.maxxp}</div>
         <div>PRE { this.props.officer.prestige }</div>
         <div>PAR { this.props.officer.party }</div>
@@ -402,7 +399,7 @@ class VStats extends React.Component {
         <div>DIP { this.props.officer.diplomacy }</div>
       </div>
     } else {
-      html = <div className="stats"></div>
+      html = <div className='stats'></div>
     }
 
     return(html);
@@ -419,23 +416,23 @@ class VHistory extends React.Component {
   }
 
   render () {
-    var history = [];
+    const history = [];
 
     if (this.props.officer) {
       this.props.officer.history.events.forEach((event) => {
-        history.push(<li className="log">{ event }</li>)
+        history.push(<li className='log'>{ event }</li>)
       })
       // if (!this.props.officer.reserved) history = history.slice(0, 2)
       history.reverse()
     }
 
-    var html = (this.props.officer) ? <div className="history">
+    const html = (this.props.officer) ? <div className='history'>
                                         <div>Record</div>
                                         <ul>{ history }</ul>
-                                      </div> : <div></div>;
+                                      </div> : <div></div>
 
-    return(html);
+    return(html)
   }
 }
 
-export default VUi;
+export default VUi

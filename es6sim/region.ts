@@ -1,23 +1,23 @@
-import * as chance from './lib/chance';
+import * as chance from './lib/chance'
 import Unit from './unit'
 
 interface Chance {
-  last(): string;
-  first(o: Object): string
-  city(): string;
+  last (): string
+  first (o: object): string
+  city (): string
 }
 
 class Region {
-  id: number;
-  name: string;
-  units: Unit[];
-  chance: Chance;
+  id: number
+  name: string
+  units: Unit[]
+  chance: Chance
   constructor (id) {
-    this.id = id;
+    this.id = id
     this.chance = chance(Math.random)
-    this.name = this.chance.city();
-    this.units = [];
+    this.name = this.chance.city()
+    this.units = []
   }
 }
 
-export default Region;
+export default Region
