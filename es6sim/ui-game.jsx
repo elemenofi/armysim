@@ -101,7 +101,7 @@ class VBadges extends React.Component {
 
   render () {
     let officer = this.props.officer
-    let number = officer.operations.length;
+
     function badge () {
       return <div className="badge" style={
           {
@@ -110,6 +110,7 @@ class VBadges extends React.Component {
           }
         }></div>;
     }
+
     function getRandomColor() {
       let letters = '0123456789ABCDEF';
       let color = '#';
@@ -119,7 +120,7 @@ class VBadges extends React.Component {
       return color;
     }
 
-    if (officer.badges.length < officer.completed.length * 3) {
+    while (officer.badges.length < officer.experience / 100) {
       officer.badges.push(badge())
     }
 
