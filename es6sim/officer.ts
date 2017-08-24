@@ -72,6 +72,7 @@ export class Officer implements Officer {
   unitName: string;
 
   constructor (spec: Partial<Officer>, HQ: HQ, unitName: string) {
+    this.HQ = HQ; 
     let traits = new Traits();
     this.id = spec.id;
     this.isPlayer = spec.isPlayer;
@@ -111,7 +112,6 @@ export class Officer implements Officer {
       this.fname = 'John';
     }
 
-    this.HQ = HQ;
 
     this.badges = [];
 
