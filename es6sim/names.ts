@@ -1,5 +1,18 @@
 
-let names = {};
+export interface Names {
+  army: string[]
+  corp: string[]
+  division: string[]
+  brigade: string[]
+  regiment: string[]
+  company: string[]
+  battalion: string[]
+  platoon: string[]
+  squad: string[]
+  nouns: string []
+}
+
+let names: Partial<Names> = {};
 
 names.army = [
   'National Army Headquarters'

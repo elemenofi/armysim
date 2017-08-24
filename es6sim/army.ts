@@ -3,6 +3,7 @@ import HQ from './hq';
 import Unit from './unit';
 import config from './config';
 import World from './world'
+
 interface Window { army: any }
 
 class Army {
