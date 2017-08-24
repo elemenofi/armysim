@@ -12,6 +12,7 @@ import util from './util'
 
 interface Window { army: any; command: any }
 declare var window: Window
+const traits = new Traits()
 
 interface Chance {
   last (): string
@@ -75,49 +76,39 @@ export class Officer implements Officer {
   school: School
 
   constructor (spec: Partial<Officer>, headquarters: hq, unitName: string) {
-    this.hq = headquarters
-    const traits = new Traits()
-    this.id = spec.id
     this.isPlayer = spec.isPlayer
-    this.unitId = spec.unitId
-    this.reserved = false
-
-    this.rank = this.hq.secretary.ranks[spec.rankName]
-    this.experience = this.hq.secretary.ranks[spec.rankName].startxp + util.random(500)
-    this.prestige = 0
-
-    this.personality = {
-      base: traits.random('base'),
-    }
-
-    this.school = this.hq.secretary.schools[this.personality.base.area]
-    this.intelligence = this.personality.base.intelligence + this.school.intelligence + util.random(10)
-    this.commanding = this.personality.base.commanding + this.school.commanding + util.random(10)
-    this.diplomacy = this.personality.base.diplomacy + this.school.diplomacy + util.random(10)
-
-    this.alignment = util.random(10000)
-    this.militant = false
-    this.militancy = 0
-    this.drift = Math.floor(Math.random() * 2) === 1 ? 1 : -1 //
-
-    this.operations = []
-    this.completed = []
-    this.history = {
-      events: [],
-    }
-    this.targets = []
-
     this.chance = chance(Math.random)
     this.lname = this.chance.last()
     this.fname = this.chance.first({gender: 'male'})
-
     if (this.isPlayer) {
       this.lname = (config.debug) ? 'Richardson' : prompt('Name?')
       this.fname = 'John'
     }
-
+    this.hq = headquarters
+    this.id = spec.id
+    this.unitId = spec.unitId
+    this.reserved = false
+    this.rank = this.hq.secretary.ranks[spec.rankName]
+    this.experience = this.hq.secretary.ranks[spec.rankName].startxp + util.random(500)
+    this.prestige = 0
+    this.personality = {
+      base: traits.random('base'),
+    }
+    this.school = this.hq.secretary.schools[this.personality.base.area]
+    this.intelligence = this.personality.base.intelligence + this.school.intelligence + util.random(10)
+    this.commanding = this.personality.base.commanding + this.school.commanding + util.random(10)
+    this.diplomacy = this.personality.base.diplomacy + this.school.diplomacy + util.random(10)
+    this.alignment = util.random(10000)
+    this.militant = false
+    this.militancy = 0
+    this.drift = Math.floor(Math.random() * 2) === 1 ? 1 : -1 // this is hardcoded now but it should be dynamic
+    this.operations = []
+    this.completed = []
     this.badges = []
-
+    this.history = {
+      events: [],
+    }
+    this.targets = []
     this.graduate(unitName)
   }
 
@@ -131,65 +122,58 @@ export class Officer implements Officer {
     this.history.events.push(this.hq.journal.graduated(this, unitName))
   }
 
-  update (headquarters: hq) {
-    if (this.reserved) headquarters.activeOfficers[this.id] = undefined
+  update () {
+    if (this.reserved) this.hq.activeOfficers[this.id] = undefined
 
-    this.drifts(headquarters)
-    this.militate(headquarters)
+    this.drifts()
+    this.militate()
     this.align()
 
     this.experience++
 
-    if (!this.reserved && this.experience > this.rank.maxxp) this.reserve(headquarters)
-    if (this.experience > 16000) this.death(hq)
+    if (!this.reserved && this.experience > this.rank.maxxp) this.reserve()
+    if (this.experience > 16000) this.death()
   }
 
-  death (headquarters) {
+  death () {
     if (util.random(100) === 1) {
       this.dead = true
-      this.reserve(headquarters)
+      this.reserve()
     }
   }
 
-  drifts (headquarters: hq) {
+  drifts () {
     let parent
-    const unit = headquarters.findUnitById(this.unitId)
-    if (unit) parent = headquarters.findUnitById(unit.parentId)
-    if (parent) {
-      this.commander = parent.commander
-    } else {
-      this.commander = undefined
-    }
-    this.party = (this.alignment > 5000) ? 'Conservative' : 'Radical'
+    const unit = this.hq.findUnitById(this.unitId)
+    if (unit) parent = this.hq.findUnitById(unit.parentId)
+    if (parent) this.commander = parent.commander
+    else this.commander = undefined
   }
 
   align () {
-    if (this.drift > 0 && this.alignment < 10000) {
-      this.alignment += this.drift
-    } else if (this.drift < 0 && this.alignment > 0) {
+    if (
+      this.drift > 0 && this.alignment < 10000 ||
+      this.drift < 0 && this.alignment > 0
+    ) {
       this.alignment += this.drift
     }
+
+    this.party = (this.alignment > 5000) ? 'Conservative' : 'Radical'
   }
 
-  militate (headquarters: hq) {
-    this.militant = (
-      this.alignment > 9000 ||
-      this.alignment < 1000
-    ) ? true : false
+  militate () {
+    this.militant = this.alignment > 9000 || this.alignment < 1000
 
-    if (
-      this.militant &&
-      this.militancy < this.operationDelay
-    ) this.militancy ++
+    if (this.militant && this.militancy < this.operationDelay) this.militancy++
 
     if (this.militancy === this.operationDelay) {
-      this.startOperation(headquarters)
+      this.startOperation()
       this.militancy -= this.operationDelay
     }
   }
 
-  startOperation (headquarters) {
-    const targets = this.chooseTarget(headquarters)
+  startOperation () {
+    const targets = this.chooseTarget()
     if (!targets.length) return
     targets.forEach((target) => {
       if (
@@ -208,13 +192,13 @@ export class Officer implements Officer {
           type: this.personality.base.area,
         }
 
-        headquarters.operations.add(spec)
+        this.hq.operations.add(spec, this.hq)
         this.targets[target.id] = target.id
       }
     })
   }
 
-  chooseTarget (headquarters: hq): Officer[] {
+  chooseTarget (): Officer[] {
     const targets = []
 
     if (this.commander && this.commander.party !== this.party ||
@@ -227,7 +211,7 @@ export class Officer implements Officer {
     if (this.commander) {
       // my colleague in rank under my commander will be an enemy if he is
       // from the other party or has more experience than i do
-      headquarters.units[this.commander.unitId].subunits.forEach((unit) => {
+      this.hq.units[this.commander.unitId].subunits.forEach((unit) => {
         if (
           unit.commander.id !== this.id &&
           (
@@ -240,18 +224,18 @@ export class Officer implements Officer {
       })
     }
 
-    this.allSubordinates(headquarters, this, this.rank.hierarchy - 1, targets)
+    this.allSubordinates(this, this.rank.hierarchy - 1, targets)
 
     return targets
   }
 
-  allSubordinates = (headquarters: hq, officer: Officer, quantity: number, targets: Officer[]): void => {
+  allSubordinates = (officer: Officer, quantity: number, targets: Officer[]): void => {
     if (quantity === -1) return
-    if (headquarters.units[officer.unitId]) {
-      headquarters.units[officer.unitId].subunits.forEach((subunit) => {
+    if (this.hq.units[officer.unitId]) {
+      this.hq.units[officer.unitId].subunits.forEach((subunit) => {
         const commander = subunit.commander
         if (commander.party !== this.party) targets.push(commander)
-        this.allSubordinates(headquarters, commander, commander.rank.hierarchy - 1, targets)
+        this.allSubordinates(commander, commander.rank.hierarchy - 1, targets)
       })
     }
   }
@@ -260,8 +244,8 @@ export class Officer implements Officer {
     return this.party === officer.party
   }
 
-  reserve (headquarters, operation?: Operation) {
-    let lastUnit = headquarters.units[this.unitId]
+  reserve (operation ?: Operation) {
+    let lastUnit = this.hq.units[this.unitId]
 
     if (this.rank.alias === 'general') {
       lastUnit = window.army.command
@@ -273,30 +257,31 @@ export class Officer implements Officer {
     this.reserved = true
 
     if (this.dead) {
+      alert('a')
       this.history.events.push(this.hq.journal.formatDate() + ' buried with full Military Honors')
     } else if (!operation) {
       this.history.events.push('Moved to reserve on ' + this.hq.journal.formatDate())
     } else if (operation) {
-      this.logRetirement(headquarters, operation)
+      this.logRetirement(operation)
     }
   }
 
-  logRetirement (headquarters: hq, operation: Operation) {
+  logRetirement (operation: Operation) {
     operation.completed = this.hq.journal.formatDate()
 
     this.retiredByOperation = operation
 
     let lastRecord = this.history.events[this.history.events.length - 1]
 
-    lastRecord = headquarters.realDate + ', retired by ' + operation.name + ', directed by ' + operation.officer.name()
+    lastRecord = this.hq.realDate + ', retired by ' + operation.name + ', directed by ' + operation.officer.name()
 
     operation.target.history.events.push(lastRecord)
 
-    operation.officer.history.events.push(headquarters.journal.operated(operation))
+    operation.officer.history.events.push(this.hq.journal.operated(operation))
 
     // operation planned by player but carried out by someone else
     if (operation.byPlayer && !operation.officer.isPlayer) {
-      headquarters.findPlayer().history.events.push(operation.name)
+      this.hq.findPlayer().history.events.push(operation.name)
     }
   }
 }

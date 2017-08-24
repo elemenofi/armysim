@@ -57,7 +57,7 @@ export class Operation {
     }
 
     if (this.strength >= 300) {
-      this.target.reserve(HQ, this)
+      this.target.reserve(this)
       this.officer.prestige += 10
       this.officer.prestige += this.target.prestige
       this.officer.operations[this.officer.operations.indexOf(this)] = undefined

@@ -23,7 +23,7 @@ interface ReplaceSpec {
   rankToPromote: string
 }
 
-export class hq {
+export class Hq {
   rawDate: moment.Moment
   operations: Operations
   activeOperations: Operation[]
@@ -67,7 +67,7 @@ export class hq {
     this.units.map(this.reserve.bind(this))
     this.reserve(window.army.command)
     this.operations.update(this)
-    this.activeOfficers.forEach((officer) => { if (officer) officer.update(this) })
+    this.activeOfficers.forEach((officer) => { if (officer) officer.update() })
   }
 
   makePlayer () {
@@ -241,4 +241,4 @@ export class hq {
   }
 }
 
-export default hq
+export default Hq

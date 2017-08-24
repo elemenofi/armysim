@@ -17,7 +17,7 @@ export class Operations {
     this.active = []
   }
 
-  add (spec: Operation, HQ: hq) {
+  add (spec: Partial<Operation>, HQ: hq) {
     const o = spec.officer
 
     if (o.id === spec.target.id) return

@@ -13,7 +13,7 @@ class Journal {
   }
 
   formatDate (): string {
-    return moment(this.hq.rawDate).format('YYYY, Do of MMMM ')
+    return moment(this.hq.rawDate).format('YYYY, MMMM Do')
   }
 
   operated (operation: Operation): string {
