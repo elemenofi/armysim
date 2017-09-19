@@ -30,13 +30,12 @@ export interface Rank {
 
 export interface Personality {
   base: Trait
-  childhood: any
-  teenhood: any
-  college: any
-  company: any
-  field: any
-  physical: any
-  special: any
+  cognitive: Trait
+  look: Trait
+  childhood: Trait
+  teenhood: Trait
+  college: Trait
+  special: Trait
 }
 
 export class Officer implements Officer {
@@ -92,11 +91,16 @@ export class Officer implements Officer {
     this.prestige = 0
     this.personality = {
       base: traits.random('base'),
+      childhood: traits.random('childhood'),
+      cognitive: traits.random('cognitive'),
+      look: traits.random('look'),
+      college: traits.random('college'),
+      special: traits.random('special'),
     }
     this.school = this.hq.secretary.schools[this.personality.base.area]
-    this.intelligence = this.personality.base.intelligence + this.school.intelligence + util.random(10)
-    this.commanding = this.personality.base.commanding + this.school.commanding + util.random(10)
-    this.diplomacy = this.personality.base.diplomacy + this.school.diplomacy + util.random(10)
+    this.intelligence = this.personality.base.intelligence + util.random(10) + this.bonus('intelligence')
+    this.commanding = this.personality.base.commanding + util.random(10) + + this.bonus('commanding')
+    this.diplomacy = this.personality.base.diplomacy + util.random(10) + + this.bonus('diplomacy')
     this.alignment = util.random(10000)
     this.militant = false
     this.militancy = 0
@@ -107,6 +111,14 @@ export class Officer implements Officer {
     this.history = []
     this.targets = []
     this.graduate(unitName)
+  }
+
+  bonus (type: string) {
+    let sum = 0
+    Object.keys(this.personality).forEach((key) => {
+      sum += this.personality[key][type]
+    })
+    return sum
   }
 
   name () {

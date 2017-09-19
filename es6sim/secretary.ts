@@ -2,31 +2,19 @@ import config from './config'
 import { Rank } from './officer'
 
 export interface School {
-  name: string,
-  intelligence: number,
-  commanding: number,
-  diplomacy: number
+  name: string
 }
 
 class Secretary {
   schools: { [key: string]: School; } = {
     diplomacy: {
       name: 'National Officer Candidate School',
-      intelligence: 1,
-      commanding: 1,
-      diplomacy: 4,
     },
     commanding: {
       name: 'National Military Academy',
-      intelligence: 1,
-      commanding: 4,
-      diplomacy: 1,
     },
     intelligence: {
       name: 'National Institute of Military Intelligence',
-      intelligence: 4,
-      commanding: 1,
-      diplomacy: 1,
     },
   }
 
