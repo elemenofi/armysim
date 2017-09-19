@@ -140,10 +140,10 @@ export class Hq {
   }
 
   reserve (unit: Unit) {
-    if (unit.commander.reserved) unit.commander = this.replaceOfficer(unit.commander)
+    if (unit.commander.reserved) unit.commander = this.replace(unit.commander)
   }
 
-  replaceOfficer (replacedCommander: Officer) {
+  replace (replacedCommander: Officer) {
     const lowerRank = this.secretary.rankLower(replacedCommander.rank)
 
     const spec = {
@@ -167,7 +167,7 @@ export class Hq {
     const candidate: Officer = (candidateA.experience > candidateB.experience) ? candidateA : candidateB
     const cadidateUnit = this.units[candidate.unitId]
 
-    cadidateUnit.commander = this.replaceOfficer(cadidateUnit.commander)
+    cadidateUnit.commander = this.replace(cadidateUnit.commander)
 
     candidate.unitId = spec.unitId
     candidate.rank = this.secretary.ranks[spec.rank]
