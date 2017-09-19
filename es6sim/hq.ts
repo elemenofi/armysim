@@ -145,13 +145,6 @@ export class Hq {
     return officer
   }
 
-  findOperationalStaff (officer: Officer, self ?: boolean) {
-    let operationalStaff: Officer[] = []
-    operationalStaff = operationalStaff.concat(this.findSubordinates(officer))
-    if (this.findPlayer() && self) operationalStaff.push(this.findPlayer())
-    return operationalStaff
-  }
-
   findSubordinates (officer: Officer) {
     const subordinates: Officer[] = []
     const unit = this.units.filter((u) => u.id === officer.unitId)[0]

@@ -321,7 +321,7 @@ class VStaff extends React.Component {
     const superior = this.props.officer.commander;
     if (!unit) unit = { name: 'No unit' };
 
-    army.hq.findOperationalStaff(this.props.officer).forEach((officer) => {
+    army.hq.findSubordinates(this.props.officer).forEach((officer) => {
       staff.push(<li><VOfficer officer={ officer } engine={ engine }/></li>);
     });
     staff.reverse()
