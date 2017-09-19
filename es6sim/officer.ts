@@ -54,7 +54,7 @@ export class Officer implements Officer {
   alignment: number
   militancy: number
   drift: number
-  history: {events: string[], reason?: Operation}
+  history: string[]
   rank: Rank
   rankName: string
   operations: Operation[]
@@ -104,9 +104,7 @@ export class Officer implements Officer {
     this.operations = []
     this.completed = []
     this.badges = []
-    this.history = {
-      events: [],
-    }
+    this.history = []
     this.targets = []
     this.graduate(unitName)
   }
@@ -118,118 +116,23 @@ export class Officer implements Officer {
   }
 
   graduate (unitName: string) {
-    this.history.events.push(this.hq.journal.graduated(this, unitName))
+    this.history.push(this.hq.journal.graduated(this, unitName))
   }
 
   update () {
-    this.experience++
-    this.findCommander()
-    this.sendToReserve()
-    this.reserve()
-    this.death()
-  }
-
-  death () {
-    if (this.experience < 16000) return
-    if (util.random(100) === 1) {
-      this.dead = true
-      this.reserve(this.dead)
-    }
-  }
-
-  sendToReserve () {
-    this.hq.sendToReserve(this)
-  }
-
-  findCommander () {
     this.commander = this.hq.findCommander(this)
+    this.experience++
+    if (this.experience > this.rank.maxxp) this.retire()
   }
 
-  drifts () {
-    // let parent
-    // const unit = this.hq.findUnitById(this.unitId)
-    // if (unit) parent = this.hq.findUnitById(unit.parentId)
-    // if (parent) this.commander = parent.commander
-    // else this.commander = undefined
+  retire () {
+    this.reserved = true
+    this.hq.retireOfficer(this)
+    this.hq.assignToReserve(this)
   }
 
-  align () {
-    // if (
-    //   this.drift > 0 && this.alignment < 10000 ||
-    //   this.drift < 0 && this.alignment > 0
-    // ) {
-    //   this.alignment += this.drift
-    // }
-
-    // this.party = (this.alignment > 5000) ? 'Conservative' : 'Radical'
-  }
-
-  militate () {
-    // this.militant = this.alignment > 9000 || this.alignment < 1000
-
-    // if (this.militant && this.militancy < this.operationDelay) this.militancy++
-
-    // if (this.militancy === this.operationDelay) {
-    //   this.startOperation()
-    //   this.militancy -= this.operationDelay
-    // }
-  }
-
-  startOperation () {
-    // const targets = this.chooseTarget()
-    // if (!targets.length) return
-    // targets.forEach((target) => {
-    //   if (
-    //     target &&
-    //     // !this.isPlayer &&
-    //     !this.reserved &&
-    //     this.operations.length <= this.rank.hierarchy &&
-    //     !this.targets[target.id] &&
-    //     this.rank.hierarchy < target.rank.hierarchy + 2
-    //   ) {
-
-    //     const spec = {
-    //       name: '',
-    //       officer: this,
-    //       target,
-    //       type: this.personality.base.area,
-    //     }
-
-    //     this.hq.operations.add(spec, this.hq)
-    //     this.targets[target.id] = target.id
-    //   }
-    // })
-  }
-
-  chooseTarget () {
-    // const targets = []
-
-    // if (this.commander && this.commander.party !== this.party ||
-    //   this.commander &&
-    //   this.commander.rank.maxxp - this.commander.experience > // time to retire if in same position
-    //   this.rank.maxxp - this.experience) { // officers whose boss will retire after them will be enemies
-    //   targets.push(this.commander)
-    // }
-
-    // if (this.commander) {
-    //   // my colleague in rank under my commander will be an enemy if he is
-    //   // from the other party or has more experience than i do
-    //   this.hq.units[this.commander.unitId].subunits.forEach((unit) => {
-    //     if (
-    //       unit.commander.id !== this.id &&
-    //       (
-    //         unit.commander.party !== this.party ||
-    //         unit.commander.experience > this.experience
-    //       )
-    //     ) {
-    //       targets.push(unit.commander)
-    //     }
-    //   })
-    // }
-
-    // this.allSubordinates(this, this.rank.hierarchy - 1, targets)
-
-    // return targets
+  isAlly (officer: Officer): boolean {
+    return this.party === officer.party
   }
 
   allSubordinates = (officer: Officer, quantity: number, targets: Officer[]): void => {
@@ -240,54 +143,6 @@ export class Officer implements Officer {
         if (commander.party !== this.party) targets.push(commander)
         this.allSubordinates(commander, commander.rank.hierarchy - 1, targets)
       })
-    }
-  }
-
-  isAlly (officer: Officer): boolean {
-    return this.party === officer.party
-  }
-
-  reserve (death?: boolean, operation?: Operation) {
-    // officers can only be reserved if they are above their experience
-    // for the rank or if it is because of an operation that reserves them
-    if (!operation && this.experience < this.rank.maxxp && !death) return
-
-    let lastUnit = this.hq.units[this.unitId]
-
-    if (this.rank.alias === 'general') {
-      lastUnit = window.army.command
-    }
-
-    if (this.rank.hierarchy >= 4) lastUnit.reserve.unshift(this)
-    if (lastUnit.reserve.length > 3) lastUnit.reserve.pop()
-
-    this.reserved = true
-
-    if (this.dead) {
-      this.history.events.push(this.hq.journal.formatDate() + ' buried with full Military Honors')
-    } else if (!operation) {
-      this.history.events.push('Moved to reserve on ' + this.hq.journal.formatDate())
-    } else if (operation) {
-      this.logRetirement(operation)
-    }
-  }
-
-  logRetirement (operation: Operation) {
-    operation.completed = this.hq.journal.formatDate()
-
-    this.retiredByOperation = operation
-
-    let lastRecord = this.history.events[this.history.events.length - 1]
-
-    lastRecord = this.hq.realDate + ', retired by ' + operation.name + ', directed by ' + operation.officer.name()
-
-    operation.target.history.events.push(lastRecord)
-
-    operation.officer.history.events.push(this.hq.journal.operated(operation))
-
-    // operation planned by player but carried out by someone else
-    if (operation.byPlayer && !operation.officer.isPlayer) {
-      this.hq.findPlayer().history.events.push(operation.name)
     }
   }
 }

@@ -420,7 +420,7 @@ class VHistory extends React.Component {
     const history = [];
 
     if (this.props.officer) {
-      this.props.officer.history.events.forEach((event) => {
+      this.props.officer.history.forEach((event) => {
         history.push(<li className='log'>{ event }</li>)
       })
       // if (!this.props.officer.reserved) history = history.slice(0, 2)

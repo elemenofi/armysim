@@ -29,7 +29,6 @@ class Engine {
   start () {
     this.update()
     this.army.hq.makePlayer()
-    this.army.hq.player.drifts()
     this.updateUI()
     this.pause()
   }

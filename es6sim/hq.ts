@@ -62,7 +62,9 @@ export class Hq {
     if (!triggeredByUserAction) this.updateDate()
     this.units.map((unit) => this.reserve(unit))
     this.operations.update(this)
-    this.activeOfficers.forEach((officer) => { if (officer) officer.update() })
+    this.activeOfficers
+      .filter((officer) => officer)
+      .forEach((officer) => { officer.update() })
   }
 
   makePlayer () {
@@ -92,8 +94,19 @@ export class Hq {
     return (officer.commander) ? officer.commander : { name: () => 'No name' }
   }
 
-  sendToReserve (officer: Officer) {
-    if (officer.reserved) this.activeOfficers[officer.id] = undefined
+  retireOfficer (officer: Officer) {
+    this.activeOfficers[officer.id] = undefined
+  }
+
+  assignToReserve (officer: Officer) {
+    let lastUnit = this.units[officer.unitId]
+
+    if (officer.rank.alias === 'general') {
+      lastUnit = window.army.command
+    }
+
+    if (officer.rank.hierarchy >= 4) lastUnit.reserve.unshift(officer)
+    if (lastUnit.reserve.length > 3) lastUnit.reserve.pop()
   }
 
   findCommander (officer: Officer): Officer {
@@ -132,7 +145,7 @@ export class Hq {
     return officer
   }
 
-  findOperationalStaff (officer: Officer, self?: boolean) {
+  findOperationalStaff (officer: Officer, self ?: boolean) {
     let operationalStaff: Officer[] = []
     operationalStaff = operationalStaff.concat(this.findSubordinates(officer))
     if (this.findPlayer() && self) operationalStaff.push(this.findPlayer())
@@ -188,7 +201,7 @@ export class Hq {
     return this.recruit('lieutenant', replacedCommander.unitId, true, this.findUnitById(replacedCommander.unitId).name)
   }
 
-  recruit (rank: string, unitId: number, isPlayer?: boolean, unitName?: string) {
+  recruit (rank: string, unitId: number, isPlayer ?: boolean, unitName ?: string) {
     const options = {
       date: this.realDate,
       id: this.OFFICERSID,
@@ -233,7 +246,7 @@ export class Hq {
   promote (officer: Officer, spec: ReplaceSpec) {
     this.deassign(officer.unitId)
     const promotion = this.promotion(officer, spec)
-    officer.history.events.push(this.journal.promoted(spec.rank, spec.unitId))
+    officer.history.push(this.journal.promoted(spec.rank, spec.unitId))
     officer.targets = []
     officer.commander = undefined
     return officer

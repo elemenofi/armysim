@@ -100,7 +100,7 @@ class Secretary {
       title: 'General',
       alias: 'general',
       startxp: 180 * config.gameLength,
-      maxxp: 1000000 * config.gameLength,
+      maxxp: 400 * config.gameLength,
       startpr: 900,
     },
   }
