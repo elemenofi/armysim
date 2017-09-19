@@ -62,7 +62,6 @@ export class Officer implements Officer {
   commander: Officer
   personality: Partial<Personality>
   chance: any
-  retiredByOperation: Operation
   targets: number[]
   party: string
   militant: boolean
@@ -140,22 +139,6 @@ export class Officer implements Officer {
   retire () {
     this.reserved = true
     this.hq.retireOfficer(this)
-    this.hq.assignToReserve(this)
-  }
-
-  isAlly (officer: Officer): boolean {
-    return this.party === officer.party
-  }
-
-  allSubordinates = (officer: Officer, quantity: number, targets: Officer[]): void => {
-    if (quantity === -1) return
-    if (this.hq.units[officer.unitId]) {
-      this.hq.units[officer.unitId].subunits.forEach((subunit) => {
-        const commander = subunit.commander
-        if (commander.party !== this.party) targets.push(commander)
-        this.allSubordinates(commander, commander.rank.hierarchy - 1, targets)
-      })
-    }
   }
 }
 

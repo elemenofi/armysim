@@ -19,13 +19,13 @@ class Journal {
   operated (operation: Operation): string {
     return `
       ${this.formatDate()} completed ${operation.name}
-      ${operation.description} the ${this.hq.findUnitById(operation.target.unitId).name}
+      ${operation.description} the ${this.hq.units[operation.target.unitId].name}
       and forcing ${operation.target.name()} into retirement
     `
   }
 
   promoted (rank: string, unitId: number): string {
-    return `${this.formatDate()} promoted to ${this.hq.secretary.ranks[rank].title}, ${this.hq.findUnitById(unitId).name}`
+    return `${this.formatDate()} promoted to ${this.hq.secretary.ranks[rank].title}, ${this.hq.units[unitId].name}`
   }
 
   graduated (officer: Officer, unitName: string): string {

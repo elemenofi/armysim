@@ -30,7 +30,7 @@ class VArmy extends React.Component {
         <p className="date" >{ army.hq.realDate }</p>
         <div className="client">
           <VPlayer className="player-box" player={ army.hq.player } engine={ engine }/>
-          <VInspected className="target-box" officer={ army.hq.findInspected() } engine={ engine } />
+          <VInspected className="target-box" officer={ army.hq.inspected } engine={ engine } />
           <VOperation className="target-box" operation={ army.hq.inspectedOperation } engine={ engine } />
         </div>
         <div className="clear"></div>
@@ -151,7 +151,7 @@ class VPlayer extends React.Component {
     return(
       <div className="player">
         <div onClick={ this.inspect.bind(this) }>{ player.name() }</div>
-        <div>{ this.state.engine.army.hq.findUnitById(player.unitId).name }</div>
+        <div>{ this.state.engine.army.hq.units[player.unitId].name }</div>
         <VStats officer={ player } engine={ engine } />
         <VStaff officer={ player } engine={ engine } />
         <VOperations officer={ player } engine={ engine } />
@@ -211,7 +211,7 @@ class VOperations extends React.Component {
           <li onClick={this.inspectOperation.bind(this, operation)} className="operation">
             <div>
               <ul>
-              <li>{operation.name} {operation.description} {this.props.engine.army.hq.findUnitById(operation.target.unitId).name}</li>
+              <li>{operation.name} {operation.description} {this.props.engine.army.hq.units[operation.target.unitId].name}</li>
               </ul>
             </div>
             <div>{(operation.strength * 30)/100} % complete</div>
@@ -273,7 +273,7 @@ class VInspected extends React.Component {
     let headerHTML = (!officer.isPlayer) ?
     <div>
       <VOfficer officer={ officer } engine={ engine }/>
-      <div>{ army.hq.findUnitById(officer.unitId).name }</div>
+      <div>{ army.hq.units[officer.unitId].name }</div>
       <VBadges officer={ officer } />
       <VStats officer={ officer } engine={ engine }/>
       <VStaff officer={ officer } engine={ engine }/>
@@ -315,11 +315,11 @@ class VStaff extends React.Component {
     const army = this.props.engine.army;
     const engine = this.props.engine;
     const officer = this.props.officer;
-    let unit = army.hq.findUnitById(officer.unitId);
+    let unit = army.hq.units[officer.unitId];
     const superior = this.props.officer.commander;
     if (!unit) unit = { name: 'No unit' };
 
-    army.hq.findSubordinates(this.props.officer).forEach((officer) => {
+    army.hq.directSubordinates(this.props.officer).forEach((officer) => {
       staff.push(<li><VOfficer officer={ officer } engine={ engine }/></li>);
     });
     staff.reverse()

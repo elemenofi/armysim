@@ -14,7 +14,6 @@ interface Window { army: any, engine: any, command: any }
 declare var window: Window
 
 interface ReplaceSpec {
-  aggresor?: Officer
   replacedCommander: Officer
   unitId: number
   rank: string
@@ -76,61 +75,32 @@ export class Hq {
     this.planner = this.player
   }
 
-  findPlayer () {
-    return this.officersPool.filter((officer) => {
-      return officer.isPlayer
-    })[0]
-  }
-
   findUnitsByType (type: string) {
     return this.units.filter((unit) => unit.type === type)
-  }
-
-  findUnitById (id: number): Unit {
-    return this.units[id]
-  }
-
-  findCommandingOfficer (officer: Officer): any {
-    return (officer.commander) ? officer.commander : { name: () => 'No name' }
   }
 
   retireOfficer (officer: Officer) {
     this.activeOfficers[officer.id] = undefined
   }
 
-  assignToReserve (officer: Officer) {
-    let lastUnit = this.units[officer.unitId]
-
-    if (officer.rank.alias === 'general') {
-      lastUnit = window.army.command
-    }
-
-    if (officer.rank.hierarchy >= 4) lastUnit.reserve.unshift(officer)
-    if (lastUnit.reserve.length > 3) lastUnit.reserve.pop()
-  }
-
   findCommander (officer: Officer): Officer {
     let commander
-    const unit = this.findUnitById(officer.unitId)
-    const parentUnit = this.findUnitById(unit.parentId)
+    const unit = this.units[officer.unitId]
+    const parentUnit = this.units[unit.parentId]
     if (parentUnit) commander = parentUnit.commander
     else commander = undefined
     return commander
   }
 
-  findOfficerById (officerId: number) {
-    return this.officersPool.filter((officer) => officer.id === Number(officerId))[0]
-  }
-
   inspectOfficer (officerId: number) {
-    const officer = this.findOfficerById(officerId)
+    const officer = this.officersPool[officerId]
     this.inspected = officer
     return officer
   }
 
   targetOfficer (officerId: number) {
-    const officer = this.findOfficerById(officerId)
-    const subordinates = this.findSubordinates(this.player) as any
+    const officer = this.officersPool[officerId]
+    const subordinates = this.directSubordinates(this.player) as any
 
     // weird logic
     if (this.planner.id === officer.id && !officer.isPlayer) {
@@ -145,9 +115,9 @@ export class Hq {
     return officer
   }
 
-  findSubordinates (officer: Officer) {
+  directSubordinates (officer: Officer): Officer[] {
     const subordinates: Officer[] = []
-    const unit = this.units.filter((u) => u.id === officer.unitId)[0]
+    const unit = this.units[officer.unitId]
     if (unit && unit.subunits) {
       unit.subunits.forEach((su) => {
         subordinates.push(su.commander)
@@ -156,8 +126,17 @@ export class Hq {
     return subordinates
   }
 
-  findInspected () {
-    return this.inspected
+  allSubordinates = (officer: Officer, quantity: number): Officer[] => {
+    const subordinates: Officer[] = []
+    if (quantity === -1) return
+    if (this.units[officer.unitId]) {
+      this.units[officer.unitId].subunits.forEach((subunit) => {
+        const commander = subunit.commander
+        subordinates.push(commander)
+        this.allSubordinates(commander, commander.rank.hierarchy - 1)
+      })
+    }
+    return subordinates
   }
 
   add (unit: Unit) {
@@ -176,7 +155,6 @@ export class Hq {
     const lowerRank = this.secretary.rankLower(replacedCommander.rank)
 
     const spec = {
-      aggresor: (replacedCommander.retiredByOperation) ? replacedCommander.retiredByOperation.officer : undefined,
       rank: replacedCommander.rank.alias,
       rankToPromote: lowerRank,
       replacedCommander,
@@ -186,12 +164,21 @@ export class Hq {
     if (lowerRank) {
       return this.candidate(spec)
     } else {
-      return this.recruit(spec.rank, replacedCommander.unitId, false, this.findUnitById(spec.unitId).name)
+      return this.recruit(spec.rank, replacedCommander.unitId, false, this.units[spec.unitId].name)
     }
   }
 
+  candidate (spec: ReplaceSpec) {
+    const parentUnit = this.units[spec.replacedCommander.unitId]
+    const candidateA = parentUnit.subunits[0].commander
+    const candidateB = parentUnit.subunits[1].commander
+    const candidate: Officer = (candidateA.experience > candidateB.experience) ? candidateA : candidateB
+
+    return this.promote(candidate, spec)
+  }
+
   replaceForPlayer (replacedCommander: Officer) {
-    return this.recruit('lieutenant', replacedCommander.unitId, true, this.findUnitById(replacedCommander.unitId).name)
+    return this.recruit('lieutenant', replacedCommander.unitId, true, this.units[replacedCommander.unitId].name)
   }
 
   recruit (rank: string, unitId: number, isPlayer ?: boolean, unitName ?: string) {
@@ -209,31 +196,13 @@ export class Hq {
     }
 
     this.activeOfficers[cadet.id] = cadet
-    this.officersPool.push(cadet)
+    this.officersPool[cadet.id] = cadet
     this.OFFICERSID++
     return cadet
   }
 
   deassign (id: number) {
-    this.replace(this.units.filter((unit) => unit.id === id)[0])
-  }
-
-  candidate (spec: ReplaceSpec) {
-    const parentUnit = this.units[spec.replacedCommander.unitId]
-    let candidate = parentUnit.subunits[0].commander
-    const candidateB = parentUnit.subunits[1].commander
-
-    candidate = (candidate.experience > candidateB.experience) ? candidate : candidateB
-    // if the retirement of the previous office was because of an operation then the planner will be the promoted one if it is only
-    // one rank below
-    if (
-      spec.aggresor &&
-      !spec.aggresor.reserved &&
-      spec.replacedCommander.rank.hierarchy === spec.aggresor.rank.hierarchy + 1
-    ) {
-      candidate = spec.aggresor
-    }
-    return this.promote(candidate, spec)
+    this.replace(this.units[id])
   }
 
   promote (officer: Officer, spec: ReplaceSpec) {
@@ -252,7 +221,7 @@ export class Hq {
     return {
       date: this.journal.formatDate(),
       rank: spec.rank,
-      unit: this.findUnitById(officer.unitId).name,
+      unit: this.units[officer.unitId].name,
     }
   }
 }
