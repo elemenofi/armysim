@@ -31,7 +31,7 @@ class Army {
     unit.subunits = []
 
     this.command = unit
-    this.hq.add(unit)
+    this.hq.units.push(unit)
 
     this._unitsId++
 
@@ -128,7 +128,7 @@ class Army {
         break
       }
 
-      this.hq.add(unit)
+      this.hq.units.push(unit)
 
     }
   }

@@ -138,7 +138,7 @@ export class Officer implements Officer {
 
   retire () {
     this.reserved = true
-    this.hq.retireOfficer(this)
+    this.hq.activeOfficers[this.id] = undefined
   }
 }
 

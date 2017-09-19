@@ -79,10 +79,6 @@ export class Hq {
     return this.units.filter((unit) => unit.type === type)
   }
 
-  retireOfficer (officer: Officer) {
-    this.activeOfficers[officer.id] = undefined
-  }
-
   findCommander (officer: Officer): Officer {
     let commander
     const unit = this.units[officer.unitId]
@@ -137,10 +133,6 @@ export class Hq {
       })
     }
     return subordinates
-  }
-
-  add (unit: Unit) {
-    this.units.push(unit)
   }
 
   reserve (unit: Unit) {
