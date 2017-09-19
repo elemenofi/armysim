@@ -29,46 +29,8 @@ export class Operation {
     this.type = spec.type
     this.name = 'Operation ' + names.nouns[util.random(names.nouns.length)]
     this.strength = 0
-    this.turns = 1000
     this.byPlayer = spec.byPlayer
     this.description = this.descriptions[spec.type]
-  }
-
-  roll (officer: Officer): number {
-    const o = officer
-    let roll
-    roll =
-      o[this.type] +
-      o.intelligence +
-      o.rank.hierarchy +
-      util.random(10)
-
-    roll += (o.commander && o.commander.party === o.party) ? o.commander.rank.hierarchy : 0
-
-    return roll
-  }
-
-  execute (HQ: hq): void {
-    const targetRoll = this.roll(this.target)
-    const officerRoll = this.roll(this.officer)
-
-    if ((officerRoll) > (targetRoll)) {
-      this.strength++
-    }
-
-    if (this.strength >= 300) {
-      this.target.retire()
-      this.officer.prestige += 10
-      this.officer.prestige += this.target.prestige
-      this.officer.operations[this.officer.operations.indexOf(this)] = undefined
-      this.officer.completed.push(this)
-      if (this.byPlayer) {
-        HQ.findPlayer().operations[HQ.findPlayer().operations.indexOf(this)] = undefined
-        HQ.findPlayer().completed.push(this)
-      }
-    }
-
-    this.turns--
   }
 }
 

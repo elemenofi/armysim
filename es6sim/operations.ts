@@ -27,51 +27,19 @@ export class Operations {
 
     operation.id = this.operationsID
     this.operationsID++
+
     this.active.push(operation)
-
-    if (!spec.byPlayer) o.operations.push(operation)
-
-    if (spec.byPlayer && !o.isPlayer) {
-      // add proxy operation
-      o.operations.push(operation)
-      HQ.player.operations.push(operation)
-    }
+    o.operations.push(operation)
 
     return operation
   }
 
   update (HQ) {
-    this.active = this.active.filter((operation) => {
-      const o = operation.officer
-      const t = operation.target
-      if (
-        !o.reserved &&
-        !t.reserved &&
-        operation.turns > 0 &&
-        t.rank &&
-        t.rank.hierarchy <= o.rank.hierarchy + 2
-      ) {
-        return true
-      } else {
-        // remove proxy operation
-        o.operations.splice(o.operations.indexOf(operation), 1)
-        o.completed.push(operation)
-        if (operation.byPlayer && !o.isPlayer) {
-          HQ.player.operations.splice(HQ.player.operations.indexOf(operation), 1)
-          HQ.player.completed.push(operation)
-        }
-        return false
-      }
-    })
+    this.active.forEach((operation) => { this.execute(HQ, operation) })
+  }
 
-    this.active.forEach((operation) => {
-      if (!operation.logged && operation.byPlayer && operation.officer.isPlayer) {
-        // push only main ops to players array
-        HQ.findPlayer().operations.push(operation)
-        operation.logged = true
-      }
-      operation.execute(HQ)
-    })
+  execute (HQ: hq, operation: Operation) {
+    // console.log('operations', operation)
   }
 }
 

@@ -204,12 +204,9 @@ class VOperations extends React.Component {
 
   render () {
     if (!this.props.officer || !this.props.officer.operations.length) return(<div></div>);
-
     let operations = [];
-    let html = <div><ul>{operations}</ul></div>;
-
     this.props.officer.operations.forEach(operation => {
-      if (operation && operation.turns) {
+      if (operation) {
         operations.push(
           <li onClick={this.inspectOperation.bind(this, operation)} className="operation">
             <div>
@@ -217,13 +214,14 @@ class VOperations extends React.Component {
               <li>{operation.name} {operation.description} {this.props.engine.army.hq.findUnitById(operation.target.unitId).name}</li>
               </ul>
             </div>
-            <div>{(operation.strength * 300)/1000} % complete</div>
+            <div>{(operation.strength * 30)/100} % complete</div>
             <div>{operation.officer.name()} </div>
             <div>{operation.target.name()} </div>
           </li>
         )
       }
     })
+    let html = <div><ul>{operations}</ul></div>;    
 
     return(html)
   }
