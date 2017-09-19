@@ -75,6 +75,10 @@ export class Hq {
     this.planner = this.player
   }
 
+  replaceForPlayer (replacedCommander: Officer) {
+    return this.recruit('lieutenant', replacedCommander.unitId, true, this.units[replacedCommander.unitId].name)
+  }
+
   findUnitsByType (type: string) {
     return this.units.filter((unit) => unit.type === type)
   }
@@ -136,11 +140,7 @@ export class Hq {
   }
 
   reserve (unit: Unit) {
-    if (unit.commander.reserved) this.replace(unit)
-  }
-
-  replace (unit: Unit) {
-    unit.commander = this.replaceOfficer(unit.commander)
+    if (unit.commander.reserved) unit.commander = this.replaceOfficer(unit.commander)
   }
 
   replaceOfficer (replacedCommander: Officer) {
@@ -165,12 +165,25 @@ export class Hq {
     const candidateA = parentUnit.subunits[0].commander
     const candidateB = parentUnit.subunits[1].commander
     const candidate: Officer = (candidateA.experience > candidateB.experience) ? candidateA : candidateB
+    const cadidateUnit = this.units[candidate.unitId]
 
-    return this.promote(candidate, spec)
-  }
+    cadidateUnit.commander = this.replaceOfficer(cadidateUnit.commander)
 
-  replaceForPlayer (replacedCommander: Officer) {
-    return this.recruit('lieutenant', replacedCommander.unitId, true, this.units[replacedCommander.unitId].name)
+    candidate.unitId = spec.unitId
+    candidate.rank = this.secretary.ranks[spec.rank]
+
+    const promotion = {
+      date: this.journal.formatDate(),
+      rank: spec.rank,
+      unit: this.units[candidate.unitId].name,
+    }
+
+    candidate.history.push(this.journal.promoted(spec.rank, spec.unitId))
+
+    candidate.targets = []
+    candidate.commander = undefined
+
+    return candidate
   }
 
   recruit (rank: string, unitId: number, isPlayer ?: boolean, unitName ?: string) {
@@ -191,30 +204,6 @@ export class Hq {
     this.officersPool[cadet.id] = cadet
     this.OFFICERSID++
     return cadet
-  }
-
-  deassign (id: number) {
-    this.replace(this.units[id])
-  }
-
-  promote (officer: Officer, spec: ReplaceSpec) {
-    this.deassign(officer.unitId)
-    const promotion = this.promotion(officer, spec)
-    officer.history.push(this.journal.promoted(spec.rank, spec.unitId))
-    officer.targets = []
-    officer.commander = undefined
-    return officer
-  }
-
-  promotion (officer: Officer, spec: any) {
-    officer.unitId = spec.unitId
-    officer.rank = this.secretary.ranks[spec.rank]
-
-    return {
-      date: this.journal.formatDate(),
-      rank: spec.rank,
-      unit: this.units[officer.unitId].name,
-    }
   }
 }
 
