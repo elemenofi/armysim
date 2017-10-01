@@ -83,7 +83,7 @@ export class Hq {
     return this.units.filter((unit) => unit.type === type)
   }
 
-  findCommander (officer: Officer): Officer {
+  findSuperior (officer: Officer): Officer {
     let commander
     const unit = this.units[officer.unitId]
     const parentUnit = this.units[unit.parentId]
@@ -172,16 +172,9 @@ export class Hq {
     candidate.unitId = spec.unitId
     candidate.rank = this.secretary.ranks[spec.rank]
 
-    const promotion = {
-      date: this.journal.formatDate(),
-      rank: spec.rank,
-      unit: this.units[candidate.unitId].name,
-    }
-
     candidate.history.push(this.journal.promoted(spec.rank, spec.unitId))
 
-    candidate.targets = []
-    candidate.commander = undefined
+    candidate.superior = undefined
 
     return candidate
   }

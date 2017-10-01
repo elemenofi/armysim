@@ -59,7 +59,7 @@ export class Officer implements Officer {
   operations: Operation[]
   completed: Operation[]
   unit: Unit
-  commander: Officer
+  superior: Officer
   personality: Partial<Personality>
   chance: any
   targets: number[]
@@ -71,9 +71,10 @@ export class Officer implements Officer {
   hq: hq
   unitName: string
   school: School
+  relations: Officer[]
 
   constructor (spec: Partial<Officer>, headquarters: hq, unitName: string, isPlayer: boolean) {
-    this.isPlayer = spec.isPlayer
+    this.isPlayer = isPlayer
     this.chance = chance(Math.random)
     this.lname = this.chance.last()
     this.fname = this.chance.first({gender: 'male'})
@@ -108,7 +109,6 @@ export class Officer implements Officer {
     this.completed = []
     this.badges = []
     this.history = []
-    this.targets = []
     this.graduate(unitName)
   }
 
@@ -131,14 +131,20 @@ export class Officer implements Officer {
   }
 
   update () {
-    this.commander = this.hq.findCommander(this)
+    this.superior = this.hq.findSuperior(this)
     this.experience++
+    if (this.rank.hierarchy > 5) this.relate()
     if (this.experience > this.rank.maxxp) this.retire()
   }
 
   retire () {
     this.reserved = true
     this.hq.activeOfficers[this.id] = undefined
+  }
+
+  relate () {
+    const subordinates = this.hq.allSubordinates(this, this.rank.hierarchy)
+    console.log(subordinates)
   }
 }
 

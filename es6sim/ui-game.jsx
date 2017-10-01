@@ -268,7 +268,7 @@ class VInspected extends React.Component {
     let army = this.props.engine.army;
     let officer = this.props.officer;
     let engine = this.props.engine;
-    let superior = army.hq.findCommander(officer)
+    let superior = army.hq.findSuperior(officer)
     let target = (army.hq.target) ? army.hq.target.name() : '';
     let headerHTML = (!officer.isPlayer) ?
     <div>
