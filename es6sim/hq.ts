@@ -23,7 +23,6 @@ interface ReplaceSpec {
 export class Hq {
   rawDate: moment.Moment
   operations: Operations
-  activeOperations: Operation[]
   units: Unit[]
   realDate: string
   player: Officer
@@ -59,8 +58,7 @@ export class Hq {
 
   update (triggeredByUserAction?: boolean) {
     if (!triggeredByUserAction) this.updateDate()
-    this.units.map((unit) => this.reserve(unit))
-    this.operations.update(this)
+
     this.activeOfficers
       .filter((officer) => officer)
       .forEach((officer) => { officer.update() })
@@ -69,8 +67,10 @@ export class Hq {
   makePlayer () {
     const squads = this.findUnitsByType('squad')
     const unit = squads[util.random(squads.length) + 1]
+
     unit.commander.reserved = true
     unit.commander = this.replaceForPlayer(unit.commander)
+
     this.player = unit.commander
     this.planner = this.player
   }
@@ -83,103 +83,27 @@ export class Hq {
     return this.units.filter((unit) => unit.type === type)
   }
 
-  findSuperior (officer: Officer): Officer {
-    let commander
-    const unit = this.units[officer.unitId]
-    const parentUnit = this.units[unit.parentId]
-    if (parentUnit) commander = parentUnit.commander
-    else commander = undefined
-    return commander
+  findSubordinates (officer: Officer): Officer[] {
+    const subordinates = []
+    const subunits = this.units[officer.unitId].subunits
+
+    if (!subunits.length) return []
+
+    subordinates[0] = subunits[0].commander
+    subordinates[1] = subunits[1].commander
+
+    return subordinates
   }
 
   inspectOfficer (officerId: number) {
-    const officer = this.officersPool[officerId]
-    this.inspected = officer
-    return officer
+    this.inspected = this.officersPool[officerId]
   }
 
   targetOfficer (officerId: number) {
-    const officer = this.officersPool[officerId]
-    const subordinates = this.directSubordinates(this.player) as any
-
-    // weird logic
-    if (this.planner.id === officer.id && !officer.isPlayer) {
-      this.target = officer
-      this.planner = this.player
-    } else if (officer.isPlayer || subordinates.includes(officer)) {
-      this.planner = officer
-    } else {
-      this.target = officer
-    }
-
-    return officer
+    this.target = this.officersPool[officerId]
   }
 
-  directSubordinates (officer: Officer): Officer[] {
-    const subordinates: Officer[] = []
-    const unit = this.units[officer.unitId]
-    if (unit && unit.subunits) {
-      unit.subunits.forEach((su) => {
-        subordinates.push(su.commander)
-      })
-    }
-    return subordinates
-  }
-
-  allSubordinates = (officer: Officer, quantity: number): Officer[] => {
-    const subordinates: Officer[] = []
-    if (quantity === -1) return
-    if (this.units[officer.unitId]) {
-      this.units[officer.unitId].subunits.forEach((subunit) => {
-        const commander = subunit.commander
-        subordinates.push(commander)
-        this.allSubordinates(commander, commander.rank.hierarchy - 1)
-      })
-    }
-    return subordinates
-  }
-
-  reserve (unit: Unit) {
-    if (unit.commander.reserved) unit.commander = this.replace(unit.commander)
-  }
-
-  replace (replacedCommander: Officer) {
-    const lowerRank = this.secretary.rankLower(replacedCommander.rank)
-
-    const spec = {
-      rank: replacedCommander.rank.alias,
-      rankToPromote: lowerRank,
-      replacedCommander,
-      unitId: replacedCommander.unitId,
-    }
-
-    if (lowerRank) {
-      return this.candidate(spec)
-    } else {
-      return this.recruit(spec.rank, replacedCommander.unitId, false, this.units[spec.unitId].name)
-    }
-  }
-
-  candidate (spec: ReplaceSpec) {
-    const parentUnit = this.units[spec.replacedCommander.unitId]
-    const candidateA = parentUnit.subunits[0].commander
-    const candidateB = parentUnit.subunits[1].commander
-    const candidate: Officer = (candidateA.experience > candidateB.experience) ? candidateA : candidateB
-    const cadidateUnit = this.units[candidate.unitId]
-
-    cadidateUnit.commander = this.replace(cadidateUnit.commander)
-
-    candidate.unitId = spec.unitId
-    candidate.rank = this.secretary.ranks[spec.rank]
-
-    candidate.history.push(this.journal.promoted(spec.rank, spec.unitId))
-
-    candidate.superior = undefined
-
-    return candidate
-  }
-
-  recruit (rank: string, unitId: number, isPlayer ?: boolean, unitName ?: string) {
+  recruit (rank: string, unitId: number, isPlayer ?: boolean, unitName ?: string): Officer {
     const options = {
       date: this.realDate,
       id: this.OFFICERSID,
@@ -196,7 +120,51 @@ export class Hq {
     this.activeOfficers[cadet.id] = cadet
     this.officersPool[cadet.id] = cadet
     this.OFFICERSID++
+
     return cadet
+  }
+
+  retire (officer: Officer) {
+    const unit = this.units[officer.unitId]
+    unit.commander = this.replace(unit.commander)
+
+    this.activeOfficers[officer.id] = undefined
+  }
+
+  replace (replacedCommander: Officer): Officer {
+    const lowerRank = this.secretary.rankLower(replacedCommander.rank)
+
+    const spec = {
+      rank: replacedCommander.rank.alias,
+      rankToPromote: lowerRank,
+      replacedCommander,
+      unitId: replacedCommander.unitId,
+    }
+
+    if (lowerRank) {
+      return this.candidate(spec)
+    } else {
+      return this.recruit(spec.rank, replacedCommander.unitId, false, this.units[spec.unitId].name)
+    }
+  }
+
+  candidate (spec: ReplaceSpec): Officer {
+    const parentUnit = this.units[spec.replacedCommander.unitId]
+    const candidateA = parentUnit.subunits[0].commander
+    const candidateB = parentUnit.subunits[1].commander
+    const candidate: Officer = (candidateA.experience > candidateB.experience) ? candidateA : candidateB
+    const cadidateUnit = this.units[candidate.unitId]
+
+    cadidateUnit.commander = this.replace(cadidateUnit.commander)
+
+    candidate.unitId = spec.unitId
+    candidate.rank = this.secretary.ranks[spec.rank]
+
+    candidate.history.push(this.journal.promoted(spec.rank, spec.unitId))
+
+    candidate.superior = undefined
+
+    return candidate
   }
 }
 

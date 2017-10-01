@@ -268,8 +268,9 @@ class VInspected extends React.Component {
     let army = this.props.engine.army;
     let officer = this.props.officer;
     let engine = this.props.engine;
-    let superior = army.hq.findSuperior(officer)
+    let superior = army.hq.units[officer.unitId].commander
     let target = (army.hq.target) ? army.hq.target.name() : '';
+    
     let headerHTML = (!officer.isPlayer) ?
     <div>
       <VOfficer officer={ officer } engine={ engine }/>
@@ -316,12 +317,15 @@ class VStaff extends React.Component {
     const engine = this.props.engine;
     const officer = this.props.officer;
     let unit = army.hq.units[officer.unitId];
-    const superior = this.props.officer.commander;
+    const superior = unit.commander;
     if (!unit) unit = { name: 'No unit' };
 
-    army.hq.directSubordinates(this.props.officer).forEach((officer) => {
-      staff.push(<li><VOfficer officer={ officer } engine={ engine }/></li>);
-    });
+    army.hq
+      .findSubordinates(this.props.officer)
+      .forEach((officer) => {
+        staff.push(<li><VOfficer officer={ officer } engine={ engine }/></li>);
+      });
+
     staff.reverse()
 
     const superiorHTML = (!officer.reserved && officer.rank.hierarchy < 8) ?

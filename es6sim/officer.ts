@@ -67,21 +67,22 @@ export class Officer implements Officer {
   militant: boolean
   badges: any[]
   dead: boolean
-  operationDelay = 500
   hq: hq
   unitName: string
   school: School
-  relations: Officer[]
+  relations: Officer[] = []
 
   constructor (spec: Partial<Officer>, headquarters: hq, unitName: string, isPlayer: boolean) {
     this.isPlayer = isPlayer
     this.chance = chance(Math.random)
     this.lname = this.chance.last()
     this.fname = this.chance.first({gender: 'male'})
+
     if (isPlayer) {
       this.lname = (config.debug) ? 'Richardson' : prompt('Name?')
       this.fname = 'John'
     }
+
     this.hq = headquarters
     this.id = spec.id
     this.unitId = spec.unitId
@@ -89,6 +90,7 @@ export class Officer implements Officer {
     this.rank = this.hq.secretary.ranks[spec.rankName]
     this.experience = this.hq.secretary.ranks[spec.rankName].startxp + util.random(500)
     this.prestige = 0
+
     this.personality = {
       base: traits.random('base'),
       childhood: traits.random('childhood'),
@@ -97,18 +99,22 @@ export class Officer implements Officer {
       college: traits.random('college'),
       special: traits.random('special'),
     }
-    this.school = this.hq.secretary.schools[this.personality.base.area]
+
     this.intelligence = this.personality.base.intelligence + util.random(10) + this.bonus('intelligence')
     this.commanding = this.personality.base.commanding + util.random(10) + + this.bonus('commanding')
     this.diplomacy = this.personality.base.diplomacy + util.random(10) + + this.bonus('diplomacy')
+
     this.alignment = util.random(10000)
     this.militant = false
     this.militancy = 0
     this.drift = Math.floor(Math.random() * 2) === 1 ? 1 : -1 // this is hardcoded now but it should be dynamic
+
     this.operations = []
     this.completed = []
     this.badges = []
     this.history = []
+
+    this.school = this.hq.secretary.schools[this.personality.base.area]
     this.graduate(unitName)
   }
 
@@ -131,20 +137,23 @@ export class Officer implements Officer {
   }
 
   update () {
-    this.superior = this.hq.findSuperior(this)
-    this.experience++
-    if (this.rank.hierarchy > 5) this.relate()
+    this.train()
+    this.relate()
     if (this.experience > this.rank.maxxp) this.retire()
+  }
+
+  train () {
+    this.experience++
   }
 
   retire () {
     this.reserved = true
-    this.hq.activeOfficers[this.id] = undefined
+    this.hq.retire(this)
   }
 
   relate () {
-    const subordinates = this.hq.allSubordinates(this, this.rank.hierarchy)
-    console.log(subordinates)
+    const subordinates = this.hq.findSubordinates(this)
+    const superior = this.hq.units[this.unitId].commander
   }
 }
 
