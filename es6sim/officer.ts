@@ -76,6 +76,8 @@ export class Officer implements Officer {
   bonded = []
   attacking = []
   friends = []
+  nominated: number
+  passed: number
 
   constructor (spec: Partial<Officer>, headquarters: hq, unitName: string, isPlayer: boolean) {
     this.isPlayer = isPlayer
@@ -145,12 +147,54 @@ export class Officer implements Officer {
 
   update () {
     this.train()
-    this.relate()
+    this.nominate()
+    this.pass()
+    // this.relate()
     if (this.experience > this.rank.maxxp) this.retire()
   }
 
   train () {
     this.experience++
+  }
+
+  competitor (): Officer {
+    const unit = this.hq.units[this.unitId]
+    const command = this.hq.units[unit.parentId]
+    const subunits = (command) ? command.subunits : undefined
+
+    const otherUnit = (subunits) ? subunits.filter((u) => {
+      return u.id !== unit.id
+    })[0] : undefined
+
+    return (otherUnit) ? otherUnit.commander : undefined
+  }
+
+  commander (): Officer {
+    const unit = this.hq.units[this.unitId]
+    const command = this.hq.units[unit.parentId]
+    const superior = (command) ? command.commander : undefined
+
+    return superior
+  }
+
+  pass () {
+    const unit = this.hq.units[this.unitId]
+    const command = this.hq.units[unit.parentId]
+    const commander = this.commander()
+    const ranks = this.hq.secretary.ranks
+
+    this.passed = (
+      this.commander() &&
+      ranks[commander.rank.alias].maxxp - commander.experience >
+      ranks[this.rank.alias].maxxp - this.experience
+    ) ? 1 : 0
+  }
+
+  nominate () {
+    this.nominated = (
+      this.competitor() &&
+      this.experience > this.competitor().experience
+    ) ? 1 : 0
   }
 
   retire () {

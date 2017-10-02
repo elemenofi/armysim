@@ -401,6 +401,9 @@ class VStats extends React.Component {
         <div>INT { this.props.officer.intelligence }</div>
         <div>MIL { this.props.officer.commanding }</div>
         <div>DIP { this.props.officer.diplomacy }</div>
+        eqokwoek
+        <div>NOM { this.props.officer.nominated }</div>
+        <div>PAS { this.props.officer.passed }</div>
       </div>
     } else {
       html = <div className='stats'></div>
