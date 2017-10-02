@@ -268,9 +268,10 @@ class VInspected extends React.Component {
     let army = this.props.engine.army;
     let officer = this.props.officer;
     let engine = this.props.engine;
-    let superior = army.hq.units[officer.unitId].commander
+    let unit = army.hq.units[officer.unitId]
+    let superior = (army.hq.units[unit.parentId]) ? army.hq.units[unit.parentId].commander : undefined;
     let target = (army.hq.target) ? army.hq.target.name() : '';
-    
+
     let headerHTML = (!officer.isPlayer) ?
     <div>
       <VOfficer officer={ officer } engine={ engine }/>
@@ -317,7 +318,7 @@ class VStaff extends React.Component {
     const engine = this.props.engine;
     const officer = this.props.officer;
     let unit = army.hq.units[officer.unitId];
-    const superior = unit.commander;
+    const superior = (unit.parentId) ? army.hq.units[unit.parentId].commander : undefined;
     if (!unit) unit = { name: 'No unit' };
 
     army.hq

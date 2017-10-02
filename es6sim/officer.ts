@@ -71,6 +71,11 @@ export class Officer implements Officer {
   unitName: string
   school: School
   relations: Officer[] = []
+  opinions = []
+  threatened = []
+  bonded = []
+  attacking = []
+  friends = []
 
   constructor (spec: Partial<Officer>, headquarters: hq, unitName: string, isPlayer: boolean) {
     this.isPlayer = isPlayer
@@ -120,9 +125,11 @@ export class Officer implements Officer {
 
   bonus (type: string) {
     let sum = 0
+
     Object.keys(this.personality).forEach((key) => {
       sum += this.personality[key][type]
     })
+
     return sum
   }
 
@@ -152,8 +159,100 @@ export class Officer implements Officer {
   }
 
   relate () {
+    const unit = this.hq.units[this.unitId]
+    const command = this.hq.units[unit.parentId]
+    const superior = (command) ? command.commander : undefined
     const subordinates = this.hq.findSubordinates(this)
-    const superior = this.hq.units[this.unitId].commander
+    const related = [subordinates[0], subordinates[1], superior]
+    const ranks = this.hq.secretary.ranks
+
+    related
+      .filter((officer) => {
+        return officer && officer.id
+      })
+      .forEach((officer) => {
+        let opinion = this.opinions[officer.id] || 0
+
+        // if (this.isPlayer) {
+        //   console.log('boss', ranks[superior.rank.alias].maxxp - superior.experience)
+        //   console.log('me', ranks[this.rank.alias].maxxp - this.experience)
+        //   console.log('opinion', this.opinions[superior.id])
+        // }
+
+        if (
+          opinion < 365
+        ) {
+          opinion += 1
+        }
+
+        if (
+          superior &&
+          officer.id === superior.id &&
+          (ranks[superior.rank.alias].maxxp - superior.experience >
+          ranks[this.rank.alias].maxxp - this.experience)
+        ) {
+          if (opinion > -365) opinion -= 2
+        }
+
+        if (!officer.reserved && !this.reserved) {
+          this.act(opinion, officer)
+        }
+
+        this.opinions[officer.id] = opinion
+      })
+  }
+
+  act (opinion: number, officer: Officer) {
+    if (opinion < 0) {
+      this.threat(officer)
+    }
+
+    if (opinion > 0) {
+      this.friend(officer)
+    }
+
+    if (opinion === 365) {
+      this.bond(officer)
+    }
+
+    if (opinion <= -365) {
+      this.attack(officer)
+    }
+  }
+
+  friend (officer: Officer) {
+    if (this.friends[officer.id]) return
+
+    this.friends[officer.id] = true
+    this.threatened[officer.id] = false
+  }
+
+  threat (officer: Officer) {
+    if (this.threatened[officer.id]) return
+
+    this.threatened[officer.id] = true
+    this.bonded[officer.id] = false
+    this.friends[officer.id] = false
+
+    this.history.push(this.hq.journal.action('threatened by', officer))
+  }
+
+  bond (officer: Officer) {
+    if (this.bonded[officer.id]) return
+
+    this.threatened[officer.id] = false
+    this.bonded[officer.id] = true
+
+    this.history.push(this.hq.journal.action('bonded with', officer))
+  }
+
+  attack (officer: Officer) {
+    if (this.commanding > officer.commanding) {
+      this.attacking[officer.id] = true
+      officer.reserved = true
+      this.hq.retire(officer)
+      this.history.push(this.hq.journal.action('attacked', officer))
+    }
   }
 }
 

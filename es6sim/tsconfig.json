@@ -14,7 +14,11 @@
         "noLib": false,
         "preserveConstEnums": true,
         "suppressImplicitAnyIndexErrors": true,
-        "allowJs": true
+        "allowJs": true,
+        "lib": [
+            "dom",
+            "es2017"
+        ]
     },
     "exclude": [
         "node_modules",

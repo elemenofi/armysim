@@ -31,6 +31,10 @@ class Journal {
   graduated (officer: Officer, unitName: string): string {
     return `${this.formatDate()} graduated from the ${officer.school.name} and assigned to ${unitName}`
   }
+
+  action (action: string, officer: Officer) {
+    return `${this.formatDate()} ${action} ${officer.name()}`
+  }
 }
 
 export default Journal
