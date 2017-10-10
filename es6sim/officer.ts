@@ -78,6 +78,7 @@ export class Officer implements Officer {
   friends = []
   nominated: number
   passed: number
+  planning: number
 
   constructor (spec: Partial<Officer>, headquarters: hq, unitName: string, isPlayer: boolean) {
     this.isPlayer = isPlayer
@@ -149,12 +150,33 @@ export class Officer implements Officer {
     this.train()
     this.nominate()
     this.pass()
+    this.plan()
+    this.execute()
     // this.relate()
     if (this.experience > this.rank.maxxp) this.retire()
   }
 
+  speciality () {
+    return (this.commanding > this.diplomacy) ? 'commanding' : 'diplomacy'
+  }
+
   train () {
     this.experience++
+  }
+
+  plan () {
+    this.planning++
+  }
+
+  execute () {
+    if (this.planning < 100) return
+    this.planning = 0
+
+    if (!this.nominated && this.passed) {
+      if (this[this.speciality()] > this.commander()[this.speciality()]) {
+        //
+      }
+    }
   }
 
   competitor (): Officer {
