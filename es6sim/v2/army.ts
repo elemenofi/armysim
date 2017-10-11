@@ -71,14 +71,14 @@ export class Army extends Unit {
   }
 
   assign (unit: Unit, parent?: Unit) {
-    if (parent) unit.parent = parent
     unit.id = this.hq.UNITID
     unit.officer.id = this.hq.OFFICERID
     unit.officer.unit = unit
 
-    this.hq.staff.push(unit.officer)
+    if (parent) unit.parent = parent
     if (parent) parent.subunits.push(unit)
 
+    this.hq.staff.push(unit.officer)
     this.hq.UNITID++
     this.hq.OFFICERID++
   }
