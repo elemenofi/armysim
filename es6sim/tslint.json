@@ -21,6 +21,7 @@
         "interface-over-type-literal": true,
         "label-position": true,
         "max-line-length": [true, 160],
+        "max-classes-per-file": false,
         "member-access": false,
         "no-arg": true,
         "no-bitwise": true,

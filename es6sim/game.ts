@@ -1,12 +1,16 @@
 
-import Army from './army'
-import Engine from './engine'
-import Keyboard from './keyboard'
+// import Army from './army'
+// import Engine from './engine'
+// import Keyboard from './keyboard'
 
-interface Window { army: any }
+import { Game } from './v2/army'
+
+interface Window { game: any }
 
 declare var window: Window
 
-window.army = new Army()
-window.army.engine = new Engine(window.army)
-window.army.keyboard = new Keyboard(window.army.engine)
+window.game = new Game()
+
+// window.army = new Army()
+// window.army.engine = new Engine(window.army)
+// window.army.keyboard = new Keyboard(window.army.engine)
