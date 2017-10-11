@@ -20,6 +20,10 @@ export class Officer {
   constructor (rank: number) {
     this.rank = rank
   }
+
+  tick () {
+    this.experience++
+  }
 }
 
 export class Unit {
@@ -44,7 +48,15 @@ export class Headquarter {
   staff: Officer[] = []
 
   tick () {
-    this.staff.forEach((officer) => officer.experience++)
+    this.staff.forEach((officer) => officer.tick())
+  }
+
+  addUnit (unit: Unit) {
+    this.oob.push(unit)
+  }
+
+  addOfficer (officer: Officer) {
+    this.staff.push(officer)
   }
 }
 
@@ -54,33 +66,42 @@ export class Army extends Unit {
   constructor () {
     super(9)
     this.officer = new Officer(9)
-    this.assign(this)
-    this.generate(8, 2, this)
+    this.assignIds(this)
+    this.generateUnitsTree(8, 2, this)
   }
 
-  generate (tier: number, quantity: number, parent: Unit) {
+  // creates a binary tree of units whth
+  // officer, subunit and parent
+  // also pushes them to the HQ
+  private generateUnitsTree (tier: number, quantity: number, parent: Unit) {
     if (quantity === 0 || tier < 1) {
       return
     } else {
       const unit = new Unit(tier)
-      this.assign(unit, parent)
-      this.generate(tier - 1, 2, unit)
-      this.generate(tier, quantity - 1, parent)
-      this.hq.oob.push(unit)
+
+      this.assignIds(unit, parent)
+      this.generateUnitsTree(tier - 1, 2, unit)
+      this.generateUnitsTree(tier, quantity - 1, parent)
+
+      this.hq.addUnit(unit)
+      this.hq.addOfficer(unit.officer)
     }
   }
 
-  assign (unit: Unit, parent?: Unit) {
+  private assignIds (unit: Unit, parent?: Unit) {
     unit.id = this.hq.UNITID
     unit.officer.id = this.hq.OFFICERID
+    this.hq.UNITID++
+    this.hq.OFFICERID++
+
+    this.assignRelations(unit, parent)
+  }
+
+  private assignRelations (unit: Unit, parent?: Unit) {
     unit.officer.unit = unit
 
     if (parent) unit.parent = parent
     if (parent) parent.subunits.push(unit)
-
-    this.hq.staff.push(unit.officer)
-    this.hq.UNITID++
-    this.hq.OFFICERID++
   }
 }
 
@@ -93,7 +114,7 @@ export class Game {
     this.tick()
   }
 
-  tick () {
+  private tick () {
     if (this.status === 'paused') return
 
     this.turn++
