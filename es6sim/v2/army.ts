@@ -32,6 +32,7 @@ export class Unit {
 
   constructor (tier: number) {
     this.tier = tier
+    this.officer = new Officer(tier)
   }
 }
 
@@ -41,6 +42,10 @@ export class Headquarter {
   OPERATIONID = 0
   oob: Unit[] = []
   staff: Officer[] = []
+
+  tick () {
+    this.staff.forEach((officer) => officer.experience++)
+  }
 }
 
 export class Army extends Unit {
@@ -57,11 +62,7 @@ export class Army extends Unit {
     if (quantity === 0 || tier < 1) {
       return
     } else {
-      let unit = {} as Unit
-
-      unit = new Unit(tier)
-      unit.officer = new Officer(tier)
-
+      const unit = new Unit(tier)
       this.assign(unit, parent)
       this.generate(tier - 1, 2, unit)
       this.generate(tier, quantity - 1, parent)
@@ -96,6 +97,7 @@ export class Game {
     if (this.status === 'paused') return
 
     this.turn++
+    this.army.hq.tick()
 
     setTimeout(() => this.tick(), 2)
   }
