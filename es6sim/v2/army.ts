@@ -27,10 +27,12 @@ export class Officer {
   unit: Unit
   operation: Operation
   status: string
+  superior: Officer
+  competitor: Officer
   timeLeftInRank: number
-  militant: boolean
-  retired: boolean
-  senior: boolean
+  isMilitant: boolean
+  isRetired: boolean
+  isSenior: boolean
 
   constructor (rank: number) {
     this.rank = new Rank(rank)
@@ -40,19 +42,14 @@ export class Officer {
   tick () {
     this.experience++
     this.timeLeftInRank = this.rank.max - this.experience
-    this.retired = this.experience > this.rank.max
-    this.updateAtitude()
-  }
+    this.isRetired = this.experience > this.rank.max
 
-  private updateAtitude () {
     if (!this.unit.parent) return
-    this.militant =  this.timeLeftInRank < this.unit.parent.officer.timeLeftInRank
-    this.senior = this.experience > this.competingOfficer().experience
-  }
-
-  private competingOfficer (): Officer {
-    const subunits = this.unit.parent.subunits
-    return subunits.filter((unit) => unit.id !== this.unit.id)[0].officer
+    const parent = this.unit.parent
+    this.superior = parent.officer
+    this.competitor = parent.subunits.find((unit) => unit.id !== this.unit.id).officer
+    this.isMilitant = this.timeLeftInRank < this.superior.timeLeftInRank
+    this.isSenior = this.experience > this.competitor.experience
   }
 }
 
@@ -95,11 +92,13 @@ export class Army extends Unit {
 
   constructor () {
     super(9)
-    this.officer = new Officer(9)
+
     this.assignIds(this)
     this.assignRelations(this)
-    this.hq.addOfficer(this.officer)
+
     this.generateUnitsTree(8, 2, this)
+
+    this.hq.addOfficer(this.officer)
   }
 
   // creates a binary tree of units whth
@@ -111,7 +110,7 @@ export class Army extends Unit {
     } else {
       const unit = new Unit(tier)
 
-      this.assignIds(unit, parent)
+      this.assignIds(unit)
       this.assignRelations(unit, parent)
 
       this.generateUnitsTree(tier - 1, 2, unit)
@@ -122,7 +121,7 @@ export class Army extends Unit {
     }
   }
 
-  private assignIds (unit: Unit, parent?: Unit) {
+  private assignIds (unit: Unit) {
     unit.id = this.hq.UNITID
     unit.officer.id = this.hq.OFFICERID
     this.hq.UNITID++
@@ -149,7 +148,7 @@ export class Game {
   private tick () {
     if (this.status === 'paused') return
 
-    if (this.turn >= 500) debugger
+    // if (this.turn >= 500) debugger
 
     this.turn++
     this.army.hq.tick()
