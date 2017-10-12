@@ -1,3 +1,4 @@
+import util from '../util'
 
 export class Operation {
   id: number
@@ -14,25 +15,44 @@ export class Rank {
 
   constructor (tier: number) {
     this.tier = tier
-    this.max = tier * 100
+    this.max = tier * 100 * 2
   }
 }
 
 export class Officer {
   id: number
   name: string
-  experience = 0
+  experience: number
   rank: Rank
   unit: Unit
   operation: Operation
   status: string
+  timeLeftInRank: number
+  militant: boolean
+  retired: boolean
+  senior: boolean
 
   constructor (rank: number) {
     this.rank = new Rank(rank)
+    this.experience = 100 * rank + util.random(100)
   }
 
   tick () {
     this.experience++
+    this.timeLeftInRank = this.rank.max - this.experience
+    this.retired = this.experience > this.rank.max
+    this.updateAtitude()
+  }
+
+  private updateAtitude () {
+    if (!this.unit.parent) return
+    this.militant =  this.timeLeftInRank < this.unit.parent.officer.timeLeftInRank
+    this.senior = this.experience > this.competingOfficer().experience
+  }
+
+  private competingOfficer (): Officer {
+    const subunits = this.unit.parent.subunits
+    return subunits.filter((unit) => unit.id !== this.unit.id)[0].officer
   }
 }
 
@@ -77,6 +97,8 @@ export class Army extends Unit {
     super(9)
     this.officer = new Officer(9)
     this.assignIds(this)
+    this.assignRelations(this)
+    this.hq.addOfficer(this.officer)
     this.generateUnitsTree(8, 2, this)
   }
 
@@ -90,6 +112,8 @@ export class Army extends Unit {
       const unit = new Unit(tier)
 
       this.assignIds(unit, parent)
+      this.assignRelations(unit, parent)
+
       this.generateUnitsTree(tier - 1, 2, unit)
       this.generateUnitsTree(tier, quantity - 1, parent)
 
@@ -103,8 +127,6 @@ export class Army extends Unit {
     unit.officer.id = this.hq.OFFICERID
     this.hq.UNITID++
     this.hq.OFFICERID++
-
-    this.assignRelations(unit, parent)
   }
 
   private assignRelations (unit: Unit, parent?: Unit) {
@@ -127,7 +149,7 @@ export class Game {
   private tick () {
     if (this.status === 'paused') return
 
-    // if (this.turn >= 500) debugger
+    if (this.turn >= 500) debugger
 
     this.turn++
     this.army.hq.tick()
