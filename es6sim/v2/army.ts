@@ -8,17 +8,27 @@ export class Operation {
   status: string
 }
 
+export class Rank {
+  tier: number
+  max: number
+
+  constructor (tier: number) {
+    this.tier = tier
+    this.max = tier * 100
+  }
+}
+
 export class Officer {
   id: number
   name: string
   experience = 0
-  rank: number
+  rank: Rank
   unit: Unit
   operation: Operation
   status: string
 
   constructor (rank: number) {
-    this.rank = rank
+    this.rank = new Rank(rank)
   }
 
   tick () {
@@ -116,6 +126,8 @@ export class Game {
 
   private tick () {
     if (this.status === 'paused') return
+
+    // if (this.turn >= 500) debugger
 
     this.turn++
     this.army.hq.tick()
