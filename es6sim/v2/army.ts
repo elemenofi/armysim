@@ -86,6 +86,16 @@ export class Headquarter {
   addOfficer (officer: Officer) {
     this.staff.push(officer)
   }
+
+  addSisters () {
+    this.oob.forEach((unit) => {
+      if (unit.parent) {
+        unit.sister = unit.parent.subunits.find((u) => {
+          return u.id !== unit.id
+        })
+      }
+    })
+  }
 }
 
 export class Army extends Unit {
@@ -98,6 +108,8 @@ export class Army extends Unit {
     this.assignRelations(this)
 
     this.generateUnitsTree(8, 2, this)
+
+    this.hq.addSisters()
 
     this.hq.addOfficer(this.officer)
   }
@@ -134,7 +146,6 @@ export class Army extends Unit {
 
     if (parent) unit.parent = parent
     if (parent) parent.subunits.push(unit)
-    if (parent) unit.sister = unit.parent.subunits.find((u) => u.id !== unit.id)
   }
 }
 
@@ -150,7 +161,7 @@ export class Game {
   private tick () {
     if (this.status === 'paused') return
 
-    // if (this.turn >= 500) debugger
+    if (this.turn >= 500) debugger
 
     this.turn++
     this.army.hq.tick()
