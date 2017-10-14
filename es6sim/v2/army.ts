@@ -47,7 +47,7 @@ export class Officer {
     if (!this.unit.parent) return
     const parent = this.unit.parent
     this.superior = parent.officer
-    this.competitor = parent.subunits.find((unit) => unit.id !== this.unit.id).officer
+    this.competitor = this.unit.sister.officer
     this.isMilitant = this.timeLeftInRank < this.superior.timeLeftInRank
     this.isSenior = this.experience > this.competitor.experience
   }
@@ -59,6 +59,7 @@ export class Unit {
   tier: number
   officer: Officer
   parent: Unit
+  sister: Unit
   subunits: Unit[] = []
 
   constructor (tier: number) {
@@ -133,6 +134,7 @@ export class Army extends Unit {
 
     if (parent) unit.parent = parent
     if (parent) parent.subunits.push(unit)
+    if (parent) unit.sister = unit.parent.subunits.find((u) => u.id !== unit.id)
   }
 }
 
