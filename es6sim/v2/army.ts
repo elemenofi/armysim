@@ -33,6 +33,7 @@ export class Officer {
   isMilitant: boolean
   isRetired: boolean
   isSenior: boolean
+  events: string[]
 
   constructor (rank: number) {
     this.rank = new Rank(rank)
@@ -44,11 +45,12 @@ export class Officer {
     this.timeLeftInRank = this.rank.max - this.experience
     this.isRetired = this.experience > this.rank.max
 
-    if (!this.unit.parent) return
+    if (!this.unit || !this.unit.parent) return
     const parent = this.unit.parent
     this.superior = parent.officer
     this.competitor = this.unit.sister.officer
     this.isMilitant = this.timeLeftInRank < this.superior.timeLeftInRank
+    if (!this.competitor) return
     this.isSenior = this.experience > this.competitor.experience
   }
 }
@@ -65,6 +67,7 @@ export class Unit {
   constructor (tier: number) {
     this.tier = tier
     this.officer = new Officer(tier)
+    this.officer.unit = this
   }
 }
 
@@ -72,22 +75,69 @@ export class Headquarter {
   UNITID = 0
   OFFICERID = 0
   OPERATIONID = 0
+  army: Unit
   oob: Unit[] = []
   staff: Officer[] = []
+  reserve: Officer[] = []
+
+  constructor () {
+    this.army = new Unit(9)
+    this.assignIds(this.army)
+    this.generateUnitsTree(8, 2, this.army)
+    this.addSisters()
+    this.staff.push(this.army.officer)
+  }
 
   tick () {
-    this.staff.forEach((officer) => officer.tick())
+    this.staff.forEach((officer) => {
+      if (officer.isRetired) {
+        this.retire(officer)
+      } else {
+        officer.tick()
+      }
+    })
   }
 
-  addUnit (unit: Unit) {
-    this.oob.push(unit)
+  private replace (officer: Officer) {
+    let replacement: Officer
+
+    if (officer.rank.tier === 1) {
+      replacement = this.recruit(1)
+    } else {
+      const candidateA = officer.unit.subunits[0].officer
+      const candidateB = officer.unit.subunits[1].officer
+      replacement = (candidateA.experience > candidateB.experience) ? candidateA : candidateB
+      this.replace(replacement)
+      this.promote(replacement)
+    }
+
+    this.assign(replacement, officer.unit)
   }
 
-  addOfficer (officer: Officer) {
-    this.staff.push(officer)
+  private recruit (tier: number): Officer {
+    const recruit = new Officer(tier)
+    recruit.id = this.OFFICERID
+    this.OFFICERID++
+    this.staff.push(recruit)
+    return recruit
   }
 
-  addSisters () {
+  private retire (officer: Officer) {
+    this.reserve.push(officer)
+    this.staff = this.staff.filter((o) => officer.id !== o.id )
+    this.replace(officer)
+  }
+
+  private promote (officer: Officer) {
+    officer.rank = new Rank(officer.rank.tier + 1)
+  }
+
+  private assign (officer: Officer, unit: Unit) {
+    unit.officer = officer
+    officer.unit = unit
+  }
+
+  private addSisters () {
     this.oob.forEach((unit) => {
       if (unit.parent) {
         unit.sister = unit.parent.subunits.find((u) => {
@@ -96,22 +146,17 @@ export class Headquarter {
       }
     })
   }
-}
 
-export class Army extends Unit {
-  hq: Headquarter = new Headquarter()
+  private assignIds (unit: Unit) {
+    unit.id = this.UNITID
+    unit.officer.id = this.OFFICERID
+    this.UNITID++
+    this.OFFICERID++
+  }
 
-  constructor () {
-    super(9)
-
-    this.assignIds(this)
-    this.assignRelations(this)
-
-    this.generateUnitsTree(8, 2, this)
-
-    this.hq.addSisters()
-
-    this.hq.addOfficer(this.officer)
+  private assignRelations (unit: Unit, parent: Unit) {
+    unit.parent = parent
+    parent.subunits.push(unit)
   }
 
   // creates a binary tree of units whth
@@ -129,28 +174,14 @@ export class Army extends Unit {
       this.generateUnitsTree(tier - 1, 2, unit)
       this.generateUnitsTree(tier, quantity - 1, parent)
 
-      this.hq.addUnit(unit)
-      this.hq.addOfficer(unit.officer)
+      this.oob.push(unit)
+      this.staff.push(unit.officer)
     }
-  }
-
-  private assignIds (unit: Unit) {
-    unit.id = this.hq.UNITID
-    unit.officer.id = this.hq.OFFICERID
-    this.hq.UNITID++
-    this.hq.OFFICERID++
-  }
-
-  private assignRelations (unit: Unit, parent?: Unit) {
-    unit.officer.unit = unit
-
-    if (parent) unit.parent = parent
-    if (parent) parent.subunits.push(unit)
   }
 }
 
 export class Game {
-  army = new Army()
+  headquarter = new Headquarter()
   turn = 0
   status = 'playing'
 
@@ -164,7 +195,7 @@ export class Game {
     if (this.turn >= 500) debugger
 
     this.turn++
-    this.army.hq.tick()
+    this.headquarter.tick()
 
     setTimeout(() => this.tick(), 2)
   }
