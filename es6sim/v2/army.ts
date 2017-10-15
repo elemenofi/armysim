@@ -33,7 +33,7 @@ export class Officer {
   isMilitant: boolean
   isRetired: boolean
   isSenior: boolean
-  events: string[]
+  events: string[] = []
 
   constructor (rank: number) {
     this.rank = new Rank(rank)
@@ -130,6 +130,7 @@ export class Headquarter {
 
   private promote (officer: Officer) {
     officer.rank = new Rank(officer.rank.tier + 1)
+    officer.events.push('Promoted')
   }
 
   private assign (officer: Officer, unit: Unit) {
