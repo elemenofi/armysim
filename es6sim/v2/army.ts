@@ -86,7 +86,7 @@ export class Headquarter {
 
     this.generateUnitsTree(8, 2, this.army)
 
-    this.addSisters()
+    this.assignSister()
   }
 
   tick () {
@@ -105,9 +105,14 @@ export class Headquarter {
     if (officer.rank.tier === 1) {
       replacement = this.recruit(1)
     } else {
-      const candidateA = officer.unit.subunits[0].officer
-      const candidateB = officer.unit.subunits[1].officer
-      replacement = (candidateA.experience > candidateB.experience) ? candidateA : candidateB
+      const subunits = officer.unit.subunits
+      const officer1 = subunits[0].officer
+      const officer2 = subunits[1].officer
+
+      replacement = (officer1.experience > officer2.experience)
+        ? officer1
+        : officer2
+
       this.replace(replacement)
       this.promote(replacement)
     }
@@ -139,7 +144,20 @@ export class Headquarter {
     officer.unit = unit
   }
 
-  private addSisters () {
+  private build (tier: number): Unit {
+    const unit = new Unit(tier)
+    unit.id = this.UNITID
+    this.UNITID++
+    if (tier < 9) this.oob.push(unit)
+    return unit
+  }
+
+  private assignParent (unit: Unit, parent: Unit) {
+    unit.parent = parent
+    parent.subunits.push(unit)
+  }
+
+  private assignSister () {
     this.oob.forEach((unit) => {
       if (unit.parent) {
         unit.sister = unit.parent.subunits.find((u) => {
@@ -149,22 +167,6 @@ export class Headquarter {
     })
   }
 
-  private build (tier: number): Unit {
-    const unit = new Unit(tier)
-    unit.id = this.UNITID
-    this.UNITID++
-    if (tier < 9) this.oob.push(unit)
-    return unit
-  }
-
-  private assignRelations (unit: Unit, parent: Unit) {
-    unit.parent = parent
-    parent.subunits.push(unit)
-  }
-
-  // creates a binary tree of units whth
-  // officer, subunit and parent
-  // also pushes them to the HQ
   private generateUnitsTree (tier: number, quantity: number, parent: Unit) {
     if (quantity === 0 || tier < 1) {
       return
@@ -173,7 +175,7 @@ export class Headquarter {
       const officer = this.recruit(tier)
 
       this.assign(officer, unit)
-      this.assignRelations(unit, parent)
+      this.assignParent(unit, parent)
 
       this.generateUnitsTree(tier - 1, 2, unit)
       this.generateUnitsTree(tier, quantity - 1, parent)
@@ -193,7 +195,7 @@ export class Game {
   private tick () {
     if (this.status === 'paused') return
 
-    if (this.turn >= 1000) debugger
+    if (this.turn >= 500) debugger
 
     this.turn++
     this.headquarter.tick()
