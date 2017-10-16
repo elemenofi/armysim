@@ -66,8 +66,6 @@ export class Unit {
 
   constructor (tier: number) {
     this.tier = tier
-    this.officer = new Officer(tier)
-    this.officer.unit = this
   }
 }
 
@@ -81,11 +79,14 @@ export class Headquarter {
   reserve: Officer[] = []
 
   constructor () {
-    this.army = new Unit(9)
-    this.assignIds(this.army)
+    this.army = this.build(9)
+    const officer = this.recruit(9)
+
+    this.assign(officer, this.army)
+
     this.generateUnitsTree(8, 2, this.army)
+
     this.addSisters()
-    this.staff.push(this.army.officer)
   }
 
   tick () {
@@ -148,11 +149,12 @@ export class Headquarter {
     })
   }
 
-  private assignIds (unit: Unit) {
+  private build (tier: number): Unit {
+    const unit = new Unit(tier)
     unit.id = this.UNITID
-    unit.officer.id = this.OFFICERID
     this.UNITID++
-    this.OFFICERID++
+    if (tier < 9) this.oob.push(unit)
+    return unit
   }
 
   private assignRelations (unit: Unit, parent: Unit) {
@@ -167,16 +169,14 @@ export class Headquarter {
     if (quantity === 0 || tier < 1) {
       return
     } else {
-      const unit = new Unit(tier)
+      const unit = this.build(tier)
+      const officer = this.recruit(tier)
 
-      this.assignIds(unit)
+      this.assign(officer, unit)
       this.assignRelations(unit, parent)
 
       this.generateUnitsTree(tier - 1, 2, unit)
       this.generateUnitsTree(tier, quantity - 1, parent)
-
-      this.oob.push(unit)
-      this.staff.push(unit.officer)
     }
   }
 }
@@ -193,7 +193,7 @@ export class Game {
   private tick () {
     if (this.status === 'paused') return
 
-    if (this.turn >= 500) debugger
+    if (this.turn >= 1000) debugger
 
     this.turn++
     this.headquarter.tick()
