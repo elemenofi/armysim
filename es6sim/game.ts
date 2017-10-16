@@ -5,7 +5,7 @@
 
 import { Game } from './v2/army'
 
-interface Window { game: any }
+interface Window { game: Game }
 
 declare var window: Window
 

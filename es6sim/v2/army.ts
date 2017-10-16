@@ -50,7 +50,6 @@ export class Officer {
     this.superior = parent.officer
     this.competitor = this.unit.sister.officer
     this.isMilitant = this.timeLeftInRank < this.superior.timeLeftInRank
-    if (!this.competitor) return
     this.isSenior = this.experience > this.competitor.experience
   }
 }
@@ -77,6 +76,7 @@ export class Headquarter {
   oob: Unit[] = []
   staff: Officer[] = []
   reserve: Officer[] = []
+  log: Logger
 
   constructor () {
     this.army = this.build(9)
@@ -136,7 +136,7 @@ export class Headquarter {
 
   private promote (officer: Officer) {
     officer.rank = new Rank(officer.rank.tier + 1)
-    officer.events.push('Promoted')
+    officer.events.push(this.log.action('promote'))
   }
 
   private assign (officer: Officer, unit: Unit) {
@@ -184,22 +184,42 @@ export class Headquarter {
 }
 
 export class Game {
-  headquarter = new Headquarter()
+  headquarter: Headquarter
+  logger: Logger
   turn = 0
   status = 'playing'
 
   constructor () {
+    this.headquarter = new Headquarter()
+    this.headquarter.log = new Logger(this)
+
     this.tick()
   }
 
   private tick () {
     if (this.status === 'paused') return
 
-    if (this.turn >= 500) debugger
+    if (this.turn >= 1000) debugger
 
     this.turn++
     this.headquarter.tick()
 
     setTimeout(() => this.tick(), 2)
+  }
+}
+
+export class Logger {
+  game: Game
+
+  constructor (game) {
+    this.game = game
+  }
+
+  action (action: string): string {
+    return this[action]()
+  }
+
+  promote (): string {
+    return 'Promoted ' + this.game.turn
   }
 }
