@@ -226,3 +226,5 @@ export class Logger {
     return moment().add(this.game.turn * 10, 'days').format('YYYY-MM-DD') + ' promoted'
   }
 }
+
+

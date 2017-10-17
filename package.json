@@ -5,6 +5,7 @@
   "main": "server.js",
   "author": "Elemenofi",
   "dependencies": {
+    "amdefine": "^1.0.1",
     "babel-cli": "^6.16.0",
     "babel-preset-es2015": "^6.22.0",
     "babel-preset-es2016": "^6.16.0",
@@ -14,10 +15,13 @@
     "date-utils": "^1.2.16",
     "depd": "1.0.1",
     "express": "~4",
+    "has-flag": "^2.0.0",
     "latest": "0.2.0",
     "mersenne-twister": "1.0.1",
     "moment": "^2.17.1",
-    "react": "^0.13.3",
+    "react": "^16.0.0-alpha.6",
+    "react-current-owner": "0.0.0",
+    "react-dom": "^16.0.0-alpha.6",
     "react-select": "^0.6.3",
     "socket.io": "^1.3.5",
     "underscore": "^1.8.2"

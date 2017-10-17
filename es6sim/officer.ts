@@ -2,7 +2,7 @@ import * as moment from 'moment'
 import config from './config'
 import hq from './hq'
 import Journal from './journal'
-import * as chance from './lib/chance'
+// import * as chance from './lib/chance'
 import Operation from './operation'
 import { School } from './secretary'
 import { Trait, Traits } from './traits'
@@ -82,9 +82,10 @@ export class Officer implements Officer {
 
   constructor (spec: Partial<Officer>, headquarters: hq, unitName: string, isPlayer: boolean) {
     this.isPlayer = isPlayer
-    this.chance = chance(Math.random)
-    this.lname = this.chance.last()
-    this.fname = this.chance.first({gender: 'male'})
+    // this.chance = chance(Math.random)
+    
+    // this.lname = this.chance.last()
+    // this.fname = this.chance.first({gender: 'male'})
 
     if (isPlayer) {
       this.lname = (config.debug) ? 'Richardson' : prompt('Name?')

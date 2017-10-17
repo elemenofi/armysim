@@ -6,7 +6,7 @@ module.exports = {
   devtool: 'eval',
   // This will be our app's entry point (webpack will look for it in the 'src' directory due to the modulesDirectory setting below). Feel free to change as desired.
   entry: [
-    './es6sim/game.ts'
+    './es6sim/game.tsx'
   ],
   // Output the bundled JS to dist/app.js
   output: {
