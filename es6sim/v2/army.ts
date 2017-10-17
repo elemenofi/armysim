@@ -1,3 +1,4 @@
+import * as moment from 'moment'
 import util from '../util'
 
 export class Operation {
@@ -15,7 +16,7 @@ export class Rank {
 
   constructor (tier: number) {
     this.tier = tier
-    this.max = tier * 100 * 2
+    this.max = tier * 100 * 3
   }
 }
 
@@ -199,7 +200,7 @@ export class Game {
   private tick () {
     if (this.status === 'paused') return
 
-    if (this.turn >= 1000) debugger
+    if (this.turn >= 500) debugger
 
     this.turn++
     this.headquarter.tick()
@@ -220,6 +221,6 @@ export class Logger {
   }
 
   promote (): string {
-    return 'Promoted ' + this.game.turn
+    return moment().add(this.game.turn * 10, 'days').format('YYYY-MM-DD') + ' promoted'
   }
 }
