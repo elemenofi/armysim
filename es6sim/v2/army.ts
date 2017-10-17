@@ -90,7 +90,9 @@ export class Headquarter {
     this.assignSister()
   }
 
-  tick () {
+  tick (turn) {
+    // console.log(turn)
+
     this.staff.forEach((officer) => {
       if (officer.isRetired) {
         this.retire(officer)
@@ -203,7 +205,7 @@ export class Game {
     if (this.turn >= 500) debugger
 
     this.turn++
-    this.headquarter.tick()
+    this.headquarter.tick(this.turn)
 
     setTimeout(() => this.tick(), 2)
   }
