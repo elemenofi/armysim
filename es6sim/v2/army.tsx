@@ -1,5 +1,6 @@
 import * as moment from 'moment'
 import util from '../util'
+import { UI } from "../game";
 
 export class Operation {
   id: number
@@ -187,6 +188,7 @@ export class Headquarter {
 }
 
 export class Game {
+  ui: UI
   headquarter: Headquarter
   logger: Logger
   turn = 0
@@ -195,6 +197,7 @@ export class Game {
   constructor () {
     this.headquarter = new Headquarter()
     this.headquarter.log = new Logger(this)
+    this.ui = new UI()
 
     this.tick()
   }
@@ -206,6 +209,7 @@ export class Game {
 
     this.turn++
     this.headquarter.tick(this.turn)
+    this.ui.render(this)
 
     setTimeout(() => this.tick(), 2)
   }
