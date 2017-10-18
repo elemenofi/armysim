@@ -1,6 +1,6 @@
 import * as moment from 'moment'
+import * as chance from 'chance'
 import util from '../util'
-import { UI } from "../game";
 
 export class Operation {
   id: number
@@ -36,10 +36,14 @@ export class Officer {
   isRetired: boolean
   isSenior: boolean
   events: string[] = []
+  chance: any
+
 
   constructor (rank: number) {
     this.rank = new Rank(rank)
     this.experience = 100 * rank + util.random(100)
+    this.chance = chance(Math.random)
+    this.name = this.chance.first({gender: 'male'}) + ' ' + this.chance.last()
   }
 
   tick () {
@@ -231,4 +235,121 @@ export class Logger {
   }
 }
 
+import * as React from 'react'
+import * as ReactDOM from 'react-dom'
+
+export class UIMain extends React.Component {
+  props: {
+    game: Game
+  }
+
+  render () {
+    return <div className='army'>
+      <h1>{this.props.game.turn}</h1>
+      <UIUnit unit={this.props.game.headquarter.army}/>
+    </div>
+  }
+}
+
+export class UIUnit extends React.Component {
+  props: {
+    unit: Unit
+  }
+
+  label (tier: number): {label: string, size: string} {
+    return constants.label(tier)
+  }
+
+  subunits () {
+    const u = this.props.unit
+    const su = u.subunits
+    const size = 'unit-' + this.label(u.tier).size
+
+    return <div className='subunits'>
+      <div className={size}>
+        <UIUnit unit={su[0]}/>
+      </div>
+      <div className={size}>
+        <UIUnit unit={su[1]}/>
+      </div>
+    </div>
+  }
+
+  render () {      
+    const u = this.props.unit
+
+    const subunits = (u.subunits.length) 
+      ? this.subunits() : undefined
+
+    return <div>
+      {this.label(u.tier).label}
+      {subunits}
+    </div>
+  }
+}
+
+export class UI extends React.Component {
+  render (game: Game) {
+    ReactDOM.render(
+      <UIMain game={game} />,
+      document.getElementById('game')
+    )
+  }
+}
+
+const constants = {
+  label (tier: number): {label: string, size: string} {
+    let result = {
+      label: '',
+      size: ''
+    }
+
+    if (tier === 1) {
+      result.label = '*'
+      result.size = 'small'
+    }
+
+    if (tier === 2) {
+      result.label = '**'
+      result.size = 'small'
+    }
+
+    if (tier === 3) {
+      result.label = '***'
+      result.size = 'small'
+    }
+
+    if (tier === 4) {
+      result.label = '***'
+      result.size = 'small'
+    }
+
+    if (tier === 5) {
+      result.label = '****'
+      result.size = 'small'
+    }
+
+    if (tier === 6) {
+      result.label = '★'
+      result.size = 'big'
+    }
+
+    if (tier === 7) {
+      result.label = '★★'
+      result.size = 'big'
+    }
+
+    if (tier === 8) {
+      result.label = '★★★'
+      result.size = 'big'
+    }
+
+    if (tier === 9) {
+      result.label = '★★★★'
+      result.size = 'big'
+    }
+
+    return result
+  }
+}
 

@@ -1,4 +1,4 @@
-body, h1, h2, h3, h4, p, ul, li {
+/*body, h1, h2, h3, h4, p, ul, li {
   margin: 0;
   padding: 0;
   line-height: 18px;
@@ -125,4 +125,23 @@ ul {
 }
 .isTarget {
   background-color: lightblue;
+}*/
+
+
+/*.army {
+  width: 100%;
+  display: flex;
+}*/
+
+.subunits {
+  width: 100%;
+}
+
+.unit-big {
+  width: 50%;
+  float: left;
+}
+
+.unit-small {
+  float: none;
 }
