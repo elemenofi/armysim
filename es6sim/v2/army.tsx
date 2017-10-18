@@ -82,6 +82,7 @@ export class Headquarter {
   oob: Unit[] = []
   staff: Officer[] = []
   reserve: Officer[] = []
+  inspected: Officer
   log: Logger
 
   constructor () {
@@ -97,6 +98,7 @@ export class Headquarter {
 
   tick (turn) {
     // console.log(turn)
+    if(this.inspected) console.log(this.inspected)
 
     this.staff.forEach((officer) => {
       if (officer.isRetired) {
@@ -246,31 +248,56 @@ export class UIMain extends React.Component {
   render () {
     return <div className='army'>
       <h1>{this.props.game.turn}</h1>
-      <UIUnit unit={this.props.game.headquarter.army}/>
+      <UIOfficer officer={this.props.game.headquarter.inspected}/>
+      <UIUnit hq={this.props.game.headquarter} unit={this.props.game.headquarter.army}/>
     </div>
+  }
+}
+
+export class UIOfficer extends React.Component {
+  props: {
+    officer: Officer
+  }
+
+  render () {
+    const o = this.props.officer
+    const name = (o) ? o.name : 'Click on an officer to inspect it'
+    return <div>{name}</div>
   }
 }
 
 export class UIUnit extends React.Component {
   props: {
     unit: Unit
+    hq: Headquarter
+  }
+
+  constructor () {
+    super()
+    this.handleClick = this.handleClick.bind(this);    
   }
 
   label (tier: number): {label: string, size: string} {
     return constants.label(tier)
   }
 
+  handleClick() {
+    debugger
+    this.props.hq.inspected = this.props.unit.officer
+  }
+
   subunits () {
+    const hq = this.props.hq
     const u = this.props.unit
     const su = u.subunits
     const size = 'unit-' + this.label(u.tier).size
 
     return <div className='subunits'>
       <div className={size}>
-        <UIUnit unit={su[0]}/>
+        <UIUnit hq={hq} unit={su[0]}/>
       </div>
       <div className={size}>
-        <UIUnit unit={su[1]}/>
+        <UIUnit hq={hq} unit={su[1]}/>
       </div>
     </div>
   }
@@ -281,7 +308,7 @@ export class UIUnit extends React.Component {
     const subunits = (u.subunits.length) 
       ? this.subunits() : undefined
 
-    return <div>
+    return <div onClick={this.handleClick}>
       {this.label(u.tier).label}
       {subunits}
     </div>
@@ -320,32 +347,32 @@ const constants = {
     }
 
     if (tier === 4) {
-      result.label = '***'
-      result.size = 'small'
-    }
-
-    if (tier === 5) {
       result.label = '****'
       result.size = 'small'
     }
 
-    if (tier === 6) {
+    if (tier === 5) {
       result.label = '★'
-      result.size = 'big'
+      result.size = 'small'
     }
 
-    if (tier === 7) {
+    if (tier === 6) {
       result.label = '★★'
       result.size = 'big'
     }
 
-    if (tier === 8) {
+    if (tier === 7) {
       result.label = '★★★'
       result.size = 'big'
     }
 
-    if (tier === 9) {
+    if (tier === 8) {
       result.label = '★★★★'
+      result.size = 'big'
+    }
+
+    if (tier === 9) {
+      result.label = '★★★★★'
       result.size = 'big'
     }
 
