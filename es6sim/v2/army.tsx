@@ -47,18 +47,25 @@ export class Officer {
   }
 
   tick () {
+    this.train()
+    if (!this.unit || !this.unit.parent) return
+    this.relate()
+  }
+
+  private train () {
     this.experience++
     this.timeLeftInRank = this.rank.max - this.experience
     this.isRetired = this.experience > this.rank.max
+  }
 
-    if (!this.unit || !this.unit.parent) return
+  private relate () {
     const parent = this.unit.parent
     this.superior = parent.officer
     this.competitor = this.unit.sister.officer
     this.isMilitant = this.timeLeftInRank < this.superior.timeLeftInRank
     this.isSenior = this.experience > this.competitor.experience
   }
-}
+ }
 
 export class Unit {
   id: number
@@ -196,7 +203,7 @@ export class Headquarter {
 export class Game {
   ui: UI
   headquarter: Headquarter
-  logger: Logger
+  keyboard: Keyboard
   turn = 0
   status = 'playing'
 
@@ -204,8 +211,18 @@ export class Game {
     this.headquarter = new Headquarter()
     this.headquarter.log = new Logger(this)
     this.ui = new UI()
+    this.keyboard = new Keyboard(this)
 
     this.tick()
+  }
+
+  pause () {
+    if (this.status === 'playing') {
+      this.status = 'paused'
+    } else {
+      this.status = 'playing'
+      this.tick()
+    }
   }
 
   private tick () {
@@ -236,6 +253,25 @@ export class Logger {
     return moment().add(this.game.turn * 10, 'days').format('YYYY-MM-DD') + ' promoted'
   }
 }
+
+class Keyboard {
+  game: Game
+
+  constructor (game) {
+    this.game = game
+    this.bindHotkeys()
+  }
+
+  bindHotkeys () {
+    window.addEventListener('keydown', (event) => {
+      if (event.keyCode === 32 && event.target === document.body) {
+        event.preventDefault()
+        this.game.pause()
+      }
+    })
+  }
+}
+
 
 import * as React from 'react'
 import * as ReactDOM from 'react-dom'
@@ -274,14 +310,14 @@ export class UIUnit extends React.Component {
 
   constructor () {
     super()
-    this.handleClick = this.handleClick.bind(this);    
+    this.inspect = this.inspect.bind(this);    
   }
 
   label (tier: number): {label: string, size: string} {
     return constants.label(tier)
   }
 
-  handleClick() {
+  inspect() {
     debugger
     this.props.hq.inspected = this.props.unit.officer
   }
@@ -308,7 +344,7 @@ export class UIUnit extends React.Component {
     const subunits = (u.subunits.length) 
       ? this.subunits() : undefined
 
-    return <div onClick={this.handleClick}>
+    return <div onClick={this.inspect}>
       {this.label(u.tier).label}
       {subunits}
     </div>
