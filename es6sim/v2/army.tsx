@@ -317,8 +317,9 @@ export class UIUnit extends React.Component {
     return constants.label(tier)
   }
 
-  inspect() {
-    debugger
+  inspect (e: Event) {
+    e.preventDefault()
+    e.stopPropagation()
     this.props.hq.inspected = this.props.unit.officer
   }
 
