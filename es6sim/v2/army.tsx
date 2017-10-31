@@ -104,9 +104,6 @@ export class Headquarter {
   }
 
   tick (turn) {
-    // console.log(turn)
-    if(this.inspected) console.log(this.inspected)
-
     this.staff.forEach((officer) => {
       if (officer.isRetired) {
         this.retire(officer)
@@ -129,7 +126,7 @@ export class Headquarter {
       replacement = (officer1.experience > officer2.experience)
         ? officer1
         : officer2
-
+      
       this.replace(replacement)
       this.promote(replacement)
     }
@@ -228,7 +225,7 @@ export class Game {
   private tick () {
     if (this.status === 'paused') return
 
-    if (this.turn >= 500) debugger
+    if (this.turn >= 1500) debugger
 
     this.turn++
     this.headquarter.tick(this.turn)
