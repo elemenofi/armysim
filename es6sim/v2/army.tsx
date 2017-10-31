@@ -238,7 +238,7 @@ export class Game {
 export class Logger {
   game: Game
 
-  constructor (game) {
+  constructor (game: Game) {
     this.game = game
   }
 
@@ -247,14 +247,16 @@ export class Logger {
   }
 
   promote (): string {
-    return moment().add(this.game.turn * 10, 'days').format('YYYY-MM-DD') + ' promoted'
+    return moment()
+      .add(this.game.turn * 10, 'days')
+      .format('YYYY-MM-DD') + ' promoted'
   }
 }
 
 class Keyboard {
   game: Game
 
-  constructor (game) {
+  constructor (game: Game) {
     this.game = game
     this.bindHotkeys()
   }
@@ -294,8 +296,19 @@ export class UIOfficer extends React.Component {
 
   render () {
     const o = this.props.officer
-    const name = (o) ? o.name : 'Click on an officer to inspect it'
-    return <div>{name}</div>
+    
+    if (!o) return <div>Click on an officer to inspect it</div>
+
+    let events: string[] = []
+    
+    o.events.forEach(event => {
+      events.push(<div>{event}</div>)
+    })
+    
+    return <div>
+      {o.name}
+      {events}
+    </div>
   }
 }
 
