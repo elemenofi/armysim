@@ -6,7 +6,9 @@ import util from '../util'
 enum OperationStatus {
   planning = 'planning',
   prepared = 'prepared',
-  executed = 'executed'
+  executed = 'executed',
+  revealed = 'revealed',
+  failed = 'failed'
 }
 
 export class Operation {
@@ -24,6 +26,10 @@ export class Operation {
     this.target = target
     this.strength = 0
     this.status = OperationStatus.planning
+  }
+
+  tick (): void {
+    
   }
 }
 
@@ -79,6 +85,17 @@ export class Officer {
     this.competitor = this.unit.sister.officer
     this.isMilitant = this.timeLeftInRank < this.superior.timeLeftInRank
     this.isSenior = this.experience > this.competitor.experience
+  }
+
+  private operate () {
+    if (!this.operations.length) return
+
+    this.operations = this.operations.filter((operation: Operation) => {
+      return operation.status !== OperationStatus.failed &&
+        operation.status !== OperationStatus.revealed
+    })
+
+    this.operations.forEach((operation) => operation.tick())
   }
 
   hasOperationAgainst (target: Officer): boolean {
