@@ -27,7 +27,6 @@ export class Officer {
   experience: number
   rank: Rank
   unit: Unit
-  operations: Operation[] = []
   status: string
   superior: Officer
   competitor: Officer
@@ -36,13 +35,14 @@ export class Officer {
   isRetired: boolean
   isSenior: boolean
   events: string[] = []
+  operations: Operation[] = []
   chance: any
 
   constructor (rank: number) {
     this.rank = new Rank(rank)
     this.experience = 100 * rank + util.random(100)
     this.chance = chance(Math.random)
-    this.name = this.chance.first({gender: 'male'}) + ' ' + this.chance.last()
+    this.name = `${this.chance.first({gender: 'male'}) } ${this.chance.last()}`
   }
 
   tick () {
@@ -50,7 +50,6 @@ export class Officer {
     if (!this.unit || !this.unit.parent) return
     this.relate()
     this.scheme()
-
   }
 
   private train () {
@@ -119,6 +118,12 @@ export class Headquarter {
     })
   }
 
+  private retire (officer: Officer) {
+    this.reserve.push(officer)
+    this.staff = this.staff.filter((o) => officer.id !== o.id )
+    this.replace(officer)
+  }
+
   private replace (officer: Officer) {
     let replacement: Officer
 
@@ -146,12 +151,6 @@ export class Headquarter {
     this.OFFICERID++
     this.staff.push(recruit)
     return recruit
-  }
-
-  private retire (officer: Officer) {
-    this.reserve.push(officer)
-    this.staff = this.staff.filter((o) => officer.id !== o.id )
-    this.replace(officer)
   }
 
   private promote (officer: Officer): Officer {
@@ -232,15 +231,25 @@ export class Game {
   }
 
   private tick () {
+    // if (this.turn === 0) {
+    //   for (var i = 0; i < 2000; i++) {
+    //     this.advance()
+    //   }
+    // }
+
     if (this.status === 'paused') return
 
-    if (this.turn >= 1500) debugger
+    // if (this.turn >= 1500) debugger
 
+    this.advance()
+
+    setTimeout(() => this.tick())
+  }
+
+  private advance () {
     this.turn++
     this.headquarter.tick(this.turn)
     this.ui.render(this)
-
-    setTimeout(() => this.tick(), 2)
   }
 }
 
