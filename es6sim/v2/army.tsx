@@ -122,17 +122,16 @@ export class Operations {
   }
 
   start (officer: Officer, target: Officer): void {
+    if (!officer || !target) return
     if (officer.operations.length > officer.rank.tier) return
     if (officer.hasOperationAgainst(target)) return    
 
     const operation = new Operation(this.OPERATIONID, officer, target)
     this.OPERATIONID++
-    
+
     officer.operations.push(operation)
     officer.events.push(this.hq.log.plot(operation))
   }
-
-  
 }
 
 export class Headquarter {
@@ -147,7 +146,7 @@ export class Headquarter {
   log: Logger
 
   constructor () {
-    this.army = this.build(9)
+    this.army = this.build(9)    
     const officer = this.recruit(9)
 
     this.assign(officer, this.army)
