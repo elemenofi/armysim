@@ -108,7 +108,7 @@ export class Headquarter {
     this.assignSister()
   }
 
-  tick (turn) {
+  tick (turn: number): void {
     this.staff.forEach((officer) => {
       if (officer.isRetired) {
         this.retire(officer)
@@ -118,13 +118,14 @@ export class Headquarter {
     })
   }
 
-  private retire (officer: Officer) {
+  private retire (officer: Officer): Officer {
     this.reserve.push(officer)
     this.staff = this.staff.filter((o) => officer.id !== o.id )
     this.replace(officer)
+    return officer
   }
 
-  private replace (officer: Officer) {
+  private replace (officer: Officer): Officer {
     let replacement: Officer
 
     if (officer.rank.tier === 1) {
@@ -143,6 +144,8 @@ export class Headquarter {
     }
 
     this.assign(replacement, officer.unit)
+    
+    return replacement
   }
 
   private recruit (tier: number): Officer {
@@ -260,14 +263,18 @@ export class Logger {
     this.game = game
   }
 
+  day (): string {
+    return moment()
+      .add(this.game.turn * 10, 'days')
+      .format('YYYY-MM-DD')
+  }
+
   action (action: string): string {
     return this[action]()
   }
 
   promote (): string {
-    return moment()
-      .add(this.game.turn * 10, 'days')
-      .format('YYYY-MM-DD') + ' promoted'
+    return this.day() + ' promoted'
   }
 }
 
@@ -288,7 +295,6 @@ class Keyboard {
     })
   }
 }
-
 
 import * as React from 'react'
 import * as ReactDOM from 'react-dom'
