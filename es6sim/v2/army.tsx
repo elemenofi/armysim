@@ -1,6 +1,13 @@
 import * as moment from 'moment'
 import * as chance from 'chance'
+import names from '../names'
 import util from '../util'
+
+enum OperationStatus {
+  planning = 'planning',
+  prepared = 'prepared',
+  executed = 'executed'
+}
 
 export class Operation {
   id: number
@@ -8,7 +15,16 @@ export class Operation {
   officer: Officer
   target: Officer
   strength: number
-  status: string
+  status: OperationStatus
+
+  constructor (id: number, officer: Officer, target: Officer) {
+    this.id = id
+    this.name = 'Operation ' + names.nouns[util.random(names.nouns.length)]
+    this.officer = officer
+    this.target = target
+    this.strength = 0
+    this.status = OperationStatus.planning
+  }
 }
 
 export class Rank {
@@ -49,7 +65,6 @@ export class Officer {
     this.train()
     if (!this.unit || !this.unit.parent) return
     this.relate()
-    this.scheme()
   }
 
   private train () {
@@ -66,11 +81,12 @@ export class Officer {
     this.isSenior = this.experience > this.competitor.experience
   }
 
-  private scheme () {
-    // if (!this.isSenior) this.plot(this.competitor)
-    // if (this.isSenior && this.isMilitant) this.plot(this.superior)
+  hasOperationAgainst (target: Officer): boolean {
+    return this.operations
+      .map((operation) => operation.target)
+      .includes(target)
   }
- }
+}
 
 export class Unit {
   id: number
@@ -86,14 +102,47 @@ export class Unit {
   }
 }
 
+export class Operations {
+  hq: Headquarter
+  OPERATIONID = 0
+
+  constructor (hq: Headquarter) {
+    this.hq = hq
+  }
+
+  tick (): void {
+    this.hq.staff.forEach((officer) => {
+      this.plot(officer)
+    })
+  }
+
+  plot (officer: Officer): void {
+    if (!officer.isSenior) this.start(officer, officer.competitor)
+    if (officer.isMilitant) this.start(officer, officer.superior)
+  }
+
+  start (officer: Officer, target: Officer): void {
+    if (officer.operations.length > officer.rank.tier) return
+    if (officer.hasOperationAgainst(target)) return    
+
+    const operation = new Operation(this.OPERATIONID, officer, target)
+    this.OPERATIONID++
+    
+    officer.operations.push(operation)
+    officer.events.push(this.hq.log.plot(operation))
+  }
+
+  
+}
+
 export class Headquarter {
   UNITID = 0
   OFFICERID = 0
-  OPERATIONID = 0
   army: Unit
   oob: Unit[] = []
   staff: Officer[] = []
   reserve: Officer[] = []
+  operations: Operations
   inspected: Officer
   log: Logger
 
@@ -106,6 +155,8 @@ export class Headquarter {
     this.generateUnitsTree(8, 2, this.army)
 
     this.assignSister()
+
+    this.operations = new Operations(this)
   }
 
   tick (turn: number): void {
@@ -116,6 +167,8 @@ export class Headquarter {
         officer.tick()
       }
     })
+
+    this.operations.tick()
   }
 
   private retire (officer: Officer): Officer {
@@ -158,7 +211,7 @@ export class Headquarter {
 
   private promote (officer: Officer): Officer {
     officer.rank = new Rank(officer.rank.tier + 1)
-    officer.events.push(this.log.action('promote'))
+    officer.events.push(this.log.promote())
     return officer
   }
 
@@ -269,12 +322,12 @@ export class Logger {
       .format('YYYY-MM-DD')
   }
 
-  action (action: string): string {
-    return this[action]()
-  }
-
   promote (): string {
     return this.day() + ' promoted'
+  }
+
+  plot (operation: Operation): string {
+    return `${this.day()} started ${operation.name} against ${operation.target.name}`
   }
 }
 
