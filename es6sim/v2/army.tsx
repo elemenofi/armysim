@@ -27,7 +27,7 @@ export class Officer {
   experience: number
   rank: Rank
   unit: Unit
-  operation: Operation
+  operations: Operation[] = []
   status: string
   superior: Officer
   competitor: Officer
@@ -37,7 +37,6 @@ export class Officer {
   isSenior: boolean
   events: string[] = []
   chance: any
-
 
   constructor (rank: number) {
     this.rank = new Rank(rank)
@@ -50,6 +49,8 @@ export class Officer {
     this.train()
     if (!this.unit || !this.unit.parent) return
     this.relate()
+    this.scheme()
+
   }
 
   private train () {
@@ -64,6 +65,11 @@ export class Officer {
     this.competitor = this.unit.sister.officer
     this.isMilitant = this.timeLeftInRank < this.superior.timeLeftInRank
     this.isSenior = this.experience > this.competitor.experience
+  }
+
+  private scheme () {
+    // if (!this.isSenior) this.plot(this.competitor)
+    // if (this.isSenior && this.isMilitant) this.plot(this.superior)
   }
  }
 
@@ -148,14 +154,16 @@ export class Headquarter {
     this.replace(officer)
   }
 
-  private promote (officer: Officer) {
+  private promote (officer: Officer): Officer {
     officer.rank = new Rank(officer.rank.tier + 1)
     officer.events.push(this.log.action('promote'))
+    return officer
   }
 
-  private assign (officer: Officer, unit: Unit) {
+  private assign (officer: Officer, unit: Unit): Officer {
     unit.officer = officer
     officer.unit = unit
+    return officer
   }
 
   private build (tier: number): Unit {
@@ -166,12 +174,13 @@ export class Headquarter {
     return unit
   }
 
-  private assignParent (unit: Unit, parent: Unit) {
+  private assignParent (unit: Unit, parent: Unit): Unit {
     unit.parent = parent
     parent.subunits.push(unit)
+    return unit
   }
 
-  private assignSister () {
+  private assignSister (): void {
     this.oob.forEach((unit) => {
       if (unit.parent) {
         unit.sister = unit.parent.subunits.find((u) => {
@@ -181,7 +190,7 @@ export class Headquarter {
     })
   }
 
-  private generateUnitsTree (tier: number, quantity: number, parent: Unit) {
+  private generateUnitsTree (tier: number, quantity: number, parent: Unit): void {
     if (quantity === 0 || tier < 1) {
       return
     } else {
