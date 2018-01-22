@@ -1,5 +1,5 @@
 const util = {
-  random (n) {
+  random (n: number) {
     return Math.round(Math.random() * n)
   },
 }

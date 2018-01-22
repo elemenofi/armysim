@@ -5,9 +5,7 @@ import util from '../util'
 
 enum OperationStatus {
   planning = 'planning',
-  prepared = 'prepared',
   executed = 'executed',
-  revealed = 'revealed',
   failed = 'failed'
 }
 
@@ -17,6 +15,7 @@ export class Operation {
   officer: Officer
   target: Officer
   strength: number
+  turns: number
   status: OperationStatus
 
   constructor (id: number, officer: Officer, target: Officer) {
@@ -26,10 +25,27 @@ export class Operation {
     this.target = target
     this.strength = 0
     this.status = OperationStatus.planning
+    this.turns = 365
   }
 
   tick (): void {
+    if (this.strength === 100 && this.status === OperationStatus.planning) this.execute()
+    if (this.status === OperationStatus.executed || this.status === OperationStatus.failed) return
     
+    if (this.turns < 0) {
+      this.status = OperationStatus.failed
+      return
+    }
+
+    this.turns--
+
+    if (util.random(10) + this.officer.rank.tier > util.random(10) + this.target.rank.tier) {
+      this.strength++
+    }
+  }
+
+  execute (): void { 
+    this.status = OperationStatus.executed
   }
 }
 
@@ -89,12 +105,6 @@ export class Officer {
 
   private operate () {
     if (!this.operations.length) return
-
-    this.operations = this.operations.filter((operation: Operation) => {
-      return operation.status !== OperationStatus.failed &&
-        operation.status !== OperationStatus.revealed
-    })
-
     this.operations.forEach((operation) => operation.tick())
   }
 
