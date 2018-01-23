@@ -4,6 +4,7 @@ import names from '../names'
 import util from '../util'
 
 enum OperationStatus {
+  abandoned = 'abandoned',
   planning = 'planning',
   executed = 'executed',
   failed = 'failed'
@@ -29,11 +30,23 @@ export class Operation {
   }
 
   tick (): void {
-    if (this.strength === 100 && this.status === OperationStatus.planning) this.execute()
-    if (this.status === OperationStatus.executed || this.status === OperationStatus.failed) return
+    if (
+      this.strength === 100 && 
+      this.status === OperationStatus.planning
+    ) {
+      this.execute()
+    }
+
+    if (
+      this.status === OperationStatus.executed || 
+      this.status === OperationStatus.failed ||
+      this.status === OperationStatus.abandoned
+    ) {
+      return
+    }
     
     if (this.turns < 0) {
-      this.status = OperationStatus.failed
+      this.status = OperationStatus.abandoned
       return
     }
 
@@ -44,8 +57,12 @@ export class Operation {
     }
   }
 
-  execute (): void { 
-    this.status = OperationStatus.executed
+  execute (): void {
+    if (util.random(10) + this.officer.rank.tier > util.random(10) + this.target.rank.tier) {
+      this.status = OperationStatus.executed
+    } else {
+      this.status = OperationStatus.failed
+    }
   }
 }
 
