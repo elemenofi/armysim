@@ -18,9 +18,11 @@ export class Operation {
   strength: number
   turns: number
   status: OperationStatus
+  hq: Headquarter
 
-  constructor (id: number, officer: Officer, target: Officer) {
+  constructor (id: number, officer: Officer, target: Officer, hq: Headquarter) {
     this.id = id
+    this.hq = hq
     this.name = 'Operation ' + names.nouns[util.random(names.nouns.length)]
     this.officer = officer
     this.target = target
@@ -45,7 +47,9 @@ export class Operation {
       return
     }
     
-    if (this.turns < 0) {
+    if (this.turns <= 0) {
+      debugger
+      this.officer.events.push(this.hq.log.abandoned(this))
       this.status = OperationStatus.abandoned
       return
     }
@@ -104,6 +108,7 @@ export class Officer {
     this.train()
     if (!this.unit || !this.unit.parent) return
     this.relate()
+    this.operate()
   }
 
   private train () {
@@ -171,7 +176,7 @@ export class Operations {
     if (officer.operations.length > officer.rank.tier) return
     if (officer.hasOperationAgainst(target)) return    
 
-    const operation = new Operation(this.OPERATIONID, officer, target)
+    const operation = new Operation(this.OPERATIONID, officer, target, this.hq)
     this.OPERATIONID++
 
     officer.operations.push(operation)
@@ -373,6 +378,10 @@ export class Logger {
   plot (operation: Operation): string {
     return `${this.day()} started ${operation.name} against ${operation.target.name}`
   }
+
+  abandoned (operation: Operation): string {
+    return `${this.day()} abandoned ${operation.name} against ${operation.target.name}`    
+  }
 }
 
 class Keyboard {
@@ -429,7 +438,7 @@ export class UIOfficer extends React.Component {
     let operations: string[] = []
 
     o.operations.forEach((operation) => {
-      operations.push(<div>{operation.name} {operation.status}</div>)
+      operations.push(<div>{operation.name} {operation.status} {operation.turns} {operation.strength}</div>)
     })
 
     return <div>

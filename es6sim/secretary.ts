@@ -1,5 +1,4 @@
 import config from './config'
-import { Rank } from './officer'
 
 export interface School {
   name: string
@@ -93,7 +92,7 @@ class Secretary {
     },
   }
 
-  rankLower (rank: Rank) {
+  rankLower (rank) {
     let lowerRank
 
     switch (rank.alias) {
