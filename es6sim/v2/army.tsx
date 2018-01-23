@@ -150,6 +150,7 @@ export class Operations {
 
   start (officer: Officer, target: Officer): void {
     if (!officer || !target) return
+    if (officer === target) return
     if (officer.operations.length > officer.rank.tier) return
     if (officer.hasOperationAgainst(target)) return    
 
@@ -403,14 +404,21 @@ export class UIOfficer extends React.Component {
     if (!o) return <div>Click on an officer to inspect it</div>
 
     let events: string[] = []
-    
-    o.events.forEach(event => {
+
+    o.events.forEach((event) => {
       events.push(<div>{event}</div>)
     })
-    
+
+    let operations: string[] = []
+
+    o.operations.forEach((operation) => {
+      operations.push(<div>{operation.name} {operation.status}</div>)
+    })
+
     return <div>
       {o.name}
       {events}
+      {operations}
     </div>
   }
 }
@@ -418,12 +426,12 @@ export class UIOfficer extends React.Component {
 export class UIUnit extends React.Component {
   props: {
     unit: Unit
-    hq: Headquarter
+    hq: Headquarter,
   }
 
   constructor () {
     super()
-    this.inspect = this.inspect.bind(this);    
+    this.inspect = this.inspect.bind(this)
   }
 
   label (tier: number): {label: string, size: string} {
@@ -452,10 +460,10 @@ export class UIUnit extends React.Component {
     </div>
   }
 
-  render () {      
+  render () {
     const u = this.props.unit
 
-    const subunits = (u.subunits.length) 
+    const subunits = (u.subunits.length)
       ? this.subunits() : undefined
 
     return <div onClick={this.inspect}>
@@ -469,16 +477,16 @@ export class UI extends React.Component {
   render (game: Game) {
     ReactDOM.render(
       <UIMain game={game} />,
-      document.getElementById('game')
+      document.getElementById('game'),
     )
   }
 }
 
 const constants = {
   label (tier: number): {label: string, size: string} {
-    let result = {
+    const result = {
       label: '',
-      size: ''
+      size: '',
     }
 
     if (tier === 1) {
@@ -527,6 +535,5 @@ const constants = {
     }
 
     return result
-  }
+  },
 }
-
