@@ -46,8 +46,7 @@ export class Operation {
       return
     }
     
-    if (this.turns <= 0) {
-      this.officer.events.push(this.hq.log.plot(OperationStatus.abandoned, this))
+    if (this.turns <= 0 || this.target.isRetired) {
       this.status = OperationStatus.abandoned
       return
     }
@@ -60,12 +59,25 @@ export class Operation {
   }
 
   execute (): void {
-    if (util.random(10) + this.officer.rank.tier > util.random(10) + this.target.rank.tier) {
+    if (
+        util.random(10) + 
+        this.officer.rank.tier +
+        this.officer.prestige
+        > 
+        util.random(10) + 
+        this.target.rank.tier +
+        this.officer.prestige
+      ) 
+    {
       this.officer.events.push(this.hq.log.plot(OperationStatus.executed, this))      
       this.status = OperationStatus.executed
+      this.officer.prestige++
+      this.target.isRetired = true
+      this.target.events.push(this.hq.log.retire(this))
     } else {
       this.officer.events.push(this.hq.log.plot(OperationStatus.failed, this))      
       this.status = OperationStatus.failed
+      this.officer.prestige--    
     }
   }
 }
@@ -100,13 +112,14 @@ export class Officer {
   id: number
   name: string
   experience: number
+  prestige: number
   rank: Rank
   unit: Unit
   status: string
   superior: Officer
   competitor: Officer
   timeLeftInRank: number
-  isMilitant: boolean
+  isPassedForPromotion: boolean
   isRetired: boolean
   isSenior: boolean
   events: string[] = []
@@ -116,6 +129,7 @@ export class Officer {
   constructor (rank: number, private hq: Headquarter) {
     this.rank = new Rank(rank)
     this.experience = 100 * rank + util.random(100)
+    this.prestige = 0
     this.chance = chance(Math.random)
     this.name = `${this.chance.first({gender: 'male'}) } ${this.chance.last()}`
   }
@@ -129,20 +143,21 @@ export class Officer {
   }
 
   fullName (): string {
-    return `${this.rank.name()} ${this.name}`
+    return `${this.rank.name()} ${(this.isRetired ? '(r) ': ' ')} ${this.name}`
   }
 
   private train () {
     this.experience++
     this.timeLeftInRank = this.rank.max - this.experience
     this.isRetired = this.experience > this.rank.max
+    if (this.isRetired) this.events.push(this.hq.log.reserve())
   }
 
   private relate () {
     const parent = this.unit.parent
     this.superior = parent.officer
     this.competitor = this.unit.sister.officer
-    this.isMilitant = this.timeLeftInRank < this.superior.timeLeftInRank
+    this.isPassedForPromotion = this.timeLeftInRank < this.superior.timeLeftInRank
     this.isSenior = this.experience > this.competitor.experience
   }
 
@@ -156,7 +171,7 @@ export class Officer {
 
     if (!this.isSenior) {
       target = this.competitor
-    } else if (this.isMilitant) {
+    } else if (this.isPassedForPromotion) {
       target = this.superior
     }
 
@@ -167,7 +182,6 @@ export class Officer {
     const operation = new Operation(this, target, this.hq)
 
     this.operations.push(operation)
-    this.events.push(this.hq.log.plot(OperationStatus.started, operation))
   }
 
   private target (target: Officer): void {
@@ -382,6 +396,14 @@ export class Logger {
     return this.day() + ' promoted to ' + newRank
   }
 
+  reserve (): string {
+    return this.day() + ' moved to reserve'
+  }
+
+  retire (operation?: Operation): string {
+    return this.day() + ' retired by ' + operation.officer.fullName() + ' in ' + operation.name
+  }
+
   plot (stage: OperationStatus, operation: Operation): string {
     return `${this.day()} ${stage} ${operation.name} against ${operation.target.fullName()}`
   }
@@ -441,13 +463,17 @@ export class UIOfficer extends React.Component {
     let operations: string[] = []
 
     o.operations.forEach((operation) => {
-      operations.push(<div>{operation.name} {operation.status} {operation.turns} {operation.strength}</div>)
+      operations.push(<div>{operation.name} {operation.strength}</div>)
     })
 
     return <div>
-      {o.fullName()}
-      {events}
-      {operations}
+      <ul>
+        <li>{o.fullName()}</li>
+        <li>Experience: {o.experience}</li>
+        <li>Prestige: {o.prestige}</li>
+        <li>{events}</li>
+        <li>{operations}</li>
+      </ul>
     </div>
   }
 }
