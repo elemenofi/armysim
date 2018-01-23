@@ -20,8 +20,7 @@ export class Operation {
   status: OperationStatus
   hq: Headquarter
 
-  constructor (id: number, officer: Officer, target: Officer, hq: Headquarter) {
-    this.id = id
+  constructor (officer: Officer, target: Officer, hq: Headquarter) {
     this.hq = hq
     this.name = 'Operation ' + names.nouns[util.random(names.nouns.length)]
     this.officer = officer
@@ -79,6 +78,22 @@ export class Rank {
     this.tier = tier
     this.max = tier * 100 * 3
   }
+
+  names = [
+    'Lieutenant',
+    'Captain', 
+    'Major', 
+    'Lieutenant Coronel', 
+    'Coronel', 
+    'Brigade General', 
+    'Division General', 
+    'Lieutenant General', 
+    'General'
+  ]
+
+  name (): string {
+    return this.names[this.tier - 1]
+  }
 }
 
 export class Officer {
@@ -98,7 +113,7 @@ export class Officer {
   operations: Operation[] = []
   chance: any
 
-  constructor (rank: number) {
+  constructor (rank: number, private hq: Headquarter) {
     this.rank = new Rank(rank)
     this.experience = 100 * rank + util.random(100)
     this.chance = chance(Math.random)
@@ -110,6 +125,11 @@ export class Officer {
     if (!this.unit || !this.unit.parent) return
     this.relate()
     this.operate()
+    this.plot()
+  }
+
+  fullName (): string {
+    return `${this.rank.name()} ${this.name}`
   }
 
   private train () {
@@ -131,7 +151,31 @@ export class Officer {
     this.operations.forEach((operation) => operation.tick())
   }
 
-  hasOperationAgainst (target: Officer): boolean {
+  private plot (): void {
+    let target: Officer = undefined
+
+    if (!this.isSenior) {
+      target = this.competitor
+    } else if (this.isMilitant) {
+      target = this.superior
+    }
+
+    if (!target) return
+    if (this.operations.length > this.rank.tier) return
+    if (this.hasOperationAgainst(target)) return    
+
+    const operation = new Operation(this, target, this.hq)
+
+    this.operations.push(operation)
+    this.events.push(this.hq.log.plot(OperationStatus.started, operation))
+  }
+
+  private target (target: Officer): void {
+    if (!target) return
+    
+  }
+
+  private hasOperationAgainst (target: Officer): boolean {
     return this.operations
       .map((operation) => operation.target)
       .includes(target)
@@ -152,39 +196,6 @@ export class Unit {
   }
 }
 
-export class Operations {
-  hq: Headquarter
-  OPERATIONID = 0
-
-  constructor (hq: Headquarter) {
-    this.hq = hq
-  }
-
-  tick (): void {
-    this.hq.staff.forEach((officer) => {
-      this.plot(officer)
-    })
-  }
-
-  plot (officer: Officer): void {
-    if (!officer.isSenior) this.start(officer, officer.competitor)
-    if (officer.isMilitant) this.start(officer, officer.superior)
-  }
-
-  start (officer: Officer, target: Officer): void {
-    if (!officer || !target) return
-    if (officer === target) return
-    if (officer.operations.length > officer.rank.tier) return
-    if (officer.hasOperationAgainst(target)) return    
-
-    const operation = new Operation(this.OPERATIONID, officer, target, this.hq)
-    this.OPERATIONID++
-
-    officer.operations.push(operation)
-    officer.events.push(this.hq.log.plot(OperationStatus.started, operation))
-  }
-}
-
 export class Headquarter {
   UNITID = 0
   OFFICERID = 0
@@ -192,7 +203,6 @@ export class Headquarter {
   oob: Unit[] = []
   staff: Officer[] = []
   reserve: Officer[] = []
-  operations: Operations
   inspected: Officer
   log: Logger
 
@@ -205,8 +215,6 @@ export class Headquarter {
     this.generateUnitsTree(8, 2, this.army)
 
     this.assignSister()
-
-    this.operations = new Operations(this)
   }
 
   tick (turn: number): void {
@@ -217,8 +225,6 @@ export class Headquarter {
         officer.tick()
       }
     })
-
-    this.operations.tick()
   }
 
   private retire (officer: Officer): Officer {
@@ -252,7 +258,7 @@ export class Headquarter {
   }
 
   private recruit (tier: number): Officer {
-    const recruit = new Officer(tier)
+    const recruit = new Officer(tier, this)
     recruit.id = this.OFFICERID
     this.OFFICERID++
     this.staff.push(recruit)
@@ -261,7 +267,7 @@ export class Headquarter {
 
   private promote (officer: Officer): Officer {
     officer.rank = new Rank(officer.rank.tier + 1)
-    officer.events.push(this.log.promote())
+    officer.events.push(this.log.promote(officer.rank.name()))
     return officer
   }
 
@@ -352,7 +358,7 @@ export class Game {
     setTimeout(() => this.tick())
   }
 
-  private advance () {
+  public advance () {
     this.turn++
     this.headquarter.tick(this.turn)
     this.ui.render(this)
@@ -372,12 +378,12 @@ export class Logger {
       .format('YYYY-MM-DD')
   }
 
-  promote (): string {
-    return this.day() + ' promoted'
+  promote (newRank: string): string {
+    return this.day() + ' promoted to ' + newRank
   }
 
   plot (stage: OperationStatus, operation: Operation): string {
-    return `${this.day()} ${stage} ${operation.name} against ${operation.target.name}`
+    return `${this.day()} ${stage} ${operation.name} against ${operation.target.fullName()}`
   }
 }
 
@@ -411,7 +417,7 @@ export class UIMain extends React.Component {
     return <div className='army'>
       <h1>{this.props.game.turn}</h1>
       <UIOfficer officer={this.props.game.headquarter.inspected}/>
-      <UIUnit hq={this.props.game.headquarter} unit={this.props.game.headquarter.army}/>
+      <UIUnit hq={this.props.game.headquarter} unit={this.props.game.headquarter.army} game={this.props.game}/>
     </div>
   }
 }
@@ -439,7 +445,7 @@ export class UIOfficer extends React.Component {
     })
 
     return <div>
-      {o.name}
+      {o.fullName()}
       {events}
       {operations}
     </div>
@@ -450,6 +456,7 @@ export class UIUnit extends React.Component {
   props: {
     unit: Unit
     hq: Headquarter,
+    game: Game,
   }
 
   constructor () {
@@ -465,6 +472,7 @@ export class UIUnit extends React.Component {
     e.preventDefault()
     e.stopPropagation()
     this.props.hq.inspected = this.props.unit.officer
+    this.props.game.advance()
   }
 
   subunits () {
@@ -475,10 +483,10 @@ export class UIUnit extends React.Component {
 
     return <div className='subunits'>
       <div className={size}>
-        <UIUnit hq={hq} unit={su[0]}/>
+        <UIUnit hq={hq} unit={su[0]} game={this.props.game}/>
       </div>
       <div className={size}>
-        <UIUnit hq={hq} unit={su[1]}/>
+        <UIUnit hq={hq} unit={su[1]} game={this.props.game}/>
       </div>
     </div>
   }
