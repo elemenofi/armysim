@@ -8,7 +8,6 @@ module.exports = {
   entry: [
     './es6sim/game.tsx'
   ],
-  // Output the bundled JS to dist/app.js
   output: {
     filename: 'bundle.js',
     path: path.resolve('es6sim/lib')

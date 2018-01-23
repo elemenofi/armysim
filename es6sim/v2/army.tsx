@@ -1,11 +1,11 @@
 import * as moment from 'moment'
 import * as chance from 'chance'
-import names from '../names'
-import util from '../util'
+import names from './names'
+import util from './util'
 
 enum OperationStatus {
   abandoned = 'abandoned',
-  planning = 'planning',
+  started = 'started',
   executed = 'executed',
   failed = 'failed'
 }
@@ -27,14 +27,14 @@ export class Operation {
     this.officer = officer
     this.target = target
     this.strength = 0
-    this.status = OperationStatus.planning
+    this.status = OperationStatus.started
     this.turns = 365
   }
 
   tick (): void {
     if (
       this.strength === 100 && 
-      this.status === OperationStatus.planning
+      this.status === OperationStatus.started
     ) {
       this.execute()
     }
@@ -48,8 +48,7 @@ export class Operation {
     }
     
     if (this.turns <= 0) {
-      debugger
-      this.officer.events.push(this.hq.log.abandoned(this))
+      this.officer.events.push(this.hq.log.plot(OperationStatus.abandoned, this))
       this.status = OperationStatus.abandoned
       return
     }
@@ -63,8 +62,10 @@ export class Operation {
 
   execute (): void {
     if (util.random(10) + this.officer.rank.tier > util.random(10) + this.target.rank.tier) {
+      this.officer.events.push(this.hq.log.plot(OperationStatus.executed, this))      
       this.status = OperationStatus.executed
     } else {
+      this.officer.events.push(this.hq.log.plot(OperationStatus.failed, this))      
       this.status = OperationStatus.failed
     }
   }
@@ -180,7 +181,7 @@ export class Operations {
     this.OPERATIONID++
 
     officer.operations.push(operation)
-    officer.events.push(this.hq.log.plot(operation))
+    officer.events.push(this.hq.log.plot(OperationStatus.started, operation))
   }
 }
 
@@ -375,12 +376,8 @@ export class Logger {
     return this.day() + ' promoted'
   }
 
-  plot (operation: Operation): string {
-    return `${this.day()} started ${operation.name} against ${operation.target.name}`
-  }
-
-  abandoned (operation: Operation): string {
-    return `${this.day()} abandoned ${operation.name} against ${operation.target.name}`    
+  plot (stage: OperationStatus, operation: Operation): string {
+    return `${this.day()} ${stage} ${operation.name} against ${operation.target.name}`
   }
 }
 

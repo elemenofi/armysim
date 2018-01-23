@@ -1,3 +1,105 @@
+export interface School {
+  name: string
+}
+
+class Secretary {
+  schools: { [key: string]: School; } = {
+    diplomacy: {
+      name: 'National Officer Candidate School',
+    },
+    commanding: {
+      name: 'National Military Academy',
+    },
+    intelligence: {
+      name: 'National Institute of Military Intelligence',
+    },
+  }
+
+  ranks = {
+    lieutenant: {
+      hierarchy: 0,
+      title: 'Lieutenant',
+      alias: 'lieutenant',
+    },
+    captain: {
+      hierarchy: 1,
+      title: 'Captain',
+      alias: 'captain',
+      startpr: 200,
+    },
+    major: {
+      hierarchy: 2,
+      title: 'Major',
+      alias: 'major',
+    },
+    lcoronel: {
+      hierarchy: 3,
+      title: 'Lieutenant Coronel',
+      alias: 'lcoronel',
+    },
+    coronel: {
+      hierarchy: 4,
+      title: 'Coronel',
+      alias: 'coronel',
+    },
+    bgeneral: {
+      hierarchy: 5,
+      title: 'Brigade General',
+      alias: 'bgeneral',
+    },
+    dgeneral: {
+      hierarchy: 6,
+      title: 'Division General',
+      alias: 'dgeneral',
+    },
+    lgeneral: {
+      hierarchy: 7,
+      title: 'Lieutenant General',
+      alias: 'lgeneral',
+    },
+    general: {
+      hierarchy: 8,
+      title: 'General',
+      alias: 'general',
+    },
+  }
+
+  rankLower (rank) {
+    let lowerRank
+
+    switch (rank.alias) {
+      case 'lieutenant':
+        return lowerRank
+      case 'captain':
+        lowerRank = 'lieutenant'
+      break
+      case 'major':
+        lowerRank = 'captain'
+      break
+      case 'lcoronel':
+        lowerRank = 'major'
+      break
+      case 'coronel':
+        lowerRank = 'lcoronel'
+      break
+      case 'bgeneral':
+        lowerRank = 'coronel'
+      break
+      case 'dgeneral':
+        lowerRank = 'bgeneral'
+      break
+      case 'lgeneral':
+        lowerRank = 'dgeneral'
+      break
+      case 'general':
+        lowerRank = 'lgeneral'
+      break
+    }
+
+    return lowerRank
+  }
+}
+
 
 export interface Trait {
   name: string
@@ -153,4 +255,6 @@ export class Traits {
   }
 }
 
-export default Traits
+// export default Traits
+
+export default Secretary
