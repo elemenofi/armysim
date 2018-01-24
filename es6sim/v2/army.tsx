@@ -72,6 +72,7 @@ export class Operation {
       this.officer.events.push(this.hq.log.plot(OperationStatus.executed, this))      
       this.status = OperationStatus.executed
       this.officer.prestige++
+
       this.target.isRetired = true
       this.target.events.push(this.hq.log.retire(this))
     } else {
@@ -85,9 +86,10 @@ export class Operation {
 export class Rank {
   tier: number
   max: number
-
+  
   constructor (tier: number) {
     this.tier = tier
+    // this.max = this.getMax()
     this.max = tier * 100 * 3
   }
 
@@ -102,6 +104,22 @@ export class Rank {
     'Lieutenant General', 
     'General'
   ]
+
+  maxes = [
+    5 * 365,
+    10 * 365,
+    15 * 365,
+    18 * 365,
+    21* 365,
+    23 * 365,
+    25 * 365,
+    28 * 365,
+    30 * 365
+  ]
+
+  getMax (): number {
+    return this.maxes[this.tier - 1]
+  }
 
   name (): string {
     return this.names[this.tier - 1]
@@ -358,7 +376,7 @@ export class Game {
 
   private tick () {
     // if (this.turn === 0) {
-    //   for (var i = 0; i < 2000; i++) {
+    //   for (var i = 0; i < (5*365); i++) {
     //     this.advance()
     //   }
     // }
@@ -388,7 +406,7 @@ export class Logger {
 
   day (): string {
     return moment()
-      .add(this.game.turn * 10, 'days')
+      .add(this.game.turn, 'days')
       .format('YYYY-MM-DD')
   }
 
@@ -397,11 +415,11 @@ export class Logger {
   }
 
   reserve (): string {
-    return this.day() + ' moved to reserve'
+    return this.day() + ' retired'
   }
 
   retire (operation?: Operation): string {
-    return this.day() + ' retired by ' + operation.officer.fullName() + ' in ' + operation.name
+    return this.day() + ' forced to retire by ' + operation.officer.fullName() + ' in ' + operation.name
   }
 
   plot (stage: OperationStatus, operation: Operation): string {
@@ -437,7 +455,7 @@ export class UIMain extends React.Component {
 
   render () {
     return <div className='army'>
-      <h1>{this.props.game.turn}</h1>
+      <h1>{ moment().add(this.props.game.turn, 'days').format('YYYY-MM-DD')}</h1>
       <UIOfficer officer={this.props.game.headquarter.inspected}/>
       <UIUnit hq={this.props.game.headquarter} unit={this.props.game.headquarter.army} game={this.props.game}/>
     </div>
