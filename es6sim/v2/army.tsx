@@ -66,7 +66,7 @@ export class Operation {
         >
         util.random(10) +
         this.target.rank.tier +
-        this.officer.prestige
+        this.target.prestige
     ) {
       this.officer.events.push(this.hq.log.plot(OperationStatus.executed, this))
       this.status = OperationStatus.executed
