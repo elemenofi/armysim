@@ -1,5 +1,5 @@
-import * as moment from 'moment'
 import * as chance from 'chance'
+import * as moment from 'moment'
 import names from './names'
 import util from './util'
 
@@ -7,7 +7,7 @@ enum OperationStatus {
   abandoned = 'abandoned',
   started = 'started',
   executed = 'executed',
-  failed = 'failed'
+  failed = 'failed',
 }
 
 export class Operation {
@@ -32,20 +32,20 @@ export class Operation {
 
   tick (): void {
     if (
-      this.strength === 100 && 
+      this.strength === 100 &&
       this.status === OperationStatus.started
     ) {
       this.execute()
     }
 
     if (
-      this.status === OperationStatus.executed || 
+      this.status === OperationStatus.executed ||
       this.status === OperationStatus.failed ||
       this.status === OperationStatus.abandoned
     ) {
       return
     }
-    
+
     if (this.turns <= 0 || this.target.isRetired) {
       this.status = OperationStatus.abandoned
       return
@@ -60,25 +60,24 @@ export class Operation {
 
   execute (): void {
     if (
-        util.random(10) + 
+        util.random(10) +
         this.officer.rank.tier +
         this.officer.prestige
-        > 
-        util.random(10) + 
+        >
+        util.random(10) +
         this.target.rank.tier +
         this.officer.prestige
-      ) 
-    {
-      this.officer.events.push(this.hq.log.plot(OperationStatus.executed, this))      
+    ) {
+      this.officer.events.push(this.hq.log.plot(OperationStatus.executed, this))
       this.status = OperationStatus.executed
       this.officer.prestige++
 
       this.target.isRetired = true
       this.target.events.push(this.hq.log.retire(this))
     } else {
-      this.officer.events.push(this.hq.log.plot(OperationStatus.failed, this))      
+      this.officer.events.push(this.hq.log.plot(OperationStatus.failed, this))
       this.status = OperationStatus.failed
-      this.officer.prestige--    
+      this.officer.prestige--
     }
   }
 }
@@ -86,23 +85,17 @@ export class Operation {
 export class Rank {
   tier: number
   max: number
-  
-  constructor (tier: number) {
-    this.tier = tier
-    // this.max = this.getMax()
-    this.max = tier * 100 * 3
-  }
 
   names = [
     'Lieutenant',
-    'Captain', 
-    'Major', 
-    'Lieutenant Coronel', 
-    'Coronel', 
-    'Brigade General', 
-    'Division General', 
-    'Lieutenant General', 
-    'General'
+    'Captain',
+    'Major',
+    'Lieutenant Coronel',
+    'Coronel',
+    'Brigade General',
+    'Division General',
+    'Lieutenant General',
+    'General',
   ]
 
   maxes = [
@@ -110,12 +103,18 @@ export class Rank {
     10 * 365,
     15 * 365,
     18 * 365,
-    21* 365,
+    21 * 365,
     23 * 365,
     25 * 365,
     28 * 365,
-    30 * 365
+    30 * 365,
   ]
+
+  constructor (tier: number) {
+    this.tier = tier
+    // this.max = this.getMax()
+    this.max = tier * 100 * 3
+  }
 
   getMax (): number {
     return this.maxes[this.tier - 1]
@@ -161,7 +160,7 @@ export class Officer {
   }
 
   fullName (): string {
-    return `${this.rank.name()} ${(this.isRetired ? '(r) ': ' ')} ${this.name}`
+    return `${this.rank.name()} ${(this.isRetired ? '(r) ' : ' ')} ${this.name}`
   }
 
   private train () {
@@ -185,7 +184,7 @@ export class Officer {
   }
 
   private plot (): void {
-    let target: Officer = undefined
+    let target: Officer
 
     if (!this.isSenior) {
       target = this.competitor
@@ -195,7 +194,7 @@ export class Officer {
 
     if (!target) return
     if (this.operations.length > this.rank.tier) return
-    if (this.hasOperationAgainst(target)) return    
+    if (this.hasOperationAgainst(target)) return
 
     const operation = new Operation(this, target, this.hq)
 
@@ -204,7 +203,7 @@ export class Officer {
 
   private target (target: Officer): void {
     if (!target) return
-    
+
   }
 
   private hasOperationAgainst (target: Officer): boolean {
@@ -239,7 +238,7 @@ export class Headquarter {
   log: Logger
 
   constructor () {
-    this.army = this.build(9)    
+    this.army = this.build(9)
     const officer = this.recruit(9)
 
     this.assign(officer, this.army)
@@ -279,13 +278,13 @@ export class Headquarter {
       replacement = (officer1.experience > officer2.experience)
         ? officer1
         : officer2
-      
+
       this.replace(replacement)
       this.promote(replacement)
     }
 
     this.assign(replacement, officer.unit)
-    
+
     return replacement
   }
 
@@ -365,13 +364,19 @@ export class Game {
     this.tick()
   }
 
-  pause () {
+  public pause () {
     if (this.status === 'playing') {
       this.status = 'paused'
     } else {
       this.status = 'playing'
       this.tick()
     }
+  }
+
+  public advance () {
+    this.turn++
+    this.headquarter.tick(this.turn)
+    this.ui.render(this)
   }
 
   private tick () {
@@ -390,11 +395,6 @@ export class Game {
     setTimeout(() => this.tick())
   }
 
-  public advance () {
-    this.turn++
-    this.headquarter.tick(this.turn)
-    this.ui.render(this)
-  }
 }
 
 export class Logger {
@@ -450,7 +450,7 @@ import * as ReactDOM from 'react-dom'
 
 export class UIMain extends React.Component {
   props: {
-    game: Game
+    game: Game,
   }
 
   render () {
@@ -464,21 +464,21 @@ export class UIMain extends React.Component {
 
 export class UIOfficer extends React.Component {
   props: {
-    officer: Officer
+    officer: Officer,
   }
 
   render () {
     const o = this.props.officer
-    
+
     if (!o) return <div>Click on an officer to inspect it</div>
 
-    let events: string[] = []
+    const events: string[] = []
 
     o.events.forEach((event) => {
       events.push(<div>{event}</div>)
     })
 
-    let operations: string[] = []
+    const operations: string[] = []
 
     o.operations.forEach((operation) => {
       operations.push(<div>{operation.name} {operation.strength}</div>)
