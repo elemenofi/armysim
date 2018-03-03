@@ -18,15 +18,15 @@
         "lib": [
             "dom",
             "es2017"
-        ]
+        ],
+        "skipLibCheck": true
     },
     "exclude": [
-        "node_modules",
-        "typings/browser",
-        "typings/browser.d.ts"
+        "node_modules"
     ],
     "compileOnSave": false,
     "buildOnSave": false,
+    "skipLibCheck": true,
     "atom": {
         "rewriteTsconfig": false
     }
