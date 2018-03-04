@@ -5,7 +5,6 @@ export class Keyboard {
   game: Game
 
   constructor (game: Game) {
-    this.game = game
     this.bindHotkeys()
   }
 
