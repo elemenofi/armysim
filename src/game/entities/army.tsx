@@ -1,8 +1,7 @@
 import * as chance from 'chance'
 import * as moment from 'moment'
-import names from './names'
-import { UI } from './ui'
-import util from './util'
+import { UI } from '../ui/ui'
+import { names, util } from '../util'
 
 enum OperationStatus {
   abandoned = 'abandoned',

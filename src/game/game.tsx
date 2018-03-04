@@ -1,5 +1,5 @@
 
-import { Game } from './army'
+import { Game } from './entities/army'
 
 export interface Window { game: Game }
 

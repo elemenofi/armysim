@@ -1,7 +1,8 @@
 import * as moment from 'moment'
 import * as React from 'react'
 import * as ReactDOM from 'react-dom'
-import { Game, Headquarter, Officer, Unit } from './army'
+import { Game, Headquarter, Officer, Unit } from '../entities/army'
+import { constants } from '../util'
 
 export class UIMain extends React.Component {
   props: {
@@ -110,60 +111,4 @@ export class UI extends React.Component {
       document.getElementById('game'),
     )
   }
-}
-
-const constants = {
-  label (tier: number): {label: string, size: string} {
-    const result = {
-      label: '',
-      size: '',
-    }
-
-    if (tier === 1) {
-      result.label = '*'
-      result.size = 'small'
-    }
-
-    if (tier === 2) {
-      result.label = '**'
-      result.size = 'small'
-    }
-
-    if (tier === 3) {
-      result.label = '***'
-      result.size = 'small'
-    }
-
-    if (tier === 4) {
-      result.label = '****'
-      result.size = 'small'
-    }
-
-    if (tier === 5) {
-      result.label = '★'
-      result.size = 'small'
-    }
-
-    if (tier === 6) {
-      result.label = '★★'
-      result.size = 'big'
-    }
-
-    if (tier === 7) {
-      result.label = '★★★'
-      result.size = 'big'
-    }
-
-    if (tier === 8) {
-      result.label = '★★★★'
-      result.size = 'big'
-    }
-
-    if (tier === 9) {
-      result.label = '★★★★★'
-      result.size = 'big'
-    }
-
-    return result
-  },
 }
