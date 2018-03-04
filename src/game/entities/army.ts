@@ -42,15 +42,28 @@ export class Headquarter {
 
   private build (tier: number): Unit {
     const unit = new Unit(tier)
+
     unit.id = this.UNITID
     this.UNITID++
+
     if (tier < 9) this.oob.push(unit)
+
     return unit
   }
 
   private assignParent (unit: Unit, parent: Unit): Unit {
     unit.parent = parent
+
     parent.subunits.push(unit)
+
+    return unit
+  }
+
+  private assignSister (unit: Unit): Unit {
+    unit.sister = unit.parent.subunits.find((u) => {
+      return u.id !== unit.id
+    })
+
     return unit
   }
 
@@ -62,14 +75,13 @@ export class Headquarter {
       const officer = this.staff.recruit(tier)
 
       this.staff.assign(officer, unit)
+
       this.assignParent(unit, parent)
 
       this.generateUnitsTree(tier - 1, 2, unit)
       this.generateUnitsTree(tier, quantity - 1, parent)
 
-      unit.sister = unit.parent.subunits.find((u) => {
-        return u.id !== unit.id
-      })
+      this.assignSister(unit)
     }
   }
 }
