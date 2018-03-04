@@ -54,8 +54,6 @@ export class Game {
 
     if (this.status === 'paused') return
 
-    // if (this.turn >= 1500) debugger
-
     this.advance()
 
     setTimeout(() => this.tick())
