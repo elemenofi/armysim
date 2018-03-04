@@ -1,6 +1,4 @@
-.subunits {
-  width: 100%;
-}
+
 
 .unit-big {
   width: 50%;
@@ -9,4 +7,8 @@
 
 .unit-small {
   float: none;
+}
+
+.unit-sub {
+  width: 100%;
 }

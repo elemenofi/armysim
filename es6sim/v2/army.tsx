@@ -525,7 +525,7 @@ export class UIUnit extends React.Component {
     const su = u.subunits
     const size = 'unit-' + this.label(u.tier).size
 
-    return <div className='subunits'>
+    return <div className='unit-sub'>
       <div className={size}>
         <UIUnit hq={hq} unit={su[0]} game={this.props.game}/>
       </div>
