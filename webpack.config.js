@@ -4,7 +4,7 @@ var path = require('path');
 module.exports = {
   devtool: 'eval',
   entry: [
-    './src/game.tsx'
+    './src/game/game.tsx'
   ],
   output: {
     filename: 'bundle.js',
