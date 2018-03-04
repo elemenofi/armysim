@@ -1,7 +1,10 @@
 import * as moment from 'moment'
 import * as React from 'react'
 import * as ReactDOM from 'react-dom'
-import { Game, Headquarter, Officer, Unit } from '../entities/army'
+import { Headquarter } from '../entities/army'
+import { Officer } from '../entities/officer'
+import { Unit } from '../entities/unit'
+import { Game } from '../game'
 import { constants } from '../util'
 
 export class UIMain extends React.Component {
