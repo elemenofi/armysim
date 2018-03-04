@@ -28,8 +28,6 @@ export class Headquarter {
     this.staff.assign(officer, this.army)
 
     this.generateUnitsTree(8, 2, this.army)
-
-    this.assignSister()
   }
 
   tick (turn: number): void {
@@ -56,16 +54,6 @@ export class Headquarter {
     return unit
   }
 
-  private assignSister (): void {
-    this.oob.forEach((unit) => {
-      if (unit.parent) {
-        unit.sister = unit.parent.subunits.find((u) => {
-          return u.id !== unit.id
-        })
-      }
-    })
-  }
-
   private generateUnitsTree (tier: number, quantity: number, parent: Unit): void {
     if (quantity === 0 || tier < 1) {
       return
@@ -78,6 +66,10 @@ export class Headquarter {
 
       this.generateUnitsTree(tier - 1, 2, unit)
       this.generateUnitsTree(tier, quantity - 1, parent)
+
+      unit.sister = unit.parent.subunits.find((u) => {
+        return u.id !== unit.id
+      })
     }
   }
 }

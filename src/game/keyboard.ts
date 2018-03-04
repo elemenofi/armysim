@@ -2,9 +2,7 @@
 import { Game } from './game'
 
 export class Keyboard {
-  game: Game
-
-  constructor (game: Game) {
+  constructor (private game: Game) {
     this.bindHotkeys()
   }
 
