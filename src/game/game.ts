@@ -13,20 +13,13 @@ export class Game {
   ui: UI
   headquarter: Headquarter
   keyboard: Keyboard
-  log: Logger
   turn = 0
   status = 'playing'
 
   constructor () {
     this.ui = new UI()
-
-    this.log = new Logger(this)
-
     this.keyboard = new Keyboard(this)
-
     this.headquarter = new Headquarter()
-    this.headquarter.log = this.log
-    this.headquarter.staff.log = this.log
     this.tick()
   }
 

@@ -3,16 +3,16 @@ import * as moment from 'moment'
 import { Operation, OperationStatus } from './entities/operation'
 import { Game } from './game'
 
-export class Logger {
+export interface Window {
   game: Game
+}
 
-  constructor (game: Game) {
-    this.game = game
-  }
+declare const window: Window
 
+export class Logger {
   day (): string {
     return moment()
-      .add(this.game.turn, 'days')
+      .add(window.game.turn, 'days')
       .format('YYYY-MM-DD')
   }
 

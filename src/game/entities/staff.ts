@@ -12,6 +12,7 @@ export class Staff {
   hq: Headquarter
 
   constructor (hq: Headquarter) {
+    this.log = new Logger()
     this.hq = hq
   }
 

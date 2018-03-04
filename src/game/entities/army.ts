@@ -19,6 +19,7 @@ export class Headquarter {
   log: Logger
 
   constructor () {
+    this.log = new Logger()
     this.staff = new Staff(this)
     this.army = this.build(9)
 
