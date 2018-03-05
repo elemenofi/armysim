@@ -848,7 +848,7 @@
 /* 134 */
 /***/ (function(module, exports) {
 
-	eval("\"use strict\";\n\nObject.defineProperty(exports, \"__esModule\", { value: true });\nclass Rank {\n    constructor(tier) {\n        this.names = ['Lieutenant', 'Captain', 'Major', 'Lieutenant Coronel', 'Coronel', 'Brigade General', 'Division General', 'Lieutenant General', 'General'];\n        this.maxes = [2 * 365, 4 * 365, 6 * 365, 8 * 365, 10 * 365, 12 * 365, 14 * 365, 16 * 365, 18 * 365];\n        this.tier = tier;\n        this.max = this.getMax();\n    }\n    getMax() {\n        return this.maxes[this.tier - 1];\n    }\n    name() {\n        return this.names[this.tier - 1];\n    }\n}\nexports.Rank = Rank;\n\n//////////////////\n// WEBPACK FOOTER\n// ./src/game/entities/rank.ts\n// module id = 134\n// module chunks = 0\n//# sourceURL=webpack:///./src/game/entities/rank.ts?");
+	eval("\"use strict\";\n\nObject.defineProperty(exports, \"__esModule\", { value: true });\nclass Rank {\n    constructor(tier) {\n        this.names = ['Lieutenant', 'Captain', 'Major', 'Lieutenant Coronel', 'Coronel', 'Brigade General', 'Division General', 'Lieutenant General', 'General'];\n        this.maxes = [2 * 365, 4 * 365, 6 * 365, 8 * 365, 10 * 365, 12 * 365, 14 * 365, 16 * 365, 18 * 365];\n        this.tier = tier;\n        this.max = this.getMax();\n    }\n    name() {\n        return this.names[this.tier - 1];\n    }\n    getMax() {\n        return this.maxes[this.tier - 1];\n    }\n}\nexports.Rank = Rank;\n\n//////////////////\n// WEBPACK FOOTER\n// ./src/game/entities/rank.ts\n// module id = 134\n// module chunks = 0\n//# sourceURL=webpack:///./src/game/entities/rank.ts?");
 
 /***/ }),
 /* 135 */

@@ -32,11 +32,11 @@ export class Rank {
     this.max = this.getMax()
   }
 
-  getMax (): number {
-    return this.maxes[this.tier - 1]
-  }
-
   name (): string {
     return this.names[this.tier - 1]
+  }
+
+  private getMax (): number {
+    return this.maxes[this.tier - 1]
   }
 }
