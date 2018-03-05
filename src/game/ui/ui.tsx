@@ -40,7 +40,7 @@ export class UIOfficer extends React.Component {
     const operations: string[] = []
 
     o.operations.forEach((operation) => {
-      operations.push(<div>{operation.name} {operation.strength}</div>)
+      operations.push(<div>{operation.name} {operation.strength} started as a {operation.startedAs} against a {operation.againstA}</div>)
     })
 
     return <div>
@@ -48,7 +48,9 @@ export class UIOfficer extends React.Component {
         <li>{o.fullName()}</li>
         <li>Experience: {o.experience}</li>
         <li>Prestige: {o.prestige}</li>
+        <li></li>
         <li>{events}</li>
+        <li></li>
         <li>{operations}</li>
       </ul>
     </div>

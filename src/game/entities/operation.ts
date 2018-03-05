@@ -17,6 +17,8 @@ export class Operation {
   turns: number
   status: OperationStatus
   hq: Headquarter
+  startedAs: string
+  againstA: string
 
   constructor (officer: Officer, target: Officer, hq: Headquarter) {
     this.hq = hq
@@ -26,6 +28,8 @@ export class Operation {
     this.strength = 0
     this.status = OperationStatus.started
     this.turns = 365
+    this.startedAs = officer.rank.name()
+    this.againstA = target.rank.name()
   }
 
   tick (): void {
