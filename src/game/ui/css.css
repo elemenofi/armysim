@@ -1,6 +1,16 @@
 
+* {
+  margin: 0;
+  padding: 0;
+}
+
+
 body {
   font-family: Monaco;
+}
+
+li {
+  list-style: none;
 }
 
 .unit-big {
