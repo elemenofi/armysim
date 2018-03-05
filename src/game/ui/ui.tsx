@@ -104,7 +104,9 @@ export class UIUnit extends React.Component {
     const subunits = (u.subunits.length)
       ? this.subunits() : undefined
 
-    return <div onClick={this.inspect}>
+    const selected = (this.props.hq.inspected && (this.props.unit.officer.id === this.props.hq.inspected.id)) ? 'selected' : ''
+
+    return <div onClick={this.inspect} className={selected}>
       {this.label(u.tier).label}
       {subunits}
     </div>
