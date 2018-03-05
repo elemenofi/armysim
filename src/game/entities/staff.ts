@@ -17,23 +17,30 @@ export class Staff {
   }
 
   retire (officer: Officer): Officer {
-    officer.events.push(this.hq.log.retire())
     this.reserve.push(officer)
     this.active = this.active.filter((o) => officer.id !== o.id)
     this.replace(officer)
     return officer
   }
 
-  replace (replaced: Officer): Officer {
+  replace (officer: Officer): Officer {
     let replacement: Officer
 
-    if (replaced.rank.tier === 1) {
+    if (officer.rank.tier === 1) {
       replacement = this.recruit(1)
     } else {
-      replacement = this.handleReplacement(replaced)
+      const subunits = officer.unit.subunits
+      const officer1 = subunits[0].officer
+      const officer2 = subunits[1].officer
+
+      replacement =
+        officer1.experience > officer2.experience ? officer1 : officer2
+
+      this.replace(replacement)
+      this.promote(replacement)
     }
 
-    this.assign(replacement, replaced.unit)
+    this.assign(replacement, officer.unit)
 
     return replacement
   }
@@ -56,22 +63,5 @@ export class Staff {
     unit.officer = officer
     officer.unit = unit
     return officer
-  }
-
-  private handleReplacement (officer: Officer): Officer {
-    const replacement = this.getReplacement(officer)
-
-    this.replace(replacement)
-    this.promote(replacement)
-
-    return replacement
-  }
-
-  private getReplacement (officer: Officer): Officer {
-    const subunits = officer.unit.subunits
-    const officer1 = subunits[0].officer
-    const officer2 = subunits[1].officer
-    const replacement = officer1.experience > officer2.experience ? officer1 : officer2
-    return replacement
   }
 }
