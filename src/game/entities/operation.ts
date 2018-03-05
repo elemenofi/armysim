@@ -30,52 +30,72 @@ export class Operation {
   }
 
   tick (): void {
-    if (
-      this.strength === 100 &&
-      this.status === OperationStatus.started
-    ) {
-      this.execute()
-    }
+    if (this.isReady()) this.execute()
 
-    if (
-      this.status === OperationStatus.executed ||
-      this.status === OperationStatus.failed ||
-      this.status === OperationStatus.abandoned
-    ) {
-      return
-    }
+    if (this.isDone()) return
 
-    if (this.turns <= 0 || this.target.isRetired) {
-      this.status = OperationStatus.abandoned
+    if (this.isAbandoned()) {
+      this.setStatus(OperationStatus.abandoned)
       return
     }
 
     this.turns--
 
-    if (util.random(10) + this.officer.rank.tier > util.random(10) + this.target.rank.tier) {
-      this.strength++
-    }
+    if (this.shouldStrengthen()) this.strength++
+  }
+
+  isReady (): boolean {
+    return this.strength === 100 && this.status === OperationStatus.started
+  }
+
+  isDone (): boolean {
+    return this.status === OperationStatus.executed ||
+      this.status === OperationStatus.failed ||
+      this.status === OperationStatus.abandoned
+  }
+
+  isAbandoned (): boolean {
+    return this.turns <= 0 || this.target.isRetired
+  }
+
+  setStatus (status: OperationStatus): void {
+    this.status = status
+  }
+
+  shouldStrengthen (): boolean {
+    return util.random(10) + this.officer.rank.tier >
+      util.random(10) + this.target.rank.tier
+  }
+
+  successfulExecution (): boolean {
+    return util.random(10) +
+      this.officer.rank.tier +
+      this.officer.prestige >
+      util.random(10) +
+      this.target.rank.tier +
+      this.target.prestige
+  }
+
+  logExecution (): void {
+    this.officer.events.push(this.hq.log.plot(OperationStatus.executed, this))
+    this.target.events.push(this.hq.log.retire(this))
+  }
+
+  logFailure (): void {
+    this.officer.events.push(this.hq.log.plot(OperationStatus.failed, this))
   }
 
   execute (): void {
-    if (
-        util.random(10) +
-        this.officer.rank.tier +
-        this.officer.prestige
-        >
-        util.random(10) +
-        this.target.rank.tier +
-        this.target.prestige
-    ) {
-      this.officer.events.push(this.hq.log.plot(OperationStatus.executed, this))
-      this.status = OperationStatus.executed
-      this.officer.prestige++
+    if (this.successfulExecution()) {
+      this.setStatus(OperationStatus.executed)
+      this.logExecution()
 
+      this.officer.prestige++
       this.target.isRetired = true
-      this.target.events.push(this.hq.log.retire(this))
     } else {
-      this.officer.events.push(this.hq.log.plot(OperationStatus.failed, this))
-      this.status = OperationStatus.failed
+      this.setStatus(OperationStatus.failed)
+      this.logFailure()
+
       this.officer.prestige--
     }
   }
