@@ -23,6 +23,13 @@ export class Staff {
     return officer
   }
 
+  // replace does a recursion that finds the subordinate
+  // with highest experience and replaces all the
+  // way down to recruiting a new liteutenant. in
+  // the way down it also promotes. so if it replaces
+  // a major it looks for the senior captain and promotes
+  // it and replaces it with the senior lieutenant and
+  // and recruit a new lieutenant
   replace (officer: Officer): Officer {
     let replacement: Officer
 

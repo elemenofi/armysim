@@ -6,10 +6,16 @@
 
 body {
   font-family: Monaco;
+  padding: 16px;
 }
 
 li {
   list-style: none;
+}
+
+.officer {
+  height: 320px;
+  overflow: scroll;
 }
 
 .unit-big {

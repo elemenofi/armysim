@@ -30,7 +30,7 @@ export class Officer {
 
   tick () {
     this.train()
-    if (!this.unit || !this.unit.parent) return
+    // if (!this.unit || !this.unit.parent) return
     this.operate()
     this.plot()
   }
