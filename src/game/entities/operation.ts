@@ -3,7 +3,6 @@ import { Headquarter } from './army'
 import { Officer } from './officer'
 
 export enum OperationStatus {
-  abandoned = 'abandoned',
   started = 'started',
   executed = 'executed',
   failed = 'failed',
@@ -34,14 +33,9 @@ export class Operation {
 
     if (this.isDone()) return
 
-    if (this.isAbandoned()) {
-      this.setStatus(OperationStatus.abandoned)
-      return
-    }
+    this.decreaseTurns()
 
-    this.turns--
-
-    if (this.shouldStrengthen()) this.strength++
+    if (this.succesfulPlanning()) this.increaseStrength()
   }
 
   isReady (): boolean {
@@ -51,20 +45,33 @@ export class Operation {
   isDone (): boolean {
     return this.status === OperationStatus.executed ||
       this.status === OperationStatus.failed ||
-      this.status === OperationStatus.abandoned
-  }
-
-  isAbandoned (): boolean {
-    return this.turns <= 0 || this.target.isRetired
+      this.turns <= 0 ||
+      this.target.isRetired
   }
 
   setStatus (status: OperationStatus): void {
     this.status = status
   }
 
-  shouldStrengthen (): boolean {
+  decreaseTurns (): number {
+    return this.turns--
+  }
+
+  increaseStrength (): number {
+    return this.strength++
+  }
+
+  succesfulPlanning (): boolean {
     return util.random(10) + this.officer.rank.tier >
       util.random(10) + this.target.rank.tier
+  }
+
+  execute (): void {
+    if (this.successfulExecution()) {
+      this.applySuccessfulExecution()
+    } else {
+      this.applyFailedExecution()
+    }
   }
 
   successfulExecution (): boolean {
@@ -76,6 +83,21 @@ export class Operation {
       this.target.prestige
   }
 
+  applySuccessfulExecution (): void {
+    this.setStatus(OperationStatus.executed)
+    this.logExecution()
+
+    this.officer.prestige++
+    this.target.isRetired = true
+  }
+
+  applyFailedExecution (): void {
+    this.setStatus(OperationStatus.failed)
+    this.logFailure()
+
+    this.officer.prestige--
+  }
+
   logExecution (): void {
     this.officer.events.push(this.hq.log.plot(OperationStatus.executed, this))
     this.target.events.push(this.hq.log.retire(this))
@@ -83,20 +105,5 @@ export class Operation {
 
   logFailure (): void {
     this.officer.events.push(this.hq.log.plot(OperationStatus.failed, this))
-  }
-
-  execute (): void {
-    if (this.successfulExecution()) {
-      this.setStatus(OperationStatus.executed)
-      this.logExecution()
-
-      this.officer.prestige++
-      this.target.isRetired = true
-    } else {
-      this.setStatus(OperationStatus.failed)
-      this.logFailure()
-
-      this.officer.prestige--
-    }
   }
 }
