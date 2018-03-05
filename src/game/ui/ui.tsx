@@ -29,7 +29,7 @@ export class UIOfficer extends React.Component {
   render () {
     const o = this.props.officer
 
-    if (!o) return <div>Click on an officer to inspect it</div>
+    if (!o) return <div></div>
 
     const events: string[] = []
 
