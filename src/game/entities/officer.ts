@@ -39,8 +39,18 @@ export class Officer {
     return `${this.rank.name()} ${this.isRetired() ? '(r) ' : ' '} ${this.name}`
   }
 
+  public isSenior (): boolean {
+    if (!this.competitor()) return true
+    return this.experience > this.competitor().experience
+  }
+
   public isRetired (): boolean {
     return this.experience > this.rank.max
+  }
+
+  public isPassedForPromotion (): boolean {
+    if (!this.superior()) return false
+    return this.timeLeftInRank() < this.superior().timeLeftInRank()
   }
 
   private train () {
@@ -48,23 +58,17 @@ export class Officer {
   }
 
   private superior (): Officer {
+    if (!this.unit.parent) return
     return this.unit.parent.officer
   }
 
   private competitor (): Officer {
+    if (!this.unit.sister) return
     return this.unit.sister.officer
   }
 
   private timeLeftInRank (): number {
     return this.rank.max - this.experience
-  }
-
-  private isPassedForPromotion (): boolean {
-    return this.timeLeftInRank() < this.superior().timeLeftInRank()
-  }
-
-  private isSenior (): boolean {
-    return this.experience > this.competitor().experience
   }
 
   private operate () {

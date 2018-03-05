@@ -48,6 +48,8 @@ export class UIOfficer extends React.Component {
         <li>{o.fullName()}</li>
         <li>Experience: {o.experience}</li>
         <li>Prestige: {o.prestige}</li>
+        <li>Senior: {o.isSenior() ? 'Yes' : 'No'}</li>
+        <li>Passed for promotion: {o.isPassedForPromotion() ? 'Yes' : 'No'}</li>
         <li></li>
         <li>{events}</li>
         <li></li>

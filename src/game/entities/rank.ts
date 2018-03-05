@@ -16,21 +16,20 @@ export class Rank {
   ]
 
   maxes = [
-    5 * 365,
+    2 * 365,
+    4 * 365,
+    6 * 365,
+    8 * 365,
     10 * 365,
-    15 * 365,
+    12 * 365,
+    14 * 365,
+    16 * 365,
     18 * 365,
-    21 * 365,
-    23 * 365,
-    25 * 365,
-    28 * 365,
-    30 * 365,
   ]
 
   constructor (tier: number) {
     this.tier = tier
-    // this.max = this.getMax()
-    this.max = tier * 100 * 3
+    this.max = this.getMax()
   }
 
   getMax (): number {
