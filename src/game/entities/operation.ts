@@ -46,7 +46,7 @@ export class Operation {
     return this.status === OperationStatus.executed ||
       this.status === OperationStatus.failed ||
       this.turns <= 0 ||
-      this.target.isRetired
+      this.target.isRetired()
   }
 
   setStatus (status: OperationStatus): void {
@@ -88,7 +88,7 @@ export class Operation {
     this.logExecution()
 
     this.officer.prestige++
-    this.target.isRetired = true
+    this.target.experience = this.target.rank.max + 1
   }
 
   applyFailedExecution (): void {

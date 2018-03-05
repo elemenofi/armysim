@@ -32,7 +32,7 @@ export class Headquarter {
 
   tick (turn: number): void {
     this.staff.active.forEach((officer) => {
-      if (officer.isRetired) {
+      if (officer.isRetired()) {
         this.staff.retire(officer)
       } else {
         officer.tick()

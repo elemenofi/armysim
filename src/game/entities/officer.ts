@@ -13,12 +13,6 @@ export class Officer {
   rank: Rank
   unit: Unit
   status: string
-  superior: Officer
-  competitor: Officer
-  timeLeftInRank: number
-  isPassedForPromotion: boolean
-  isRetired: boolean
-  isSenior: boolean
   events: string[] = []
   operations: Operation[] = []
   chance: any
@@ -37,29 +31,41 @@ export class Officer {
   tick () {
     this.train()
     if (!this.unit || !this.unit.parent) return
-    this.relate()
     this.operate()
     this.plot()
   }
 
   fullName (): string {
-    return `${this.rank.name()} ${this.isRetired ? '(r) ' : ' '} ${this.name}`
+    return `${this.rank.name()} ${this.isRetired() ? '(r) ' : ' '} ${this.name}`
+  }
+
+  public isRetired (): boolean {
+    return this.experience > this.rank.max
   }
 
   private train () {
     this.experience++
-    this.timeLeftInRank = this.rank.max - this.experience
-    this.isRetired = this.experience > this.rank.max
-    if (this.isRetired) this.events.push(this.hq.log.reserve())
+    if (this.isRetired()) this.events.push(this.hq.log.reserve())
   }
 
-  private relate () {
-    const parent = this.unit.parent
-    this.superior = parent.officer
-    this.competitor = this.unit.sister.officer
-    this.isPassedForPromotion =
-      this.timeLeftInRank < this.superior.timeLeftInRank
-    this.isSenior = this.experience > this.competitor.experience
+  private superior (): Officer {
+    return this.unit.parent.officer
+  }
+
+  private competitor (): Officer {
+    return this.unit.sister.officer
+  }
+
+  private timeLeftInRank (): number {
+    return this.rank.max - this.experience
+  }
+
+  private isPassedForPromotion (): boolean {
+    return this.timeLeftInRank() < this.superior().timeLeftInRank()
+  }
+
+  private isSenior (): boolean {
+    return this.experience > this.competitor().experience
   }
 
   private operate () {
@@ -70,10 +76,10 @@ export class Officer {
   private plot (): void {
     let target: Officer
 
-    if (!this.isSenior) {
-      target = this.competitor
-    } else if (this.isPassedForPromotion) {
-      target = this.superior
+    if (!this.isSenior()) {
+      target = this.competitor()
+    } else if (this.isPassedForPromotion()) {
+      target = this.superior()
     }
 
     if (!target) return
@@ -83,10 +89,6 @@ export class Officer {
     const operation = new Operation(this, target, this.hq)
 
     this.operations.push(operation)
-  }
-
-  private target (target: Officer): void {
-    if (!target) return
   }
 
   private hasOperationAgainst (target: Officer): boolean {
