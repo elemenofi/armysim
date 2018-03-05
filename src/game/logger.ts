@@ -20,11 +20,11 @@ export class Logger {
     return this.day() + ' promoted to ' + newRank
   }
 
-  reserve (): string {
+  retire (): string {
     return this.day() + ' retired'
   }
 
-  retire (operation?: Operation): string {
+  forcedRetirement (operation?: Operation): string {
     return (
       this.day() +
       ' forced to retire by ' +

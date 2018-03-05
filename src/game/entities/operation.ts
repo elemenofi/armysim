@@ -100,7 +100,7 @@ export class Operation {
 
   logExecution (): void {
     this.officer.events.push(this.hq.log.plot(OperationStatus.executed, this))
-    this.target.events.push(this.hq.log.retire(this))
+    this.target.events.push(this.hq.log.forcedRetirement(this))
   }
 
   logFailure (): void {

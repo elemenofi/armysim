@@ -17,6 +17,7 @@ export class Staff {
   }
 
   retire (officer: Officer): Officer {
+    officer.events.push(this.hq.log.retire())
     this.reserve.push(officer)
     this.active = this.active.filter((o) => officer.id !== o.id)
     this.replace(officer)

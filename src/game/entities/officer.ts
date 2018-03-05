@@ -45,7 +45,6 @@ export class Officer {
 
   private train () {
     this.experience++
-    if (this.isRetired()) this.events.push(this.hq.log.reserve())
   }
 
   private superior (): Officer {
