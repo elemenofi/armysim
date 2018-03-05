@@ -73,6 +73,24 @@ export class Officer {
     this.operations.forEach((operation) => operation.tick())
   }
 
+  private hasOperationAgainst (target: Officer): boolean {
+    return this.operations.map((operation) => operation.target).includes(target)
+  }
+
+  private canOperateAgainst (target: Officer): boolean {
+    return target &&
+      this.operations.length < this.rank.tier &&
+      !this.hasOperationAgainst(target)
+  }
+
+  private startOperationAgainst (target: Officer): void {
+    if (!this.canOperateAgainst(target)) return
+
+    const operation = new Operation(this, target, this.hq)
+
+    this.operations.push(operation)
+  }
+
   private plot (): void {
     let target: Officer
 
@@ -82,16 +100,6 @@ export class Officer {
       target = this.superior()
     }
 
-    if (!target) return
-    if (this.operations.length > this.rank.tier) return
-    if (this.hasOperationAgainst(target)) return
-
-    const operation = new Operation(this, target, this.hq)
-
-    this.operations.push(operation)
-  }
-
-  private hasOperationAgainst (target: Officer): boolean {
-    return this.operations.map((operation) => operation.target).includes(target)
+    this.startOperationAgainst(target)
   }
 }
