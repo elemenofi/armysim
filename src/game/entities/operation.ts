@@ -48,8 +48,7 @@ export class Operation {
   isDone (): boolean {
     if (
       (this.turns <= 0 ||
-      this.target.isRetired() ||
-      this.target.forcedToRetireBy) &&
+      this.target.shouldRetire()) &&
       this.status === OperationStatus.planning
     ) {
       this.setStatus(OperationStatus.abandoned)

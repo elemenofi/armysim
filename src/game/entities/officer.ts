@@ -35,7 +35,7 @@ export class Officer {
   }
 
   fullName (): string {
-    return `${this.rank.name()} ${this.isRetired() || this.forcedToRetireBy ? '(r) ' : ' '} ${this.name}`
+    return `${this.rank.name()} ${this.shouldRetire() ? '(r) ' : ' '} ${this.name}`
   }
 
   public isSenior (): boolean {
@@ -45,6 +45,10 @@ export class Officer {
 
   public isRetired (): boolean {
     return this.experience > this.rank.max
+  }
+
+  public shouldRetire (): boolean {
+    return !!(this.isRetired() || this.forcedToRetireBy)
   }
 
   public isPassedForPromotion (): boolean {
