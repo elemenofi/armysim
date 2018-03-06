@@ -30,7 +30,6 @@ export class Officer {
 
   tick () {
     this.train()
-    this.operate()
     this.plot()
   }
 
@@ -94,6 +93,8 @@ export class Officer {
   }
 
   private plot (): void {
+    this.operate()
+
     let target: Officer
 
     if (!this.isSenior()) {
