@@ -42,12 +42,7 @@ export class Staff {
     if (officer.rank.tier === 1) {
       replacement = this.recruit(1)
     } else {
-      const subunits = officer.unit.subunits
-      const officer1 = subunits[0].officer
-      const officer2 = subunits[1].officer
-
-      replacement =
-        officer1.experience > officer2.experience ? officer1 : officer2
+      replacement = this.getReplacement(officer)
 
       this.replace(replacement)
       this.promote(replacement)
@@ -56,6 +51,13 @@ export class Staff {
     this.assign(replacement, officer.unit)
 
     return replacement
+  }
+
+  getReplacement (officer: Officer): Officer {
+    const subunits = officer.unit.subunits
+    const officer1 = subunits[0].officer
+    const officer2 = subunits[1].officer
+    return officer1.experience > officer2.experience ? officer1 : officer2
   }
 
   recruit (tier: number): Officer {
