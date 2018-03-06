@@ -1,6 +1,7 @@
 import * as chance from 'chance'
 import { util } from '../util'
 import { Headquarter } from './army'
+import { Faction, randomFaction } from './faction'
 import { Operation, OperationStatus } from './operation'
 import { Rank } from './rank'
 import { Unit } from './unit'
@@ -17,6 +18,7 @@ export class Officer {
   operations: Operation[] = []
   chance: any
   forcedToRetireBy: Operation
+  faction: Faction
 
   constructor (rank: number, private hq: Headquarter) {
     this.rank = new Rank(rank)
@@ -27,6 +29,7 @@ export class Officer {
     this.name = `${this.chance.first({
       gender: 'male',
     })} ${this.chance.last()}`
+    this.faction = new Faction(randomFaction())
   }
 
   tick () {
