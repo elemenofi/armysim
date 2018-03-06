@@ -74,6 +74,22 @@ export class Officer {
     return this.rank.max - this.experience
   }
 
+  private plot (): void {
+    this.operate()
+
+    let target: Officer
+
+    if (!this.isSenior()) {
+      target = this.competitor()
+    } else if (this.isPassedForPromotion()) {
+      target = this.superior()
+    }
+
+    if (!this.canOperateAgainst(target)) return
+
+    this.startOperationAgainst(target)
+  }
+
   private operate () {
     if (!this.operations.length) return
     this.operations.forEach((operation) => operation.tick())
@@ -107,21 +123,5 @@ export class Officer {
     if (operation.successfulCounter()) {
       operation.target.startOperationAgainst(operation.officer, true)
     }
-  }
-
-  private plot (): void {
-    this.operate()
-
-    let target: Officer
-
-    if (!this.isSenior()) {
-      target = this.competitor()
-    } else if (this.isPassedForPromotion()) {
-      target = this.superior()
-    }
-
-    if (!this.canOperateAgainst(target)) return
-
-    this.startOperationAgainst(target)
   }
 }
