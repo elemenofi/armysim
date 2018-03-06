@@ -6,6 +6,7 @@ export enum OperationStatus {
   planned = 'planned',
   executed = 'executed',
   failed = 'failed',
+  abandoned = 'abandoned',
 }
 
 export class Operation {
@@ -43,10 +44,13 @@ export class Operation {
   }
 
   isDone (): boolean {
+    if (this.turns <= 0 || this.target.isRetired()) {
+      this.setStatus(OperationStatus.abandoned)
+    }
+
     return this.status === OperationStatus.executed ||
       this.status === OperationStatus.failed ||
-      this.turns <= 0 ||
-      this.target.isRetired()
+      this.status === OperationStatus.abandoned
   }
 
   setStatus (status: OperationStatus): void {

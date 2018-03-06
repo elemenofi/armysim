@@ -1,7 +1,7 @@
 import * as chance from 'chance'
 import { util } from '../util'
 import { Headquarter } from './army'
-import { Operation } from './operation'
+import { Operation, OperationStatus } from './operation'
 import { Rank } from './rank'
 import { Unit } from './unit'
 
@@ -81,15 +81,20 @@ export class Officer {
 
   private canOperateAgainst (target: Officer): boolean {
     return target &&
-      this.operations.length < this.rank.tier &&
-      !this.hasOperationAgainst(target)
+      !this.hasOperationAgainst(target) &&
+      this.canStartNewOperation()
+  }
+
+  private canStartNewOperation (): boolean {
+    const ongoing = this.operations
+      .filter((o) => o.status === OperationStatus.planned)
+      .length
+
+    return ongoing < this.rank.tier
   }
 
   private startOperationAgainst (target: Officer): void {
-    if (!this.canOperateAgainst(target)) return
-
     const operation = new Operation(this, target, this.hq)
-
     this.operations.push(operation)
   }
 
@@ -103,6 +108,8 @@ export class Officer {
     } else if (this.isPassedForPromotion()) {
       target = this.superior()
     }
+
+    if (!this.canOperateAgainst(target)) return
 
     this.startOperationAgainst(target)
   }
