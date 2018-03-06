@@ -16,19 +16,19 @@ export class Operation {
   target: Officer
   strength: number
   turns: number
-  counter: boolean
+  counterOperation: boolean
   status: OperationStatus
   hq: Headquarter
 
-  constructor (officer: Officer, target: Officer, hq: Headquarter, counter = false) {
+  constructor (officer: Officer, target: Officer, hq: Headquarter, counterOperation = false) {
     this.hq = hq
-    this.name = `${(counter) ? 'Counter ' : ''} Operation ${names.nouns[util.random(names.nouns.length)]}`
+    this.name = `${(counterOperation) ? 'Counter ' : ''} Operation ${names.nouns[util.random(names.nouns.length)]}`
     this.officer = officer
     this.target = target
     this.strength = 0
     this.status = OperationStatus.planning
     this.turns = 365
-    this.counter = counter
+    this.counterOperation = counterOperation
   }
 
   tick (): void {

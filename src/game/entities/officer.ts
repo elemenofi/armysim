@@ -75,24 +75,27 @@ export class Officer {
   }
 
   private plot (): void {
-    this.operate()
-
-    let target: Officer
-
-    if (!this.isSenior()) {
-      target = this.competitor()
-    } else if (this.isPassedForPromotion()) {
-      target = this.superior()
-    }
-
-    if (!this.canOperateAgainst(target)) return
-
-    this.startOperationAgainst(target)
+    this.handleExistingOperations()
+    this.handlePossibleOperations()
   }
 
-  private operate () {
+  private handlePossibleOperations () {
+    const target = this.findTarget()
+    if (!target) return
+    if (this.canOperateAgainst(target)) this.startOperationAgainst(target)
+  }
+
+  private handleExistingOperations () {
     if (!this.operations.length) return
     this.operations.forEach((operation) => operation.tick())
+  }
+
+  private findTarget (): Officer {
+    if (!this.isSenior()) {
+      return this.competitor()
+    } else if (this.isPassedForPromotion()) {
+      return this.superior()
+    }
   }
 
   private hasOperationAgainst (target: Officer): boolean {
@@ -100,8 +103,7 @@ export class Officer {
   }
 
   private canOperateAgainst (target: Officer): boolean {
-    return target &&
-      !this.hasOperationAgainst(target) &&
+    return !this.hasOperationAgainst(target) &&
       this.canStartNewOperation()
   }
 
@@ -113,10 +115,13 @@ export class Officer {
     return ongoing < this.rank.tier
   }
 
-  private startOperationAgainst (target: Officer, counter = false): void {
-    const operation = new Operation(this, target, this.hq, counter)
+  // when starting an operation the target has a chance to counter it
+  // with an operation and the counterOperation flag prevents this happening
+  // back and forth in a endless loop
+  private startOperationAgainst (target: Officer, counterOperation = false): void {
+    const operation = new Operation(this, target, this.hq, counterOperation)
     this.operations.push(operation)
-    if (!counter) target.attemptToCounterOperation(operation)
+    if (!counterOperation) target.attemptToCounterOperation(operation)
   }
 
   private attemptToCounterOperation (operation: Operation): void {
