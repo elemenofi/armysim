@@ -87,7 +87,7 @@ export class Officer {
 
   private canStartNewOperation (): boolean {
     const ongoing = this.operations
-      .filter((o) => o.status === OperationStatus.planned)
+      .filter((o) => o.status === OperationStatus.planning)
       .length
 
     return ongoing < this.rank.tier

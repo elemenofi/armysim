@@ -3,7 +3,7 @@ import { Headquarter } from './army'
 import { Officer } from './officer'
 
 export enum OperationStatus {
-  planned = 'planned',
+  planning = 'planning',
   executed = 'executed',
   failed = 'failed',
   abandoned = 'abandoned',
@@ -25,7 +25,7 @@ export class Operation {
     this.officer = officer
     this.target = target
     this.strength = 0
-    this.status = OperationStatus.planned
+    this.status = OperationStatus.planning
     this.turns = 365
   }
 
@@ -40,7 +40,7 @@ export class Operation {
   }
 
   isReady (): boolean {
-    return this.strength === 100 && this.status === OperationStatus.planned
+    return this.strength === 100 && this.status === OperationStatus.planning
   }
 
   isDone (): boolean {
