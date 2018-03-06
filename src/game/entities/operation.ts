@@ -3,7 +3,7 @@ import { Headquarter } from './army'
 import { Officer } from './officer'
 
 export enum OperationStatus {
-  started = 'started',
+  ongoing = 'ongoing',
   executed = 'executed',
   failed = 'failed',
 }
@@ -17,8 +17,6 @@ export class Operation {
   turns: number
   status: OperationStatus
   hq: Headquarter
-  startedAs: string
-  againstA: string
 
   constructor (officer: Officer, target: Officer, hq: Headquarter) {
     this.hq = hq
@@ -26,10 +24,8 @@ export class Operation {
     this.officer = officer
     this.target = target
     this.strength = 0
-    this.status = OperationStatus.started
+    this.status = OperationStatus.ongoing
     this.turns = 365
-    this.startedAs = officer.rank.name()
-    this.againstA = target.rank.name()
   }
 
   tick (): void {
@@ -43,7 +39,7 @@ export class Operation {
   }
 
   isReady (): boolean {
-    return this.strength === 100 && this.status === OperationStatus.started
+    return this.strength === 100 && this.status === OperationStatus.ongoing
   }
 
   isDone (): boolean {
@@ -92,19 +88,23 @@ export class Operation {
     this.logExecution()
 
     this.officer.prestige++
-    this.target.experience = this.target.rank.max + 1
+
+    this.setTargetForForcedRetirement()
   }
 
   applyFailedExecution (): void {
     this.setStatus(OperationStatus.failed)
-    this.logFailure()
+    // this.logFailure()
 
     this.officer.prestige--
   }
 
+  setTargetForForcedRetirement (): void {
+    this.target.forcedToRetireBy = this
+  }
+
   logExecution (): void {
     this.officer.events.push(this.hq.log.plot(OperationStatus.executed, this))
-    this.target.events.push(this.hq.log.forcedRetirement(this))
   }
 
   logFailure (): void {

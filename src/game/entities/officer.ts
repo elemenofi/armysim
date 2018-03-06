@@ -16,6 +16,7 @@ export class Officer {
   events: string[] = []
   operations: Operation[] = []
   chance: any
+  forcedToRetireBy: Operation
 
   constructor (rank: number, private hq: Headquarter) {
     this.rank = new Rank(rank)

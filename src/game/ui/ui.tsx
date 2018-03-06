@@ -44,7 +44,7 @@ export class UIOfficer extends React.Component {
     const operations: string[] = []
 
     o.operations.forEach((operation) => {
-      operations.push(<div>{operation.name} {operation.strength} started as a {operation.startedAs} against a {operation.againstA}</div>)
+      operations.push(<div>{operation.name} {operation.strength} {operation.status}</div>)
     })
 
     return <div>
