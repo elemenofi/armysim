@@ -35,7 +35,7 @@ export class Officer {
   }
 
   fullName (): string {
-    return `${this.rank.name()} ${this.isRetired() ? '(r) ' : ' '} ${this.name}`
+    return `${this.rank.name()} ${this.isRetired() || this.forcedToRetireBy ? '(r) ' : ' '} ${this.name}`
   }
 
   public isSenior (): boolean {
@@ -93,9 +93,16 @@ export class Officer {
     return ongoing < this.rank.tier
   }
 
-  private startOperationAgainst (target: Officer): void {
-    const operation = new Operation(this, target, this.hq)
+  private startOperationAgainst (target: Officer, counter = false): void {
+    const operation = new Operation(this, target, this.hq, counter)
     this.operations.push(operation)
+    if (!counter) target.attemptToCounterOperation(operation)
+  }
+
+  private attemptToCounterOperation (operation: Operation): void {
+    if (operation.successfulCounter()) {
+      operation.target.startOperationAgainst(operation.officer, true)
+    }
   }
 
   private plot (): void {
