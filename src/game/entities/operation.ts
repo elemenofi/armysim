@@ -140,11 +140,17 @@ export class Operation {
     this.metadata = {
       againstA: this.target.rank.name(),
       startedAs: this.officer.rank.name(),
-      because: `
-        ${!this.counterOperation && this.officer.isPassedForPromotion() ? ' Officer was passed for promotion.' : ''}
-        ${!this.counterOperation && !this.officer.isSenior() ? 'Officer was not senior.' : ''}
-        ${this.counterOperation ? 'Counter Operation' : ''}
-      `,
+      because: this.getReasonForOperation(),
+    }
+  }
+
+  private getReasonForOperation (): string {
+    if (this.counterOperation) {
+      return 'Officer was countering an operation.'
+    } else if (this.officer.rank.tier === this.target.rank.tier) {
+      return 'Officer was not candidate for promotion.'
+    } else {
+      return 'Officer was passed for promotion.'
     }
   }
 }

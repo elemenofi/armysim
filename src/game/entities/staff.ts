@@ -66,6 +66,7 @@ export class Staff {
     recruit.id = this.OFFICERID
     this.OFFICERID++
     this.active.push(recruit)
+    recruit.events.push(this.log.promote(recruit.rank.name()))
     return recruit
   }
 
