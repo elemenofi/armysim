@@ -96,7 +96,7 @@ export class Officer {
 
   private handlePossibleOperations () {
     const possibleTarget = this.findTarget()
-    if (!possibleTarget || !this.canOperateAgainst(possibleTarget.target)) return
+    if (!possibleTarget) return
     this.startOperationAgainst(possibleTarget)
   }
 
