@@ -38,6 +38,7 @@ export class Headquarter {
         officer.tick()
       }
     })
+    this.staff.setScores()
   }
 
   private build (tier: number): Unit {

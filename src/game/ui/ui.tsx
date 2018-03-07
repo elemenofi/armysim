@@ -14,17 +14,20 @@ export class UIMain extends React.Component {
   }
 
   render () {
+    const game = this.props.game
     return <div className='army'>
-      <h1>{ moment().add(this.props.game.turn, 'days').format('YYYY-MM-DD')}</h1>
+      <h1>{ moment().add(game.turn, 'days').format('YYYY-MM-DD')}</h1>
+      <h1>Conservatives: {game.headquarter.staff.scores.rightFaction}</h1>
+      <h1>Revolutionaries: {game.headquarter.staff.scores.leftFaction}</h1>
       <div className='officer'>
-        <UIOfficer officer={this.props.game.headquarter.inspected}/>
+        <UIOfficer officer={game.headquarter.inspected}/>
       </div>
       <div className='officer procer'>
-        <UIOfficer officer={this.props.game.headquarter.staff.procer}/>
+        <UIOfficer officer={game.headquarter.staff.procer}/>
       </div>
       <div className='clear'></div>
       <div className='units'>
-        <UIUnit hq={this.props.game.headquarter} unit={this.props.game.headquarter.army} game={this.props.game}/>
+        <UIUnit hq={game.headquarter} unit={game.headquarter.army} game={game}/>
       </div>
     </div>
   }

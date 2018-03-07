@@ -1,5 +1,6 @@
 import { Logger } from '../logger'
 import { Headquarter } from './army'
+import { FactionNames } from './faction'
 import { Officer } from './officer'
 import { Rank } from './rank'
 import { Unit } from './unit'
@@ -11,10 +12,33 @@ export class Staff {
   log: Logger
   hq: Headquarter
   procer: Officer
+  scores: { rightFaction: number, leftFaction: number} = {
+    rightFaction: 0,
+    leftFaction: 0,
+  }
 
   constructor (hq: Headquarter) {
     this.log = new Logger()
     this.hq = hq
+  }
+
+  setScores (): void {
+    const reducer = (accumulator, currentValue: Officer) => {
+      if (currentValue.faction.type === FactionNames.right) {
+        return accumulator + currentValue.prestige
+      }
+      return accumulator
+    }
+
+    const leftReducer = (accumulator, currentValue: Officer) => {
+      if (currentValue.faction.type === FactionNames.left) {
+        return accumulator + currentValue.prestige
+      }
+      return accumulator
+    }
+
+    this.scores.rightFaction = Math.max(0, this.active.reduce(reducer, 0))
+    this.scores.leftFaction = Math.max(0, this.active.reduce(leftReducer, 0))
   }
 
   retire (officer: Officer): Officer {
@@ -33,12 +57,6 @@ export class Staff {
     this.checkMerit(officer)
 
     return officer
-  }
-
-  private checkMerit (officer: Officer): Officer {
-    if (!this.procer) this.procer = officer
-    if (officer.prestige > this.procer.prestige) this.procer = officer
-    return this.procer
   }
 
   // replace does a recursion that finds the subordinate
@@ -91,5 +109,11 @@ export class Staff {
     unit.officer = officer
     officer.unit = unit
     return officer
+  }
+
+  private checkMerit (officer: Officer): Officer {
+    if (!this.procer) this.procer = officer
+    if (officer.prestige > this.procer.prestige) this.procer = officer
+    return this.procer
   }
 }
