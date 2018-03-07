@@ -33,8 +33,4 @@ export class Logger {
       operation.name
     )
   }
-
-  plot (stage: OperationStatus, operation: Operation): string {
-    return `${this.day()} ${stage} ${operation.name} against ${operation.target.fullName()}`
-  }
 }

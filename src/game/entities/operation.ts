@@ -19,6 +19,7 @@ export class Operation {
   counterOperation: boolean
   status: OperationStatus
   hq: Headquarter
+  logged: string
   metadata: {
     startedAs: string,
     againstA: string,
@@ -110,7 +111,7 @@ export class Operation {
 
   applySuccessfulExecution (): void {
     this.setStatus(OperationStatus.executed)
-    this.logExecution()
+    this.log()
 
     this.officer.prestige++
 
@@ -119,7 +120,7 @@ export class Operation {
 
   applyFailedExecution (): void {
     this.setStatus(OperationStatus.failed)
-    // this.logFailure()
+    this.log()
 
     this.officer.prestige--
   }
@@ -128,12 +129,8 @@ export class Operation {
     this.target.forcedToRetireBy = this
   }
 
-  logExecution (): void {
-    this.officer.events.push(this.hq.log.plot(OperationStatus.executed, this))
-  }
-
-  logFailure (): void {
-    this.officer.events.push(this.hq.log.plot(OperationStatus.failed, this))
+  log (): void {
+    this.logged = this.hq.log.day()
   }
 
   private populateMetadata (): void {
