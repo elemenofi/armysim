@@ -1,6 +1,6 @@
 import { util } from '../util'
 
-export enum FactioNames {
+export enum FactionNames {
   left = 'Left',
   right = 'Right',
   center = 'Center',
@@ -8,13 +8,13 @@ export enum FactioNames {
 
 export const randomFaction = () => {
   const random = util.random(10)
-  if (random === 3) return FactioNames.left
-  else if (random === 4) return FactioNames.right
-  else return FactioNames.center
+  if (random === 3) return FactionNames.left
+  else if (random === 4) return FactionNames.right
+  else return FactionNames.center
 }
 
 export class Faction {
-  type: FactioNames
+  type: FactionNames
 
   constructor () {
     this.type = randomFaction()

@@ -1,7 +1,7 @@
 import * as chance from 'chance'
 import { util } from '../util'
 import { Headquarter } from './army'
-import { Faction, randomFaction } from './faction'
+import { Faction, FactionNames, randomFaction } from './faction'
 import { Operation, OperationStatus } from './operation'
 import { Rank } from './rank'
 import { Unit } from './unit'
@@ -84,8 +84,8 @@ export class Officer {
 
   private handlePossibleOperations () {
     const target = this.findTarget()
-    if (!target) return
-    if (this.canOperateAgainst(target)) this.startOperationAgainst(target)
+    if (!target || !this.canOperateAgainst(target)) return
+    this.startOperationAgainst(target)
   }
 
   private handleExistingOperations () {
@@ -102,7 +102,9 @@ export class Officer {
   }
 
   private hasOperationAgainst (target: Officer): boolean {
-    return this.operations.map((operation) => operation.target).includes(target)
+    return this.operations
+      .map((operation) => operation.target)
+      .includes(target)
   }
 
   private canOperateAgainst (target: Officer): boolean {
@@ -124,12 +126,17 @@ export class Officer {
   private startOperationAgainst (target: Officer, counterOperation = false): void {
     const operation = new Operation(this, target, this.hq, counterOperation)
     this.operations.push(operation)
-    if (!counterOperation) target.attemptToCounterOperation(operation)
+    if (counterOperation) return
+    target.attemptToCounterOperation(operation)
   }
 
   private attemptToCounterOperation (operation: Operation): void {
-    if (operation.successfulCounter()) {
-      operation.target.startOperationAgainst(operation.officer, true)
-    }
+    if (!operation.successfulCounter()) return
+    operation.target.startOperationAgainst(operation.officer, true)
+  }
+
+  private isInSameFaction (officer: Officer): boolean {
+    return this.faction.type !== FactionNames.center &&
+      this.faction.type === officer.faction.type
   }
 }
