@@ -40,7 +40,7 @@ export class Operation {
     this.counterOperation = counterOperation
     this.populateMetadata()
     this.started = this.hq.log.day()
-    this.checkIfCoup()
+    // this.checkIfCoup()
   }
 
   tick (): void {
