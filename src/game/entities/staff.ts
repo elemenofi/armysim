@@ -23,7 +23,6 @@ export class Staff {
     leftFaction: 0,
     leftFactionAmount: 0,
   }
-  couped: boolean
 
   constructor (hq: Headquarter) {
     this.log = new Logger()
@@ -100,10 +99,6 @@ export class Staff {
   }
 
   coup (side: FactionNames): void {
-    if (this.couped) return
-    this.couped = true
-    console.log('coupe by ', side)
-
     this.active.forEach((o) => {
       if (!o.resistsCoup(side)) this.retire(o)
     })

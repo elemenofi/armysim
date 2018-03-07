@@ -1,4 +1,5 @@
 import { Headquarter } from './entities/army'
+import { FactionNames } from './entities/faction'
 import { Keyboard } from './keyboard'
 import { Logger } from './logger'
 import { UI } from './ui/ui'
@@ -6,6 +7,7 @@ import { UI } from './ui/ui'
 export interface Window {
   game: Game
   pause: () => void
+  coup: () => void
 }
 
 declare const window: Window
@@ -59,4 +61,8 @@ window.game = new Game()
 
 window.pause = () => {
   window.game.pause()
+}
+
+window.coup = () => {
+  window.game.headquarter.staff.coup(FactionNames.left)
 }
