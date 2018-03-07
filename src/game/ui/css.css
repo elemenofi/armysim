@@ -32,3 +32,16 @@ li {
 .selected {
   background-color: #e0e0e0;
 }
+
+.rightFaction {
+  background-color: #d3daff;
+}
+
+.leftFaction {
+  background-color: #ffd3d3;
+}
+
+.centerFaction {
+  background-color: #ffffff;
+}
+
