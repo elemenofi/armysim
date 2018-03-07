@@ -3,6 +3,7 @@ import * as React from 'react'
 import * as ReactDOM from 'react-dom'
 import { Headquarter } from '../entities/army'
 import { Officer } from '../entities/officer'
+import { Operation } from '../entities/operation'
 import { Unit } from '../entities/unit'
 import { Game } from '../game'
 import { constants } from '../util'
@@ -30,6 +31,20 @@ export class UIOfficer extends React.Component {
     officer: Officer,
   }
 
+  getOperation (operation: Operation) {
+    return <div className='operationItem'>
+      <ul>
+        <li>Status:     {operation.status.toUpperCase()}</li>
+        <li>Name:       {operation.name}</li>
+        <li>Stength:    {operation.strength}</li>
+        <li>Target:     {operation.target.fullName()}</li>
+        <li>Started as: {operation.metadata.startedAs}</li>
+        <li>Against a:  {operation.metadata.againstA}</li>
+        <li>Because:    {operation.metadata.because}</li>
+      </ul>
+    </div>
+  }
+
   render () {
     const o = this.props.officer
 
@@ -44,7 +59,7 @@ export class UIOfficer extends React.Component {
     const operations: string[] = []
 
     o.operations.forEach((operation) => {
-      operations.push(<div>{operation.name} {operation.strength} {operation.target.fullName()} {operation.status}</div>)
+      operations.push(this.getOperation(operation))
     })
 
     return <div>
@@ -58,7 +73,7 @@ export class UIOfficer extends React.Component {
         <li>-</li>
         <li>{events}</li>
         <li>-</li>
-        <li>{operations}</li>
+        <li className='operationList'>{operations}</li>
       </ul>
     </div>
   }

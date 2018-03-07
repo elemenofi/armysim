@@ -19,6 +19,11 @@ export class Operation {
   counterOperation: boolean
   status: OperationStatus
   hq: Headquarter
+  metadata: {
+    startedAs: string,
+    againstA: string,
+    because: string,
+  }
 
   constructor (officer: Officer, target: Officer, hq: Headquarter, counterOperation = false) {
     this.hq = hq
@@ -29,6 +34,7 @@ export class Operation {
     this.status = OperationStatus.planning
     this.turns = 365
     this.counterOperation = counterOperation
+    this.populateMetadata()
   }
 
   tick (): void {
@@ -128,5 +134,17 @@ export class Operation {
 
   logFailure (): void {
     this.officer.events.push(this.hq.log.plot(OperationStatus.failed, this))
+  }
+
+  private populateMetadata (): void {
+    this.metadata = {
+      againstA: this.target.rank.name(),
+      startedAs: this.officer.rank.name(),
+      because: `
+        ${!this.counterOperation && this.officer.isPassedForPromotion() ? ' Officer was passed for promotion.' : ''}
+        ${!this.counterOperation && !this.officer.isSenior() ? 'Officer was not senior.' : ''}
+        ${this.counterOperation ? 'Counter Operation' : ''}
+      `,
+    }
   }
 }

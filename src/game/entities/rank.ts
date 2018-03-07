@@ -3,7 +3,7 @@ export class Rank {
   tier: number
   max: number
 
-  names = [
+  private readonly names = [
     'Lieutenant',
     'Captain',
     'Major',
@@ -15,7 +15,7 @@ export class Rank {
     'General',
   ]
 
-  maxes = [
+  private readonly maxes = [
     2 * 365,
     4 * 365,
     6 * 365,

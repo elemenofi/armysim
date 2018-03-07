@@ -14,6 +14,7 @@ li {
 }
 
 .officer {
+
 }
 
 .unit-big {
@@ -29,10 +30,6 @@ li {
   width: 100%;
 }
 
-.selected {
-  background-color: #e0e0e0;
-}
-
 .rightFaction {
   background-color: #d3daff;
 }
@@ -43,5 +40,18 @@ li {
 
 .centerFaction {
   background-color: #ffffff;
+}
+
+.selected {
+  background-color: #e0e0e0;
+} 
+
+.operationList {
+  height: 320px;
+  overflow: scroll;
+}
+
+.operationItem {
+  margin-top: 16px;
 }
 
