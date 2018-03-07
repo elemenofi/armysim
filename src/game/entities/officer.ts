@@ -58,10 +58,6 @@ export class Officer {
     return this.experience > this.competitor().experience
   }
 
-  isRetired (): boolean {
-    return this.experience > this.rank.max
-  }
-
   shouldRetire (): boolean {
     return !!(this.isRetired() || this.forcedToRetireBy)
   }
@@ -69,6 +65,10 @@ export class Officer {
   isPassedForPromotion (): boolean {
     if (!this.superior()) return false
     return this.timeLeftInRank() < this.superior().timeLeftInRank()
+  }
+
+  private isRetired (): boolean {
+    return this.experience > this.rank.max
   }
 
   private train () {
@@ -107,11 +107,21 @@ export class Officer {
 
   private findTarget (): PossibleTarget {
     if (!this.isSenior() && this.canOperateAgainst(this.competitor())) {
-      return { target: this.competitor(), type: TargetType.competitor }
+      return {
+        target: this.competitor(),
+        type: TargetType.competitor,
+      }
     } else if (this.isPassedForPromotion() && this.canOperateAgainst(this.superior())) {
-      return { target: this.superior(), type: TargetType.superior }
+      return {
+        target: this.superior(),
+        type: TargetType.superior,
+      }
     } else if (this.getEnemySubordinates().length && this.canOperateAgainst(this.getEnemySubordinates()[0])) {
-      return { target: this.getEnemySubordinates()[0], type: TargetType.subordinate }
+      // todo: weird to return always the first in the array :s
+      return {
+        target: this.getEnemySubordinates()[0],
+        type: TargetType.subordinate,
+      }
     }
   }
 

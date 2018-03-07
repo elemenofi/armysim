@@ -41,7 +41,7 @@ export class Operation {
   }
 
   tick (): void {
-    if (this.isReady()) this.execute()
+    if (this.isReady()) this.executeOperation()
 
     if (this.isDone()) return
 
@@ -50,11 +50,20 @@ export class Operation {
     if (this.succesfulPlanning()) this.increaseStrength()
   }
 
-  isReady (): boolean {
+  successfulCounter (): boolean {
+    return util.random(10) +
+      this.officer.rank.tier +
+      this.officer.prestige >
+      util.random(8) +
+      this.target.rank.tier +
+      this.target.prestige
+  }
+
+  private isReady (): boolean {
     return this.strength === 100 && this.status === OperationStatus.planning
   }
 
-  isDone (): boolean {
+  private isDone (): boolean {
     if (
       (this.turns <= 0 ||
       this.target.shouldRetire()) &&
@@ -68,32 +77,24 @@ export class Operation {
       this.status === OperationStatus.abandoned
   }
 
-  setStatus (status: OperationStatus): void {
+  private setStatus (status: OperationStatus): void {
     this.status = status
   }
 
-  decreaseTurns (): number {
+  private decreaseTurns (): number {
     return this.turns--
   }
 
-  increaseStrength (): number {
+  private increaseStrength (): number {
     return this.strength++
   }
 
-  succesfulPlanning (): boolean {
+  private succesfulPlanning (): boolean {
     return util.random(10) + this.officer.rank.tier >
       util.random(10) + this.target.rank.tier
   }
 
-  execute (): void {
-    if (this.successfulExecution()) {
-      this.applySuccessfulExecution()
-    } else {
-      this.applyFailedExecution()
-    }
-  }
-
-  successfulExecution (): boolean {
+  private successfulExecution (): boolean {
     return util.random(10) +
       this.officer.rank.tier +
       this.officer.prestige >
@@ -102,16 +103,15 @@ export class Operation {
       this.target.prestige
   }
 
-  successfulCounter (): boolean {
-    return util.random(10) +
-      this.officer.rank.tier +
-      this.officer.prestige >
-      util.random(8) +
-      this.target.rank.tier +
-      this.target.prestige
+  private executeOperation (): void {
+    if (this.successfulExecution()) {
+      this.applySuccessfulExecution()
+    } else {
+      this.applyFailedExecution()
+    }
   }
 
-  applySuccessfulExecution (): void {
+  private applySuccessfulExecution (): void {
     this.setStatus(OperationStatus.executed)
     this.log()
 
@@ -120,18 +120,18 @@ export class Operation {
     this.setTargetForForcedRetirement()
   }
 
-  applyFailedExecution (): void {
+  private applyFailedExecution (): void {
     this.setStatus(OperationStatus.failed)
     this.log()
 
     this.officer.prestige--
   }
 
-  setTargetForForcedRetirement (): void {
+  private setTargetForForcedRetirement (): void {
     this.target.forcedToRetireBy = this
   }
 
-  log (): void {
+  private log (): void {
     this.logged = this.hq.log.day()
   }
 
