@@ -27,14 +27,14 @@ export class Staff {
 
   setScores (): void {
     const reducer = (accumulator, currentValue: Officer) => {
-      if (currentValue.faction.type === FactionNames.right) {
+      if (currentValue.faction.type === FactionNames.right && currentValue.rank.tier > 4) {
         return accumulator + currentValue.prestige
       }
       return accumulator
     }
 
     const leftReducer = (accumulator, currentValue: Officer) => {
-      if (currentValue.faction.type === FactionNames.left) {
+      if (currentValue.faction.type === FactionNames.left && currentValue.rank.tier > 4) {
         return accumulator + currentValue.prestige
       }
       return accumulator
