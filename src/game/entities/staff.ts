@@ -24,7 +24,8 @@ export class Staff {
     officer.events.push(
       (officer.forcedToRetireBy)
         ? this.log.forcedRetirement(officer.forcedToRetireBy)
-        : this.log.retire())
+        : this.log.retire(),
+    )
 
     return officer
   }

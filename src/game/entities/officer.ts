@@ -41,20 +41,20 @@ export class Officer {
     return `${this.rank.name()} ${this.shouldRetire() ? '(r) ' : ' '} ${this.name}`
   }
 
-  public isSenior (): boolean {
+  isSenior (): boolean {
     if (!this.competitor()) return true
     return this.experience > this.competitor().experience
   }
 
-  public isRetired (): boolean {
+  isRetired (): boolean {
     return this.experience > this.rank.max
   }
 
-  public shouldRetire (): boolean {
+  shouldRetire (): boolean {
     return !!(this.isRetired() || this.forcedToRetireBy)
   }
 
-  public isPassedForPromotion (): boolean {
+  isPassedForPromotion (): boolean {
     if (!this.superior()) return false
     return this.timeLeftInRank() < this.superior().timeLeftInRank()
   }

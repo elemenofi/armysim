@@ -34,7 +34,7 @@ es6sim/lib/bundle.js
 es6sim/lib/
 jspm_packages
 .idea/workspace.xml
-./src/lib/bundle.js
+src/lib/bundle.js
 
 # Optional npm cache directory
 .npm
