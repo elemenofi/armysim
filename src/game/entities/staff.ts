@@ -10,6 +10,7 @@ export class Staff {
   active: Officer[] = []
   log: Logger
   hq: Headquarter
+  procer: Officer
 
   constructor (hq: Headquarter) {
     this.log = new Logger()
@@ -29,7 +30,15 @@ export class Staff {
         : this.log.retire(),
     )
 
+    this.checkMerit(officer)
+
     return officer
+  }
+
+  private checkMerit (officer: Officer): Officer {
+    if (!this.procer) this.procer = officer
+    if (officer.prestige > this.procer.prestige) this.procer = officer
+    return this.procer
   }
 
   // replace does a recursion that finds the subordinate

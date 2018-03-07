@@ -15,10 +15,14 @@ export class UIMain extends React.Component {
 
   render () {
     return <div className='army'>
+      <h1>{ moment().add(this.props.game.turn, 'days').format('YYYY-MM-DD')}</h1>
       <div className='officer'>
-        <h1>{ moment().add(this.props.game.turn, 'days').format('YYYY-MM-DD')}</h1>
         <UIOfficer officer={this.props.game.headquarter.inspected}/>
       </div>
+      <div className='officer procer'>
+        <UIOfficer officer={this.props.game.headquarter.staff.procer}/>
+      </div>
+      <div className='clear'></div>
       <div className='units'>
         <UIUnit hq={this.props.game.headquarter} unit={this.props.game.headquarter.army} game={this.props.game}/>
       </div>
