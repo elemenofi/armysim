@@ -35,6 +35,10 @@ export class Officer {
   tick () {
     this.train()
     this.plot()
+
+    // if (this.rank.tier === 9) {
+    //   console.log(this.getAlliedSubordinates())
+    // }
   }
 
   fullName (): string {
@@ -122,7 +126,7 @@ export class Officer {
 
   // when starting an operation the target has a chance to counter it
   // with an operation and the counterOperation flag prevents this happening
-  // back and forth in a endless loop
+  // back and forth in an endless loop
   private startOperationAgainst (target: Officer, counterOperation = false): void {
     const operation = new Operation(this, target, this.hq, counterOperation)
     this.operations.push(operation)
@@ -138,5 +142,18 @@ export class Officer {
   private isInSameFaction (officer: Officer): boolean {
     return this.faction.type !== FactionNames.center &&
       this.faction.type === officer.faction.type
+  }
+
+  private getSubordinates (): Officer[] {
+    if (!this.unit.subunits.length) return []
+    return [
+      this.unit.subunits[0].officer,
+      this.unit.subunits[1].officer,
+    ]
+  }
+
+  private getAlliedSubordinates (): Officer[] {
+    return this.getSubordinates()
+      .filter((o) => o.isInSameFaction(this))
   }
 }
