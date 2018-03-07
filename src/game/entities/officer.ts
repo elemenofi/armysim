@@ -6,6 +6,17 @@ import { Operation, OperationStatus } from './operation'
 import { Rank } from './rank'
 import { Unit } from './unit'
 
+export enum TargetType {
+  superior = 'superior',
+  competitor = 'competitor',
+  subordinate = 'subordinate',
+}
+
+export interface PossibleTarget {
+  target: Officer,
+  type: TargetType
+}
+
 export class Officer {
   id: number
   name: string
@@ -84,9 +95,9 @@ export class Officer {
   }
 
   private handlePossibleOperations () {
-    const target = this.findTarget()
-    if (!target || !this.canOperateAgainst(target)) return
-    this.startOperationAgainst(target)
+    const possibleTarget = this.findTarget()
+    if (!possibleTarget || !this.canOperateAgainst(possibleTarget.target)) return
+    this.startOperationAgainst(possibleTarget)
   }
 
   private handleExistingOperations () {
@@ -94,11 +105,13 @@ export class Officer {
     this.operations.forEach((operation) => operation.tick())
   }
 
-  private findTarget (): Officer {
-    if (!this.isSenior()) {
-      return this.competitor()
-    } else if (this.isPassedForPromotion()) {
-      return this.superior()
+  private findTarget (): PossibleTarget {
+    if (!this.isSenior() && this.canOperateAgainst(this.competitor())) {
+      return { target: this.competitor(), type: TargetType.competitor }
+    } else if (this.isPassedForPromotion() && this.canOperateAgainst(this.superior())) {
+      return { target: this.superior(), type: TargetType.superior }
+    } else if (this.getEnemySubordinates().length && this.canOperateAgainst(this.getEnemySubordinates()[0])) {
+      return { target: this.getEnemySubordinates()[0], type: TargetType.subordinate }
     }
   }
 
@@ -126,16 +139,16 @@ export class Officer {
   // when starting an operation the target has a chance to counter it
   // with an operation and the counterOperation flag prevents this happening
   // back and forth in an endless loop
-  private startOperationAgainst (target: Officer, counterOperation = false): void {
-    const operation = new Operation(this, target, this.hq, counterOperation)
+  private startOperationAgainst (possibleTarget: PossibleTarget, counterOperation = false): void {
+    const operation = new Operation(this, possibleTarget.target, possibleTarget.type, this.hq, counterOperation)
     this.operations.push(operation)
     if (counterOperation) return
-    target.attemptToCounterOperation(operation)
+    possibleTarget.target.attemptToCounterOperation(operation, possibleTarget.type)
   }
 
-  private attemptToCounterOperation (operation: Operation): void {
+  private attemptToCounterOperation (operation: Operation, type: TargetType): void {
     if (!operation.successfulCounter()) return
-    operation.target.startOperationAgainst(operation.officer, true)
+    operation.target.startOperationAgainst({target: operation.officer, type}, true)
   }
 
   private isNeutral (): boolean {

@@ -40,12 +40,13 @@ export class UIOfficer extends React.Component {
       <ul>
         <li>Status:     {operation.status.toUpperCase()}</li>
         <li>Name:       {operation.name}</li>
+        <li>Type:       {operation.type}</li>
         <li>Logged:     {operation.logged}</li>
         <li>Stength:    {operation.strength}</li>
         <li>Target:     {operation.target.fullName()}</li>
         <li>Started as: {operation.metadata.startedAs}</li>
         <li>Against a:  {operation.metadata.againstA}</li>
-        <li>Because:    {operation.metadata.because}</li>
+        {/*<li>Because:    {operation.metadata.because}</li>*/}
       </ul>
     </div>
   }

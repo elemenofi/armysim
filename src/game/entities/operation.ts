@@ -1,6 +1,6 @@
 import { names, util } from '../util'
 import { Headquarter } from './army'
-import { Officer } from './officer'
+import { Officer, TargetType } from './officer'
 
 export enum OperationStatus {
   planning = 'planning',
@@ -20,17 +20,19 @@ export class Operation {
   status: OperationStatus
   hq: Headquarter
   logged: string
+  type: string
   metadata: {
     startedAs: string,
     againstA: string,
     because: string,
   }
 
-  constructor (officer: Officer, target: Officer, hq: Headquarter, counterOperation = false) {
+  constructor (officer: Officer, target: Officer, type: TargetType, hq: Headquarter, counterOperation = false) {
     this.hq = hq
-    this.name = `${(counterOperation) ? 'Counter ' : ''} Operation ${names.nouns[util.random(names.nouns.length)]}`
+    this.name = `${(counterOperation) ? 'Counter ' : ''}Operation ${names.nouns[util.random(names.nouns.length)]}`
     this.officer = officer
     this.target = target
+    this.type = type
     this.strength = 0
     this.status = OperationStatus.planning
     this.turns = 365
