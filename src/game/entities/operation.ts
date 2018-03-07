@@ -19,6 +19,7 @@ export class Operation {
   counterOperation: boolean
   status: OperationStatus
   hq: Headquarter
+  started: string
   logged: string
   type: string
   metadata: {
@@ -38,6 +39,7 @@ export class Operation {
     this.turns = 365
     this.counterOperation = counterOperation
     this.populateMetadata()
+    this.started = this.hq.log.day()
   }
 
   tick (): void {
@@ -70,6 +72,7 @@ export class Operation {
       this.status === OperationStatus.planning
     ) {
       this.setStatus(OperationStatus.abandoned)
+      this.log()
     }
 
     return this.status === OperationStatus.executed ||

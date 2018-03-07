@@ -16,9 +16,11 @@ export class UIMain extends React.Component {
   render () {
     const game = this.props.game
     return <div className='army'>
-      <h1>{ moment().add(game.turn, 'days').format('YYYY-MM-DD')}</h1>
-      <h1>Conservatives: {game.headquarter.staff.scores.rightFaction}</h1>
-      <h1>Revolutionaries: {game.headquarter.staff.scores.leftFaction}</h1>
+      <h1>
+        { moment().add(game.turn, 'days').format('YYYY-MM-DD')}&nbsp;
+        Conservatives: {game.headquarter.staff.scores.rightFaction}&nbsp;
+        Revolutionaries: {game.headquarter.staff.scores.leftFaction}
+      </h1>
       <div className='officer'>
         <UIOfficer officer={game.headquarter.inspected}/>
       </div>
@@ -33,25 +35,58 @@ export class UIMain extends React.Component {
   }
 }
 
+export class UIOperation extends React.Component {
+  props: {
+    operation: Operation,
+  }
+
+  state: {
+    open: boolean,
+  }
+
+  constructor () {
+    super()
+    this.state = {
+      open: false,
+    }
+    this.inspect = this.inspect.bind(this)
+  }
+
+  inspect (e: Event) {
+    e.preventDefault()
+    e.stopPropagation()
+    super.setState({open: !this.state.open})
+  }
+
+  render () {
+    const operation = this.props.operation
+
+    const content = (this.state.open)
+      ? <ul className='operationInfo'>
+        <li>{operation.logged} {operation.status.toUpperCase()}</li>
+        <li>Stength:    {operation.strength}</li>
+        <li>Type:       {operation.type}</li>
+        <li>Started as: {operation.metadata.startedAs}</li>
+        <li>Against a:  {operation.metadata.againstA}</li>
+        <li>Target:     {operation.target.fullName()}</li>
+        {/*<li>Because:    {operation.metadata.because}</li>*/}
+      </ul>
+      : <div></div>
+
+    return <div className='operationItem' onClick={this.inspect}>
+      <div>{operation.started} {operation.name}</div>
+      {content}
+    </div>
+  }
+}
+
 export class UIOfficer extends React.Component {
   props: {
     officer: Officer,
   }
 
   getOperation (operation: Operation) {
-    return <div className='operationItem'>
-      <ul>
-        <li>Status:     {operation.status.toUpperCase()}</li>
-        <li>Name:       {operation.name}</li>
-        <li>Type:       {operation.type}</li>
-        <li>Logged:     {operation.logged}</li>
-        <li>Stength:    {operation.strength}</li>
-        <li>Target:     {operation.target.fullName()}</li>
-        <li>Started as: {operation.metadata.startedAs}</li>
-        <li>Against a:  {operation.metadata.againstA}</li>
-        {/*<li>Because:    {operation.metadata.because}</li>*/}
-      </ul>
-    </div>
+    return <UIOperation operation={operation} />
   }
 
   render () {

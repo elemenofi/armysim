@@ -28,9 +28,9 @@ export class Logger {
     return (
       this.day() +
       ' forced to retire by ' +
-      operation.officer.fullName() +
-      ' in ' +
-      operation.name
+      operation.officer.fullName()
+      // ' in ' +
+      // operation.name
     )
   }
 }

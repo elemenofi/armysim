@@ -77,6 +77,12 @@ export class Staff {
     return officer
   }
 
+  coup (side: FactionNames): void {
+    this.active.forEach((o) => {
+      if (!o.resistsCoup(side)) this.retire(o)
+    })
+  }
+
   // replace does a recursion that finds the subordinate
   // with highest experience and replaces all the
   // way down to recruiting a new liteutenant. in

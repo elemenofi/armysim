@@ -67,6 +67,10 @@ export class Officer {
     return this.timeLeftInRank() < this.superior().timeLeftInRank()
   }
 
+  resistsCoup (faction: FactionNames): boolean {
+    return this.faction.type === faction
+  }
+
   private isRetired (): boolean {
     return this.experience > this.rank.max
   }
