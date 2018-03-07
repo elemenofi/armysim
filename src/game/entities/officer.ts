@@ -13,12 +13,12 @@ export class Officer {
   prestige: number
   rank: Rank
   unit: Unit
-  status: string
   events: string[] = []
   operations: Operation[] = []
   chance: any
   forcedToRetireBy: Operation
   faction: Faction
+  inReserve: boolean
 
   constructor (rank: number, private hq: Headquarter) {
     this.rank = new Rank(rank)
@@ -35,10 +35,7 @@ export class Officer {
   tick () {
     this.train()
     this.plot()
-
-    // if (this.rank.tier === 9) {
-    //   console.log(this.getAlliedSubordinates())
-    // }
+    // this.debugAllyAndEnemies()
   }
 
   fullName (): string {
@@ -139,9 +136,19 @@ export class Officer {
     operation.target.startOperationAgainst(operation.officer, true)
   }
 
+  private isNeutral (): boolean {
+    return this.faction.type === FactionNames.center
+  }
+
   private isInSameFaction (officer: Officer): boolean {
-    return this.faction.type !== FactionNames.center &&
+    return !this.isNeutral() &&
       this.faction.type === officer.faction.type
+  }
+
+  private isInOppositeFaction (officer: Officer): boolean {
+    return !this.isNeutral() &&
+      !officer.isNeutral() &&
+      this.faction.type !== officer.faction.type
   }
 
   private getSubordinates (): Officer[] {
@@ -152,8 +159,22 @@ export class Officer {
     ]
   }
 
-  private getAlliedSubordinates (): Officer[] {
+  private getAllySubordinates (): Officer[] {
     return this.getSubordinates()
       .filter((o) => o.isInSameFaction(this))
+  }
+
+  private getEnemySubordinates (): Officer[] {
+    return this.getSubordinates()
+      .filter((o) => o.isInOppositeFaction(this))
+  }
+
+  private debugAllyAndEnemies () {
+    if (this.rank.tier === 9 && this.getAllySubordinates().length || this.getEnemySubordinates().length) {
+      console.log('inReserve', this.inReserve)
+      console.log('faction', this.faction.type)
+      console.log('allies', this.getAllySubordinates())
+      console.log('enemies', this.getEnemySubordinates())
+    }
   }
 }

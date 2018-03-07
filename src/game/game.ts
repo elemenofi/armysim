@@ -5,6 +5,7 @@ import { UI } from './ui/ui'
 
 export interface Window {
   game: Game
+  pause: () => void
 }
 
 declare const window: Window
@@ -55,3 +56,7 @@ export class Game {
 }
 
 window.game = new Game()
+
+window.pause = () => {
+  window.game.pause()
+}
