@@ -18,8 +18,8 @@ export class UIMain extends React.Component {
     return <div className='army'>
       <h1>
         { moment().add(game.turn, 'days').format('YYYY-MM-DD')}&nbsp;
-        Conservatives: {game.headquarter.staff.scores.rightFaction}&nbsp;
-        Revolutionaries: {game.headquarter.staff.scores.leftFaction}
+        Conservatives: {game.headquarter.staff.scores.rightFactionAmount} {game.headquarter.staff.scores.rightFaction}&nbsp;
+        Revolutionaries: {game.headquarter.staff.scores.leftFactionAmount} {game.headquarter.staff.scores.leftFaction}
       </h1>
       <div className='officer'>
         <UIOfficer officer={game.headquarter.inspected}/>

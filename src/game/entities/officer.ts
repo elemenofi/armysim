@@ -71,6 +71,12 @@ export class Officer {
     return this.faction.type === faction
   }
 
+  public isInOppositeFaction (officer: Officer): boolean {
+    return !this.isNeutral() &&
+      !officer.isNeutral() &&
+      this.faction.type !== officer.faction.type
+  }
+
   private isRetired (): boolean {
     return this.experience > this.rank.max
   }
@@ -172,12 +178,6 @@ export class Officer {
   private isInSameFaction (officer: Officer): boolean {
     return !this.isNeutral() &&
       this.faction.type === officer.faction.type
-  }
-
-  private isInOppositeFaction (officer: Officer): boolean {
-    return !this.isNeutral() &&
-      !officer.isNeutral() &&
-      this.faction.type !== officer.faction.type
   }
 
   private getSubordinates (): Officer[] {

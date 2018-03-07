@@ -14,11 +14,16 @@ export class Staff {
   procer: Officer
   scores: {
     rightFaction: number,
+    rightFactionAmount: number,
     leftFaction: number,
+    leftFactionAmount: number,
   } = {
     rightFaction: 0,
+    rightFactionAmount: 0,
     leftFaction: 0,
+    leftFactionAmount: 0,
   }
+  couped: boolean
 
   constructor (hq: Headquarter) {
     this.log = new Logger()
@@ -42,6 +47,23 @@ export class Staff {
 
     this.scores.rightFaction = Math.max(0, this.active.reduce(reducer, 0))
     this.scores.leftFaction = Math.max(0, this.active.reduce(leftReducer, 0))
+
+    const rightCountReducer = (accumulator, currentValue: Officer) => {
+      if (currentValue.faction.type === FactionNames.right) {
+        return accumulator + 1
+      }
+      return accumulator
+    }
+
+    const leftCountReducer = (accumulator, currentValue: Officer) => {
+      if (currentValue.faction.type === FactionNames.left) {
+        return accumulator + 1
+      }
+      return accumulator
+    }
+
+    this.scores.rightFactionAmount = Math.max(0, this.active.reduce(rightCountReducer, 0))
+    this.scores.leftFactionAmount = Math.max(0, this.active.reduce(leftCountReducer, 0))
   }
 
   retire (officer: Officer): Officer {
@@ -78,6 +100,10 @@ export class Staff {
   }
 
   coup (side: FactionNames): void {
+    if (this.couped) return
+    this.couped = true
+    console.log('coupe by ', side)
+
     this.active.forEach((o) => {
       if (!o.resistsCoup(side)) this.retire(o)
     })

@@ -40,6 +40,7 @@ export class Operation {
     this.counterOperation = counterOperation
     this.populateMetadata()
     this.started = this.hq.log.day()
+    this.checkIfCoup()
   }
 
   tick (): void {
@@ -59,6 +60,17 @@ export class Operation {
       util.random(8) +
       this.target.rank.tier +
       this.target.prestige
+  }
+
+  private checkIfCoup (): void {
+    if (
+      this.officer.rank.tier > 4 &&
+      this.type === TargetType.superior &&
+      this.officer.isInOppositeFaction(this.target) &&
+      this.successfulExecution()
+    ) {
+      this.hq.staff.coup(this.officer.faction.type)
+    }
   }
 
   private isReady (): boolean {
