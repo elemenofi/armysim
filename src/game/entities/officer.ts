@@ -29,7 +29,7 @@ export class Officer {
     this.name = `${this.chance.first({
       gender: 'male',
     })} ${this.chance.last()}`
-    this.faction = new Faction(randomFaction())
+    this.faction = new Faction()
   }
 
   tick () {

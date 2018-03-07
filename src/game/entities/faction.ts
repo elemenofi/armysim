@@ -16,7 +16,7 @@ export const randomFaction = () => {
 export class Faction {
   type: FactioNames
 
-  constructor (type: FactioNames) {
-    this.type = type
+  constructor () {
+    this.type = randomFaction()
   }
 }
