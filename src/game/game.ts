@@ -7,7 +7,7 @@ import { UI } from './ui/ui'
 export interface Window {
   game: Game
   pause: () => void
-  coup: () => void
+  coup: (side: FactionNames) => void
 }
 
 declare const window: Window
@@ -63,6 +63,6 @@ window.pause = () => {
   window.game.pause()
 }
 
-window.coup = () => {
-  window.game.headquarter.staff.coup(FactionNames.left)
+window.coup = (side) => {
+  window.game.headquarter.staff.coup(side)
 }
