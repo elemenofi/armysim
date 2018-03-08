@@ -71,3 +71,13 @@ li {
 .clear {
   clear: both;
 }
+
+.officerData {
+  width: 50%;
+  float: left;
+}
+
+.officerTraits {
+  width: 50;
+  float: left;
+}

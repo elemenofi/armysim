@@ -1,5 +1,5 @@
 import * as chance from 'chance'
-import { util } from '../util'
+import { Trait, traitsService, util } from '../util'
 import { Headquarter } from './army'
 import { Faction, FactionNames, randomFaction } from './faction'
 import { Operation, OperationStatus } from './operation'
@@ -23,6 +23,7 @@ export class Officer {
   name: string
   experience: number
   prestige: number
+  commanding: number
   rank: Rank
   unit: Unit
   events: string[] = []
@@ -31,6 +32,7 @@ export class Officer {
   forcedToRetireBy: Operation
   faction: Faction
   inReserve: boolean
+  traits: Trait[]
 
   constructor (rank: number, private hq: Headquarter) {
     this.rank = new Rank(rank)
@@ -42,6 +44,7 @@ export class Officer {
       gender: 'male',
     })} ${this.chance.last()}`
     this.faction = new Faction()
+    this.traits = traitsService.random()
   }
 
   tick () {
@@ -72,10 +75,28 @@ export class Officer {
     return this.faction.type === faction
   }
 
+  getTotalTraitValue (type: string): number {
+    return this.traitReducer(type)
+  }
+
+  getTotalTraitsValue (): number {
+    return this.traitReducer('intelligence') +
+      this.traitReducer('commanding') +
+      this.traitReducer('diplomacy')
+  }
+
   public isInOppositeFaction (officer: Officer): boolean {
     return !this.isNeutral() &&
       !officer.isNeutral() &&
       this.faction.type !== officer.faction.type
+  }
+
+  private traitReducer (type: string): number {
+    const reducer = (accumulator, currentValue: Trait) => {
+      return accumulator + currentValue[type]
+    }
+
+    return this.traits.reduce(reducer, 0)
   }
 
   private isRetired (): boolean {

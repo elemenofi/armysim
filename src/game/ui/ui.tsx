@@ -107,11 +107,21 @@ export class UIOfficer extends React.Component {
       operations.push(this.getOperation(operation))
     })
 
+    const traits: string[] = []
+
+    o.traits.forEach((trait) => {
+      traits.push(<li>{trait.name}</li>)
+    })
+
     return <div>
-      <ul>
+      <ul className='officerData'>
         <li>{o.fullName()}</li>
         <li>Experience: {o.experience}</li>
         <li>Prestige: {o.prestige}</li>
+        <li>Commanding: {o.getTotalTraitValue('commanding')}</li>
+        <li>Diplomacy: {o.getTotalTraitValue('diplomacy')}</li>
+        <li>Espionage: {o.getTotalTraitValue('intelligence')}</li>
+        <li>Skill: {o.getTotalTraitsValue()}</li>
         <li>Faction: {o.faction.type}</li>
         <li>Senior: {o.isSenior() ? 'Yes' : 'No'}</li>
         <li>Passed for promotion: {o.isPassedForPromotion() ? 'Yes' : 'No'}</li>
@@ -119,6 +129,9 @@ export class UIOfficer extends React.Component {
         <li>{events}</li>
         <li>-</li>
         <li className='operationList'>{operations}</li>
+      </ul>
+      <ul className='officerTraits'>
+        {traits}
       </ul>
     </div>
   }

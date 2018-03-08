@@ -99,13 +99,13 @@ export class Traits {
 
   college: Trait[] = [
     {
-      name: 'Liberal',
+      name: 'Talker',
       commanding: -1,
       intelligence: 1,
       diplomacy: 1,
     },
     {
-      name: 'Conservative',
+      name: 'Doer',
       commanding: 1,
       intelligence: -1,
       diplomacy: -1,
@@ -151,12 +151,18 @@ export class Traits {
     },
   ]
 
-  random (type: string): Trait {
-    let rnd = Math.round(Math.random() * this[type].length)
-    if (rnd > 0) rnd--
-    return this[type][rnd]
+  random (): Trait[] {
+    const traits: Trait[] = []
+    Object.keys(this).forEach((type) => {
+      let rnd = Math.round(Math.random() * this[type].length)
+      if (rnd > 0) rnd--
+      traits.push(this[type][rnd])
+    })
+    return traits
   }
 }
+
+export const traitsService = new Traits()
 
 export interface Names {
   army: string[]

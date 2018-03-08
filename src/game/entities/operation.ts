@@ -49,7 +49,7 @@ export class Operation {
 
     this.decreaseTurns()
 
-    if (this.succesfulPlanning()) this.increaseStrength()
+    this.increaseStrength()
   }
 
   successfulCounter (): boolean {
@@ -102,12 +102,13 @@ export class Operation {
   }
 
   private increaseStrength (): number {
+    if (!this.succesfulPlanning()) return
     return this.strength++
   }
 
   private succesfulPlanning (): boolean {
-    return util.random(10) + this.officer.rank.tier >
-      util.random(10) + this.target.rank.tier
+    return util.random(10) + this.officer.rank.tier + this.officer.getTotalTraitsValue() >
+      util.random(10) + this.target.rank.tier + this.target.getTotalTraitsValue()
   }
 
   private successfulExecution (): boolean {
