@@ -10,6 +10,7 @@ export enum TargetType {
   superior = 'superior',
   competitor = 'competitor',
   subordinate = 'subordinate',
+  coup = 'coup',
 }
 
 export interface PossibleTarget {

@@ -40,7 +40,6 @@ export class Operation {
     this.counterOperation = counterOperation
     this.populateMetadata()
     this.started = this.hq.log.day()
-    // this.checkIfCoup()
   }
 
   tick (): void {
@@ -69,6 +68,7 @@ export class Operation {
       this.officer.isInOppositeFaction(this.target) &&
       this.successfulExecution()
     ) {
+      this.type = TargetType.coup
       this.hq.staff.coup(this.officer.faction.type)
     }
   }
@@ -133,6 +133,7 @@ export class Operation {
     this.officer.prestige++
 
     this.setTargetForForcedRetirement()
+    this.checkIfCoup()
   }
 
   private applyFailedExecution (): void {
