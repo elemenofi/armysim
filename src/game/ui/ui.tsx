@@ -128,11 +128,12 @@ export class UIOfficer extends React.Component {
         <li>-</li>
         <li>{events}</li>
         <li>-</li>
-        <li className='operationList'>{operations}</li>
       </ul>
       <ul className='officerTraits'>
         {traits}
       </ul>
+      <div className='clear'></div>
+      <div className='operationList'>{operations}</div>
     </div>
   }
 }

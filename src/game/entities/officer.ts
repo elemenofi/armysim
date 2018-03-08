@@ -85,7 +85,11 @@ export class Officer {
       this.traitReducer('diplomacy')
   }
 
-  public isInOppositeFaction (officer: Officer): boolean {
+  roll (): number {
+    return util.random(10) + this.rank.tier + this.getTotalTraitsValue()
+  }
+
+  isInOppositeFaction (officer: Officer): boolean {
     return !this.isNeutral() &&
       !officer.isNeutral() &&
       this.faction.type !== officer.faction.type

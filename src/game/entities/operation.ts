@@ -67,7 +67,7 @@ export class Operation {
       this.officer.rank.tier > 5 &&
       this.type === TargetType.superior &&
       this.officer.isInOppositeFaction(this.target) &&
-      this.successfulExecution()
+      this.successfulRoll()
     ) {
       this.type = TargetType.coup
       this.hq.staff.coup(this.officer.faction.type)
@@ -102,26 +102,17 @@ export class Operation {
   }
 
   private increaseStrength (): number {
-    if (!this.succesfulPlanning()) return
+    if (!this.successfulRoll()) return
     return this.strength++
   }
 
-  private succesfulPlanning (): boolean {
-    return util.random(10) + this.officer.rank.tier + this.officer.getTotalTraitsValue() >
-      util.random(10) + this.target.rank.tier + this.target.getTotalTraitsValue()
-  }
-
-  private successfulExecution (): boolean {
-    return util.random(10) +
-      this.officer.rank.tier +
-      this.officer.prestige >
-      util.random(10) +
-      this.target.rank.tier +
-      this.target.prestige
+  private successfulRoll (): boolean {
+    return this.officer.roll() >
+      this.target.roll()
   }
 
   private executeOperation (): void {
-    if (this.successfulExecution()) {
+    if (this.successfulRoll()) {
       this.applySuccessfulExecution()
     } else {
       this.applyFailedExecution()
