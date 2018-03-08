@@ -63,7 +63,8 @@ export class Operation {
 
   private checkIfCoup (): void {
     if (
-      this.officer.rank.tier > 4 &&
+      !this.counterOperation &&
+      this.officer.rank.tier > 5 &&
       this.type === TargetType.superior &&
       this.officer.isInOppositeFaction(this.target) &&
       this.successfulExecution()

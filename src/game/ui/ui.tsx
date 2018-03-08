@@ -66,6 +66,7 @@ export class UIOperation extends React.Component {
         <li>{operation.logged} {operation.status.toUpperCase()}</li>
         <li>Stength:    {operation.strength}</li>
         <li>Type:       {operation.type}</li>
+        <li>Faction:    {operation.officer.faction.type}</li>
         <li>Started as: {operation.metadata.startedAs}</li>
         <li>Against a:  {operation.metadata.againstA}</li>
         <li>Target:     {operation.target.fullName()}</li>
@@ -81,8 +82,8 @@ export class UIOperation extends React.Component {
 }
 
 export class UIOfficer extends React.Component {
-  props: {
-    officer: Officer,
+  props:  {
+    officer:  Officer,
   }
 
   getOperation (operation: Operation) {
@@ -124,8 +125,8 @@ export class UIOfficer extends React.Component {
 }
 
 export class UIUnit extends React.Component {
-  props: {
-    unit: Unit
+  props:  {
+    unit:  Unit
     hq: Headquarter,
     game: Game,
   }
@@ -135,7 +136,7 @@ export class UIUnit extends React.Component {
     this.inspect = this.inspect.bind(this)
   }
 
-  label (tier: number): {label: string, size: string} {
+  label (tier: number): {label:  string, size: string} {
     return constants.label(tier)
   }
 
@@ -183,10 +184,11 @@ export class UIUnit extends React.Component {
 }
 
 export class UI extends React.Component {
-  render (game: Game) {
+  render (game:  Game) {
     ReactDOM.render(
       <UIMain game={game} />,
       document.getElementById('game'),
     )
   }
 }
+ 
