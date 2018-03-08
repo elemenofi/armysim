@@ -5,6 +5,13 @@ import { Officer } from './officer'
 import { Rank } from './rank'
 import { Unit } from './unit'
 
+export interface Scores {
+  rightFaction: number,
+  rightFactionAmount: number,
+  leftFaction: number,
+  leftFactionAmount: number,
+}
+
 export class Staff {
   OFFICERID = 0
   reserve: Officer[] = []
@@ -12,17 +19,7 @@ export class Staff {
   log: Logger
   hq: Headquarter
   procer: Officer
-  scores: {
-    rightFaction: number,
-    rightFactionAmount: number,
-    leftFaction: number,
-    leftFactionAmount: number,
-  } = {
-    rightFaction: 0,
-    rightFactionAmount: 0,
-    leftFaction: 0,
-    leftFactionAmount: 0,
-  }
+  scores: Scores
 
   constructor (hq: Headquarter) {
     this.log = new Logger()
@@ -44,9 +41,6 @@ export class Staff {
       return accumulator
     }
 
-    this.scores.rightFaction = Math.max(0, this.active.reduce(reducer, 0))
-    this.scores.leftFaction = Math.max(0, this.active.reduce(leftReducer, 0))
-
     const rightCountReducer = (accumulator, currentValue: Officer) => {
       if (currentValue.faction.type === FactionNames.right) {
         return accumulator + 1
@@ -61,8 +55,12 @@ export class Staff {
       return accumulator
     }
 
-    this.scores.rightFactionAmount = Math.max(0, this.active.reduce(rightCountReducer, 0))
-    this.scores.leftFactionAmount = Math.max(0, this.active.reduce(leftCountReducer, 0))
+    this.scores = {
+      rightFaction: Math.max(0, this.active.reduce(reducer, 0)),
+      leftFaction: Math.max(0, this.active.reduce(leftReducer, 0)),
+      rightFactionAmount: Math.max(0, this.active.reduce(rightCountReducer, 0)),
+      leftFactionAmount: Math.max(0, this.active.reduce(leftCountReducer, 0)),
+    }
   }
 
   retire (officer: Officer): Officer {
