@@ -6,159 +6,228 @@ export const util = {
 
 export interface Trait {
   name: string
-  area?: string
   intelligence: number
   commanding: number
   diplomacy: number
+  type: string
 }
 
 export class Traits {
-  base: Trait[] = [
+  traits: Trait[] = [
     {
       name: 'Diplomat',
-      area: 'diplomacy',
       intelligence: 3,
       commanding: 2,
-      diplomacy: 4,
+      diplomacy: 5,
+      type: 'base',
     },
     {
       name: 'Warrior',
-      area: 'commanding',
       intelligence: 2,
-      commanding: 4,
+      commanding: 5,
       diplomacy: 1,
+      type: 'base',
     },
     {
       name: 'Spy',
-      area: 'intelligence',
-      intelligence: 4,
+      intelligence: 5,
       commanding: 1,
       diplomacy: 3,
+      type: 'base',
     },
-  ]
-
-  cognitive: Trait[] = [
     {
       name: 'Smart',
       commanding: 2,
       intelligence: 2,
       diplomacy: 2,
+      type: 'aptitude',
     },
     {
       name: 'Slow',
       commanding: -2,
       intelligence: -2,
       diplomacy: -2,
+      type: 'aptitude',
     },
-  ]
-
-  look: Trait[] = [
+    {
+      name: 'Capable',
+      commanding: 1,
+      intelligence: 1,
+      diplomacy: 1,
+      type: 'aptitude',
+    },
+    {
+      name: 'Talented',
+      commanding: 3,
+      intelligence: 3,
+      diplomacy: 3,
+      type: 'aptitude',
+    },
+    {
+      name: 'Silly',
+      commanding: -3,
+      intelligence: -3,
+      diplomacy: -3,
+      type: 'aptitude',
+    },
     {
       name: 'Handsome',
       commanding: 1,
       intelligence: 0,
       diplomacy: 1,
+      type: 'looks',
     },
     {
       name: 'Ugly',
       commanding: -1,
       intelligence: 0,
       diplomacy: -1,
+      type: 'looks',
     },
-  ]
-
-  childhood: Trait[] = [
+    {
+      name: 'Tall',
+      commanding: 2,
+      intelligence: 1,
+      diplomacy: 1,
+      type: 'looks',
+    },
+    {
+      name: 'Short',
+      commanding: -2,
+      intelligence: 2,
+      diplomacy: -1,
+      type: 'looks',
+    },
+    {
+      name: 'Strong',
+      commanding: 3,
+      intelligence: 0,
+      diplomacy: 0,
+      type: 'physical',
+    },
+    {
+      name: 'Weak',
+      commanding: -3,
+      intelligence: 0,
+      diplomacy: 0,
+      type: 'physical',
+    },
     {
       name: 'Mature',
       commanding: 2,
       intelligence: 0,
       diplomacy: 0,
+      type: 'childhood',
     },
     {
       name: 'Spoiled',
       commanding: -2,
       intelligence: 0,
       diplomacy: 0,
+      type: 'childhood',
     },
-  ]
-
-  teenhood: Trait[] = [
+    {
+      name: 'Martial',
+      commanding: 4,
+      intelligence: 0,
+      diplomacy: 4,
+      type: 'childhood',
+    },
+    {
+      name: 'Urchin',
+      commanding: 0,
+      intelligence: 5,
+      diplomacy: 3,
+      type: 'childhood',
+    },
     {
       name: 'Ambitious',
       commanding: 1,
       intelligence: 1,
       diplomacy: 1,
+      type: 'teenhood',
     },
     {
       name: 'Lazy',
       commanding: -1,
       intelligence: -1,
       diplomacy: -1,
+      type: 'teenhood',
     },
-  ]
-
-  college: Trait[] = [
     {
       name: 'Talker',
       commanding: -1,
       intelligence: 1,
       diplomacy: 1,
+      type: 'teenhood',
     },
     {
       name: 'Doer',
       commanding: 1,
       intelligence: -1,
       diplomacy: -1,
+      type: 'teenhood',
     },
-  ]
-
-  special: Trait[] = [
     {
       name: 'Eccentric',
       commanding: 0,
       intelligence: 0,
       diplomacy: -2,
+      type: 'special',
     },
     {
       name: 'Eloquent',
       commanding: 0,
       intelligence: 0,
       diplomacy: 2,
+      type: 'special',
     },
     {
       name: 'Brave',
       commanding: 2,
       intelligence: 0,
       diplomacy: 0,
+      type: 'special',
     },
     {
       name: 'Coward',
       commanding: -2,
       intelligence: 0,
       diplomacy: 0,
+      type: 'special',
     },
     {
       name: 'Subtle',
       commanding: 0,
       intelligence: 2,
       diplomacy: 0,
+      type: 'special',
     },
     {
       name: 'Crude',
       commanding: 0,
       intelligence: 2,
       diplomacy: 0,
+      type: 'special',
     },
   ]
 
   random (): Trait[] {
     const traits: Trait[] = []
-    Object.keys(this).forEach((type) => {
-      let rnd = Math.round(Math.random() * this[type].length)
+    while (traits.length < 7) {
+      let rnd = Math.round(Math.random() * this.traits.length)
       if (rnd > 0) rnd--
-      traits.push(this[type][rnd])
-    })
+      if (this.canHave(traits, this.traits[rnd])) {
+        traits.push(this.traits[rnd])
+      }
+    }
     return traits
+  }
+
+  private canHave (traits: Trait[], trait: Trait): boolean {
+    const hasIt = traits.filter((t) => t.name === trait.name).length > 0
+    const hasOfType = traits.filter((t) => t.type === trait.type).length > 0
+    return !hasIt && !hasOfType
   }
 }
 
