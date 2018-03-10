@@ -1,8 +1,8 @@
-import { Headquarter } from './entities/army'
-import { FactionNames } from './entities/faction'
+import { UI } from '../ui/ui'
+import { Headquarter } from './army'
+import { FactionNames } from './faction'
 import { Keyboard } from './keyboard'
 import { Logger } from './logger'
-import { UI } from './ui/ui'
 
 export interface Window {
   game: Game

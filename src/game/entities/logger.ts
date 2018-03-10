@@ -1,7 +1,7 @@
 
 import * as moment from 'moment'
-import { Operation, OperationStatus } from './entities/operation'
 import { Game } from './game'
+import { Operation, OperationStatus } from './operation'
 
 export interface Window {
   game: Game

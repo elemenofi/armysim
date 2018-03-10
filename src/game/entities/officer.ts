@@ -1,10 +1,10 @@
 import * as chance from 'chance'
-import { Trait, traitsService, util } from '../util'
 import { Headquarter } from './army'
 import { Faction, FactionNames, randomFaction } from './faction'
 import { Operation, OperationStatus } from './operation'
 import { Rank } from './rank'
 import { Unit } from './unit'
+import { Trait, traitsService, util } from './util'
 
 export enum TargetType {
   superior = 'superior',

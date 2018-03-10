@@ -2,11 +2,11 @@ import * as moment from 'moment'
 import * as React from 'react'
 import * as ReactDOM from 'react-dom'
 import { Headquarter } from '../entities/army'
+import { Game } from '../entities/game'
 import { Officer } from '../entities/officer'
 import { Operation } from '../entities/operation'
 import { Unit } from '../entities/unit'
-import { Game } from '../game'
-import { constants } from '../util'
+import { constants } from '../entities/util'
 
 export class UIMain extends React.Component {
   props: {
@@ -22,6 +22,7 @@ export class UIMain extends React.Component {
         Revolutionaries: {game.headquarter.staff.scores.leftFactionAmount} {game.headquarter.staff.scores.leftFaction}
       </h1>
       <div className='officer'>
+        <h2>Inspected officer</h2>
         <UIOfficer officer={game.headquarter.inspected}/>
       </div>
       <div className='officer procer'>
@@ -67,8 +68,8 @@ export class UIOperation extends React.Component {
         <li>Stength:    {operation.strength}</li>
         <li>Type:       {operation.type}</li>
         <li>Faction:    {operation.officer.faction.type}</li>
-        <li>Started as: {operation.metadata.startedAs}</li>
-        <li>Against a:  {operation.metadata.againstA}</li>
+        <li>Started as: {operation.startedAs}</li>
+        <li>Against a:  {operation.againstA}</li>
         <li>Target:     {operation.target.fullName()}</li>
         {/*<li>Because:    {operation.metadata.because}</li>*/}
       </ul>
@@ -205,4 +206,3 @@ export class UI extends React.Component {
     )
   }
 }
- 

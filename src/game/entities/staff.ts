@@ -1,6 +1,6 @@
-import { Logger } from '../logger'
 import { Headquarter } from './army'
 import { FactionNames } from './faction'
+import { Logger } from './logger'
 import { Officer } from './officer'
 import { Rank } from './rank'
 import { Unit } from './unit'

@@ -1,6 +1,6 @@
-import { names, util } from '../util'
 import { Headquarter } from './army'
 import { Officer, TargetType } from './officer'
+import { names, util } from './util'
 
 export enum OperationStatus {
   planning = 'planning',
@@ -22,11 +22,9 @@ export class Operation {
   started: string
   logged: string
   type: string
-  metadata: {
-    startedAs: string,
-    againstA: string,
-    because: string,
-  }
+  startedAs: string
+  againstA: string
+  because: string
 
   constructor (officer: Officer, target: Officer, type: TargetType, hq: Headquarter, counterOperation = false) {
     this.hq = hq
@@ -38,7 +36,9 @@ export class Operation {
     this.status = OperationStatus.planning
     this.turns = 365
     this.counterOperation = counterOperation
-    this.populateMetadata()
+    this.againstA = target.rank.name(),
+    this.startedAs = officer.rank.name(),
+    this.because = this.getReasonForOperation(),
     this.started = this.hq.log.day()
   }
 
@@ -142,14 +142,6 @@ export class Operation {
 
   private log (): void {
     this.logged = this.hq.log.day()
-  }
-
-  private populateMetadata (): void {
-    this.metadata = {
-      againstA: this.target.rank.name(),
-      startedAs: this.officer.rank.name(),
-      because: this.getReasonForOperation(),
-    }
   }
 
   private getReasonForOperation (): string {
