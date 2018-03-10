@@ -34,11 +34,11 @@ export class UIMain extends React.Component {
         LEFT WING: {scores.leftFaction} / {scores.leftFactionAmount}
       </h1>
       <div className='officer'>
-        <h2>Inspected officer</h2>
+        <h2>Inspected officer:</h2>
         <UIOfficer officer={hq.inspected}/>
       </div>
       <div className='officer procer'>
-        <h2>Most highly decorated</h2>
+        <h2>Most highly decorated:</h2>
         <UIOfficer officer={hq.staff.procer}/>
       </div>
       <div className='clear'></div>
