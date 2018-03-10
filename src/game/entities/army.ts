@@ -22,6 +22,7 @@ export class Headquarter {
     this.army = this.build(9)
 
     const officer = this.staff.recruit(9)
+    this.inspect(officer)
 
     this.staff.assign(officer, this.army)
 

@@ -168,7 +168,7 @@ export class Officer {
   }
 
   private canOperateAgainst (target: Officer): boolean {
-    return this.rank.tier > 3 &&
+    return this.rank.tier > 2 &&
       !this.isNeutral() &&
       !this.isInSameFaction(target) &&
       !this.hasOperationAgainst(target) &&

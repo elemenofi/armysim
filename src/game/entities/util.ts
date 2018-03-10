@@ -22,7 +22,7 @@ export class Traits {
       type: 'base',
     },
     {
-      name: 'Warrior',
+      name: 'Commander',
       intelligence: 2,
       commanding: 5,
       diplomacy: 1,
@@ -71,6 +71,13 @@ export class Traits {
       type: 'aptitude',
     },
     {
+      name: 'Unreliable',
+      commanding: -1,
+      intelligence: -1,
+      diplomacy: 0,
+      type: 'aptitude',
+    },
+    {
       name: 'Handsome',
       commanding: 1,
       intelligence: 0,
@@ -113,6 +120,13 @@ export class Traits {
       type: 'physical',
     },
     {
+      name: 'Fat',
+      commanding: -3,
+      intelligence: 0,
+      diplomacy: -3,
+      type: 'looks',
+    },
+    {
       name: 'Mature',
       commanding: 2,
       intelligence: 0,
@@ -127,10 +141,17 @@ export class Traits {
       type: 'childhood',
     },
     {
-      name: 'Martial',
+      name: 'Leader',
       commanding: 4,
-      intelligence: 0,
+      intelligence: 2,
       diplomacy: 4,
+      type: 'childhood',
+    },
+    {
+      name: 'Bully',
+      commanding: 4,
+      intelligence: -2,
+      diplomacy: -2,
       type: 'childhood',
     },
     {
@@ -166,6 +187,13 @@ export class Traits {
       commanding: 1,
       intelligence: -1,
       diplomacy: -1,
+      type: 'teenhood',
+    },
+    {
+      name: 'Critical',
+      commanding: 0,
+      intelligence: 3,
+      diplomacy: 0,
       type: 'teenhood',
     },
     {
@@ -208,6 +236,13 @@ export class Traits {
       commanding: 0,
       intelligence: 2,
       diplomacy: 0,
+      type: 'special',
+    },
+    {
+      name: 'Pedantic',
+      commanding: 0,
+      intelligence: 0,
+      diplomacy: -1,
       type: 'special',
     },
   ]
