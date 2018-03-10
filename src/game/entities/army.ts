@@ -39,6 +39,10 @@ export class Headquarter {
     this.staff.setScores()
   }
 
+  inspect (officer: Officer): void {
+    this.inspected = officer
+  }
+
   private build (tier: number): Unit {
     const unit = new Unit(tier)
 

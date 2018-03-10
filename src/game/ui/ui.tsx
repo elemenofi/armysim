@@ -8,6 +8,15 @@ import { Operation } from '../entities/operation'
 import { Unit } from '../entities/unit'
 import { constants } from '../entities/util'
 
+export class UI extends React.Component {
+  render (game:   Game) {
+    ReactDOM.render(
+      <UIMain game={game} />,
+      document.getElementById('game'),
+    )
+  }
+}
+
 export class UIMain extends React.Component {
   props: {
     game: Game,
@@ -15,76 +24,93 @@ export class UIMain extends React.Component {
 
   render () {
     const game = this.props.game
+    const hq = game.headquarter
+    const scores = hq.staff.scores
+
     return <div className='army'>
       <h1>
         { moment().add(game.turn, 'days').format('YYYY-MM-DD')}&nbsp;
-        Conservatives: {game.headquarter.staff.scores.rightFactionAmount} {game.headquarter.staff.scores.rightFaction}&nbsp;
-        Revolutionaries: {game.headquarter.staff.scores.leftFactionAmount} {game.headquarter.staff.scores.leftFaction}
+        RIGHT WING: {scores.rightFaction} / {scores.rightFactionAmount}&nbsp;
+        LEFT WING: {scores.leftFaction} / {scores.leftFactionAmount}
       </h1>
       <div className='officer'>
         <h2>Inspected officer</h2>
-        <UIOfficer officer={game.headquarter.inspected}/>
+        <UIOfficer officer={hq.inspected}/>
       </div>
       <div className='officer procer'>
-        <UIOfficer officer={game.headquarter.staff.procer}/>
+        <h2>Most highly decorated</h2>
+        <UIOfficer officer={hq.staff.procer}/>
       </div>
       <div className='clear'></div>
       <div className='units'>
-        <UIUnit hq={game.headquarter} unit={game.headquarter.army} game={game}/>
+        <UIUnit hq={hq} unit={hq.army} game={game}/>
       </div>
     </div>
   }
 }
 
-export class UIOperation extends React.Component {
-  props: {
-    operation: Operation,
-  }
-
-  state: {
-    open: boolean,
+export class UIUnit extends React.Component {
+  props:   {
+    unit:   Unit
+    hq: Headquarter,
+    game: Game,
   }
 
   constructor () {
     super()
-    this.state = {
-      open: false,
-    }
     this.inspect = this.inspect.bind(this)
+  }
+
+  label (tier: number): {label:   string, size: string} {
+    return constants.label(tier)
   }
 
   inspect (e: Event) {
     e.preventDefault()
     e.stopPropagation()
-    super.setState({open: !this.state.open})
+    this.props.hq.inspect(this.props.unit.officer)
+    this.props.game.advance()
+  }
+
+  subunits () {
+    const hq = this.props.hq
+    const u = this.props.unit
+    const su = u.subunits
+    const size = 'unit-' + this.label(u.tier).size
+
+    return <div className='unit-sub'>
+      <div className={size}>
+        <UIUnit hq={hq} unit={su[0]} game={this.props.game}/>
+      </div>
+      <div className={size}>
+        <UIUnit hq={hq} unit={su[1]} game={this.props.game}/>
+      </div>
+    </div>
   }
 
   render () {
-    const operation = this.props.operation
+    const u = this.props.unit
 
-    const content = (this.state.open)
-      ? <ul className='operationInfo'>
-        <li>{operation.logged} {operation.status.toUpperCase()}</li>
-        <li>Stength:    {operation.strength}</li>
-        <li>Type:       {operation.type}</li>
-        <li>Faction:    {operation.officer.faction.type}</li>
-        <li>Started as: {operation.startedAs}</li>
-        <li>Against a:  {operation.againstA}</li>
-        <li>Target:     {operation.target.fullName()}</li>
-        {/*<li>Because:    {operation.metadata.because}</li>*/}
-      </ul>
-      : <div></div>
+    const subunits = (u.subunits.length)
+      ? this.subunits() : undefined
 
-    return <div className='operationItem' onClick={this.inspect}>
-      <div>{operation.started} {operation.name}</div>
-      {content}
+    const faction = this.props.unit.officer.faction.type.toLowerCase() + 'Faction'
+
+    const selected = (
+      this.props.hq.inspected &&
+      (this.props.unit.officer.id === this.props.hq.inspected.id)
+    ) ? 'selected' : ''
+
+    return <div onClick={this.inspect} className={selected + ' ' + faction}>
+      {this.label(u.tier).label}
+      {subunits}
     </div>
   }
 }
 
 export class UIOfficer extends React.Component {
-  props:  {
-    officer:  Officer,
+  props:   {
+    officer:   Officer,
   }
 
   getOperation (operation: Operation) {
@@ -139,70 +165,48 @@ export class UIOfficer extends React.Component {
   }
 }
 
-export class UIUnit extends React.Component {
-  props:  {
-    unit:  Unit
-    hq: Headquarter,
-    game: Game,
+export class UIOperation extends React.Component {
+  props: {
+    operation: Operation,
+  }
+
+  state: {
+    open: boolean,
   }
 
   constructor () {
     super()
+    this.state = {
+      open: false,
+    }
     this.inspect = this.inspect.bind(this)
-  }
-
-  label (tier: number): {label:  string, size: string} {
-    return constants.label(tier)
   }
 
   inspect (e: Event) {
     e.preventDefault()
     e.stopPropagation()
-    this.props.hq.inspected = this.props.unit.officer
-    this.props.game.advance()
-  }
-
-  subunits () {
-    const hq = this.props.hq
-    const u = this.props.unit
-    const su = u.subunits
-    const size = 'unit-' + this.label(u.tier).size
-
-    return <div className='unit-sub'>
-      <div className={size}>
-        <UIUnit hq={hq} unit={su[0]} game={this.props.game}/>
-      </div>
-      <div className={size}>
-        <UIUnit hq={hq} unit={su[1]} game={this.props.game}/>
-      </div>
-    </div>
+    super.setState({open: !this.state.open})
   }
 
   render () {
-    const u = this.props.unit
+    const operation = this.props.operation
 
-    const subunits = (u.subunits.length)
-      ? this.subunits() : undefined
+    const content = (this.state.open)
+      ? <ul className='operationInfo'>
+        <li>{operation.logged} {operation.status.toUpperCase()}</li>
+        <li>Stength:    {operation.strength}</li>
+        <li>Type:       {operation.type}</li>
+        <li>Faction:    {operation.officer.faction.type}</li>
+        <li>Started as: {operation.startedAs}</li>
+        <li>Against a:  {operation.againstA}</li>
+        <li>Target:     {operation.target.fullName()}</li>
+        {/*<li>Because:    {operation.metadata.because}</li>*/}
+      </ul>
+      : <div></div>
 
-    const faction = this.props.unit.officer.faction.type.toLowerCase() + 'Faction'
-
-    const selected = (
-      this.props.hq.inspected &&
-      (this.props.unit.officer.id === this.props.hq.inspected.id)
-    ) ? 'selected' : ''
-
-    return <div onClick={this.inspect} className={selected + ' ' + faction}>
-      {this.label(u.tier).label}
-      {subunits}
+    return <div className='operationItem' onClick={this.inspect}>
+      <div>{operation.started} {operation.name}</div>
+      {content}
     </div>
-  }
-}
-
-export class UI extends React.Component {
-  render (game:  Game) {
-    ReactDOM.render(
-      <UIMain game={game} />,
-      document.getElementById('game'),
-    )
   }
 }
