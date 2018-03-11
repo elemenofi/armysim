@@ -12,6 +12,16 @@ export interface Trait {
   type: string
 }
 
+export enum TraitTypes {
+  base = 'base',
+  aptitude = 'aptitude',
+  looks = 'looks',
+  physical = 'physical',
+  childhood = 'childhood',
+  teenhood = 'teenhood',
+  special = 'special',
+}
+
 export class Traits {
   traits: Trait[] = [
     {
@@ -19,63 +29,63 @@ export class Traits {
       intelligence: 3,
       commanding: 2,
       diplomacy: 5,
-      type: 'base',
+      type: TraitTypes.base,
     },
     {
       name: 'Commander',
       intelligence: 2,
       commanding: 5,
       diplomacy: 1,
-      type: 'base',
+      type: TraitTypes.base,
     },
     {
       name: 'Spy',
       intelligence: 5,
       commanding: 1,
       diplomacy: 3,
-      type: 'base',
+      type: TraitTypes.base,
     },
     {
       name: 'Smart',
       commanding: 2,
       intelligence: 2,
       diplomacy: 2,
-      type: 'aptitude',
+      type: TraitTypes.aptitude,
     },
     {
       name: 'Slow',
       commanding: -2,
       intelligence: -2,
       diplomacy: -2,
-      type: 'aptitude',
+      type: TraitTypes.aptitude,
     },
     {
       name: 'Capable',
       commanding: 1,
       intelligence: 1,
       diplomacy: 1,
-      type: 'aptitude',
+      type: TraitTypes.aptitude,
     },
     {
       name: 'Talented',
       commanding: 3,
       intelligence: 3,
       diplomacy: 3,
-      type: 'aptitude',
+      type: TraitTypes.aptitude,
     },
     {
       name: 'Silly',
       commanding: -3,
       intelligence: -3,
       diplomacy: -3,
-      type: 'aptitude',
+      type: TraitTypes.aptitude,
     },
     {
       name: 'Unreliable',
       commanding: -1,
       intelligence: -1,
       diplomacy: 0,
-      type: 'aptitude',
+      type: TraitTypes.aptitude,
     },
     {
       name: 'Handsome',
@@ -89,161 +99,162 @@ export class Traits {
       commanding: -1,
       intelligence: 0,
       diplomacy: -1,
-      type: 'looks',
+      type: TraitTypes.looks,
     },
     {
       name: 'Tall',
       commanding: 2,
       intelligence: 1,
       diplomacy: 1,
-      type: 'looks',
+      type: TraitTypes.looks,
     },
     {
       name: 'Short',
       commanding: -2,
       intelligence: 2,
       diplomacy: -1,
-      type: 'looks',
-    },
-    {
-      name: 'Strong',
-      commanding: 3,
-      intelligence: 0,
-      diplomacy: 0,
-      type: 'physical',
-    },
-    {
-      name: 'Weak',
-      commanding: -3,
-      intelligence: 0,
-      diplomacy: 0,
-      type: 'physical',
+      type: TraitTypes.looks,
     },
     {
       name: 'Fat',
       commanding: -3,
       intelligence: 0,
       diplomacy: -3,
-      type: 'looks',
+      type: TraitTypes.looks,
     },
+    {
+      name: 'Strong',
+      commanding: 3,
+      intelligence: 0,
+      diplomacy: 0,
+      type: TraitTypes.physical,
+    },
+    {
+      name: 'Weak',
+      commanding: -3,
+      intelligence: 0,
+      diplomacy: 0,
+      type: TraitTypes.physical,
+    },
+
     {
       name: 'Mature',
       commanding: 2,
       intelligence: 0,
       diplomacy: 0,
-      type: 'childhood',
+      type: TraitTypes.childhood,
     },
     {
       name: 'Spoiled',
       commanding: -2,
       intelligence: 0,
       diplomacy: 0,
-      type: 'childhood',
+      type: TraitTypes.childhood,
     },
     {
       name: 'Leader',
       commanding: 4,
       intelligence: 2,
       diplomacy: 4,
-      type: 'childhood',
+      type: TraitTypes.childhood,
     },
     {
       name: 'Bully',
       commanding: 4,
       intelligence: -2,
       diplomacy: -2,
-      type: 'childhood',
+      type: TraitTypes.childhood,
     },
     {
       name: 'Urchin',
       commanding: 0,
       intelligence: 5,
       diplomacy: 3,
-      type: 'childhood',
+      type: TraitTypes.childhood,
     },
     {
       name: 'Ambitious',
       commanding: 1,
       intelligence: 1,
       diplomacy: 1,
-      type: 'teenhood',
+      type: TraitTypes.teenhood,
     },
     {
       name: 'Lazy',
       commanding: -1,
       intelligence: -1,
       diplomacy: -1,
-      type: 'teenhood',
+      type: TraitTypes.teenhood,
     },
     {
       name: 'Talker',
       commanding: -1,
       intelligence: 1,
       diplomacy: 1,
-      type: 'teenhood',
+      type: TraitTypes.teenhood,
     },
     {
       name: 'Doer',
       commanding: 1,
       intelligence: -1,
       diplomacy: -1,
-      type: 'teenhood',
+      type: TraitTypes.teenhood,
     },
     {
       name: 'Critical',
       commanding: 0,
       intelligence: 3,
       diplomacy: 0,
-      type: 'teenhood',
+      type: TraitTypes.teenhood,
     },
     {
       name: 'Eccentric',
       commanding: 0,
       intelligence: 0,
       diplomacy: -2,
-      type: 'special',
+      type: TraitTypes.special,
     },
     {
       name: 'Eloquent',
       commanding: 0,
       intelligence: 0,
       diplomacy: 2,
-      type: 'special',
+      type: TraitTypes.special,
     },
     {
       name: 'Brave',
       commanding: 2,
       intelligence: 0,
       diplomacy: 0,
-      type: 'special',
+      type: TraitTypes.special,
     },
     {
       name: 'Coward',
       commanding: -2,
       intelligence: 0,
       diplomacy: 0,
-      type: 'special',
+      type: TraitTypes.special,
     },
     {
       name: 'Subtle',
       commanding: 0,
       intelligence: 2,
       diplomacy: 0,
-      type: 'special',
+      type: TraitTypes.special,
     },
     {
       name: 'Crude',
       commanding: 0,
       intelligence: 2,
       diplomacy: 0,
-      type: 'special',
+      type: TraitTypes.special,
     },
     {
       name: 'Pedantic',
       commanding: 0,
       intelligence: 0,
       diplomacy: -1,
-      type: 'special',
+      type: TraitTypes.special,
     },
   ]
 
@@ -256,6 +267,13 @@ export class Traits {
         traits.push(this.traits[rnd])
       }
     }
+    return this.sortTraits(traits)
+  }
+
+  private sortTraits (traits: Trait[]): Trait[] {
+    traits = traits.sort((p, n) => {
+      return (p.type > n.type) ? 1 : 0
+    })
     return traits
   }
 
