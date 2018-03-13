@@ -1,12 +1,15 @@
 import * as moment from 'moment'
 import * as React from 'react'
 import * as ReactDOM from 'react-dom'
+import { Subject } from 'rxjs/Subject'
 import { Headquarter } from '../entities/army'
 import { Game } from '../entities/game'
 import { Officer } from '../entities/officer'
 import { Operation } from '../entities/operation'
 import { Unit } from '../entities/unit'
 import { constants } from '../entities/util'
+
+const officerOperationClicked$ = new Subject<Officer>()
 
 export class UI extends React.Component {
   render (game:   Game) {
@@ -114,7 +117,7 @@ export class UIOfficer extends React.Component {
   }
 
   getOperation (operation: Operation) {
-    return <UIOperation operation={operation} />
+    return <UIOperation operation={operation} officer={this.props.officer} />
   }
 
   render () {
@@ -169,6 +172,7 @@ export class UIOfficer extends React.Component {
 export class UIOperation extends React.Component {
   props: {
     operation: Operation,
+    officer: Officer,
   }
 
   state: {
@@ -181,11 +185,17 @@ export class UIOperation extends React.Component {
       open: false,
     }
     this.inspect = this.inspect.bind(this)
+    officerOperationClicked$.subscribe((officer: Officer) => {
+      if (officer.id === this.props.officer.id && this.state.open) {
+        this.state.open = false
+      }
+    })
   }
 
   inspect (e: Event) {
     e.preventDefault()
     e.stopPropagation()
+    officerOperationClicked$.next(this.props.officer)
     super.setState({open: !this.state.open})
   }
 
