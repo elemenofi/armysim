@@ -250,6 +250,7 @@ const allTraits: Trait[] = [
     intelligence: 0,
     diplomacy: 0,
     type: TraitTypes.special,
+    opposite: 'Coward',
   },
   {
     name: 'Coward',
@@ -257,6 +258,7 @@ const allTraits: Trait[] = [
     intelligence: 0,
     diplomacy: 0,
     type: TraitTypes.special,
+    opposite: 'Brave',
   },
   {
     name: 'Subtle',
@@ -264,6 +266,7 @@ const allTraits: Trait[] = [
     intelligence: 2,
     diplomacy: 0,
     type: TraitTypes.special,
+    opposite: 'Crude',
   },
   {
     name: 'Crude',
@@ -271,6 +274,7 @@ const allTraits: Trait[] = [
     intelligence: 2,
     diplomacy: 0,
     type: TraitTypes.special,
+    opposite: 'Subtle',
   },
   {
     name: 'Pedantic',
@@ -278,6 +282,22 @@ const allTraits: Trait[] = [
     intelligence: 0,
     diplomacy: -1,
     type: TraitTypes.special,
+  },
+  {
+    name: 'Funny',
+    commanding: 0,
+    intelligence: 0,
+    diplomacy: 2,
+    type: TraitTypes.special,
+    opposite: 'Boring',
+  },
+  {
+    name: 'Boring',
+    commanding: 0,
+    intelligence: 0,
+    diplomacy: 2,
+    type: TraitTypes.special,
+    opposite: 'Funny',
   },
 ]
 
