@@ -36,13 +36,16 @@ export class Traits {
   }
 
   getTraitByType (type: TraitTypes, traits: Trait[] = []): Trait {
-    const possible = this.traits.filter((t) => {
-      return t.type === type &&
-        !traits.includes(t) &&
-        !traits.filter((tr) => tr.opposite === type).length
+    const traitsOfType = this.traits.filter((t) => {
+      return t.type === type && !traits.includes(t)
     })
-    const randomNumber = util.random(possible.length - 1)
-    const randomTrait = possible[randomNumber]
+    const randomNumber = util.random(traitsOfType.length - 1)
+    const randomTrait = traitsOfType[randomNumber]
+
+    // dont return trait if officer had the opposite one
+    if (traits.filter((t) => t.opposite === randomTrait.name).length) {
+      return
+    }
 
     return randomTrait
   }

@@ -99,9 +99,9 @@ export class Officer {
   }
 
   getNewTrait (): void {
-    this.traits.push(
-      traitsService.getTraitByType(TraitTypes.special, this.traits),
-    )
+    const newTrait = traitsService.getTraitByType(TraitTypes.special, this.traits)
+    if (!newTrait) return
+    this.traits.push(newTrait)
   }
 
   private traitTypeValue (type: string): number {

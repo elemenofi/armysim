@@ -12,7 +12,7 @@ export class Logger {
   day (): string {
     const day = new Date()
     day.setDate(day.getDate() + (window.game.turn) ? window.game.turn : 0)
-    return day.toDateString()
+    return day.toISOString().slice(0, 10)
   }
 
   promote (newRank: string): string {

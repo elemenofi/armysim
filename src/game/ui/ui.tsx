@@ -31,7 +31,7 @@ export class UIMain extends React.Component {
     tomorrow.setDate(tomorrow.getDate() + game.turn)
     return <div className='army'>
       <h1>
-        { tomorrow.toDateString() }&nbsp;
+        { tomorrow.toISOString().slice(0, 10) }&nbsp;
         RIGHT WING: {scores.rightFaction} / {scores.rightFactionAmount}&nbsp;
         LEFT WING: {scores.leftFaction} / {scores.leftFactionAmount}
       </h1>
