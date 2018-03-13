@@ -11,7 +11,7 @@ declare const window: Window
 export class Logger {
   day (): string {
     const day = new Date()
-    day.setDate(day.getDate() + window.game.turn)
+    day.setDate(day.getDate() + (window.game.turn) ? window.game.turn : 0)
     return day.toDateString()
   }
 

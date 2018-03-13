@@ -207,7 +207,7 @@ export class UIOperation extends React.Component {
   }
 
   componentWillUnmount () {
-    this.props.officerOperationClicked.unsubscribe()
+    // this.props.officerOperationClicked.unsubscribe()
   }
 
   inspect (e: Event) {
