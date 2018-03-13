@@ -71,6 +71,11 @@ export class Operation {
     ) {
       this.type = TargetType.coup
       this.hq.staff.coup(this.officer.faction.type)
+      console.log(`
+        ${this.hq.log.day()} An uprising led by ${this.officer.fullName()} against
+        his superior officer ${this.target.fullName()} escalated
+        into a Coup 'D Etat executed by the ${this.officer.faction.type} Faction
+      `)
     }
   }
 
