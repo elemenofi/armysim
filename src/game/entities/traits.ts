@@ -8,15 +8,14 @@ export interface Trait {
   commanding: number
   diplomacy: number
   type: string
+  opposite?: string
 }
 
 export enum TraitTypes {
   base = 'base',
   aptitude = 'aptitude',
-  looks = 'looks',
   physical = 'physical',
   childhood = 'childhood',
-  teenhood = 'teenhood',
   special = 'special',
 }
 
@@ -29,15 +28,18 @@ export class Traits {
 
   getInitialTraits (officer: Officer): Trait[] {
     return [
-      this.getTraitByType(TraitTypes.childhood),
-      this.getTraitByType(TraitTypes.teenhood),
       this.getTraitByType(TraitTypes.base),
+      this.getTraitByType(TraitTypes.childhood),
+      this.getTraitByType(TraitTypes.aptitude),
+      this.getTraitByType(TraitTypes.physical),
     ]
   }
 
   getTraitByType (type: TraitTypes, traits: Trait[] = []): Trait {
     const possible = this.traits.filter((t) => {
-      return t.type === type && !traits.includes(t)
+      return t.type === type &&
+        !traits.includes(t) &&
+        !traits.filter((tr) => tr.opposite === type).length
     })
     const randomNumber = util.random(possible.length - 1)
     const randomTrait = possible[randomNumber]
@@ -81,6 +83,7 @@ const allTraits: Trait[] = [
     intelligence: -2,
     diplomacy: -2,
     type: TraitTypes.aptitude,
+    opposite: 'Capable',
   },
   {
     name: 'Capable',
@@ -88,6 +91,7 @@ const allTraits: Trait[] = [
     intelligence: 1,
     diplomacy: 1,
     type: TraitTypes.aptitude,
+    opposite: 'Slow',
   },
   {
     name: 'Talented',
@@ -95,6 +99,7 @@ const allTraits: Trait[] = [
     intelligence: 3,
     diplomacy: 3,
     type: TraitTypes.aptitude,
+    opposite: 'Slow',
   },
   {
     name: 'Silly',
@@ -102,6 +107,7 @@ const allTraits: Trait[] = [
     intelligence: -3,
     diplomacy: -3,
     type: TraitTypes.aptitude,
+    opposite: 'Capable',
   },
   {
     name: 'Unreliable',
@@ -109,41 +115,46 @@ const allTraits: Trait[] = [
     intelligence: -1,
     diplomacy: 0,
     type: TraitTypes.aptitude,
+    opposite: 'Smart',
   },
   {
     name: 'Handsome',
     commanding: 1,
     intelligence: 0,
     diplomacy: 1,
-    type: 'looks',
+    type: TraitTypes.physical,
+    opposite: 'Ugly',
   },
   {
     name: 'Ugly',
     commanding: -1,
     intelligence: 0,
     diplomacy: -1,
-    type: TraitTypes.looks,
+    type: TraitTypes.physical,
+    opposite: 'Handsome',
   },
   {
     name: 'Tall',
     commanding: 2,
     intelligence: 1,
     diplomacy: 1,
-    type: TraitTypes.looks,
+    type: TraitTypes.physical,
+    opposite: 'Short',
   },
   {
     name: 'Short',
     commanding: -2,
     intelligence: 2,
     diplomacy: -1,
-    type: TraitTypes.looks,
+    type: TraitTypes.physical,
+    opposite: 'Tall',
   },
   {
     name: 'Fat',
     commanding: -3,
     intelligence: 0,
     diplomacy: -3,
-    type: TraitTypes.looks,
+    type: TraitTypes.physical,
   },
   {
     name: 'Strong',
@@ -151,6 +162,7 @@ const allTraits: Trait[] = [
     intelligence: 0,
     diplomacy: 0,
     type: TraitTypes.physical,
+    opposite: 'Weak',
   },
   {
     name: 'Weak',
@@ -158,6 +170,7 @@ const allTraits: Trait[] = [
     intelligence: 0,
     diplomacy: 0,
     type: TraitTypes.physical,
+    opposite: 'Strong',
   },
   {
     name: 'Responsible',
@@ -199,35 +212,23 @@ const allTraits: Trait[] = [
     commanding: 1,
     intelligence: 1,
     diplomacy: 1,
-    type: TraitTypes.teenhood,
+    type: TraitTypes.special,
   },
   {
     name: 'Lazy',
     commanding: -1,
     intelligence: -1,
     diplomacy: -1,
-    type: TraitTypes.teenhood,
+    type: TraitTypes.special,
+    opposite: 'Diligent',
   },
   {
-    name: 'Talker',
-    commanding: -1,
+    name: 'Diligent',
+    commanding: 1,
     intelligence: 1,
     diplomacy: 1,
-    type: TraitTypes.teenhood,
-  },
-  {
-    name: 'Doer',
-    commanding: 1,
-    intelligence: -1,
-    diplomacy: -1,
-    type: TraitTypes.teenhood,
-  },
-  {
-    name: 'Critical',
-    commanding: 0,
-    intelligence: 3,
-    diplomacy: 0,
-    type: TraitTypes.teenhood,
+    type: TraitTypes.special,
+    opposite: 'Lazy',
   },
   {
     name: 'Eccentric',

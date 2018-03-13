@@ -3,7 +3,7 @@ import { Headquarter } from './army'
 import { Faction, FactionNames, randomFaction } from './faction'
 import { Operation, OperationStatus } from './operation'
 import { Rank } from './rank'
-import { Trait, traitsService } from './traits'
+import { Trait, traitsService, TraitTypes } from './traits'
 import { Unit } from './unit'
 import { util } from './util'
 
@@ -25,6 +25,7 @@ export class Officer {
   experience: number
   prestige: number
   commanding: number
+  militancy: number
   rank: Rank
   unit: Unit
   events: string[] = []
@@ -40,6 +41,7 @@ export class Officer {
     this.hq = hq
     this.experience = 100 * rank + util.random(100)
     this.prestige = 0
+    this.militancy = 0
     this.chance = chance(Math.random)
     this.name = `${this.chance.first({
       gender: 'male',
@@ -94,6 +96,12 @@ export class Officer {
     return !this.isNeutral() &&
       !officer.isNeutral() &&
       this.faction.type !== officer.faction.type
+  }
+
+  getNewTrait (): void {
+    this.traits.push(
+      traitsService.getTraitByType(TraitTypes.special, this.traits),
+    )
   }
 
   private traitTypeValue (type: string): number {
@@ -191,6 +199,7 @@ export class Officer {
     const operation = new Operation(this, possibleTarget.target, possibleTarget.type, this.hq, counterOperation)
     this.operations.push(operation)
     if (counterOperation) return
+    this.militancy++
     possibleTarget.target.attemptToCounterOperation(operation, possibleTarget.type)
   }
 
