@@ -57,7 +57,7 @@ export class Officer {
   }
 
   fullName (): string {
-    return `${this.rank.name()} ${this.shouldRetire() ? ' (r)' : ''} ${this.name}`
+    return `${this.rank.name()} ${this.shouldRetire() ? ' (r) ' : ''}${this.name}`
   }
 
   isSenior (): boolean {
