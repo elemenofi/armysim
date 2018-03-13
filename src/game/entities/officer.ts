@@ -3,8 +3,9 @@ import { Headquarter } from './army'
 import { Faction, FactionNames, randomFaction } from './faction'
 import { Operation, OperationStatus } from './operation'
 import { Rank } from './rank'
+import { Trait, traitsService } from './traits'
 import { Unit } from './unit'
-import { Trait, traitsService, util } from './util'
+import { util } from './util'
 
 export enum TargetType {
   superior = 'superior',
@@ -44,7 +45,7 @@ export class Officer {
       gender: 'male',
     })} ${this.chance.last()}`
     this.faction = new Faction()
-    this.traits = traitsService.random()
+    this.traits = traitsService.getInitialTraits(this)
   }
 
   tick () {
@@ -76,13 +77,13 @@ export class Officer {
   }
 
   getTotalTraitValue (type: string): number {
-    return this.traitReducer(type)
+    return this.traitTypeValue(type)
   }
 
   getTotalTraitsValue (): number {
-    return this.traitReducer('intelligence') +
-      this.traitReducer('commanding') +
-      this.traitReducer('diplomacy')
+    return this.traitTypeValue('intelligence') +
+      this.traitTypeValue('commanding') +
+      this.traitTypeValue('diplomacy')
   }
 
   roll (): number {
@@ -95,7 +96,7 @@ export class Officer {
       this.faction.type !== officer.faction.type
   }
 
-  private traitReducer (type: string): number {
+  private traitTypeValue (type: string): number {
     const reducer = (accumulator, currentValue: Trait) => {
       return accumulator + currentValue[type]
     }
