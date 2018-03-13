@@ -1,5 +1,4 @@
 
-import * as moment from 'moment'
 import { Game } from './game'
 import { Operation, OperationStatus } from './operation'
 
@@ -11,9 +10,9 @@ declare const window: Window
 
 export class Logger {
   day (): string {
-    return moment()
-      .add(window.game.turn, 'days')
-      .format('YYYY-MM-DD')
+    const day = new Date()
+    day.setDate(day.getDate() + window.game.turn)
+    return day.toDateString()
   }
 
   promote (newRank: string): string {

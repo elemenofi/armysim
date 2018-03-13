@@ -27,10 +27,11 @@ export class UIMain extends React.Component {
     const game = this.props.game
     const hq = game.headquarter
     const scores = hq.staff.scores
-
+    const tomorrow = new Date()
+    tomorrow.setDate(tomorrow.getDate() + game.turn)
     return <div className='army'>
       <h1>
-        { moment().add(game.turn, 'days').format('YYYY-MM-DD')}&nbsp;
+        { tomorrow.toDateString() }&nbsp;
         RIGHT WING: {scores.rightFaction} / {scores.rightFactionAmount}&nbsp;
         LEFT WING: {scores.leftFaction} / {scores.leftFactionAmount}
       </h1>

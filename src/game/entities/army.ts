@@ -1,5 +1,3 @@
-import * as chance from 'chance'
-import * as moment from 'moment'
 import { UI } from '../ui/ui'
 import { Logger } from './logger'
 import { Officer } from './officer'

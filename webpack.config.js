@@ -1,5 +1,6 @@
 var webpack = require('webpack');
 var path = require('path');
+var UglifyJsPlugin = require('uglifyjs-webpack-plugin')
 
 module.exports = {
   devtool: 'eval',
@@ -31,5 +32,11 @@ module.exports = {
         }
       }
     ]
-  }
+  },
+  plugins: [
+    new UglifyJsPlugin({
+      sourceMap: true,
+      include: /\/src/
+    })
+  ]
 };
