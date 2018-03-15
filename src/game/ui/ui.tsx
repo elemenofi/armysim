@@ -1,4 +1,3 @@
-import * as moment from 'moment'
 import * as React from 'react'
 import * as ReactDOM from 'react-dom'
 import { Subject } from 'rxjs/Subject'
