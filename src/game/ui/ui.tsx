@@ -1,7 +1,7 @@
 import * as React from 'react'
 import * as ReactDOM from 'react-dom'
 import { Subject } from 'rxjs/Subject'
-import { Headquarter } from '../entities/army'
+import { Headquarter, Order } from '../entities/army'
 import { Game } from '../entities/game'
 import { Officer } from '../entities/officer'
 import { Operation } from '../entities/operation'
@@ -29,6 +29,7 @@ export class UIMain extends React.Component {
     const tomorrow = new Date()
     tomorrow.setDate(tomorrow.getDate() + game.turn)
     return <div className='army'>
+      <UIOrder order={game.headquarter.order}/>
       <h1>
         { tomorrow.toISOString().slice(0, 10) }&nbsp;
         RIGHT WING: {scores.rightFaction} / {scores.rightFactionAmount}&nbsp;
@@ -46,6 +47,49 @@ export class UIMain extends React.Component {
       <div className='units'>
         <UIUnit hq={hq} unit={hq.army} game={game}/>
       </div>
+    </div>
+  }
+}
+
+export class UIOrder extends React.Component {
+  props: {
+    order: Order,
+  }
+
+  constructor () {
+    super()
+    this.handleChange = this.handleChange.bind(this)
+  }
+
+  handleChange (event) {
+    this.props.order.data$.next(event.target.value)
+  }
+
+  render () {
+    const order = this.props.order
+    let body = <div></div>
+    const options = []
+
+    if (order) {
+      this.props
+        .order
+        .options
+        .forEach((o) => {
+          options.push(<li><button onClick={o.handler}>{o.text}</button></li>)
+        })
+
+      body = <div className='order'>
+        <h2>{order.title}</h2>
+        <p>{order.description}</p>
+        <input type='text' onChange={this.handleChange}></input>
+        <ul>
+          {options}
+        </ul>
+      </div>
+    }
+
+    return <div className='orders'>
+      {body}
     </div>
   }
 }

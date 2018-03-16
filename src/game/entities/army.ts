@@ -1,3 +1,4 @@
+import { Subject } from 'rxjs/Subject'
 import { UI } from '../ui/ui'
 import { Logger } from './logger'
 import { Officer } from './officer'
@@ -6,6 +7,25 @@ import { Rank } from './rank'
 import { Staff } from './staff'
 import { Unit } from './unit'
 
+export interface OrderOption {
+  text: string
+  handler: () => void
+}
+
+export class Order {
+  options: OrderOption[]
+  title: string
+  description: string
+  data$: Subject<any>
+
+  constructor (title, data$, description, options) {
+    this.title = title
+    this.data$ = data$
+    this.description = description
+    this.options = options
+  }
+}
+
 export class Headquarter {
   UNITID = 0
   army: Unit
@@ -13,6 +33,7 @@ export class Headquarter {
   staff: Staff
   inspected: Officer
   log: Logger
+  order: Order
 
   constructor () {
     this.log = new Logger()
@@ -25,6 +46,8 @@ export class Headquarter {
     this.staff.assign(officer, this.army)
 
     this.generateUnitsTree(8, 2, this.army)
+
+    this.staff.assignPlayer()
   }
 
   tick (turn: number): void {
@@ -71,7 +94,7 @@ export class Headquarter {
 
   private generateUnitsTree (tier: number, quantity: number, parent: Unit): void {
     if (quantity === 0 || tier < 1) {
-      return
+       return
     } else {
       const unit = this.build(tier)
       const officer = this.staff.recruit(tier)

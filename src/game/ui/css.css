@@ -81,3 +81,16 @@ li {
   width: 50;
   float: left;
 }
+
+.orders {
+  position: absolute;
+  width: 100%;
+}
+
+.order {
+  background-color: white;
+  margin: 0 auto;
+  width: 256px;
+  padding: 32px;
+  border: 1px solid black;
+}

@@ -35,6 +35,7 @@ export class Officer {
   faction: Faction
   inReserve: boolean
   traits: Trait[]
+  isPlayer: boolean
 
   constructor (rank: number, private hq: Headquarter) {
     this.rank = new Rank(rank)

@@ -1,4 +1,6 @@
-import { Headquarter } from './army'
+import { debounce, debounceTime, take } from 'rxjs/operators'
+import { Subject } from 'rxjs/Subject'
+import { Headquarter, Order } from './army'
 import { FactionNames } from './faction'
 import { Logger } from './logger'
 import { Officer } from './officer'
@@ -101,6 +103,33 @@ export class Staff {
     this.active.forEach((o) => {
       if (!o.resistsCoup(side)) this.retire(o)
     })
+  }
+
+  assignPlayer (): void {
+    const lieutenant = this.active.find((o) => o.rank.tier === 1)
+    lieutenant.isPlayer = true
+    this.hq.inspected = lieutenant
+
+    const nameChange$ = new Subject()
+
+    nameChange$.pipe(debounceTime(500)).subscribe((name: string) => {
+      lieutenant.name = name
+    })
+
+    this.hq.order = new Order(
+      'New game',
+      nameChange$,
+      'Name and surname',
+      [
+        {
+          text: 'Ok',
+          handler: () => {
+            nameChange$.unsubscribe()
+            this.hq.order = undefined
+          },
+        },
+      ],
+    )
   }
 
   // replace does a recursion that finds the subordinate
