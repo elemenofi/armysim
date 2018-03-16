@@ -17,12 +17,14 @@ export class Order {
   title: string
   description: string
   data$: Subject<any>
+  value: string
 
-  constructor (title, data$, description, options) {
+  constructor (title, description, options, data$, value?) {
     this.title = title
     this.data$ = data$
     this.description = description
     this.options = options
+    this.value = value
   }
 }
 

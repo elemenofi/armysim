@@ -9,7 +9,7 @@ import { Unit } from '../entities/unit'
 import { constants } from '../entities/util'
 
 export class UI extends React.Component {
-  render (game:   Game) {
+  render (game: Game) {
     ReactDOM.render(
       <UIMain game={game} />,
       document.getElementById('game'),
@@ -56,13 +56,31 @@ export class UIOrder extends React.Component {
     order: Order,
   }
 
-  constructor () {
+  state: {
+    value: string,
+  }
+
+  nameInput
+
+  constructor (props) {
     super()
-    this.handleChange = this.handleChange.bind(this)
+  }
+
+  componentWillMount () {
+    super.setState({value: this.props.order.value })
+  }
+
+  componentDidMount () {
+    this.nameInput.focus()
   }
 
   handleChange (event) {
-    this.props.order.data$.next(event.target.value)
+    super.setState({value: event.target.value})
+  }
+
+  onSubmit (handle) {
+    this.props.order.data$.next(this.state.value)
+    handle()
   }
 
   render () {
@@ -75,13 +93,27 @@ export class UIOrder extends React.Component {
         .order
         .options
         .forEach((o) => {
-          options.push(<li><button onClick={o.handler}>{o.text}</button></li>)
+          options.push(
+            <li>
+              <button
+                onClick={this.onSubmit.bind(this, o.handler)}
+                ref={(input) => { this.nameInput = input }}
+              >
+                {o.text}
+              </button>
+            </li>,
+          )
         })
 
       body = <div className='order'>
         <h2>{order.title}</h2>
         <p>{order.description}</p>
-        <input type='text' onChange={this.handleChange}></input>
+        <input
+          type='text'
+          value={this.state.value}
+          onChange={this.handleChange.bind(this)}
+        >
+        </input>
         <ul>
           {options}
         </ul>

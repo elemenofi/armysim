@@ -24,6 +24,7 @@ export class Game {
     this.keyboard = new Keyboard(this)
     this.headquarter = new Headquarter()
     this.tick()
+    this.pause()
   }
 
   public pause () {

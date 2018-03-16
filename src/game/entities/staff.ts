@@ -2,11 +2,15 @@ import { debounce, debounceTime, take } from 'rxjs/operators'
 import { Subject } from 'rxjs/Subject'
 import { Headquarter, Order } from './army'
 import { FactionNames } from './faction'
+import { Window } from './game'
 import { Logger } from './logger'
 import { Officer } from './officer'
 import { Rank } from './rank'
+import { store } from './store'
 import { traitsService } from './traits'
 import { Unit } from './unit'
+
+declare const window: Window
 
 export interface Scores {
   rightFaction: number,
@@ -108,27 +112,31 @@ export class Staff {
   assignPlayer (): void {
     const lieutenant = this.active.find((o) => o.rank.tier === 1)
     lieutenant.isPlayer = true
+    lieutenant.name = store.playerName
     this.hq.inspected = lieutenant
 
     const nameChange$ = new Subject()
-
-    nameChange$.pipe(debounceTime(500)).subscribe((name: string) => {
-      lieutenant.name = name
-    })
+    const nameChangeSub = nameChange$
+      .subscribe((name: string) => {
+        lieutenant.name = name
+        store.playerName = name
+      })
 
     this.hq.order = new Order(
       'New game',
-      nameChange$,
       'Name and surname',
       [
         {
           text: 'Ok',
           handler: () => {
-            nameChange$.unsubscribe()
+            nameChangeSub.unsubscribe()
             this.hq.order = undefined
+            window.game.pause()
           },
         },
       ],
+      nameChange$,
+      store.state.playerName,
     )
   }
 
