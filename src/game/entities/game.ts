@@ -59,11 +59,3 @@ export class Game {
 }
 
 window.game = new Game()
-
-window.pause = () => {
-  window.game.pause()
-}
-
-window.coup = (side) => {
-  window.game.headquarter.staff.coup(side)
-}

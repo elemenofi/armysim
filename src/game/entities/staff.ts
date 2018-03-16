@@ -5,6 +5,7 @@ import { FactionNames } from './faction'
 import { Window } from './game'
 import { Logger } from './logger'
 import { Officer } from './officer'
+import { Operation } from './operation'
 import { Rank } from './rank'
 import { store } from './store'
 import { traitsService } from './traits'
@@ -103,9 +104,12 @@ export class Staff {
     return officer
   }
 
-  coup (side: FactionNames): void {
+  coup (operation: Operation): void {
     this.active.forEach((o) => {
-      if (!o.resistsCoup(side)) this.retire(o)
+      if (!o.resistsCoup(operation.officer.faction.type)) {
+        o.forcedToRetireBy = operation
+        this.retire(o)
+      }
     })
   }
 

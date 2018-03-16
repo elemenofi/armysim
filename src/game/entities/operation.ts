@@ -69,8 +69,9 @@ export class Operation {
       this.officer.isInOppositeFaction(this.target) &&
       this.successfulRoll()
     ) {
+      this.name = this.name.replace('Operation', 'Coup').split('').reverse().join(' ')
       this.type = TargetType.coup
-      this.hq.staff.coup(this.officer.faction.type)
+      this.hq.staff.coup(this)
       console.log(`
         ${this.hq.log.day()} An uprising led by ${this.officer.fullName()} against
         his superior officer ${this.target.fullName()} escalated

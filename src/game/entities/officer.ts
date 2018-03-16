@@ -76,6 +76,7 @@ export class Officer {
   }
 
   resistsCoup (faction: FactionNames): boolean {
+    // todo: should neutrals resist?
     return this.faction.type === faction
   }
 
