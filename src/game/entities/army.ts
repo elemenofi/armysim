@@ -47,12 +47,12 @@ export class Headquarter {
 
     this.staff.assign(officer, this.army)
 
-    this.generateUnitsTree(8, 2, this.army)
+    this.generateUnitsTree(2, 2, this.army)
 
     this.staff.assignPlayer()
   }
 
-  tick (turn: number): void {
+  tick (): void {
     this.staff.active.forEach((officer) => {
       if (officer.shouldRetire()) {
         this.staff.retire(officer)

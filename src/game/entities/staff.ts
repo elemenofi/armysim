@@ -134,6 +134,9 @@ export class Staff {
           text: 'Ok',
           handler: () => {
             nameChangeSub.unsubscribe()
+            // this might be buggy because when we submit this order
+            // there might be a different one in HQ.
+            // orders should be a stack. OrderService or so. the one in the hq was there
             this.hq.order = undefined
             window.game.pause()
           },

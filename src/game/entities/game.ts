@@ -38,7 +38,7 @@ export class Game {
 
   public advance () {
     this.turn++
-    this.headquarter.tick(this.turn)
+    this.headquarter.tick()
     this.ui.render(this)
   }
 
