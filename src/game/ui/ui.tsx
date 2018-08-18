@@ -219,7 +219,7 @@ export class UIOfficer extends React.Component {
     const events: string[] = []
 
     o.events.forEach((event) => {
-      events.push(<div>{event}</div>)
+      events.push(<div key={event}>{event}</div>)
     })
 
     const operationsRecord: string[] = []
@@ -231,7 +231,7 @@ export class UIOfficer extends React.Component {
     const traits: string[] = []
 
     o.traits.forEach((trait) => {
-      traits.push(<li>{trait.name}</li>)
+      traits.push(<li key={trait.name}>{trait.name}</li>)
     })
 
     return <div>
