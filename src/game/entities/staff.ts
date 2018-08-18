@@ -113,8 +113,8 @@ export class Staff {
     })
   }
 
-  assignPlayer (): void {
-    const lieutenant = this.active.find((o) => o.rank.tier === 1)
+  assignPlayer (_lieutenant?: Officer): void {
+    const lieutenant = (_lieutenant) ? _lieutenant : this.active.find((o) => o.rank.tier === 1)
     lieutenant.isPlayer = true
     lieutenant.name = store.playerName
     this.hq.inspected = lieutenant
@@ -157,8 +157,8 @@ export class Staff {
   private replace (officer: Officer): Officer {
     let replacement: Officer
 
-    if (officer.rank.tier === 1) {
-      replacement = this.recruit(1)
+    if (officer.rank.tier === this.hq.LEVELS_BELOW_DIVISION) {
+      replacement = this.recruit(this.hq.LEVELS_BELOW_DIVISION)
     } else {
       replacement = this.getReplacement(officer)
 
@@ -172,6 +172,7 @@ export class Staff {
   }
 
   private getReplacement (officer: Officer): Officer {
+    console.log(officer)
     const subunits = officer.unit.subunits
     const officer1 = subunits[0].officer
     const officer2 = subunits[1].officer

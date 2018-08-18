@@ -37,6 +37,8 @@ export class Headquarter {
   log: Logger
   order: Order
 
+  readonly LEVELS_BELOW_DIVISION = 5
+
   constructor () {
     this.log = new Logger()
     this.staff = new Staff(this)
@@ -47,9 +49,9 @@ export class Headquarter {
 
     this.staff.assign(officer, this.army)
 
-    this.generateUnitsTree(2, 2, this.army)
+    this.generateUnitsTree(8, 2, this.army)
 
-    this.staff.assignPlayer()
+    this.staff.assignPlayer(officer)
   }
 
   tick (): void {
@@ -95,7 +97,7 @@ export class Headquarter {
   }
 
   private generateUnitsTree (tier: number, quantity: number, parent: Unit): void {
-    if (quantity === 0 || tier < 1) {
+    if (quantity === 0 || tier < this.LEVELS_BELOW_DIVISION) {
        return
     } else {
       const unit = this.build(tier)
