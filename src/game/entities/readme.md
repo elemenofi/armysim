@@ -70,6 +70,7 @@ RANK:
 POLITICS
 - Militancy
 - Faction
+- Subversive
 
 SKILLS
 - Attacking

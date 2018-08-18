@@ -32,16 +32,15 @@ export class UIMain extends React.Component {
       <UIOrder order={game.headquarter.order}/>
       <h1>
         { tomorrow.toISOString().slice(0, 10) }&nbsp;
-        RIGHT WING: {scores.rightFaction} / {scores.rightFactionAmount}&nbsp;
-        LEFT WING: {scores.leftFaction} / {scores.leftFactionAmount}
+        {/* RIGHT WING: {scores.rightFaction} / {scores.rightFactionAmount}&nbsp;
+        LEFT WING: {scores.leftFaction} / {scores.leftFactionAmount} */}
       </h1>
       <div className='officer'>
-        <h2>Inspected officer:</h2>
-        <UIOfficer officer={hq.inspected}/>
+        <UIOfficer officer={hq.player}/>
       </div>
       <div className='officer procer'>
-        <h2>Most highly decorated:</h2>
-        <UIOfficer officer={hq.staff.procer}/>
+        <h2>Inspected officer:</h2>
+        <UIOfficer officer={hq.inspected}/>
       </div>
       <div className='clear'></div>
       <div className='units'>
@@ -215,6 +214,8 @@ export class UIOfficer extends React.Component {
 
     if (!o) return <div></div>
 
+    if (o.isPlayer) return <div>{o.fullName()}</div>
+
     const events: string[] = []
 
     o.events.forEach((event) => {
@@ -236,16 +237,6 @@ export class UIOfficer extends React.Component {
     return <div>
       <ul className='officerData'>
         <li>{o.fullName()}</li>
-        <li>Experience: {o.experience}</li>
-        <li>Prestige: {o.prestige}</li>
-        <li>Operations: {o.getTotalTraitValue('operations')}</li>
-        <li>Diplomacy: {o.getTotalTraitValue('communications')}</li>
-        <li>Espionage: {o.getTotalTraitValue('intelligence')}</li>
-        <li>Militancy: {o.militancy}</li>
-        <li>Skill: {o.getTotalTraitsValue()}</li>
-        <li>Faction: {o.faction.type}</li>
-        <li>Senior: {o.isSenior() ? 'Yes' : 'No'}</li>
-        <li>Passed for promotion: {o.isPassedForPromotion() ? 'Yes' : 'No'}</li>
         <li>-</li>
         <li>{events}</li>
         <li>-</li>
@@ -254,10 +245,22 @@ export class UIOfficer extends React.Component {
         {traits}
       </ul>
       <div className='clear'></div>
-      <div className='operationList'>{operationsRecord}</div>
     </div>
   }
 }
+// this goes in the officer component
+// i want to conceal it for the player for now
+// <div className='operationList'>{operationsRecord}</div>
+// <li>Senior: {o.isSenior() ? 'Yes' : 'No'}</li>
+// <li>Faction: {o.faction.type}</li>
+// <li>Passed for promotion: {o.isPassedForPromotion() ? 'Yes' : 'No'}</li>
+/* <li>Experience: {o.experience}</li>
+<li>Prestige: {o.prestige}</li>
+<li>Operations: {o.getTotalTraitValue('operations')}</li>
+<li>Diplomacy: {o.getTotalTraitValue('communications')}</li>
+<li>Espionage: {o.getTotalTraitValue('intelligence')}</li>
+<li>Militancy: {o.militancy}</li>
+<li>Skill: {o.getTotalTraitsValue()}</li> */
 
 export class UIOperation extends React.Component {
   props: {

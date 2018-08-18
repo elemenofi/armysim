@@ -36,6 +36,7 @@ export class Headquarter {
   inspected: Officer
   log: Logger
   order: Order
+  player: Officer
 
   readonly LEVELS_BELOW_DIVISION = 1
 
@@ -45,6 +46,8 @@ export class Headquarter {
     this.army = this.build(9)
 
     const officer = this.staff.recruit(9)
+    this.player = officer
+
     this.inspect(officer)
 
     this.staff.assign(officer, this.army)

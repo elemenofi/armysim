@@ -79,9 +79,11 @@ export class Staff {
     this.replace(officer)
 
     officer.events.push(
-      (officer.forcedToRetireBy)
-        ? this.log.forcedRetirement(officer.forcedToRetireBy)
-        : this.log.retire(),
+      this.log.retire(),
+      // for now i will just always log it as a normal retirement to conceal it from the player
+      // (officer.forcedToRetireBy)
+      //   ? this.log.forcedRetirement(officer.forcedToRetireBy)
+      //   : this.log.retire(),
     )
 
     this.checkIfProcer(officer)
@@ -127,8 +129,11 @@ export class Staff {
       })
 
     this.hq.order = new Order(
-      'New game',
-      'Name and surname',
+      `Good morning Sir.`,
+      `I am your Chieff of Personnel.
+      Congratulations on the promotion. I am looking forward to working with you,
+      I will prepare the documentation for the Secretary of Defense.
+      Please sign with your full name here:`,
       [
         {
           text: 'Ok',
