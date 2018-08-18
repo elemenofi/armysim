@@ -94,7 +94,7 @@ export class UIOrder extends React.Component {
         .options
         .forEach((o) => {
           options.push(
-            <li>
+            <li key={o.text}>
               <button
                 onClick={this.onSubmit.bind(this, o.handler)}
                 ref={(input) => { this.nameInput = input }}
@@ -126,9 +126,15 @@ export class UIOrder extends React.Component {
   }
 }
 
+interface UnitProps {
+  unit: Unit,
+  hq: Headquarter,
+  game: Game,
+}
+
 export class UIUnit extends React.Component {
-  props:   {
-    unit:   Unit
+  props: {
+    unit: Unit
     hq: Headquarter,
     game: Game,
   }
@@ -138,7 +144,7 @@ export class UIUnit extends React.Component {
     this.inspect = this.inspect.bind(this)
   }
 
-  label (tier: number): {label:   string, size: string} {
+  label (tier: number): {label: string, size: string} {
     return constants.label(tier)
   }
 
@@ -215,10 +221,10 @@ export class UIOfficer extends React.Component {
       events.push(<div>{event}</div>)
     })
 
-    const operations: string[] = []
+    const operationsRecord: string[] = []
 
-    o.operations.forEach((operation) => {
-      operations.push(this.getOperation(operation))
+    o.operationsRecord.forEach((operation) => {
+      operationsRecord.push(this.getOperation(operation))
     })
 
     const traits: string[] = []
@@ -232,8 +238,8 @@ export class UIOfficer extends React.Component {
         <li>{o.fullName()}</li>
         <li>Experience: {o.experience}</li>
         <li>Prestige: {o.prestige}</li>
-        <li>Commanding: {o.getTotalTraitValue('commanding')}</li>
-        <li>Diplomacy: {o.getTotalTraitValue('diplomacy')}</li>
+        <li>Operations: {o.getTotalTraitValue('operations')}</li>
+        <li>Diplomacy: {o.getTotalTraitValue('communications')}</li>
         <li>Espionage: {o.getTotalTraitValue('intelligence')}</li>
         <li>Militancy: {o.militancy}</li>
         <li>Skill: {o.getTotalTraitsValue()}</li>
@@ -248,7 +254,7 @@ export class UIOfficer extends React.Component {
         {traits}
       </ul>
       <div className='clear'></div>
-      <div className='operationList'>{operations}</div>
+      <div className='operationList'>{operationsRecord}</div>
     </div>
   }
 }

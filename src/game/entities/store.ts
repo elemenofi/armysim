@@ -7,7 +7,8 @@ export class Store {
 
   constructor () {
     this.state = {}
-    if (!window.localStorage.armyStorage) {
+
+    if (!window.localStorage.getItem('armyStorage')) {
       window.localStorage.setItem('armyStorage', '')
     } else {
       this.state = JSON.parse(window.localStorage.getItem('armyStorage'))

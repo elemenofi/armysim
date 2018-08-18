@@ -37,7 +37,7 @@ export class Headquarter {
   log: Logger
   order: Order
 
-  readonly LEVELS_BELOW_DIVISION = 5
+  readonly LEVELS_BELOW_DIVISION = 1
 
   constructor () {
     this.log = new Logger()

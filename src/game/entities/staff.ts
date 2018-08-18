@@ -172,7 +172,6 @@ export class Staff {
   }
 
   private getReplacement (officer: Officer): Officer {
-    console.log(officer)
     const subunits = officer.unit.subunits
     const officer1 = subunits[0].officer
     const officer2 = subunits[1].officer
