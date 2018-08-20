@@ -60,7 +60,7 @@ const allTraits: Trait[] = [
     type: TraitTypes.base,
   },
   {
-    name: 'Commander',
+    name: 'Warrior',
     intelligence: 2,
     operations: 5,
     communications: 1,

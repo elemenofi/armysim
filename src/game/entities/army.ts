@@ -61,6 +61,7 @@ export class Headquarter {
         officer.tick()
       }
     })
+
     this.staff.setScores()
   }
 

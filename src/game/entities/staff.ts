@@ -139,16 +139,15 @@ export class Staff {
     this.hq.staff.assign(officer, this.hq.army)
   }
 
-  assignPlayer (_lieutenant?: Officer): void {
-    const lieutenant = (_lieutenant) ? _lieutenant : this.active.find((o) => o.rank.tier === 1)
-    lieutenant.isPlayer = true
-    lieutenant.name = store.playerName
-    this.hq.inspected = lieutenant
+  assignPlayer (officer: Officer): void {
+    officer.isPlayer = true
+    officer.name = store.playerName
+    this.hq.inspected = officer
 
     const nameChange$ = new Subject()
     const nameChangeSub = nameChange$
       .subscribe((name: string) => {
-        lieutenant.name = name
+        officer.name = name
         store.playerName = name
         nameChangeSub.unsubscribe()
       })
