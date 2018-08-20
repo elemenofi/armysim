@@ -30,7 +30,6 @@ export interface Chiefs {
   arsenals: Officer,
   doctrine: Officer,
   finance: Officer,
-
 }
 
 export class Staff {
@@ -92,11 +91,11 @@ export class Staff {
     this.replace(officer)
 
     officer.events.push(
-      this.log.retire(),
+      // this.log.retire(),
       // for now i will just always log it as a normal retirement to conceal it from the player
-      // (officer.forcedToRetireBy)
-      //   ? this.log.forcedRetirement(officer.forcedToRetireBy)
-      //   : this.log.retire(),
+      (officer.forcedToRetireBy)
+        ? this.log.forcedRetirement(officer.forcedToRetireBy)
+        : this.log.retire(),
     )
 
     this.checkIfProcer(officer)

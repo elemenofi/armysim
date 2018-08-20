@@ -47,7 +47,7 @@ export class UIMain extends React.Component {
     tomorrow.setDate(tomorrow.getDate() + game.turn)
 
     return <div className='army'>
-        <Draggable {...dragHandlers}>
+        <Draggable handle='strong' {...dragHandlers}>
           <div className='orders'>
             <UIOrder order={game.headquarter.order}/>
           </div>
@@ -126,7 +126,7 @@ export class UIOrder extends React.Component {
         })
 
       body = <div className='order'>
-        <p>{order.date}</p>
+        <strong><h4>ORDER#1 {order.date}</h4></strong>
         <h4>{order.title}</h4>
         <div dangerouslySetInnerHTML={{__html: order.description}}></div>
         <input
