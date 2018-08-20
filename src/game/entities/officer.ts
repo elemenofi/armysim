@@ -48,7 +48,6 @@ export class Officer {
       gender: 'male',
     })} ${this.chance.last()}`
     this.faction = new Faction()
-    this.traits = []
     this.traits = traitsService.getInitialTraits(this)
   }
 
