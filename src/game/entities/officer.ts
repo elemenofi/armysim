@@ -49,6 +49,7 @@ export class Officer {
     })} ${this.chance.last()}`
     this.faction = new Faction()
     this.traits = traitsService.getInitialTraits(this)
+    this.traits = []
   }
 
   tick () {

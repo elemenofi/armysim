@@ -9,12 +9,16 @@ body {
   padding: 16px;
 }
 
-h1, h2 {
+h1, h2, h4 {
   margin-bottom: 16px;
 }
 
 li {
   list-style: none;
+}
+
+p {
+  margin-bottom: 16px;
 }
 
 .officer {
@@ -85,12 +89,16 @@ li {
 .orders {
   position: absolute;
   width: 100%;
+  z-index: 9999;
 }
 
 .order {
   background-color: white;
   margin: 0 auto;
-  width: 256px;
+  width: 612px;
+  height: 612px;
   padding: 32px;
   border: 1px solid black;
+  z-index: 99999;
+  position: absolute;
 }

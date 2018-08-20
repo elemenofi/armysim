@@ -1,9 +1,6 @@
 import { Subject } from 'rxjs/Subject'
-import { UI } from '../ui/ui'
 import { Logger } from './logger'
 import { Officer } from './officer'
-import { Operation } from './operation'
-import { Rank } from './rank'
 import { Staff } from './staff'
 import { Unit } from './unit'
 
@@ -18,13 +15,15 @@ export class Order {
   description: string
   data$: Subject<any>
   value: string
+  date: string
 
-  constructor (title, description, options, data$, value?) {
-    this.title = title
+  constructor (content, options, date, data$, value?) {
+    this.title = content.title
+    this.description = content.description
     this.data$ = data$
-    this.description = description
     this.options = options
     this.value = value
+    this.date = date
   }
 }
 
@@ -46,15 +45,12 @@ export class Headquarter {
     this.army = this.build(9)
 
     const officer = this.staff.recruit(9)
-    this.player = officer
 
     this.inspect(officer)
 
     this.staff.assign(officer, this.army)
 
     this.generateUnitsTree(8, 2, this.army)
-
-    this.staff.assignPlayer(officer)
   }
 
   tick (): void {

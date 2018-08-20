@@ -2,7 +2,6 @@ import { UI } from '../ui/ui'
 import { Headquarter } from './army'
 import { FactionNames } from './faction'
 import { Keyboard } from './keyboard'
-import { Logger } from './logger'
 
 export interface Window {
   game: Game
@@ -39,15 +38,20 @@ export class Game {
   public advance () {
     this.turn++
     this.headquarter.tick()
-    this.ui.render(this)
+    if (this.turn > (20 * 365)) this.ui.render(this)
   }
 
   private tick () {
-    // if (this.turn === 0) {
-    //   for (var i = 0; i < (5*365); i++) {
-    //     this.advance()
-    //   }
-    // }
+    if (this.turn === 0) {
+      // pass a thousand million turns until the general
+      // has done all the steps, because everyone starts fresh
+      // then assign the player as general
+      for (let i = 0; i < (20 * 365); i++) {
+        this.advance()
+      }
+
+      this.headquarter.staff.createPlayerOfficer()
+    }
 
     if (this.status === 'paused') return
 

@@ -1,5 +1,6 @@
 import * as React from 'react'
 import * as ReactDOM from 'react-dom'
+import Draggable from 'react-draggable'
 import { Subject } from 'rxjs/Subject'
 import { Headquarter, Order } from '../entities/army'
 import { Game } from '../entities/game'
@@ -22,14 +23,35 @@ export class UIMain extends React.Component {
     game: Game,
   }
 
+  constructor (props) {
+    super()
+  }
+  // tslint:disable-next-line:ban-types
+  eventLogger = (e: MouseEvent, data: Object) => {
+    console.log('Event: ', e)
+    console.log('Data: ', data)
+  }
+
+  onStart () {
+  }
+
+  onStop () {
+  }
+
   render () {
+    const dragHandlers = {onStart: this.onStart, onStop: this.onStop}
     const game = this.props.game
     const hq = game.headquarter
     const scores = hq.staff.scores
     const tomorrow = new Date()
     tomorrow.setDate(tomorrow.getDate() + game.turn)
+
     return <div className='army'>
-      <UIOrder order={game.headquarter.order}/>
+        <Draggable {...dragHandlers}>
+          <div className='orders'>
+            <UIOrder order={game.headquarter.order}/>
+          </div>
+        </Draggable>
       <h1>
         { tomorrow.toISOString().slice(0, 10) }&nbsp;
         {/* RIGHT WING: {scores.rightFaction} / {scores.rightFactionAmount}&nbsp;
@@ -39,7 +61,6 @@ export class UIMain extends React.Component {
         <UIOfficer officer={hq.player}/>
       </div>
       <div className='officer procer'>
-        <h2>Inspected officer:</h2>
         <UIOfficer officer={hq.inspected}/>
       </div>
       <div className='clear'></div>
@@ -105,8 +126,9 @@ export class UIOrder extends React.Component {
         })
 
       body = <div className='order'>
-        <h2>{order.title}</h2>
-        <p>{order.description}</p>
+        <p>{order.date}</p>
+        <h4>{order.title}</h4>
+        <div dangerouslySetInnerHTML={{__html: order.description}}></div>
         <input
           type='text'
           value={this.state.value}
@@ -119,7 +141,7 @@ export class UIOrder extends React.Component {
       </div>
     }
 
-    return <div className='orders'>
+    return <div>
       {body}
     </div>
   }
@@ -214,7 +236,7 @@ export class UIOfficer extends React.Component {
 
     if (!o) return <div></div>
 
-    if (o.isPlayer) return <div>{o.fullName()}</div>
+    // if (o.isPlayer) return <div>{o.fullName()}</div>
 
     const events: string[] = []
 
@@ -237,30 +259,31 @@ export class UIOfficer extends React.Component {
     return <div>
       <ul className='officerData'>
         <li>{o.fullName()}</li>
+        <li>Senior: {o.isSenior() ? 'Yes' : 'No'}</li>
+        <li>Passed: {o.isPassedForPromotion() ? 'Yes' : 'No'}</li>
+        <li>Faction: {o.faction.type}</li>
+        <li>Experience: {o.experience}</li>
+        <li>Prestige: {o.prestige}</li>
+        <li>Operations: {o.getTotalTraitValue('operations')}</li>
+        <li>Communications: {o.getTotalTraitValue('communications')}</li>
+        <li>Espionage: {o.getTotalTraitValue('intelligence')}</li>
+        <li>Militancy: {o.militancy}</li>
+        <li>Skill: {o.getTotalTraitsValue()}</li>
         <li>-</li>
         <li>{events}</li>
         <li>-</li>
       </ul>
+
       <ul className='officerTraits'>
         {traits}
       </ul>
+
       <div className='clear'></div>
+
+      <div className='operationList'>{operationsRecord}</div>
     </div>
   }
 }
-// this goes in the officer component
-// i want to conceal it for the player for now
-// <div className='operationList'>{operationsRecord}</div>
-// <li>Senior: {o.isSenior() ? 'Yes' : 'No'}</li>
-// <li>Faction: {o.faction.type}</li>
-// <li>Passed for promotion: {o.isPassedForPromotion() ? 'Yes' : 'No'}</li>
-/* <li>Experience: {o.experience}</li>
-<li>Prestige: {o.prestige}</li>
-<li>Operations: {o.getTotalTraitValue('operations')}</li>
-<li>Diplomacy: {o.getTotalTraitValue('communications')}</li>
-<li>Espionage: {o.getTotalTraitValue('intelligence')}</li>
-<li>Militancy: {o.militancy}</li>
-<li>Skill: {o.getTotalTraitsValue()}</li> */
 
 export class UIOperation extends React.Component {
   props: {
@@ -312,12 +335,12 @@ export class UIOperation extends React.Component {
         <li>Started as: {operation.startedAs}</li>
         <li>Against a:  {operation.againstA}</li>
         <li>Target:     {operation.target.fullName()}</li>
-        {/*<li>Because:    {operation.metadata.because}</li>*/}
+        {/* <li>Because:    {operation.metadata.because}</li> */}
       </ul>
       : <div></div>
 
     return <div className='operationItem' onClick={this.inspect}>
-      <div>{operation.started} {operation.name}</div>
+      <div className='operationTitle'>{operation.started} {operation.name}</div>
       {content}
     </div>
   }

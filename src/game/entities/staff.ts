@@ -6,11 +6,11 @@ import { Window } from './game'
 import { Logger } from './logger'
 import { Officer } from './officer'
 import { Operation } from './operation'
+import { orders } from './orders'
 import { Rank } from './rank'
 import { store } from './store'
 import { traitsService } from './traits'
 import { Unit } from './unit'
-
 declare const window: Window
 
 export interface Scores {
@@ -18,6 +18,19 @@ export interface Scores {
   rightFactionAmount: number,
   leftFaction: number,
   leftFactionAmount: number,
+}
+
+export interface Chiefs {
+  personnel: Officer,
+  operations: Officer,
+  investigations: Officer,
+  intelligence: Officer,
+  logistics: Officer,
+  communications: Officer,
+  arsenals: Officer,
+  doctrine: Officer,
+  finance: Officer,
+
 }
 
 export class Staff {
@@ -115,6 +128,17 @@ export class Staff {
     })
   }
 
+  assignChiefs () {
+
+  }
+
+  createPlayerOfficer () {
+    const officer = this.recruit(9)
+    this.hq.player = officer
+    this.hq.staff.assignPlayer(officer)
+    this.hq.staff.assign(officer, this.hq.army)
+  }
+
   assignPlayer (_lieutenant?: Officer): void {
     const lieutenant = (_lieutenant) ? _lieutenant : this.active.find((o) => o.rank.tier === 1)
     lieutenant.isPlayer = true
@@ -126,19 +150,15 @@ export class Staff {
       .subscribe((name: string) => {
         lieutenant.name = name
         store.playerName = name
+        nameChangeSub.unsubscribe()
       })
 
     this.hq.order = new Order(
-      `Good morning Sir.`,
-      `I am your Chieff of Personnel.
-      Congratulations on the promotion. I am looking forward to working with you,
-      I will prepare the documentation for the Secretary of Defense.
-      Please sign with your full name here:`,
+      orders.firstOrder,
       [
         {
-          text: 'Ok',
+          text: 'Sign',
           handler: () => {
-            nameChangeSub.unsubscribe()
             // this might be buggy because when we submit this order
             // there might be a different one in HQ.
             // orders should be a stack. OrderService or so. the one in the hq was there
@@ -147,6 +167,7 @@ export class Staff {
           },
         },
       ],
+      this.log.day(),
       nameChange$,
       store.state.playerName,
     )
