@@ -133,10 +133,9 @@ export class Staff {
   }
 
   createPlayerOfficer () {
-    const officer = this.recruit(9)
+    const officer = this.hq.army.officer
     this.hq.player = officer
     this.hq.staff.assignPlayer(officer)
-    this.hq.staff.assign(officer, this.hq.army)
   }
 
   assignPlayer (officer: Officer): void {
