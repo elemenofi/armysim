@@ -40,6 +40,9 @@ export class Staff {
   hq: Headquarter
   procer: Officer
   scores: Scores
+  chiefs: {
+    personnel: Officer,
+  }
 
   constructor (hq: Headquarter) {
     this.log = new Logger()
@@ -128,30 +131,15 @@ export class Staff {
   }
 
   assignChiefs () {
-
-  }
-
-  createPlayerOfficer () {
-    const officer = this.hq.army.officer
-    this.hq.player = officer
-    this.hq.staff.assignPlayer(officer)
-  }
-
-  assignPlayer (officer: Officer): void {
-    officer.isPlayer = true
-    officer.name = store.playerName
-    this.hq.inspected = officer
-
-    const nameChange$ = new Subject()
-    const nameChangeSub = nameChange$
-      .subscribe((name: string) => {
-        officer.name = name
-        store.playerName = name
-        nameChangeSub.unsubscribe()
+    const newChiefOfPersonnel$ = new Subject()
+    const newChiefOfPersonnelSub = newChiefOfPersonnel$
+      .subscribe((chief: Officer) => {
+        this.chiefs.personnel = chief
+        newChiefOfPersonnelSub.unsubscribe()
       })
 
     this.hq.order = new Order(
-      orders.firstOrder,
+      orders.chief['personnel'],
       [
         {
           text: 'Sign',
@@ -165,9 +153,47 @@ export class Staff {
         },
       ],
       this.log.day(),
-      nameChange$,
-      store.state.playerName,
+      newChiefOfPersonnel$,
     )
+  }
+
+  async createPlayerOfficer () {
+    const officer = this.hq.army.officer
+    this.hq.player = officer
+    this.hq.staff.assignPlayer(officer)
+  }
+
+  assignPlayer (officer: Officer) {
+      officer.isPlayer = true
+      officer.name = store.playerName
+      this.hq.inspected = officer
+
+      const nameChange$ = new Subject()
+      const nameChangeSub = nameChange$
+        .subscribe((name: string) => {
+          officer.name = name
+          store.playerName = name
+          nameChangeSub.unsubscribe()
+        })
+
+      this.hq.order = new Order(
+        orders.firstOrder,
+        [
+          {
+            text: 'Sign',
+            handler: () => {
+              // this might be buggy because when we submit this order
+              // there might be a different one in HQ.
+              // orders should be a stack. OrderService or so. the one in the hq was there
+              this.hq.order = undefined
+              window.game.pause()
+            },
+          },
+        ],
+        this.log.day(),
+        nameChange$,
+        store.state.playerName,
+      )
   }
 
   // replace does a recursion that finds the subordinate
