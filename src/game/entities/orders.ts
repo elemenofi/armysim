@@ -14,13 +14,22 @@ export const orders = {
     ` ,
   },
   chief: {
-    personnel: (reserve: Officer[]) => {
+    personnel: () => {
       return {
         title: 'The Defense Minister wants you to select your cabinet.',
         description: `
         <p>Please choose a Chief of Personnel.</p>
-        <p>The responsabilities of this position include the management of all promotions and retirements. They are in charge of making sure that the army is properly staffed and that all positions have the best officer in command.</p>
-        ${1 + 1}`,
+        <p>The role of this officer is to manage all promotions and retirements.</p>
+        `,
+      }
+    },
+    logistics: () => {
+      return {
+        title: 'The Defense Minister wants you to select your cabinet.',
+        description: `
+        <p>Please choose a Chief of Logistics.</p>
+        <p>The role of this officer is to manage the supply chain.</p>
+        `,
       }
     },
   },

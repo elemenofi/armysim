@@ -42,11 +42,16 @@ export class Staff {
   scores: Scores
   chiefs: {
     personnel: Officer,
+    logistics: Officer,
   }
 
   constructor (hq: Headquarter) {
     this.log = new Logger()
     this.hq = hq
+    this.chiefs = {
+      personnel: undefined,
+      logistics: undefined,
+    }
   }
 
   setScores (): void {
@@ -130,40 +135,52 @@ export class Staff {
     })
   }
 
-  assignChiefs () {
-    const newChiefOfPersonnel$ = new Subject()
-    const newChiefOfPersonnelSub = newChiefOfPersonnel$
-      .subscribe((chief: Officer) => {
-        this.chiefs.personnel = chief
-        newChiefOfPersonnelSub.unsubscribe()
-      })
+  closeOrder (sub) {
+    this.hq.order = undefined
+    sub.unsubscribe()
+  }
 
-    this.hq.order = new Order(
-      orders.chief['personnel'],
-      [
-        {
-          text: 'Sign',
-          handler: () => {
-            // this might be buggy because when we submit this order
-            // there might be a different one in HQ.
-            // orders should be a stack. OrderService or so. the one in the hq was there
-            this.hq.order = undefined
-            window.game.pause()
+  assignChiefs (chiefPosition: string) {
+    return new Promise((res, rej) => {
+      const officer$ = new Subject()
+      const officerSub = officer$
+        .subscribe((officer: Officer) => {
+          res(officer)
+          this.chiefs[chiefPosition] = officer
+          this.closeOrder(officerSub)
+        })
+
+      this.hq.order = new Order(
+        orders.chief[chiefPosition](),
+        [
+          {
+            text: 'Sign',
+            handler: () => {
+              // this might be buggy because when we submit this order
+              // there might be a different one in HQ.
+              // orders should be a stack. OrderService or so. the one in the hq was there
+              this.closeOrder(officerSub)
+            },
           },
-        },
-      ],
-      this.log.day(),
-      newChiefOfPersonnel$,
-    )
+        ],
+        this.log.day(),
+        officer$,
+        2,
+        this.reserve.filter((o) => o.rank.tier > 7),
+      )
+    })
   }
 
   async createPlayerOfficer () {
     const officer = this.hq.army.officer
     this.hq.player = officer
-    this.hq.staff.assignPlayer(officer)
+    await this.assignPlayer(officer)
+    await this.assignChiefs('personnel')
+    await this.assignChiefs('logistics')
   }
 
   assignPlayer (officer: Officer) {
+    return new Promise ((res, rej) => {
       officer.isPlayer = true
       officer.name = store.playerName
       this.hq.inspected = officer
@@ -173,7 +190,7 @@ export class Staff {
         .subscribe((name: string) => {
           officer.name = name
           store.playerName = name
-          nameChangeSub.unsubscribe()
+          res(name)
         })
 
       this.hq.order = new Order(
@@ -185,15 +202,17 @@ export class Staff {
               // this might be buggy because when we submit this order
               // there might be a different one in HQ.
               // orders should be a stack. OrderService or so. the one in the hq was there
-              this.hq.order = undefined
+              this.closeOrder(nameChangeSub)
               window.game.pause()
             },
           },
         ],
         this.log.day(),
         nameChange$,
+        1,
         store.state.playerName,
       )
+    })
   }
 
   // replace does a recursion that finds the subordinate

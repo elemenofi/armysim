@@ -96,7 +96,7 @@ p {
   background-color: white;
   margin: 0 auto;
   width: 612px;
-  height: 612px;
+  height: auto;
   padding: 32px;
   border: 1px solid black;
   z-index: 99999;

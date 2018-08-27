@@ -42,7 +42,7 @@ export class Game {
     if (this.turn > (20 * 365)) this.ui.render(this)
   }
 
-  private tick () {
+  private async tick () {
     if (this.turn === 0) {
       console.log('[debug] Turn 0')
       // pass a thousand million turns until the general
@@ -55,6 +55,7 @@ export class Game {
 
       this.headquarter.staff.createPlayerOfficer()
       // this.headquarter.staff.assignChiefs()
+      // this.headquarter.staff.createPlayerOfficer()
     }
 
     if (this.status === 'paused') return

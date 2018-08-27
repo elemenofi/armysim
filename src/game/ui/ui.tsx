@@ -45,6 +45,17 @@ export class UIMain extends React.Component {
     const scores = hq.staff.scores
     const tomorrow = new Date()
     tomorrow.setDate(tomorrow.getDate() + game.turn)
+    const chiefs = []
+    const chiefsPanel = <div>
+      <ul>
+        {chiefs}
+      </ul>
+    </div>
+    Object.keys(hq.staff.chiefs).forEach((chief) => {
+      if (hq.staff.chiefs[chief]) {
+        chiefs.push(<li>{hq.staff.chiefs[chief].fullName()}</li>)
+      }
+    })
 
     return <div className='army'>
         <Draggable handle='strong' {...dragHandlers}>
@@ -61,6 +72,7 @@ export class UIMain extends React.Component {
         <UIOfficer officer={hq.player}/>
       </div>
       <div className='officer procer'>
+        {chiefsPanel}
         <UIOfficer officer={hq.inspected}/>
       </div>
       <div className='clear'></div>
@@ -99,13 +111,15 @@ export class UIOrder extends React.Component {
   }
 
   onSubmit (handle) {
-    this.props.order.data$.next(this.state.value)
+    if (this.props.order.orderNumber === 1) this.props.order.data$.next(this.state.value)
     handle()
   }
 
   render () {
     const order = this.props.order
     let body = <div></div>
+    let inputBox = <div></div>
+    let officerList = <div></div>
     const options = []
 
     if (order) {
@@ -125,18 +139,26 @@ export class UIOrder extends React.Component {
           )
         })
 
+      if (order.orderNumber === 1) {
+        inputBox = <input type='text' value={this.state.value} onChange= {this.handleChange.bind(this)}></input>
+      }
+
+      if (order.orderNumber === 2) {
+        officerList = []
+        this.props.order.value.forEach((o: Officer) => {
+          officerList.push(<UIClickableOfficer officer={o} promise={this.props.order.data$}/>)
+        })
+      }
+
       body = <div className='order'>
         <strong><h4>ORDER#1 {order.date}</h4></strong>
         <h4>{order.title}</h4>
         <div dangerouslySetInnerHTML={{__html: order.description}}></div>
-        <input
-          type='text'
-          value={this.state.value}
-          onChange={this.handleChange.bind(this)}
-        >
-        </input>
         <ul>
           {options}
+        </ul>
+        <ul>
+          {officerList}
         </ul>
       </div>
     }
@@ -144,6 +166,23 @@ export class UIOrder extends React.Component {
     return <div>
       {body}
     </div>
+  }
+}
+
+export class UIClickableOfficer extends React.Component {
+  props: {
+    officer: Officer
+    destination: string,
+    promise: Subject<Officer>,
+  }
+  constructor (props) {
+    super(props)
+  }
+  select () {
+    this.props.promise.next(this.props.officer)
+  }
+  render () {
+    return <div onClick={this.select.bind(this)}>{this.props.officer.fullName()}</div>
   }
 }
 

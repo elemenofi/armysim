@@ -14,15 +14,17 @@ export class Order {
   title: string
   description: string
   data$: Subject<any>
-  value: string
+  value: any
   date: string
+  orderNumber: number
 
-  constructor (content, options, date, data$, value?) {
+  constructor (content, options, date, data$, orderNumber, value?) {
     this.title = content.title
     this.description = content.description
     this.data$ = data$
     this.options = options
     this.value = value
+    this.orderNumber = orderNumber
     this.date = date
   }
 }
