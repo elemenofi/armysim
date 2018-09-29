@@ -26,7 +26,7 @@ export class UIMain extends React.Component {
   constructor (props) {
     super()
   }
-  // tslint:disable-next-line:ban-types
+
   eventLogger = (e: MouseEvent, data: Object) => {
     console.log('Event: ', e)
     console.log('Data: ', data)

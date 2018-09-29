@@ -54,8 +54,6 @@ export class Game {
       }
 
       this.headquarter.staff.createPlayerOfficer()
-      // this.headquarter.staff.assignChiefs()
-      // this.headquarter.staff.createPlayerOfficer()
     }
 
     if (this.status === 'paused') return
