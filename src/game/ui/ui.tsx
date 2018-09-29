@@ -44,7 +44,7 @@ export class UIMain extends React.Component {
     const hq = game.headquarter
     const scores = hq.staff.scores
     const tomorrow = new Date()
-    tomorrow.setDate(tomorrow.getDate() + game.turn)
+    tomorrow.setDate(tomorrow.getDate() + hq.turn)
     const chiefs = []
     const chiefsPanel = <div>
       <ul>

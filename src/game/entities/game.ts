@@ -15,7 +15,6 @@ export class Game {
   ui: UI
   headquarter: Headquarter
   keyboard: Keyboard
-  turn = 0
   status = 'playing'
 
   constructor () {
@@ -37,13 +36,12 @@ export class Game {
   }
 
   public advance () {
-    this.turn++
     this.headquarter.tick()
-    if (this.turn > (20 * 365)) this.ui.render(this)
+    if (this.headquarter.turn > (20 * 365)) this.ui.render(this)
   }
 
   private async tick () {
-    if (this.turn === 0) {
+    if (this.headquarter.turn === 0) {
       console.log('[debug] Turn 0')
       // pass a thousand million turns until the general
       // has done all the steps, because everyone starts fresh

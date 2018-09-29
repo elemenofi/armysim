@@ -46,7 +46,7 @@ export class Staff {
   }
 
   constructor (hq: Headquarter) {
-    this.log = new Logger()
+    this.log = new Logger(hq)
     this.hq = hq
     this.chiefs = {
       personnel: undefined,

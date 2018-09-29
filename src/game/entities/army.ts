@@ -38,11 +38,12 @@ export class Headquarter {
   log: Logger
   order: Order
   player: Officer
+  turn = 0
 
   readonly LEVELS_BELOW_DIVISION = 1
 
   constructor () {
-    this.log = new Logger()
+    this.log = new Logger(this)
     this.staff = new Staff(this)
     this.army = this.build(9)
 
@@ -56,6 +57,8 @@ export class Headquarter {
   }
 
   tick (): void {
+    this.turn++
+
     this.staff.active.forEach((officer) => {
       if (officer.shouldRetire()) {
         this.staff.retire(officer)
