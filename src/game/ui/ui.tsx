@@ -151,9 +151,12 @@ export class UIOrder extends React.Component {
       }
 
       body = <div className='order'>
-        <strong><h4>ORDER#1 {order.date}</h4></strong>
+        <strong><h4>ORDER#{order.orderNumber} {order.date}</h4></strong>
         <h4>{order.title}</h4>
         <div dangerouslySetInnerHTML={{__html: order.description}}></div>
+        <div>
+          {inputBox}
+        </div>
         <ul>
           {options}
         </ul>
