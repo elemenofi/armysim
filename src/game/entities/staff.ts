@@ -1,15 +1,12 @@
-import { debounce, debounceTime, take } from 'rxjs/operators'
-import { Subject } from 'rxjs/Subject'
 import { Headquarter, Order } from './army'
 import { FactionNames } from './faction'
 import { Window } from './game'
 import { Logger } from './logger'
 import { Officer } from './officer'
 import { Operation } from './operation'
-import { orders, CommandAndControl } from './orders'
+import { CommandAndControl } from './orders'
 import { Rank } from './rank'
 import { Unit } from './unit'
-declare const window: Window
 
 export interface Scores {
   rightFaction: number,

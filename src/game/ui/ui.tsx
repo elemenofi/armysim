@@ -42,7 +42,6 @@ export class UIMain extends React.Component {
     const dragHandlers = {onStart: this.onStart, onStop: this.onStop}
     const game = this.props.game
     const hq = game.headquarter
-    const scores = hq.staff.scores
     const tomorrow = new Date()
     tomorrow.setDate(tomorrow.getDate() + hq.turn)
     const chiefs = []
@@ -60,7 +59,7 @@ export class UIMain extends React.Component {
     return <div className='army'>
         <Draggable handle='strong' {...dragHandlers}>
           <div className='orders'>
-            <UIOrder order={game.headquarter.order}/>
+            <UIOrder order={game.headquarter.cnc.visibleOrder}/>
           </div>
         </Draggable>
       <h1>
@@ -80,95 +79,6 @@ export class UIMain extends React.Component {
       <div className='units'>
         <UIUnit hq={hq} unit={hq.army} game={game}/>
       </div>
-    </div>
-  }
-}
-
-export class UIOrder extends React.Component {
-  props: {
-    order: Order,
-  }
-
-  state: {
-    value: string,
-  }
-
-  nameInput
-
-  constructor (props) {
-    super()
-  }
-
-  componentWillMount () {
-    super.setState({value: this.props.order.value })
-  }
-
-  componentDidMount () {
-    this.nameInput.focus()
-  }
-
-  handleChange (event) {
-    super.setState({value: event.target.value})
-  }
-
-  onSubmit (handle) {
-    if (this.props.order.orderNumber === 1) this.props.order.data$.next(this.state.value)
-    handle()
-  }
-
-  render () {
-    const order = this.props.order
-    let body = <div></div>
-    let inputBox = <div></div>
-    let officerList = <div></div>
-    const options = []
-
-    if (order) {
-      this.props
-        .order
-        .options
-        .forEach((o) => {
-          options.push(
-            <li key={o.text}>
-              <button
-                onClick={this.onSubmit.bind(this, o.handler)}
-                ref={(input) => { this.nameInput = input }}
-              >
-                {o.text}
-              </button>
-            </li>,
-          )
-        })
-
-      if (order.orderNumber === 1) {
-        inputBox = <input type='text' value={this.state.value} onChange= {this.handleChange.bind(this)}></input>
-      }
-
-      if (order.orderNumber === 2) {
-        officerList = []
-        this.props.order.value.forEach((o: Officer) => {
-          officerList.push(<UIClickableOfficer key={o.name} officer={o} promise={this.props.order.data$}/>)
-        })
-      }
-
-      body = <div className='order'>
-        <strong><h4>ORDER#{order.orderNumber} {order.date}</h4></strong>
-        <h4>{order.title}</h4>
-        <div dangerouslySetInnerHTML={{__html: order.description}}></div>
-        <div>
-          {inputBox}
-        </div>
-        <ul>
-          {options}
-        </ul>
-        <ul>
-          {officerList}
-        </ul>
-      </div>
-    }
-
-    return <div>
-      {body}
     </div>
   }
 }

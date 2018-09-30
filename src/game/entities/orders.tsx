@@ -4,9 +4,10 @@ import { store } from './store'
 import { Subject } from 'rxjs/Subject'
 import { Logger } from './logger';
 import { Window } from './game'
+import * as React from 'react'
+import { UIClickableOfficer } from '../ui/ui';
 declare const window: Window
 
-// tslint:disable:max-line-length
 export const orders = {
   firstOrder: {
     title: `You have been promoted to Commander in Chief of the National Army:`,
@@ -41,11 +42,10 @@ export const orders = {
   },
 }
 
-
-
 export class CommandAndControl {
   hq: Headquarter
   log: Logger
+  visibleOrder: Order
 
   constructor (hq: Headquarter) {
     this.hq = hq
@@ -53,7 +53,7 @@ export class CommandAndControl {
   }
 
   closeOrder (sub) {
-    this.hq.order = undefined
+    this.visibleOrder = undefined
     sub.unsubscribe()
   }
 
@@ -61,48 +61,12 @@ export class CommandAndControl {
     const officer = this.hq.army.officer
     this.hq.player = officer
     await this.assignPlayer(officer)
-    await this.assignChiefs('personnel')
-    await this.assignChiefs('logistics')
-  }
-
-  assignChiefs (chiefPosition: string) {
-    return new Promise((res, rej) => {
-      const officer$ = new Subject()
-      const officerSub = officer$
-        .subscribe((officer: Officer) => {
-          res(officer)
-          // coupled to staff.chiefs
-          this.hq.staff.chiefs[chiefPosition] = officer
-          this.closeOrder(officerSub)
-        })
-
-      this.hq.order = new Order(
-        orders.chief[chiefPosition](),
-        [
-          {
-            text: 'Sign',
-            handler: () => {
-              // this might be buggy because when we submit this order
-              // there might be a different one in HQ.
-              // orders should be a stack. OrderService or so. the one in the hq was there
-              this.closeOrder(officerSub)
-              window.game.advance()
-            },
-          },
-        ],
-        this.log.day(),
-        officer$,
-        2,
-        this.hq.staff.reserve.filter((o) => o.rank.tier > 7),
-      )
-    })
   }
 
   assignPlayer (officer: Officer) {
     return new Promise ((res, rej) => {
       officer.isPlayer = true
       officer.name = store.playerName
-      this.hq.inspected = officer
 
       const nameChange$ = new Subject()
       const nameChangeSub = nameChange$
@@ -112,7 +76,7 @@ export class CommandAndControl {
           res(name)
         })
 
-      this.hq.order = new Order(
+      this.visibleOrder = new Order(
         orders.firstOrder,
         [
           {
@@ -122,6 +86,7 @@ export class CommandAndControl {
               // there might be a different one in HQ.
               // orders should be a stack. OrderService or so. the one in the hq was there
               this.closeOrder(nameChangeSub)
+              window.game.advance()
             },
           },
         ],
@@ -131,5 +96,94 @@ export class CommandAndControl {
         store.state.playerName,
       )
     })
+  }
+}
+
+export class UIOrder extends React.Component {
+  props: {
+    order: Order,
+  }
+
+  state: {
+    value: string,
+  }
+
+  nameInput
+
+  constructor (props) {
+    super()
+  }
+
+  componentWillMount () {
+    super.setState({value: this.props.order.value })
+  }
+
+  componentDidMount () {
+    this.nameInput.focus()
+  }
+
+  handleChange (event) {
+    super.setState({value: event.target.value})
+  }
+
+  onSubmit (handle) {
+    if (this.props.order.orderNumber === 1) this.props.order.data$.next(this.state.value)
+    handle()
+  }
+
+  render () {
+    const order = this.props.order
+    let body = <div></div>
+    let inputBox = <div></div>
+    let officerList = <div></div>
+    const options = []
+
+    if (order) {
+      this.props
+        .order
+        .options
+        .forEach((o) => {
+          options.push(
+            <li key={o.text}>
+              <button
+                onClick={this.onSubmit.bind(this, o.handler)}
+                ref={(input) => { this.nameInput = input }}
+              >
+                {o.text}
+              </button>
+            </li>,
+          )
+        })
+
+      if (order.orderNumber === 1) {
+        inputBox = <input type='text' value={this.state.value} onChange= {this.handleChange.bind(this)}></input>
+      }
+
+      if (order.orderNumber === 2) {
+        officerList = []
+        this.props.order.value.forEach((o: Officer) => {
+          officerList.push(<UIClickableOfficer key={o.name} officer={o} promise={this.props.order.data$}/>)
+        })
+      }
+
+      body = <div className='order'>
+        <strong><h4>ORDER#{order.orderNumber} {order.date}</h4></strong>
+        <h4>{order.title}</h4>
+        <div dangerouslySetInnerHTML={{__html: order.description}}></div>
+        <div>
+          {inputBox}
+        </div>
+        <ul>
+          {options}
+        </ul>
+        <ul>
+          {officerList}
+        </ul>
+      </div>
+    }
+
+    return <div>
+      {body}
+    </div>
   }
 }
