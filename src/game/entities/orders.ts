@@ -3,7 +3,8 @@ import { Headquarter, Order } from './army';
 import { store } from './store'
 import { Subject } from 'rxjs/Subject'
 import { Logger } from './logger';
-
+import { Window } from './game'
+declare const window: Window
 
 // tslint:disable:max-line-length
 export const orders = {
@@ -40,7 +41,7 @@ export const orders = {
   },
 }
 
-declare const window: Window
+
 
 export class CommandAndControl {
   hq: Headquarter
@@ -85,6 +86,7 @@ export class CommandAndControl {
               // there might be a different one in HQ.
               // orders should be a stack. OrderService or so. the one in the hq was there
               this.closeOrder(officerSub)
+              window.game.advance()
             },
           },
         ],
@@ -120,8 +122,6 @@ export class CommandAndControl {
               // there might be a different one in HQ.
               // orders should be a stack. OrderService or so. the one in the hq was there
               this.closeOrder(nameChangeSub)
-              // ???? QPWQW)Q*W)*QW)*WQ)*QW!(&@(!@^(!(@))))
-              window['game'].pause()
             },
           },
         ],
