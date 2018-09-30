@@ -3,6 +3,7 @@ import { Logger } from './logger'
 import { Officer } from './officer'
 import { Staff } from './staff'
 import { Unit } from './unit'
+import { CommandAndControl } from './orders';
 
 export interface OrderOption {
   text: string
@@ -39,12 +40,14 @@ export class Headquarter {
   order: Order
   player: Officer
   turn = 0
+  cnc: CommandAndControl
 
   readonly LEVELS_BELOW_DIVISION = 1
 
   constructor () {
     this.log = new Logger(this)
-    this.staff = new Staff(this)
+    this.cnc = new CommandAndControl(this)
+    this.staff = new Staff(this, this.cnc)
     this.army = this.build(9)
 
     const officer = this.staff.recruit(9)

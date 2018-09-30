@@ -49,7 +49,7 @@ export class Game {
         this.advance()
       }
 
-      this.headquarter.staff.createPlayerOfficer()
+      this.headquarter.cnc.createPlayerOfficer()
     }
 
     if (this.status === 'paused') return
