@@ -106,7 +106,7 @@ export class Staff {
         : this.log.retire(),
     )
 
-    this.checkIfProcer(officer)
+    this.isProcer(officer)
 
     return officer
   }
@@ -253,9 +253,8 @@ export class Staff {
     return officer
   }
 
-  private checkIfProcer (officer: Officer): Officer {
-    if (!this.procer) this.procer = officer
-    if (officer.prestige > this.procer.prestige) this.procer = officer
+  private isProcer (officer: Officer): Officer {
+    if (!this.procer || officer.prestige > this.procer.prestige) this.procer = officer
     return this.procer
   }
 }
