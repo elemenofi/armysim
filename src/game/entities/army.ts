@@ -1,34 +1,8 @@
-import { Subject } from 'rxjs/Subject'
 import { Logger } from './logger'
 import { Officer } from './officer'
 import { Staff } from './staff'
 import { Unit } from './unit'
 import { CommandAndControl } from './orders';
-
-export interface OrderOption {
-  text: string
-  handler: () => void
-}
-
-export class Order {
-  options: OrderOption[]
-  title: string
-  description: string
-  data$: Subject<any>
-  value: any
-  date: string
-  orderNumber: number
-
-  constructor (content, options, date, data$, orderNumber, value?) {
-    this.title = content.title
-    this.description = content.description
-    this.data$ = data$
-    this.options = options
-    this.value = value
-    this.orderNumber = orderNumber
-    this.date = date
-  }
-}
 
 export class Headquarter {
   UNITID = 0
@@ -37,7 +11,6 @@ export class Headquarter {
   staff: Staff
   inspected: Officer
   log: Logger
-  order: Order
   player: Officer
   turn = 0
   cnc: CommandAndControl

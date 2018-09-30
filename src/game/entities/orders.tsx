@@ -1,5 +1,5 @@
 import { Officer } from './officer'
-import { Headquarter, Order } from './army';
+import { Headquarter } from './army';
 import { store } from './store'
 import { Subject } from 'rxjs/Subject'
 import { Logger } from './logger';
@@ -20,26 +20,31 @@ export const orders = {
       Minister of Defence</p>
     ` ,
   },
-  chief: {
-    personnel: () => {
-      return {
-        title: 'The Defense Minister wants you to select your cabinet.',
-        description: `
-        <p>Please choose a Chief of Personnel.</p>
-        <p>The role of this officer is to manage all promotions and retirements.</p>
-        `,
-      }
-    },
-    logistics: () => {
-      return {
-        title: 'The Defense Minister wants you to select your cabinet.',
-        description: `
-        <p>Please choose a Chief of Logistics.</p>
-        <p>The role of this officer is to manage the supply chain.</p>
-        `,
-      }
-    },
-  },
+}
+
+export interface OrderOption {
+  text: string
+  handler: () => void
+}
+
+export class Order {
+  options: OrderOption[]
+  title: string
+  description: string
+  data$: Subject<any>
+  value: any
+  date: string
+  orderNumber: number
+
+  constructor (content, options, date, data$, orderNumber, value?) {
+    this.title = content.title
+    this.description = content.description
+    this.data$ = data$
+    this.options = options
+    this.value = value
+    this.orderNumber = orderNumber
+    this.date = date
+  }
 }
 
 export class CommandAndControl {
@@ -76,8 +81,10 @@ export class CommandAndControl {
           res(name)
         })
 
+      const orderIdentifier = 'firstOrder'
+
       this.visibleOrder = new Order(
-        orders.firstOrder,
+        orders[orderIdentifier],
         [
           {
             text: 'Sign',
@@ -91,8 +98,8 @@ export class CommandAndControl {
           },
         ],
         this.log.day(),
+        orderIdentifier,
         nameChange$,
-        1,
         store.state.playerName,
       )
     })
@@ -108,80 +115,12 @@ export class UIOrder extends React.Component {
     value: string,
   }
 
-  nameInput
-
   constructor (props) {
     super()
   }
 
-  componentWillMount () {
-    super.setState({value: this.props.order.value })
-  }
-
-  componentDidMount () {
-    this.nameInput.focus()
-  }
-
-  handleChange (event) {
-    super.setState({value: event.target.value})
-  }
-
-  onSubmit (handle) {
-    if (this.props.order.orderNumber === 1) this.props.order.data$.next(this.state.value)
-    handle()
-  }
-
   render () {
-    const order = this.props.order
-    let body = <div></div>
-    let inputBox = <div></div>
-    let officerList = <div></div>
-    const options = []
-
-    if (order) {
-      this.props
-        .order
-        .options
-        .forEach((o) => {
-          options.push(
-            <li key={o.text}>
-              <button
-                onClick={this.onSubmit.bind(this, o.handler)}
-                ref={(input) => { this.nameInput = input }}
-              >
-                {o.text}
-              </button>
-            </li>,
-          )
-        })
-
-      if (order.orderNumber === 1) {
-        inputBox = <input type='text' value={this.state.value} onChange= {this.handleChange.bind(this)}></input>
-      }
-
-      if (order.orderNumber === 2) {
-        officerList = []
-        this.props.order.value.forEach((o: Officer) => {
-          officerList.push(<UIClickableOfficer key={o.name} officer={o} promise={this.props.order.data$}/>)
-        })
-      }
-
-      body = <div className='order'>
-        <strong><h4>ORDER#{order.orderNumber} {order.date}</h4></strong>
-        <h4>{order.title}</h4>
-        <div dangerouslySetInnerHTML={{__html: order.description}}></div>
-        <div>
-          {inputBox}
-        </div>
-        <ul>
-          {options}
-        </ul>
-        <ul>
-          {officerList}
-        </ul>
-      </div>
-    }
-
+    const body = <div></div>
     return <div>
       {body}
     </div>
