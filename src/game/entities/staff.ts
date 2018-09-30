@@ -5,11 +5,12 @@ import { FactionNames } from './faction'
 import { Window } from './game'
 import { Logger } from './logger'
 import { Officer } from './officer'
+import { Operation } from './operation'
+import { orders } from './orders'
 import { Rank } from './rank'
 import { store } from './store'
 import { traitsService } from './traits'
 import { Unit } from './unit'
-
 declare const window: Window
 
 export interface Scores {
@@ -17,6 +18,18 @@ export interface Scores {
   rightFactionAmount: number,
   leftFaction: number,
   leftFactionAmount: number,
+}
+
+export interface Chiefs {
+  personnel: Officer,
+  operations: Officer,
+  investigations: Officer,
+  intelligence: Officer,
+  logistics: Officer,
+  communications: Officer,
+  arsenals: Officer,
+  doctrine: Officer,
+  finance: Officer,
 }
 
 export class Staff {
@@ -27,10 +40,18 @@ export class Staff {
   hq: Headquarter
   procer: Officer
   scores: Scores
+  chiefs: {
+    personnel: Officer,
+    logistics: Officer,
+  }
 
   constructor (hq: Headquarter) {
-    this.log = new Logger()
+    this.log = new Logger(hq)
     this.hq = hq
+    this.chiefs = {
+      personnel: undefined,
+      logistics: undefined,
+    }
   }
 
   setScores (): void {
@@ -78,6 +99,8 @@ export class Staff {
     this.replace(officer)
 
     officer.events.push(
+      // this.log.retire(),
+      // for now i will just always log it as a normal retirement to conceal it from the player
       (officer.forcedToRetireBy)
         ? this.log.forcedRetirement(officer.forcedToRetireBy)
         : this.log.retire(),
@@ -103,41 +126,93 @@ export class Staff {
     return officer
   }
 
-  coup (side: FactionNames): void {
+  coup (operation: Operation): void {
     this.active.forEach((o) => {
-      if (!o.resistsCoup(side)) this.retire(o)
+      if (!o.resistsCoup(operation.officer.faction.type)) {
+        o.forcedToRetireBy = operation
+        this.retire(o)
+      }
     })
   }
 
-  assignPlayer (): void {
-    const lieutenant = this.active.find((o) => o.rank.tier === 1)
-    lieutenant.isPlayer = true
-    lieutenant.name = store.playerName
-    this.hq.inspected = lieutenant
+  closeOrder (sub) {
+    this.hq.order = undefined
+    sub.unsubscribe()
+  }
 
-    const nameChange$ = new Subject()
-    const nameChangeSub = nameChange$
-      .subscribe((name: string) => {
-        lieutenant.name = name
-        store.playerName = name
-      })
+  assignChiefs (chiefPosition: string) {
+    return new Promise((res, rej) => {
+      const officer$ = new Subject()
+      const officerSub = officer$
+        .subscribe((officer: Officer) => {
+          res(officer)
+          this.chiefs[chiefPosition] = officer
+          this.closeOrder(officerSub)
+        })
 
-    this.hq.order = new Order(
-      'New game',
-      'Name and surname',
-      [
-        {
-          text: 'Ok',
-          handler: () => {
-            nameChangeSub.unsubscribe()
-            this.hq.order = undefined
-            window.game.pause()
+      this.hq.order = new Order(
+        orders.chief[chiefPosition](),
+        [
+          {
+            text: 'Sign',
+            handler: () => {
+              // this might be buggy because when we submit this order
+              // there might be a different one in HQ.
+              // orders should be a stack. OrderService or so. the one in the hq was there
+              this.closeOrder(officerSub)
+            },
           },
-        },
-      ],
-      nameChange$,
-      store.state.playerName,
-    )
+        ],
+        this.log.day(),
+        officer$,
+        2,
+        this.reserve.filter((o) => o.rank.tier > 7),
+      )
+    })
+  }
+
+  async createPlayerOfficer () {
+    const officer = this.hq.army.officer
+    this.hq.player = officer
+    await this.assignPlayer(officer)
+    await this.assignChiefs('personnel')
+    await this.assignChiefs('logistics')
+  }
+
+  assignPlayer (officer: Officer) {
+    return new Promise ((res, rej) => {
+      officer.isPlayer = true
+      officer.name = store.playerName
+      this.hq.inspected = officer
+
+      const nameChange$ = new Subject()
+      const nameChangeSub = nameChange$
+        .subscribe((name: string) => {
+          officer.name = name
+          store.playerName = name
+          res(name)
+        })
+
+      this.hq.order = new Order(
+        orders.firstOrder,
+        [
+          {
+            text: 'Sign',
+            handler: () => {
+              // this might be buggy because when we submit this order
+              // there might be a different one in HQ.
+              // orders should be a stack. OrderService or so. the one in the hq was there
+              this.closeOrder(nameChangeSub)
+              window.game.pause()
+            },
+          },
+        ],
+        this.log.day(),
+        nameChange$,
+        1,
+        store.state.playerName,
+      )
+    })
   }
 
   // replace does a recursion that finds the subordinate
@@ -150,8 +225,8 @@ export class Staff {
   private replace (officer: Officer): Officer {
     let replacement: Officer
 
-    if (officer.rank.tier === 1) {
-      replacement = this.recruit(1)
+    if (officer.rank.tier === this.hq.LEVELS_BELOW_DIVISION) {
+      replacement = this.recruit(this.hq.LEVELS_BELOW_DIVISION)
     } else {
       replacement = this.getReplacement(officer)
 

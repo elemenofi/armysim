@@ -1,5 +1,6 @@
 import * as React from 'react'
 import * as ReactDOM from 'react-dom'
+import Draggable from 'react-draggable'
 import { Subject } from 'rxjs/Subject'
 import { Headquarter, Order } from '../entities/army'
 import { Game } from '../entities/game'
@@ -22,26 +23,57 @@ export class UIMain extends React.Component {
     game: Game,
   }
 
+  constructor (props) {
+    super()
+  }
+
+  eventLogger = (e: MouseEvent, data: Object) => {
+    console.log('Event: ', e)
+    console.log('Data: ', data)
+  }
+
+  onStart () {
+  }
+
+  onStop () {
+  }
+
   render () {
+    const dragHandlers = {onStart: this.onStart, onStop: this.onStop}
     const game = this.props.game
     const hq = game.headquarter
     const scores = hq.staff.scores
     const tomorrow = new Date()
-    tomorrow.setDate(tomorrow.getDate() + game.turn)
+    tomorrow.setDate(tomorrow.getDate() + hq.turn)
+    const chiefs = []
+    const chiefsPanel = <div>
+      <ul>
+        {chiefs}
+      </ul>
+    </div>
+    Object.keys(hq.staff.chiefs).forEach((chief) => {
+      if (hq.staff.chiefs[chief]) {
+        chiefs.push(<li>{hq.staff.chiefs[chief].fullName()}</li>)
+      }
+    })
+
     return <div className='army'>
-      <UIOrder order={game.headquarter.order}/>
+        <Draggable handle='strong' {...dragHandlers}>
+          <div className='orders'>
+            <UIOrder order={game.headquarter.order}/>
+          </div>
+        </Draggable>
       <h1>
         { tomorrow.toISOString().slice(0, 10) }&nbsp;
-        RIGHT WING: {scores.rightFaction} / {scores.rightFactionAmount}&nbsp;
-        LEFT WING: {scores.leftFaction} / {scores.leftFactionAmount}
+        {/* RIGHT WING: {scores.rightFaction} / {scores.rightFactionAmount}&nbsp;
+        LEFT WING: {scores.leftFaction} / {scores.leftFactionAmount} */}
       </h1>
       <div className='officer'>
-        <h2>Inspected officer:</h2>
-        <UIOfficer officer={hq.inspected}/>
+        <UIOfficer officer={hq.player}/>
       </div>
       <div className='officer procer'>
-        <h2>Most highly decorated:</h2>
-        <UIOfficer officer={hq.staff.procer}/>
+        {chiefsPanel}
+        <UIOfficer officer={hq.inspected}/>
       </div>
       <div className='clear'></div>
       <div className='units'>
@@ -79,13 +111,15 @@ export class UIOrder extends React.Component {
   }
 
   onSubmit (handle) {
-    this.props.order.data$.next(this.state.value)
+    if (this.props.order.orderNumber === 1) this.props.order.data$.next(this.state.value)
     handle()
   }
 
   render () {
     const order = this.props.order
     let body = <div></div>
+    let inputBox = <div></div>
+    let officerList = <div></div>
     const options = []
 
     if (order) {
@@ -94,7 +128,7 @@ export class UIOrder extends React.Component {
         .options
         .forEach((o) => {
           options.push(
-            <li>
+            <li key={o.text}>
               <button
                 onClick={this.onSubmit.bind(this, o.handler)}
                 ref={(input) => { this.nameInput = input }}
@@ -105,30 +139,65 @@ export class UIOrder extends React.Component {
           )
         })
 
+      if (order.orderNumber === 1) {
+        inputBox = <input type='text' value={this.state.value} onChange= {this.handleChange.bind(this)}></input>
+      }
+
+      if (order.orderNumber === 2) {
+        officerList = []
+        this.props.order.value.forEach((o: Officer) => {
+          officerList.push(<UIClickableOfficer officer={o} promise={this.props.order.data$}/>)
+        })
+      }
+
       body = <div className='order'>
-        <h2>{order.title}</h2>
-        <p>{order.description}</p>
-        <input
-          type='text'
-          value={this.state.value}
-          onChange={this.handleChange.bind(this)}
-        >
-        </input>
+        <strong><h4>ORDER#{order.orderNumber} {order.date}</h4></strong>
+        <h4>{order.title}</h4>
+        <div dangerouslySetInnerHTML={{__html: order.description}}></div>
+        <div>
+          {inputBox}
+        </div>
         <ul>
           {options}
+        </ul>
+        <ul>
+          {officerList}
         </ul>
       </div>
     }
 
-    return <div className='orders'>
+    return <div>
       {body}
     </div>
   }
 }
 
+export class UIClickableOfficer extends React.Component {
+  props: {
+    officer: Officer
+    destination: string,
+    promise: Subject<Officer>,
+  }
+  constructor (props) {
+    super(props)
+  }
+  select () {
+    this.props.promise.next(this.props.officer)
+  }
+  render () {
+    return <div onClick={this.select.bind(this)}>{this.props.officer.fullName()}</div>
+  }
+}
+
+interface UnitProps {
+  unit: Unit,
+  hq: Headquarter,
+  game: Game,
+}
+
 export class UIUnit extends React.Component {
-  props:   {
-    unit:   Unit
+  props: {
+    unit: Unit
     hq: Headquarter,
     game: Game,
   }
@@ -138,7 +207,7 @@ export class UIUnit extends React.Component {
     this.inspect = this.inspect.bind(this)
   }
 
-  label (tier: number): {label:   string, size: string} {
+  label (tier: number): {label: string, size: string} {
     return constants.label(tier)
   }
 
@@ -209,46 +278,51 @@ export class UIOfficer extends React.Component {
 
     if (!o) return <div></div>
 
+    // if (o.isPlayer) return <div>{o.fullName()}</div>
+
     const events: string[] = []
 
     o.events.forEach((event) => {
-      events.push(<div>{event}</div>)
+      events.push(<div key={event}>{event}</div>)
     })
 
-    const operations: string[] = []
+    const operationsRecord: string[] = []
 
-    o.operations.forEach((operation) => {
-      operations.push(this.getOperation(operation))
+    o.operationsRecord.forEach((operation) => {
+      operationsRecord.push(this.getOperation(operation))
     })
 
     const traits: string[] = []
 
     o.traits.forEach((trait) => {
-      traits.push(<li>{trait.name}</li>)
+      traits.push(<li key={trait.name}>{trait.name}</li>)
     })
 
     return <div>
       <ul className='officerData'>
         <li>{o.fullName()}</li>
+        <li>Senior: {o.isSenior() ? 'Yes' : 'No'}</li>
+        <li>Passed: {o.isPassedForPromotion() ? 'Yes' : 'No'}</li>
+        <li>Faction: {o.faction.type}</li>
         <li>Experience: {o.experience}</li>
         <li>Prestige: {o.prestige}</li>
-        <li>Commanding: {o.getTotalTraitValue('commanding')}</li>
-        <li>Diplomacy: {o.getTotalTraitValue('diplomacy')}</li>
+        <li>Operations: {o.getTotalTraitValue('operations')}</li>
+        <li>Communications: {o.getTotalTraitValue('communications')}</li>
         <li>Espionage: {o.getTotalTraitValue('intelligence')}</li>
         <li>Militancy: {o.militancy}</li>
         <li>Skill: {o.getTotalTraitsValue()}</li>
-        <li>Faction: {o.faction.type}</li>
-        <li>Senior: {o.isSenior() ? 'Yes' : 'No'}</li>
-        <li>Passed for promotion: {o.isPassedForPromotion() ? 'Yes' : 'No'}</li>
         <li>-</li>
         <li>{events}</li>
         <li>-</li>
       </ul>
+
       <ul className='officerTraits'>
         {traits}
       </ul>
+
       <div className='clear'></div>
-      <div className='operationList'>{operations}</div>
+
+      <div className='operationList'>{operationsRecord}</div>
     </div>
   }
 }
@@ -303,12 +377,12 @@ export class UIOperation extends React.Component {
         <li>Started as: {operation.startedAs}</li>
         <li>Against a:  {operation.againstA}</li>
         <li>Target:     {operation.target.fullName()}</li>
-        {/*<li>Because:    {operation.metadata.because}</li>*/}
+        {/* <li>Because:    {operation.metadata.because}</li> */}
       </ul>
       : <div></div>
 
     return <div className='operationItem' onClick={this.inspect}>
-      <div>{operation.started} {operation.name}</div>
+      <div className='operationTitle'>{operation.started} {operation.name}</div>
       {content}
     </div>
   }

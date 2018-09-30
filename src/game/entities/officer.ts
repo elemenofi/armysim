@@ -24,12 +24,12 @@ export class Officer {
   name: string
   experience: number
   prestige: number
-  commanding: number
+  operations: number
   militancy: number
   rank: Rank
   unit: Unit
   events: string[] = []
-  operations: Operation[] = []
+  operationsRecord: Operation[] = []
   chance: any
   forcedToRetireBy: Operation
   faction: Faction
@@ -76,6 +76,7 @@ export class Officer {
   }
 
   resistsCoup (faction: FactionNames): boolean {
+    // todo: should neutrals resist?
     return this.faction.type === faction
   }
 
@@ -85,8 +86,8 @@ export class Officer {
 
   getTotalTraitsValue (): number {
     return this.traitTypeValue('intelligence') +
-      this.traitTypeValue('commanding') +
-      this.traitTypeValue('diplomacy')
+      this.traitTypeValue('operations') +
+      this.traitTypeValue('communications')
   }
 
   roll (): number {
@@ -147,8 +148,8 @@ export class Officer {
   }
 
   private handleExistingOperations () {
-    if (!this.operations.length) return
-    this.operations.forEach((operation) => operation.tick())
+    if (!this.operationsRecord.length) return
+    this.operationsRecord.forEach((operation) => operation.tick())
   }
 
   private findTarget (): PossibleTarget {
@@ -172,7 +173,7 @@ export class Officer {
   }
 
   private hasOperationAgainst (target: Officer): boolean {
-    return this.operations
+    return this.operationsRecord
       .map((operation) => operation.target)
       .includes(target)
   }
@@ -186,7 +187,7 @@ export class Officer {
   }
 
   private canStartNewOperation (): boolean {
-    const ongoing = this.operations
+    const ongoing = this.operationsRecord
       .filter((o) => o.status === OperationStatus.planning)
       .length
 
@@ -198,7 +199,7 @@ export class Officer {
   // back and forth in an endless loop
   private startOperationAgainst (possibleTarget: PossibleTarget, counterOperation = false): void {
     const operation = new Operation(this, possibleTarget.target, possibleTarget.type, this.hq, counterOperation)
-    this.operations.push(operation)
+    this.operationsRecord.push(operation)
     if (counterOperation) return
     this.militancy++
     possibleTarget.target.attemptToCounterOperation(operation, possibleTarget.type)

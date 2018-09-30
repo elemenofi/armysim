@@ -9,6 +9,8 @@
     "react": "^16.2.0",
     "react-current-owner": "0.0.0",
     "react-dom": "^16.2.0",
+    "react-draggable": "^3.0.5",
+    "react-markdown": "^3.4.1",
     "react-select": "^0.6.3"
   },
   "devDependencies": {

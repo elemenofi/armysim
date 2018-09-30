@@ -2,7 +2,6 @@ import { UI } from '../ui/ui'
 import { Headquarter } from './army'
 import { FactionNames } from './faction'
 import { Keyboard } from './keyboard'
-import { Logger } from './logger'
 
 export interface Window {
   game: Game
@@ -16,13 +15,13 @@ export class Game {
   ui: UI
   headquarter: Headquarter
   keyboard: Keyboard
-  turn = 0
   status = 'playing'
 
   constructor () {
     this.ui = new UI()
     this.keyboard = new Keyboard(this)
     this.headquarter = new Headquarter()
+    console.log('[debug] Game is starting')
     this.tick()
     this.pause()
   }
@@ -37,17 +36,23 @@ export class Game {
   }
 
   public advance () {
-    this.turn++
-    this.headquarter.tick(this.turn)
-    this.ui.render(this)
+    this.headquarter.tick()
+    if (this.headquarter.turn > (20 * 365)) this.ui.render(this)
   }
 
-  private tick () {
-    // if (this.turn === 0) {
-    //   for (var i = 0; i < (5*365); i++) {
-    //     this.advance()
-    //   }
-    // }
+  private async tick () {
+    if (this.headquarter.turn === 0) {
+      console.log('[debug] Turn 0')
+      // pass a thousand million turns until the general
+      // has done all the steps, because everyone starts fresh
+      // then assign the player as general
+      for (let i = 0; i < (20 * 365); i++) {
+        if (i === (20 * 365)) console.log('[debug] Last buffer turn')
+        this.advance()
+      }
+
+      this.headquarter.staff.createPlayerOfficer()
+    }
 
     if (this.status === 'paused') return
 
@@ -59,11 +64,3 @@ export class Game {
 }
 
 window.game = new Game()
-
-window.pause = () => {
-  window.game.pause()
-}
-
-window.coup = (side) => {
-  window.game.headquarter.staff.coup(side)
-}
