@@ -1,4 +1,4 @@
-import { Headquarter, Order } from './army'
+import { Headquarter } from './army'
 import { FactionNames } from './faction'
 import { Window } from './game'
 import { Logger } from './logger'

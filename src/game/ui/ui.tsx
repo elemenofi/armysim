@@ -2,12 +2,13 @@ import * as React from 'react'
 import * as ReactDOM from 'react-dom'
 import Draggable from 'react-draggable'
 import { Subject } from 'rxjs/Subject'
-import { Headquarter, Order } from '../entities/army'
+import { Headquarter } from '../entities/army'
 import { Game } from '../entities/game'
 import { Officer } from '../entities/officer'
 import { Operation } from '../entities/operation'
 import { Unit } from '../entities/unit'
 import { constants } from '../entities/util'
+import { UIOrder } from '../entities/orders';
 
 export class UI extends React.Component {
   render (game: Game) {
@@ -267,9 +268,6 @@ export class UIOperation extends React.Component {
     })
   }
 
-  componentWillUnmount () {
-    // this.props.officerOperationClicked.unsubscribe()
-  }
 
   inspect (e: Event) {
     e.preventDefault()
