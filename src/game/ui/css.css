@@ -57,7 +57,6 @@ p {
 
 .operationList {
   height: 240px;
-  overflow: scroll;
 }
 
 .operationItem {

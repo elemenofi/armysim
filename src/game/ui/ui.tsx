@@ -51,9 +51,9 @@ export class UIMain extends React.Component {
         {chiefs}
       </ul>
     </div>
-    Object.keys(hq.staff.chiefs).forEach((chief) => {
+    Object.keys(hq.staff.chiefs).forEach((chief: string) => {
       if (hq.staff.chiefs[chief]) {
-        chiefs.push(<li>{hq.staff.chiefs[chief].fullName()}</li>)
+        chiefs.push(<li key={chief}>{hq.staff.chiefs[chief].fullName()}</li>)
       }
     })
 
@@ -73,6 +73,7 @@ export class UIMain extends React.Component {
       </div>
       <div className='officer procer'>
         {chiefsPanel}
+        <div className='clear'></div>
         <UIOfficer officer={hq.inspected}/>
       </div>
       <div className='clear'></div>
@@ -146,7 +147,7 @@ export class UIOrder extends React.Component {
       if (order.orderNumber === 2) {
         officerList = []
         this.props.order.value.forEach((o: Officer) => {
-          officerList.push(<UIClickableOfficer officer={o} promise={this.props.order.data$}/>)
+          officerList.push(<UIClickableOfficer key={o.name} officer={o} promise={this.props.order.data$}/>)
         })
       }
 
@@ -270,6 +271,7 @@ export class UIOfficer extends React.Component {
     return <UIOperation
       operation={operation}
       officerOperationClicked={this.officerOperationClicked}
+      key={operation.name}
     />
   }
 
