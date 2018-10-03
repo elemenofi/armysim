@@ -53,7 +53,7 @@ export class Officer {
 
   tick () {
     this.train()
-    this.plot()
+    // this.plot()
     // this.debugAllyAndEnemies()
   }
 

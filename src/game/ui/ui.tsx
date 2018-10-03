@@ -171,11 +171,14 @@ export class UIOfficer extends React.Component {
     officer:   Officer,
   }
 
-  officerOperationClicked: Subject<Officer>
+  // this observable is part of the officer because we want to
+  // make it so that clicking in any operation closes the other one
+  // owned by this officer that was already open
+  officerOperationClicked: Subject<Operation>
 
   constructor () {
     super()
-    this.officerOperationClicked = new Subject<Officer>()
+    this.officerOperationClicked = new Subject<Operation>()
   }
 
   getOperation (operation: Operation) {
