@@ -1,7 +1,6 @@
 import * as React from 'react'
 import * as ReactDOM from 'react-dom'
 import Draggable from 'react-draggable'
-import { Subject } from 'rxjs/Subject'
 import { Headquarter } from '../entities/army'
 import { Game } from '../entities/game'
 import { Officer } from '../entities/officer'
