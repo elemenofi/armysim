@@ -1,19 +1,9 @@
 import { Headquarter } from './army'
-import { FactionNames } from './faction'
 import { Window } from './game'
 import { Logger } from './logger'
 import { Officer } from './officer'
-import { Operation } from './operation'
-import { CommandAndControl } from './orders'
 import { Rank } from './rank'
 import { Unit } from './unit'
-
-export interface Scores {
-  rightFaction: number,
-  rightFactionAmount: number,
-  leftFaction: number,
-  leftFactionAmount: number,
-}
 
 export interface Chiefs {
   personnel: Officer,
@@ -33,59 +23,15 @@ export class Staff {
   active: Officer[] = []
   log: Logger
   hq: Headquarter
-  cnc: CommandAndControl
   procer: Officer
-  scores: Scores
   chiefs: {
     personnel: Officer,
     logistics: Officer,
   }
 
-  constructor (hq: Headquarter, cnc: CommandAndControl) {
+  constructor (hq: Headquarter) {
     this.log = new Logger(hq)
     this.hq = hq
-    this.cnc = cnc
-    this.chiefs = {
-      personnel: undefined,
-      logistics: undefined,
-    }
-  }
-
-  setScores (): void {
-    const reducer = (accumulator, currentValue: Officer) => {
-      if (currentValue.faction.type === FactionNames.right && currentValue.rank.tier > 4) {
-        return accumulator + currentValue.prestige
-      }
-      return accumulator
-    }
-
-    const leftReducer = (accumulator, currentValue: Officer) => {
-      if (currentValue.faction.type === FactionNames.left && currentValue.rank.tier > 4) {
-        return accumulator + currentValue.prestige
-      }
-      return accumulator
-    }
-
-    const rightCountReducer = (accumulator, currentValue: Officer) => {
-      if (currentValue.faction.type === FactionNames.right) {
-        return accumulator + 1
-      }
-      return accumulator
-    }
-
-    const leftCountReducer = (accumulator, currentValue: Officer) => {
-      if (currentValue.faction.type === FactionNames.left) {
-        return accumulator + 1
-      }
-      return accumulator
-    }
-
-    this.scores = {
-      rightFaction: Math.max(0, this.active.reduce(reducer, 0)),
-      leftFaction: Math.max(0, this.active.reduce(leftReducer, 0)),
-      rightFactionAmount: Math.max(0, this.active.reduce(rightCountReducer, 0)),
-      leftFactionAmount: Math.max(0, this.active.reduce(leftCountReducer, 0)),
-    }
   }
 
   retire (officer: Officer): Officer {
@@ -95,13 +41,7 @@ export class Staff {
 
     this.replace(officer)
 
-    officer.events.push(
-      // this.log.retire(),
-      // for now i will just always log it as a normal retirement to conceal it from the player
-      (officer.forcedToRetireBy)
-        ? this.log.forcedRetirement(officer.forcedToRetireBy)
-        : this.log.retire(),
-    )
+    officer.events.push(this.log.retire())
 
     this.isProcer(officer)
 
@@ -121,15 +61,6 @@ export class Staff {
     unit.officer = officer
     officer.unit = unit
     return officer
-  }
-
-  coup (operation: Operation): void {
-    this.active.forEach((o) => {
-      if (!o.resistsCoup(operation.officer.faction.type)) {
-        o.forcedToRetireBy = operation
-        this.retire(o)
-      }
-    })
   }
 
   // replace does a recursion that finds the subordinate

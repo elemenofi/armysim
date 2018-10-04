@@ -1,12 +1,10 @@
 import { UI } from '../ui/ui'
 import { Headquarter } from './army'
-import { FactionNames } from './faction'
 import { Keyboard } from './keyboard'
 
 export interface Window {
   game: Game
   pause: () => void
-  coup: (side: FactionNames) => void
 }
 
 declare const window: Window
@@ -50,7 +48,7 @@ export class Game {
         this.advance()
       }
 
-      this.headquarter.cnc.createPlayerOfficer()
+      // player journey starts here 
     }
 
     if (this.status === 'paused') return

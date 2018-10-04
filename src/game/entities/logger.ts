@@ -1,6 +1,5 @@
 
 import { Game } from './game'
-import { Operation, OperationStatus } from './operation'
 import { Headquarter } from './army';
 
 export interface Window {
@@ -26,15 +25,5 @@ export class Logger {
 
   retire (): string {
     return this.day() + ' retired'
-  }
-
-  forcedRetirement (operation?: Operation): string {
-    return (
-      this.day() +
-      ' forced to retire by ' +
-      operation.officer.fullName()
-      // ' in ' +
-      // operation.name
-    )
   }
 }
