@@ -28,10 +28,15 @@ export class Staff {
     personnel: Officer,
     logistics: Officer,
   }
+  inspected: Officer
 
   constructor (hq: Headquarter) {
     this.log = new Logger(hq)
     this.hq = hq
+  }
+
+  inspect (officer: Officer): void {
+    this.inspected = officer
   }
 
   retire (officer: Officer): Officer {

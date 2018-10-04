@@ -8,7 +8,6 @@ export class Headquarter {
   army: Unit
   oob: Unit[] = []
   staff: Staff
-  inspected: Officer
   log: Logger
   player: Officer
   turn = 0
@@ -22,7 +21,7 @@ export class Headquarter {
 
     const officer = this.staff.recruit(9)
 
-    this.inspect(officer)
+    this.staff.inspect(officer)
 
     this.staff.assign(officer, this.army)
 
@@ -32,17 +31,7 @@ export class Headquarter {
   tick (): void {
     this.turn++
 
-    this.staff.active.forEach((officer) => {
-      if (officer.shouldRetire()) {
-        this.staff.retire(officer)
-      } else {
-        officer.tick()
-      }
-    })
-  }
-
-  inspect (officer: Officer): void {
-    this.inspected = officer
+    this.staff.active.forEach((officer) => { officer.tick() })
   }
 
   private build (tier: number): Unit {

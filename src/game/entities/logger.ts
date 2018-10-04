@@ -10,9 +10,11 @@ declare const window: Window
 
 export class Logger {
   hq: Headquarter
+
   constructor (hq: Headquarter){
     this.hq = hq
   }
+  
   day (): string {
     const day = new Date()
     day.setDate(day.getDate() + (this.hq.turn) ? this.hq.turn : 0)

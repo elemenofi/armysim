@@ -26,11 +26,6 @@ export class UIMain extends React.Component {
     super()
   }
 
-  eventLogger = (e: MouseEvent, data: Object) => {
-    console.log('Event: ', e)
-    console.log('Data: ', data)
-  }
-
   onStart () {
   }
 
@@ -50,16 +45,14 @@ export class UIMain extends React.Component {
           </div>
         </Draggable>
       <h1>
-        { tomorrow.toISOString().slice(0, 10) }&nbsp;
-        {/* RIGHT WING: {scores.rightFaction} / {scores.rightFactionAmount}&nbsp;
-        LEFT WING: {scores.leftFaction} / {scores.leftFactionAmount} */}
+        { tomorrow.toISOString().slice(0, 10) }
       </h1>
       <div className='officer'>
         <UIOfficer officer={hq.player}/>
       </div>
       <div className='officer procer'>
         <div className='clear'></div>
-        <UIOfficer officer={hq.inspected}/>
+        <UIOfficer officer={hq.staff.inspected}/>
       </div>
       <div className='clear'></div>
       <div className='units'>
@@ -88,7 +81,7 @@ export class UIUnit extends React.Component {
   inspect (e: Event) {
     e.preventDefault()
     e.stopPropagation()
-    this.props.hq.inspect(this.props.unit.officer)
+    this.props.hq.staff.inspect(this.props.unit.officer)
     this.props.game.advance()
   }
 
@@ -112,11 +105,11 @@ export class UIUnit extends React.Component {
     const u = this.props.unit
 
     const subunits = (u.subunits.length)
-      ? this.subunits() : undefined
+      ? this.subunits() : undefined 
 
     const selected = (
-      this.props.hq.inspected &&
-      (this.props.unit.officer.id === this.props.hq.inspected.id)
+      this.props.hq.staff.inspected &&
+      (this.props.unit.officer.id === this.props.hq.staff.inspected.id)
     ) ? 'selected' : ''
 
     return <div onClick={this.inspect} className={selected}>
