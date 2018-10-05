@@ -6,8 +6,6 @@ export interface Window {
   game: Game
 }
 
-declare const window: Window
-
 export class Logger {
   hq: Headquarter
 
