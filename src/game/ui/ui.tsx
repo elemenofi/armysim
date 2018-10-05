@@ -1,16 +1,12 @@
 import * as React from 'react'
 import * as ReactDOM from 'react-dom'
-import Draggable from 'react-draggable'
 import { Headquarter } from '../entities/army'
 import { Game } from '../entities/game'
 import { Officer } from '../entities/officer'
 import { Unit } from '../entities/unit'
 import { constants } from '../entities/util'
-import { Button } from "@blueprintjs/core";
- 
 
-
-export class UI extends React.Component {
+export class UI {
   render (game: Game) {
     ReactDOM.render(
       <UIMain game={game} />,
@@ -25,18 +21,13 @@ export class UIMain extends React.Component {
   }
 
   constructor (props) {
-    super()
-    this.increment = this.increment.bind(this)
+    super(props)
   }
 
   onStart () {
   }
 
   onStop () {
-  }
-
-  increment () {
-    alert('a')
   }
 
   render () {
@@ -47,7 +38,6 @@ export class UIMain extends React.Component {
     tomorrow.setDate(tomorrow.getDate() + hq.turn)
 
     return <div className='army'>
-      <Button intent="success" text="button content" onClick={this.increment} />
       <h1>
         { tomorrow.toISOString().slice(0, 10) }
       </h1>
@@ -73,8 +63,8 @@ export class UIUnit extends React.Component {
     game: Game,
   }
 
-  constructor () {
-    super()
+  constructor (props) {
+    super(props)
     this.inspect = this.inspect.bind(this)
   }
 
@@ -82,7 +72,7 @@ export class UIUnit extends React.Component {
     return constants.label(tier)
   }
 
-  inspect (e: Event) {
+  inspect (e) {
     e.preventDefault()
     e.stopPropagation()
     this.props.hq.staff.inspect(this.props.unit.officer)
@@ -128,8 +118,8 @@ export class UIOfficer extends React.Component {
     officer: Officer,
   }
 
-  constructor () {
-    super()
+  constructor (props) {
+    super(props)
   }
 
   render () {
@@ -139,13 +129,13 @@ export class UIOfficer extends React.Component {
 
     // if (o.isPlayer) return <div>{o.fullName()}</div>
 
-    const events: string[] = []
+    const events: JSX.Element[] = []
 
     o.events.forEach((event) => {
       events.push(<div key={event}>{event}</div>)
     })
 
-    const traits: string[] = []
+    const traits: JSX.Element[] = []
 
     o.traits.forEach((trait) => {
       traits.push(<li key={trait.name}>{trait.name}</li>)

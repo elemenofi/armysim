@@ -4,15 +4,11 @@
   "description": "Army simulator",
   "author": "Elemenofi",
   "dependencies": {
-    "@blueprintjs/core": "^3.6.1",
+    "@material-ui/core": "^3.1.2",
     "chance": "^0.6.4",
     "moment": "^2.21.0",
     "react": "^16.2.0",
-    "react-current-owner": "0.0.0",
-    "react-dom": "^16.2.0",
-    "react-draggable": "^3.0.5",
-    "react-markdown": "^3.4.1",
-    "react-select": "^0.6.3"
+    "react-dom": "^16.2.0"
   },
   "devDependencies": {
     "@types/jasmine": "^2.8.6",
