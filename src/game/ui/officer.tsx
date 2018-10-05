@@ -17,13 +17,13 @@ export class UIOfficer extends React.Component {
   
       // if (o.isPlayer) return <div>{o.fullName()}</div>
   
-      const events: JSX.Element[] = []
+      const events: Element[] = []
   
       o.events.forEach((event) => {
         events.push(<div key={event}>{event}</div>)
       })
   
-      const traits: JSX.Element[] = []
+      const traits: Element[] = []
   
       o.traits.forEach((trait) => {
         traits.push(<li key={trait.name}>{trait.name}</li>)
