@@ -1,13 +1,14 @@
 import * as React from 'react'
 import * as ReactDOM from 'react-dom'
 import Draggable from 'react-draggable'
-import { Subject } from 'rxjs/Subject'
-import { Headquarter, Order } from '../entities/army'
+import { Headquarter } from '../entities/army'
 import { Game } from '../entities/game'
 import { Officer } from '../entities/officer'
-import { Operation } from '../entities/operation'
 import { Unit } from '../entities/unit'
 import { constants } from '../entities/util'
+import { Button } from "@blueprintjs/core";
+ 
+
 
 export class UI extends React.Component {
   render (game: Game) {
@@ -25,11 +26,7 @@ export class UIMain extends React.Component {
 
   constructor (props) {
     super()
-  }
-
-  eventLogger = (e: MouseEvent, data: Object) => {
-    console.log('Event: ', e)
-    console.log('Data: ', data)
+    this.increment = this.increment.bind(this)
   }
 
   onStart () {
@@ -38,43 +35,28 @@ export class UIMain extends React.Component {
   onStop () {
   }
 
+  increment () {
+    alert('a')
+  }
+
   render () {
     const dragHandlers = {onStart: this.onStart, onStop: this.onStop}
     const game = this.props.game
     const hq = game.headquarter
-    const scores = hq.staff.scores
     const tomorrow = new Date()
     tomorrow.setDate(tomorrow.getDate() + hq.turn)
-    const chiefs = []
-    const chiefsPanel = <div>
-      <ul>
-        {chiefs}
-      </ul>
-    </div>
-    Object.keys(hq.staff.chiefs).forEach((chief: string) => {
-      if (hq.staff.chiefs[chief]) {
-        chiefs.push(<li key={chief}>{hq.staff.chiefs[chief].fullName()}</li>)
-      }
-    })
 
     return <div className='army'>
-        <Draggable handle='strong' {...dragHandlers}>
-          <div className='orders'>
-            <UIOrder order={game.headquarter.order}/>
-          </div>
-        </Draggable>
+      <Button intent="success" text="button content" onClick={this.increment} />
       <h1>
-        { tomorrow.toISOString().slice(0, 10) }&nbsp;
-        {/* RIGHT WING: {scores.rightFaction} / {scores.rightFactionAmount}&nbsp;
-        LEFT WING: {scores.leftFaction} / {scores.leftFactionAmount} */}
+        { tomorrow.toISOString().slice(0, 10) }
       </h1>
       <div className='officer'>
         <UIOfficer officer={hq.player}/>
       </div>
       <div className='officer procer'>
-        {chiefsPanel}
         <div className='clear'></div>
-        <UIOfficer officer={hq.inspected}/>
+        <UIOfficer officer={hq.staff.inspected}/>
       </div>
       <div className='clear'></div>
       <div className='units'>
@@ -82,118 +64,6 @@ export class UIMain extends React.Component {
       </div>
     </div>
   }
-}
-
-export class UIOrder extends React.Component {
-  props: {
-    order: Order,
-  }
-
-  state: {
-    value: string,
-  }
-
-  nameInput
-
-  constructor (props) {
-    super()
-  }
-
-  componentWillMount () {
-    super.setState({value: this.props.order.value })
-  }
-
-  componentDidMount () {
-    this.nameInput.focus()
-  }
-
-  handleChange (event) {
-    super.setState({value: event.target.value})
-  }
-
-  onSubmit (handle) {
-    if (this.props.order.orderNumber === 1) this.props.order.data$.next(this.state.value)
-    handle()
-  }
-
-  render () {
-    const order = this.props.order
-    let body = <div></div>
-    let inputBox = <div></div>
-    let officerList = <div></div>
-    const options = []
-
-    if (order) {
-      this.props
-        .order
-        .options
-        .forEach((o) => {
-          options.push(
-            <li key={o.text}>
-              <button
-                onClick={this.onSubmit.bind(this, o.handler)}
-                ref={(input) => { this.nameInput = input }}
-              >
-                {o.text}
-              </button>
-            </li>,
-          )
-        })
-
-      if (order.orderNumber === 1) {
-        inputBox = <input type='text' value={this.state.value} onChange= {this.handleChange.bind(this)}></input>
-      }
-
-      if (order.orderNumber === 2) {
-        officerList = []
-        this.props.order.value.forEach((o: Officer) => {
-          officerList.push(<UIClickableOfficer key={o.name} officer={o} promise={this.props.order.data$}/>)
-        })
-      }
-
-      body = <div className='order'>
-        <strong><h4>ORDER#{order.orderNumber} {order.date}</h4></strong>
-        <h4>{order.title}</h4>
-        <div dangerouslySetInnerHTML={{__html: order.description}}></div>
-        <div>
-          {inputBox}
-        </div>
-        <ul>
-          {options}
-        </ul>
-        <ul>
-          {officerList}
-        </ul>
-      </div>
-    }
-
-    return <div>
-      {body}
-    </div>
-  }
-}
-
-export class UIClickableOfficer extends React.Component {
-  props: {
-    officer: Officer
-    destination: string,
-    promise: Subject<Officer>,
-  }
-  constructor (props) {
-    super(props)
-  }
-  select () {
-    this.props.promise.next(this.props.officer)
-  }
-  render () {
-    return <div onClick={this.select.bind(this)}>{this.props.officer.fullName()}</div>
-  }
-}
-
-interface UnitProps {
-  unit: Unit,
-  hq: Headquarter,
-  game: Game,
 }
 
 export class UIUnit extends React.Component {
@@ -215,7 +85,7 @@ export class UIUnit extends React.Component {
   inspect (e: Event) {
     e.preventDefault()
     e.stopPropagation()
-    this.props.hq.inspect(this.props.unit.officer)
+    this.props.hq.staff.inspect(this.props.unit.officer)
     this.props.game.advance()
   }
 
@@ -239,16 +109,14 @@ export class UIUnit extends React.Component {
     const u = this.props.unit
 
     const subunits = (u.subunits.length)
-      ? this.subunits() : undefined
-
-    const faction = this.props.unit.officer.faction.type.toLowerCase() + 'Faction'
+      ? this.subunits() : undefined 
 
     const selected = (
-      this.props.hq.inspected &&
-      (this.props.unit.officer.id === this.props.hq.inspected.id)
+      this.props.hq.staff.inspected &&
+      (this.props.unit.officer.id === this.props.hq.staff.inspected.id)
     ) ? 'selected' : ''
 
-    return <div onClick={this.inspect} className={selected + ' ' + faction}>
+    return <div onClick={this.inspect} className={selected}>
       {this.label(u.tier).label}
       {subunits}
     </div>
@@ -256,23 +124,12 @@ export class UIUnit extends React.Component {
 }
 
 export class UIOfficer extends React.Component {
-  props:   {
-    officer:   Officer,
+  props: {
+    officer: Officer,
   }
-
-  officerOperationClicked: Subject<Officer>
 
   constructor () {
     super()
-    this.officerOperationClicked = new Subject<Officer>()
-  }
-
-  getOperation (operation: Operation) {
-    return <UIOperation
-      operation={operation}
-      officerOperationClicked={this.officerOperationClicked}
-      key={operation.name}
-    />
   }
 
   render () {
@@ -288,12 +145,6 @@ export class UIOfficer extends React.Component {
       events.push(<div key={event}>{event}</div>)
     })
 
-    const operationsRecord: string[] = []
-
-    o.operationsRecord.forEach((operation) => {
-      operationsRecord.push(this.getOperation(operation))
-    })
-
     const traits: string[] = []
 
     o.traits.forEach((trait) => {
@@ -305,7 +156,6 @@ export class UIOfficer extends React.Component {
         <li>{o.fullName()}</li>
         <li>Senior: {o.isSenior() ? 'Yes' : 'No'}</li>
         <li>Passed: {o.isPassedForPromotion() ? 'Yes' : 'No'}</li>
-        <li>Faction: {o.faction.type}</li>
         <li>Experience: {o.experience}</li>
         <li>Prestige: {o.prestige}</li>
         <li>Operations: {o.getTotalTraitValue('operations')}</li>
@@ -323,69 +173,6 @@ export class UIOfficer extends React.Component {
       </ul>
 
       <div className='clear'></div>
-
-      <div className='operationList'>{operationsRecord}</div>
-    </div>
-  }
-}
-
-export class UIOperation extends React.Component {
-  props: {
-    operation: Operation,
-    officerOperationClicked: Subject<Operation>,
-  }
-
-  state: {
-    open: boolean,
-  }
-
-  constructor () {
-    super()
-    this.state = {
-      open: false,
-    }
-    this.inspect = this.inspect.bind(this)
-  }
-
-  componentWillMount () {
-    this.props.officerOperationClicked.subscribe((operation: Operation) => {
-      if (operation.name === this.props.operation.name) {
-        super.setState({open: !this.state.open})
-      } else {
-        super.setState({open: false})
-      }
-    })
-  }
-
-  componentWillUnmount () {
-    // this.props.officerOperationClicked.unsubscribe()
-  }
-
-  inspect (e: Event) {
-    e.preventDefault()
-    e.stopPropagation()
-    this.props.officerOperationClicked.next(this.props.operation)
-  }
-
-  render () {
-    const operation = this.props.operation
-
-    const content = (this.state.open)
-      ? <ul className='operationInfo'>
-        <li>{operation.logged} {operation.status.toUpperCase()}</li>
-        <li>Stength:    {operation.strength}</li>
-        <li>Type:       {operation.type}</li>
-        <li>Faction:    {operation.officer.faction.type}</li>
-        <li>Started as: {operation.startedAs}</li>
-        <li>Against a:  {operation.againstA}</li>
-        <li>Target:     {operation.target.fullName()}</li>
-        {/* <li>Because:    {operation.metadata.because}</li> */}
-      </ul>
-      : <div></div>
-
-    return <div className='operationItem' onClick={this.inspect}>
-      <div className='operationTitle'>{operation.started} {operation.name}</div>
-      {content}
     </div>
   }
 }

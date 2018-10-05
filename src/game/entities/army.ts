@@ -1,58 +1,27 @@
-import { Subject } from 'rxjs/Subject'
 import { Logger } from './logger'
 import { Officer } from './officer'
 import { Staff } from './staff'
 import { Unit } from './unit'
-import { CommandAndControl } from './orders';
-
-export interface OrderOption {
-  text: string
-  handler: () => void
-}
-
-export class Order {
-  options: OrderOption[]
-  title: string
-  description: string
-  data$: Subject<any>
-  value: any
-  date: string
-  orderNumber: number
-
-  constructor (content, options, date, data$, orderNumber, value?) {
-    this.title = content.title
-    this.description = content.description
-    this.data$ = data$
-    this.options = options
-    this.value = value
-    this.orderNumber = orderNumber
-    this.date = date
-  }
-}
 
 export class Headquarter {
   UNITID = 0
   army: Unit
   oob: Unit[] = []
   staff: Staff
-  inspected: Officer
   log: Logger
-  order: Order
   player: Officer
   turn = 0
-  cnc: CommandAndControl
 
   readonly LEVELS_BELOW_DIVISION = 1
 
   constructor () {
     this.log = new Logger(this)
-    this.cnc = new CommandAndControl(this)
-    this.staff = new Staff(this, this.cnc)
+    this.staff = new Staff(this)
     this.army = this.build(9)
 
     const officer = this.staff.recruit(9)
 
-    this.inspect(officer)
+    this.staff.inspect(officer)
 
     this.staff.assign(officer, this.army)
 
@@ -62,19 +31,7 @@ export class Headquarter {
   tick (): void {
     this.turn++
 
-    this.staff.active.forEach((officer) => {
-      if (officer.shouldRetire()) {
-        this.staff.retire(officer)
-      } else {
-        officer.tick()
-      }
-    })
-
-    this.staff.setScores()
-  }
-
-  inspect (officer: Officer): void {
-    this.inspected = officer
+    this.staff.active.forEach((officer) => { officer.tick() })
   }
 
   private build (tier: number): Unit {
