@@ -90,12 +90,12 @@ export class Officer {
     this.experience++
   }
 
-  private superior (): Officer {
+  public superior (): Officer {
     if (!this.unit.parent) return
     return this.unit.parent.officer
   }
 
-  private competitor (): Officer {
+  public competitor (): Officer {
     if (!this.unit.sister) return
     return this.unit.sister.officer
   }

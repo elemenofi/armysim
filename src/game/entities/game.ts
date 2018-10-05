@@ -34,21 +34,13 @@ export class Game {
   }
 
   public advance () {
-    // console.log('[debug] advance')
     this.headquarter.tick()
     if (this.headquarter.turn > (20 * 365)) this.ui.render(this)
   }
 
   private async tick () {
     if (this.headquarter.turn === 0) {
-      console.log('[debug] Turn 0')
-      
-      for (let i = 0; i < (20 * 365); i++) {
-        if (i === (20 * 365)) console.log('[debug] Last buffer turn')
-        this.advance()
-      }
-
-      // player journey starts here 
+      this.turnZero()
     }
 
     if (this.status === 'paused') return
@@ -58,6 +50,16 @@ export class Game {
     setTimeout(() => this.tick())
   }
 
+  private turnZero () {
+    console.log('[debug] Turn 0')
+      
+    for (let i = 0; i < (20 * 365); i++) {
+      if (i === (20 * 365)) console.log('[debug] Last buffer turn')
+      this.advance()
+    }
+
+    this.headquarter.staff.createPlayerOfficer()
+  }
 }
 
 window.game = new Game()
