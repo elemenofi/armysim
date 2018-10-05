@@ -47,7 +47,7 @@ export class Game {
         this.advance()
       }
 
-      // player journey starts here 
+      // this.headquarter.staff.createPlayer()
     }
 
     if (this.status === 'paused') return
