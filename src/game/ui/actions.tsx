@@ -41,12 +41,12 @@ export class UIActions extends React.Component {
   
       const actions = <ul>
         <li onClick={(e) => this.inspect('superior', e)}>
-        {o.superior() ? 'Superior: ' + o.superior().fullName() : ''}
-        <button onClick={(e) => this.plot('superior', e)}>Plot</button>
+          {o.superior() ? 'Superior: ' + o.superior().fullName() : ''} 
+          <button onClick={(e) => this.plot('superior', e)}>Plot</button>
         </li>
         <li onClick={(e) => this.inspect('competitor', e)}>
-        {o.competitor() ? 'Competitor: ' + o.competitor().fullName() : ''}
-        <button onClick={(e) => this.plot('competitor', e)}>Plot</button>
+          {o.competitor() ? 'Competitor: ' + o.competitor().fullName() : ''} 
+          <button onClick={(e) => this.plot('competitor', e)}>Plot</button>
         </li>
       </ul>
   
