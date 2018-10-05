@@ -1,13 +1,25 @@
 import * as React from 'react'
 import { Officer } from '../entities/officer'
+import { Headquarter } from '../entities/army';
+import { Game } from '../entities/game';
 
 export class UIOfficer extends React.Component {
     props: {
       officer: Officer,
+      hq: Headquarter,
+      game: Game
     }
   
     constructor (props) {
       super(props)
+      this.inspect = this.inspect.bind(this)
+    }
+
+    inspect (e) {
+      e.preventDefault()
+      e.stopPropagation()
+      this.props.hq.staff.inspect(this.props.officer)
+      this.props.game.advance()
     }
   
     render () {
@@ -44,6 +56,8 @@ export class UIOfficer extends React.Component {
           <li>-</li>
           <li>{events}</li>
           <li>-</li>
+          <li>{o.superior() ? 'Superior: ' + o.superior().fullName() : ''}</li>
+          <li>{o.competitor() ? 'Competitor: ' + o.competitor().fullName() : ''}</li>
         </ul>
   
         <ul className='officerTraits'>

@@ -33,11 +33,11 @@ export class UIMain extends React.Component {
         { tomorrow.toISOString().slice(0, 10) }
       </h1>
       <div className='officer'>
-        <UIOfficer officer={hq.player}/>
+        <UIOfficer hq={hq} officer={hq.player}/>
       </div>
       <div className='officer procer'>
         <div className='clear'></div>
-        <UIOfficer officer={hq.staff.inspected}/>
+        <UIOfficer hq={hq} officer={hq.staff.inspected}/>
       </div>
       <div className='clear'></div>
       <div className='units'>

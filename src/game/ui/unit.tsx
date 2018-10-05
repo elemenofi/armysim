@@ -34,12 +34,12 @@ export class UIUnit extends React.Component {
         const size = 'unit-' + this.label(u.tier).size
 
         return <div className='unit-sub'>
-        <div className={size}>
-            <UIUnit hq={hq} unit={su[0]} game={this.props.game}/>
-        </div>
-        <div className={size}>
-            <UIUnit hq={hq} unit={su[1]} game={this.props.game}/>
-        </div>
+            <div className={size}>
+                <UIUnit hq={hq} unit={su[0]} game={this.props.game}/>
+            </div>
+            <div className={size}>
+                <UIUnit hq={hq} unit={su[1]} game={this.props.game}/>
+            </div>
         </div>
     }
 
@@ -47,16 +47,16 @@ export class UIUnit extends React.Component {
         const u = this.props.unit
 
         const subunits = (u.subunits.length)
-        ? this.subunits() : undefined 
+            ? this.subunits() : undefined 
 
         const selected = (
-        this.props.hq.staff.inspected &&
-        (this.props.unit.officer.id === this.props.hq.staff.inspected.id)
+            this.props.hq.staff.inspected &&
+            (this.props.unit.officer.id === this.props.hq.staff.inspected.id)
         ) ? 'selected' : ''
 
         return <div onClick={this.inspect} className={selected}>
-        {this.label(u.tier).label}
-        {subunits}
+            {this.label(u.tier).label}
+            {subunits}
         </div>
     }
 }
