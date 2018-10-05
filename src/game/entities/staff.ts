@@ -68,7 +68,7 @@ export class Staff {
 
   createPlayerOfficer () {
     const officer = this.hq.staff.active.find((o) => o.rank.name() === 'Lieutenant')
-    officer.experience = 100 * officer.rank.tier + util.random(100)
+    officer.experience = 100 * officer.rank.tier + 75
     this.hq.player = officer
     officer.isPlayer = true
     officer.name = 'Manuel Aberg Cobo'

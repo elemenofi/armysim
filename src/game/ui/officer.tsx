@@ -56,12 +56,11 @@ export class UIOfficer extends React.Component {
           <li>{o.fullName()}</li>
           <li>Senior: {o.isSenior() ? 'Yes' : 'No'}</li>
           <li>Passed: {o.isPassedForPromotion() ? 'Yes' : 'No'}</li>
-          <li>Experience: {o.experience}</li>
+          <li>Militancy: {o.militancy}</li>
           <li>Operations: {o.getTotalTraitValue('operations')}</li>
           <li>Combat: {o.getTotalTraitValue('combat')}</li>
           <li>Intelligence: {o.getTotalTraitValue('intelligence')}</li>
-          <li>Skill: {o.getTotalTraitsValue()}</li>
-          <li>Militancy: {o.militancy}</li>
+
           <li>-</li>
           <li>{events}</li>
           <li>-</li>

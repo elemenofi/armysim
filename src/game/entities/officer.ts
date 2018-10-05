@@ -29,22 +29,18 @@ export class Officer {
   }
 
   tick () {
-    if (this.shouldRetire()) this.hq.staff.retire(this)
+    if (this.isRetired()) this.hq.staff.retire(this)
       
     this.train()
   }
 
   fullName (): string {
-    return `${this.rank.name()} ${this.shouldRetire() ? ' (r) ' : ''}${this.name}`
+    return `${this.rank.name()} ${this.isRetired() ? ' (r) ' : ''}${this.name}`
   }
 
   isSenior (): boolean {
     if (!this.competitor()) return true
     return this.experience > this.competitor().experience
-  }
-
-  shouldRetire (): boolean {
-    return !!(this.isRetired())
   }
 
   isPassedForPromotion (): boolean {
