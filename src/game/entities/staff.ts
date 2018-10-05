@@ -4,6 +4,7 @@ import { Logger } from './logger'
 import { Officer } from './officer'
 import { Rank } from './rank'
 import { Unit } from './unit'
+import { util } from './util';
 
 export interface Chiefs {
   personnel: Officer,
@@ -23,7 +24,6 @@ export class Staff {
   active: Officer[] = []
   log: Logger
   hq: Headquarter
-  procer: Officer
   chiefs: {
     personnel: Officer,
     logistics: Officer,
@@ -48,8 +48,6 @@ export class Staff {
 
     officer.events.push(this.log.retire())
 
-    this.isProcer(officer)
-
     return officer
   }
 
@@ -70,7 +68,7 @@ export class Staff {
 
   createPlayerOfficer () {
     const officer = this.hq.staff.active.find((o) => o.rank.name() === 'Lieutenant')
-    officer.experience = 0
+    officer.experience = 100 * officer.rank.tier + util.random(100)
     this.hq.player = officer
     officer.isPlayer = true
     officer.name = 'Manuel Aberg Cobo'
@@ -113,10 +111,5 @@ export class Staff {
     officer.events.push(this.log.promote(officer.rank.name()))
     officer.getNewTrait()
     return officer
-  }
-
-  private isProcer (officer: Officer): Officer {
-    if (!this.procer || officer.prestige > this.procer.prestige) this.procer = officer
-    return this.procer
   }
 }

@@ -9,7 +9,6 @@ export class Officer {
   id: number
   name: string
   experience: number
-  prestige: number
   militancy: number
   rank: Rank
   unit: Unit
@@ -23,7 +22,6 @@ export class Officer {
     this.rank = new Rank(rank)
     this.hq = hq
     this.experience = 100 * rank + util.random(100)
-    this.prestige = 0
     this.militancy = 0
     this.chance = chance(Math.random)
     this.name = `${this.chance.first({ gender: 'male' })} ${this.chance.last()}`
@@ -61,7 +59,7 @@ export class Officer {
   getTotalTraitsValue (): number {
     return this.traitTypeValue('intelligence') +
       this.traitTypeValue('operations') +
-      this.traitTypeValue('communications')
+      this.traitTypeValue('combat')
   }
 
   roll (): number {
@@ -72,6 +70,13 @@ export class Officer {
     const newTrait = traitsService.getTraitByType(TraitTypes.special, this.traits)
     if (!newTrait) return
     this.traits.push(newTrait)
+  }
+
+  plot (officer: Officer) {
+    if (this.roll() > officer.roll()) {
+      this.hq.staff.retire(officer)
+      alert('You have forced ' + officer.fullName() + ' to retire.')
+    }
   }
 
   private traitTypeValue (type: string): number {
