@@ -5,6 +5,8 @@ import { Game } from '../entities/game'
 import { Officer } from '../entities/officer'
 import { Unit } from '../entities/unit'
 import { constants } from '../entities/util'
+import Button from '@material-ui/core/Button'
+
 
 export class UI {
   render (game: Game) {
@@ -24,14 +26,7 @@ export class UIMain extends React.Component {
     super(props)
   }
 
-  onStart () {
-  }
-
-  onStop () {
-  }
-
   render () {
-    const dragHandlers = {onStart: this.onStart, onStop: this.onStop}
     const game = this.props.game
     const hq = game.headquarter
     const tomorrow = new Date()
