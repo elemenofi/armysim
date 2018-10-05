@@ -16,18 +16,18 @@ export class UIUnit extends React.Component {
     this.inspect = this.inspect.bind(this)
   }
 
-  label(tier: number): { label: string, size: string } {
+  label (tier: number): { label: string, size: string } {
     return constants.label(tier)
   }
 
-  inspect(e) {
+  inspect (e) {
     e.preventDefault()
     e.stopPropagation()
     this.props.hq.staff.inspect(this.props.unit.officer)
     this.props.game.advance()
   }
 
-  subunits() {
+  subunits () {
     const hq = this.props.hq
     const u = this.props.unit
     const su = u.subunits
@@ -43,7 +43,7 @@ export class UIUnit extends React.Component {
     </div>
   }
 
-  render() {
+  render () {
     const u = this.props.unit
 
     const subunits = (u.subunits.length)

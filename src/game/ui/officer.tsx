@@ -15,10 +15,9 @@ export class UIOfficer extends React.Component {
       this.inspect = this.inspect.bind(this)
     }
 
-    inspect (e) {
-      e.preventDefault()
-      e.stopPropagation()
-      this.props.hq.staff.inspect(this.props.officer)
+    inspect (which: 'superior' | 'competitor') {
+      const officer = (which === 'superior') ? this.props.officer.superior() : this.props.officer.competitor()
+      this.props.hq.staff.inspect(officer)
       this.props.game.advance()
     }
   
@@ -56,8 +55,8 @@ export class UIOfficer extends React.Component {
           <li>-</li>
           <li>{events}</li>
           <li>-</li>
-          <li>{o.superior() ? 'Superior: ' + o.superior().fullName() : ''}</li>
-          <li>{o.competitor() ? 'Competitor: ' + o.competitor().fullName() : ''}</li>
+          <li onClick={() => this.inspect('superior')}>{o.superior() ? 'Superior: ' + o.superior().fullName() : ''}</li>
+          <li onClick={() => this.inspect('competitor')}>{o.competitor() ? 'Competitor: ' + o.competitor().fullName() : ''}</li>
         </ul>
   
         <ul className='officerTraits'>
