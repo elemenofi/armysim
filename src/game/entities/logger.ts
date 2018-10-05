@@ -1,4 +1,3 @@
-
 import { Game } from './game'
 import { Headquarter } from './army';
 

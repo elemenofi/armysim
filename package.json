@@ -4,7 +4,6 @@
   "description": "Army simulator",
   "author": "Elemenofi",
   "dependencies": {
-    "@material-ui/core": "^3.1.2",
     "chance": "^0.6.4",
     "moment": "^2.21.0",
     "react": "^16.2.0",

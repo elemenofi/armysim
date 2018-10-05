@@ -34,7 +34,6 @@ export class Game {
   }
 
   public advance () {
-    // console.log('[debug] advance')
     this.headquarter.tick()
     if (this.headquarter.turn > (20 * 365)) this.ui.render(this)
   }
