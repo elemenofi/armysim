@@ -47,7 +47,7 @@ export class Game {
         this.advance()
       }
 
-      // this.headquarter.staff.createPlayer()
+      this.headquarter.staff.createPlayerOfficer()
     }
 
     if (this.status === 'paused') return

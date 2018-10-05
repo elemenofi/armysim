@@ -68,6 +68,14 @@ export class Staff {
     return officer
   }
 
+  createPlayerOfficer () {
+    const officer = this.hq.staff.active.find((o) => o.rank.name() === 'Lieutenant')
+    this.hq.player = officer
+    officer.isPlayer = true
+    officer.name = 'Manuel Aberg Cobo'
+    this.inspect(officer)
+  }
+
   // replace does a recursion that finds the subordinate
   // with highest experience and replaces all the
   // way down to recruiting a new liteutenant. in
