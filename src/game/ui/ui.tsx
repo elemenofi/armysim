@@ -6,6 +6,9 @@ import { Game } from '../entities/game'
 import { Officer } from '../entities/officer'
 import { Unit } from '../entities/unit'
 import { constants } from '../entities/util'
+import { Button } from "@blueprintjs/core";
+ 
+
 
 export class UI extends React.Component {
   render (game: Game) {
@@ -23,12 +26,17 @@ export class UIMain extends React.Component {
 
   constructor (props) {
     super()
+    this.increment = this.increment.bind(this)
   }
 
   onStart () {
   }
 
   onStop () {
+  }
+
+  increment () {
+    alert('a')
   }
 
   render () {
@@ -39,10 +47,7 @@ export class UIMain extends React.Component {
     tomorrow.setDate(tomorrow.getDate() + hq.turn)
 
     return <div className='army'>
-        <Draggable handle='strong' {...dragHandlers}>
-          <div className='orders'>
-          </div>
-        </Draggable>
+      <Button intent="success" text="button content" onClick={this.increment} />
       <h1>
         { tomorrow.toISOString().slice(0, 10) }
       </h1>
