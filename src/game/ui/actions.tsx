@@ -6,52 +6,52 @@ import { Headquarter } from '../entities/army';
 import { Game } from '../entities/game';
 
 export class UIActions extends React.Component {
-    props: {
-      game: Game,
-      hq: Headquarter,
-      officer: Officer,
-    }
-  
-    constructor (props) {
-      super(props)
-    }
+  props: {
+    game: Game,
+    hq: Headquarter,
+    officer: Officer,
+  }
 
-    getRelatedOfficer (which: 'superior' | 'competitor'): Officer {
-      const officer = (which === 'superior') 
-        ? this.props.officer.superior() 
-        : this.props.officer.competitor()
-      return officer
-    }
+  constructor(props) {
+    super(props)
+  }
 
-    inspect (which: 'superior' | 'competitor', e) {
-      e.preventDefault()
-      this.props.hq.staff.inspect(this.getRelatedOfficer(which))
-      this.props.game.advance()
-    }
+  getRelatedOfficer(which: 'superior' | 'competitor'): Officer {
+    const officer = (which === 'superior')
+      ? this.props.officer.superior()
+      : this.props.officer.competitor()
+    return officer
+  }
 
-    plot (which: 'superior' | 'competitor', e) {
-      e.preventDefault()
-      this.props.hq.player.plot(this.getRelatedOfficer(which))
-    }
-  
-    render () {
-      const o = this.props.officer
-  
-      if (!o || !this.props.officer.isPlayer) return <div></div>
-  
-      const actions = <ul>
-        <li onClick={(e) => this.inspect('superior', e)}>
-          {o.superior() ? 'Superior: ' + o.superior().fullName() : ''} 
-        </li>
-        <li><button onClick={(e) => this.plot('superior', e)}>Plot</button></li>
-        <li onClick={(e) => this.inspect('competitor', e)}>
-          {o.competitor() ? 'Competitor: ' + o.competitor().fullName() : ''} 
-        </li>
-        <li><button onClick={(e) => this.plot('competitor', e)}>Plot</button></li>
-      </ul>
-  
-      return <div>
-        {actions}
-      </div>
-    }
+  inspect(target: 'superior' | 'competitor', e) {
+    e.preventDefault()
+    this.props.hq.staff.inspect(this.getRelatedOfficer(target))
+    this.props.game.advance()
+  }
+
+  plot(target: 'superior' | 'competitor', e) {
+    e.preventDefault()
+    this.props.hq.player.operations.plot(this.getRelatedOfficer(target))
+  }
+
+  render() {
+    const o = this.props.officer
+
+    if (!o || !this.props.officer.isPlayer) return <div></div>
+
+    const actions = <ul className='actions'>
+      <li onClick={(e) => this.inspect('superior', e)}>
+        {o.superior() ? 'Superior: ' + o.superior().fullName() : ''}
+      </li>
+      <li><button onClick={(e) => this.plot('superior', e)}>Plot</button></li>
+      <li onClick={(e) => this.inspect('competitor', e)}>
+        {o.competitor() ? 'Competitor: ' + o.competitor().fullName() : ''}
+      </li>
+      <li><button onClick={(e) => this.plot('competitor', e)}>Plot</button></li>
+    </ul>
+
+    return <div>
+      {actions}
+    </div>
+  }
 }

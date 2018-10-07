@@ -1,3 +1,18 @@
+you have to discover one another
+
+and you start by looking into someones trash
+
+the more type of military elements the more people you need the more powerful it is
+
+that prevents a general from doing shit everywhere
+
+he will probably coordinate a full combined operations. as if it was war.
+
+as a lieutenant you can start with one of the paths 
+
+that will guide you to the generalato. but you will have
+
+to make friends to support you in your weaker areas.
 
 HEADQUARTERS
 - Commander in Chief

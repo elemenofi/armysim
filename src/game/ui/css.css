@@ -71,8 +71,29 @@ p {
   z-index: 999;
 }
 
+.actions {
+  margin: 16px;
+}
+
+.actions li {
+  margin-top: 16px;
+}
+
+.operations li {
+  display: inline;
+}
+
+.operationsCurrent {
+  margin-bottom: 16px;
+  text-transform: uppercase;
+}
+
 .clear {
   clear: both;
+}
+
+.divider {
+  margin: 16px;
 }
 
 .officerData {

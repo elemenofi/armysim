@@ -4,6 +4,7 @@ import { Rank } from './rank'
 import { Trait, traitsService, TraitTypes } from './traits'
 import { Unit } from './unit'
 import { util } from './util'
+import { OfficerOperations } from './officerOperations';
 
 export class Officer {
   id: number
@@ -17,8 +18,10 @@ export class Officer {
   inReserve: boolean
   traits: Trait[]
   isPlayer: boolean
+  operations: OfficerOperations
+  hq: Headquarter
 
-  constructor (rank: number, private hq: Headquarter) {
+  constructor (rank: number, hq: Headquarter) {
     this.rank = new Rank(rank)
     this.hq = hq
     this.experience = 100 * rank + util.random(100)
@@ -26,11 +29,12 @@ export class Officer {
     this.chance = chance(Math.random)
     this.name = `${this.chance.first({ gender: 'male' })} ${this.chance.last()}`
     this.traits = traitsService.getInitialTraits(this)
+    this.operations = new OfficerOperations(this)
   }
 
   tick () {
     if (this.isRetired()) this.hq.staff.retire(this)
-      
+    this.operations.tick()
     this.train()
   }
 
@@ -67,14 +71,7 @@ export class Officer {
     if (!newTrait) return
     this.traits.push(newTrait)
   }
-
-  plot (officer: Officer) {
-    if (this.roll() > officer.roll()) {
-      this.hq.staff.retire(officer)
-      alert('You have forced ' + officer.fullName() + ' to retire.')
-    }
-  }
-
+  
   private traitTypeValue (type: string): number {
     const reducer = (accumulator, currentValue: Trait) => {
       return accumulator + currentValue[type]
