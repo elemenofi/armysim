@@ -25,27 +25,48 @@ export class Operation {
     this.maxTurns = 100
     this.officer = officer
     this.target = target
-    this.type = this.officer.operations.currentPlanning
+    this.type = this.officer.operations.planning
+    this.status = OperationStatus.planning
    }
 
   tick () {
+    if (
+      this.status === OperationStatus.failed || 
+      this.status === OperationStatus.executed || 
+      this.status === OperationStatus.aborted
+    ) {
+      return
+    }
+
+    if (this.officer.inReserve) {
+      this.abort()
+    }
+
     this.progress++
+    
     if (this.progress === this.maxTurns) this.execute()
+  }
+
+  abort () {
+    alert('You have retired, operation aborted')
+    this.status = OperationStatus.aborted
   }
 
   execute () {
     if (this.officer.roll() > this.target.roll()) {
       this.officer.hq.staff.retire(this.target)
       alert('You have forced ' + this.target.fullName() + ' to retire.')
+      this.status = OperationStatus.executed
     } else {
       alert('You failed to force ' + this.target.fullName() + ' to retire.')
+      this.status = OperationStatus.failed
     }
   }
 }
 
 export class OfficerOperations {
   officer: Officer
-  currentPlanning: OperationTypes
+  private currentPlanning: OperationTypes
   current: Operation[]
 
   constructor(officer: Officer) {

@@ -4,7 +4,7 @@ import * as React from 'react'
 import { Officer } from '../entities/officer'
 import { Headquarter } from '../entities/army';
 import { Game } from '../entities/game';
-import { OperationTypes } from '../entities/officerOperations';
+import { OperationTypes, Operation } from '../entities/officerOperations';
 
 export class UIOperations extends React.Component {
   props: {
@@ -17,9 +17,9 @@ export class UIOperations extends React.Component {
     super(props)
   }
 
-  select(which: OperationTypes, e) {
+  select(operationType: OperationTypes, e) {
     e.preventDefault()
-    this.props.hq.player.operations.planning = which
+    this.props.hq.player.operations.planning = operationType
     this.props.game.advance()
   }
 
@@ -30,6 +30,14 @@ export class UIOperations extends React.Component {
 
     const current = <div className='operationsCurrent'>{o.operations.planning}</div>
 
+    let currentOperations = []
+    let currentOperationList = <ul>
+      {currentOperations}
+    </ul>
+    o.operations.current.forEach((o: Operation) => {
+      currentOperations.push(<li>{o.type} operations against {o.target.fullName()}, {o.progress}, {o.status}</li>)
+    })
+
     const actions = <ul className='actions operations'>
       {current}
       <li><button onClick={(e) => this.select(OperationTypes.combat, e)}>Combat</button></li>
@@ -39,6 +47,7 @@ export class UIOperations extends React.Component {
     return <div>
       <hr className='divider'></hr>
       {actions}
+      {currentOperationList}
     </div>
   }
 }
