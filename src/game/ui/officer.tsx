@@ -65,8 +65,8 @@ export class UIOfficer extends React.Component {
         <li>-</li>
         <li>{events}</li>
         <li>-</li>
-        <li><UIActions game={this.props.game} hq={this.props.hq} officer={o} /></li>
-        <li><UIOperations game={this.props.game} hq={this.props.hq} officer={o} /></li>
+        {/* <li><UIActions game={this.props.game} hq={this.props.hq} officer={o} /></li> */}
+        {/* <li><UIOperations game={this.props.game} hq={this.props.hq} officer={o} /></li> */}
       </ul>
 
       <ul className='officerTraits'>

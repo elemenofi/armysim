@@ -29,12 +29,12 @@ export class Officer {
     this.chance = chance(Math.random)
     this.name = `${this.chance.first({ gender: 'male' })} ${this.chance.last()}`
     this.traits = traitsService.getInitialTraits(this)
-    this.operations = new OfficerOperations(this)
+    // this.operations = new OfficerOperations(this)
   }
 
   tick () {
     if (this.isRetired()) this.hq.staff.retire(this)
-    this.operations.tick()
+    // this.operations.tick()
     this.train()
   }
 

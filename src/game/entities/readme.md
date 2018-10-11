@@ -1,22 +1,18 @@
-you have to discover one another
+Combat unit are measured in terms of readiness and morale.
+Making a unit train and drill with increase its readiness but reduce its morale.
+Making a unit rest will increase its morale up to a point but will reduce its readiness.
+The commanding officer influences the readiness and morale of the combat unit.
+Combat units build a relationship with their commanders.
 
-and you start by looking into someones trash
-
-the more type of military elements the more people you need the more powerful it is
-
-that prevents a general from doing shit everywhere
-
-he will probably coordinate a full combined operations. as if it was war.
-
-as a lieutenant you can start with one of the paths 
-
-that will guide you to the generalato. but you will have
-
-to make friends to support you in your weaker areas.
+Issuing Order
+As an officer in the army you are allowed to issue orders to your direct subordinates.
+Your subordinates will then execute the order and send back a report. 
+The order and the report are actual documents that you will keep in your office.
+For example a Lieutenant gives a Sargent an order that says that the 1st Company has to do field training.
 
 HEADQUARTERS
 - Commander in Chief
-- Chieff of Investigations
+- Chieff of Inspections
 - Chieff of Personnel
 - Chieff of Operations
 - Chieff of Logistics 
@@ -27,8 +23,8 @@ HEADQUARTERS
 - Chieff of Finance
 
 UNIT
-- Commander
-- Personnel
+- Commander -> Officer
+- Personnel -> Number
 - Arsenal
 - Logistics
 - Communications
