@@ -1,14 +1,40 @@
-Combat unit are measured in terms of readiness and morale.
-Making a unit train and drill with increase its readiness but reduce its morale.
-Making a unit rest will increase its morale up to a point but will reduce its readiness.
-The commanding officer influences the readiness and morale of the combat unit.
-Combat units build a relationship with their commanders.
 
-Issuing Order
-As an officer in the army you are allowed to issue orders to your direct subordinates.
-Your subordinates will then execute the order and send back a report. 
-The order and the report are actual documents that you will keep in your office.
-For example a Lieutenant gives a Sargent an order that says that the 1st Company has to do field training.
+Skills
+=======
+1. Officer oriented
+- Personnel -> Ability to manage military personnel.
+- Doctrine -> Ability to train military personnel.
+- Administration -> Ability to operate military units.
+- Intelligence -> Ability to plan military operations.
+
+2. Soldier oriented
+- Operations -> Ability to conduct military operations.
+- Logistics -> Ability to organize supply chains.
+- Communications -> Ability to coordinate military units.
+- Arsenals -> Ability to mantain military units.
+
+Routine
+=======
+This is how you decide to spend your time. Your routine will trigger events which will be prone to be related to what you are focusing in. For example if you select a field focus, you will get different events related to daily training operations.
+
+Promotion
+=======
+Promotion will be decided when your superior officer retires or gets promoted.
+The candidates are the subordinates of the superior officer, a roll will decide who gets promoted.
+
+# Deciding factors
+
+1. Seniority
+You get seniority by spending time in the forces, the lower the rank the more important seniority is when deciding promotions.
+
+2. Soldier prestige
+You get soldier recognition by attending field exercises.
+
+3. Officer prestige
+You get officer recognition by attending office meetings.
+
+4. Officer merits
+You get merits by your actions as an officer.
 
 HEADQUARTERS
 - Commander in Chief
@@ -24,7 +50,6 @@ HEADQUARTERS
 
 UNIT
 - Commander -> Officer
-- Personnel -> Number
 - Arsenal
 - Logistics
 - Communications
@@ -83,26 +108,6 @@ POLITICS
 - Faction
 - Subversive
 
-SKILLS
-- Attacking
-- Defending
-- Tactics
-- Strategy
-- Agression
-- Anticipation
-- Bravery
-- Composure
-- Decisions
-- Determination
-- Leadership
-- Cooperation
-- Diligence
-- Negotiation
-- Infiltration
-- Investigation
-- Extortion
-- Sabbotage
-
 TRAITS
 1. ...
 
@@ -118,4 +123,3 @@ Execute operation
 Request operation
 Block supplies
 Provide supplies
-Request
