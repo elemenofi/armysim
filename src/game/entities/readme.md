@@ -1,13 +1,13 @@
 
 Skills
 =======
-1. Officer oriented
+1. Organizational
 - Personnel -> Ability to manage military personnel.
 - Doctrine -> Ability to train military personnel.
 - Administration -> Ability to operate military units.
 - Intelligence -> Ability to plan military operations.
 
-2. Soldier oriented
+2. Field
 - Operations -> Ability to conduct military operations.
 - Logistics -> Ability to organize supply chains.
 - Communications -> Ability to coordinate military units.
@@ -15,7 +15,7 @@ Skills
 
 Routine
 =======
-This is how you decide to spend your time. Your routine will trigger events which will be prone to be related to what you are focusing in. For example if you select a field focus, you will get different events related to daily training operations.
+Choosing a type of routine will trigger an event whith a higher probability of involving the skills related to that area of focus.
 
 Promotion
 =======
@@ -23,18 +23,11 @@ Promotion will be decided when your superior officer retires or gets promoted.
 The candidates are the subordinates of the superior officer, a roll will decide who gets promoted.
 
 # Deciding factors
-
 1. Seniority
-You get seniority by spending time in the forces, the lower the rank the more important seniority is when deciding promotions.
+You get seniority by spending time in the forces.
 
-2. Soldier prestige
-You get soldier recognition by attending field exercises.
-
-3. Officer prestige
-You get officer recognition by attending office meetings.
-
-4. Officer merits
-You get merits by your actions as an officer.
+2. Officer merits
+You get merits by your actions as an officer in the events that happen during your routine.
 
 HEADQUARTERS
 - Commander in Chief
