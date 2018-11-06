@@ -4,7 +4,7 @@ import { Rank } from './rank'
 import { Trait, traitsService, TraitTypes } from './traits'
 import { Unit } from './unit'
 import { util } from './util'
-import { OfficerOperations } from './officerOperations';
+import { Operations } from './operations';
 
 export class Officer {
   id: number
@@ -18,7 +18,7 @@ export class Officer {
   inReserve: boolean
   traits: Trait[]
   isPlayer: boolean
-  operations: OfficerOperations
+  operations: Operations
   hq: Headquarter
 
   constructor (rank: number, hq: Headquarter) {
@@ -29,7 +29,7 @@ export class Officer {
     this.chance = chance(Math.random)
     this.name = `${this.chance.first({ gender: 'male' })} ${this.chance.last()}`
     this.traits = traitsService.getInitialTraits(this)
-    // this.operations = new OfficerOperations(this)
+    // this.operations = new Operations(this)
   }
 
   tick () {

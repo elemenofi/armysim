@@ -4,7 +4,7 @@ import * as React from 'react'
 import { Officer } from '../entities/officer'
 import { Headquarter } from '../entities/army';
 import { Game } from '../entities/game';
-import { OperationTypes, Operation } from '../entities/officerOperations';
+import { OperationTypes, Operation } from '../entities/operations';
 
 export class UIOperations extends React.Component {
   props: {

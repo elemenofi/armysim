@@ -64,7 +64,7 @@ export class Operation {
   }
 }
 
-export class OfficerOperations {
+export class Operations {
   officer: Officer
   private currentPlanning: OperationTypes
   current: Operation[]
