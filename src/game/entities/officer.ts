@@ -28,7 +28,7 @@ export class Officer {
     this.militancy = 0
     this.chance = chance(Math.random)
     this.name = `${this.chance.first({ gender: 'male' })} ${this.chance.last()}`
-    this.traits = traitsService.getInitialTraits(this)
+    this.traits = traitsService.getInitialTraits()
     // this.operations = new Operations(this)
   }
 

@@ -26,7 +26,7 @@ export class Traits {
     this.traits = traits
   }
 
-  getInitialTraits (officer: Officer): Trait[] {
+  getInitialTraits (): Trait[] {
     return [
       this.getTraitByType(TraitTypes.base),
       this.getTraitByType(TraitTypes.childhood),
