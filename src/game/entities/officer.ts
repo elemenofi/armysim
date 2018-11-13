@@ -81,7 +81,7 @@ export class Officer {
   }
 
   private isRetired (): boolean {
-    return this.experience > this.rank.max
+    return this.experience > this.rank.max && this.rank.tier > 3
   }
 
   private train () {

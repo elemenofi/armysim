@@ -109,7 +109,7 @@ export class Staff {
   private promote (officer: Officer): Officer {
     officer.rank = new Rank(officer.rank.tier + 1)
     officer.events.push(this.log.promote(officer.rank.name()))
-    officer.getNewTrait()
+    // officer.getNewTrait()
     return officer
   }
 }

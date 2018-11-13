@@ -14,6 +14,7 @@ export class Game {
   headquarter: Headquarter
   keyboard: Keyboard
   status = 'playing'
+  BUFFER: number = 100 * 365
 
   constructor () {
     this.ui = new UI()
@@ -35,7 +36,7 @@ export class Game {
 
   public advance () {
     this.headquarter.tick()
-    if (this.headquarter.turn > (20 * 365)) this.ui.render(this)
+    if (this.headquarter.turn > this.BUFFER) this.ui.render(this)
   }
 
   private async tick () {
@@ -53,7 +54,7 @@ export class Game {
   private turnZero () {
     console.log('[debug] Turn 0')
       
-    for (let i = 0; i < (20 * 365); i++) {
+    for (let i = 0; i < this.BUFFER; i++) {
       if (i === (20 * 365)) console.log('[debug] Last buffer turn')
       this.advance()
     }
