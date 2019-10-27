@@ -9,7 +9,7 @@ import { util } from './util';
 export interface Chiefs {
   personnel: Officer,
   operations: Officer,
-  investigations: Officer,
+  inspections: Officer,
   intelligence: Officer,
   logistics: Officer,
   communications: Officer,
