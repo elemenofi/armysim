@@ -1,10 +1,8 @@
 import { Headquarter } from './army'
-import { Window } from './game'
 import { Logger } from './logger'
 import { Officer } from './officer'
 import { Rank } from './rank'
 import { Unit } from './unit'
-import { util } from './util';
 
 export interface Chiefs {
   personnel: Officer,
