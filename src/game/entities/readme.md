@@ -6,54 +6,37 @@ readiness
 morale
 status
 
-Cannon/Tank
-mantainance
-
-Unit
-commander
-troops
-cannons
-tanks
-signals
-logistics
-intelligence
-administration
-operations
-
-Commander
-unit
-martial
-signals
-logistics
-intelligence
-
 Squad
-25 troops
+50 troops
+signals
 
 Battalion
 10 troops
 10 tanks/cannons
+arsenals
 
 Company
 2 squads
 1 battalion
-signals
+logistics
 
 Regiment
 2 companies
-logistics
+intelligence
 
 Brigade
 2 regiments
-intelligence
+operations
 
 Division
 2 brigades
-administration
+doctrine
 
 Corp
 2 divisions
-operations
+personnel
 
 Army
 2 corps
+inspections
+finance

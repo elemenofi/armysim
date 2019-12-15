@@ -52,11 +52,31 @@ const allTraits: Trait[] = [
     type: TraitTypes.base
   },
   {
-    name: 'Warrior',
+    name: 'Strategist',
     type: TraitTypes.base,
   },
   {
     name: 'Spy',
+    type: TraitTypes.base,
+  },
+  {
+    name: 'Inspector',
+    type: TraitTypes.base,
+  },
+  {
+    name: 'Administrator',
+    type: TraitTypes.base,
+  },
+  {
+    name: 'Technologist',
+    type: TraitTypes.base,
+  },
+  {
+    name: 'Coordinator',
+    type: TraitTypes.base,
+  },
+  {
+    name: 'Adoctrinator',
     type: TraitTypes.base,
   },
   {

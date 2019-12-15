@@ -26,6 +26,7 @@ export class UIMain extends React.Component {
     const game = this.props.game
     const hq = game.headquarter
     const tomorrow = new Date()
+    tomorrow.setDate(-100 * 365)
     tomorrow.setDate(tomorrow.getDate() + hq.turn)
 
     return <div className='army'>

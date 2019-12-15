@@ -7,40 +7,40 @@ import { util } from './util'
 import { Operations } from './operations';
 import { Skills } from './skills'
 import { Attributes } from './attributes'
+import { Politics } from './politics'
 
 export class Officer {
   id: number
+  chance: any
   name: string
-  militancy: number
-  loyalty: number
   rank: Rank
   unit: Unit
   events: string[] = []
-  chance: any
   inReserve: boolean
-  traits: Trait[]
   isPlayer: boolean
+  traits: Trait[]
   operations: Operations
   hq: Headquarter
   skills: Skills
   attributes: Attributes
+  politics: Politics
 
   constructor (rank: number, hq: Headquarter) {
-    this.rank = new Rank(rank)
-    this.hq = hq
-    this.militancy = 0
     this.chance = chance(Math.random)
     this.name = `${this.chance.first({ gender: 'male' })} ${this.chance.last()}`
+    this.rank = new Rank(rank)
+    this.hq = hq
     this.traits = traitsService.getInitialTraits()
+    this.operations = new Operations(this)
     this.skills = new Skills();
+    this.politics = new Politics();
     this.attributes = new Attributes();
     this.attributes.experience = 100 * rank + util.random(100)
-    // this.operations = new Operations(this)
   }
 
   tick () {
     if (this.isRetired()) this.hq.staff.retire(this)
-    // this.operations.tick()
+    this.operations.tick()
     this.train()
     if (this.isPlayer) console.log(this.attributes.martial);
   }
