@@ -66,7 +66,7 @@ export class Staff {
 
   createPlayerOfficer () {
     const officer = this.hq.staff.active.find((o) => o.rank.name() === 'Lieutenant')
-    officer.experience = 100 * officer.rank.tier + 75
+    officer.attributes.experience = 100 * officer.rank.tier + 75
     this.hq.player = officer
     officer.isPlayer = true
     officer.name = 'Manuel Aberg Cobo'
@@ -101,7 +101,7 @@ export class Staff {
     const subunits = officer.unit.subunits
     const officer1 = subunits[0].officer
     const officer2 = subunits[1].officer
-    return officer1.experience > officer2.experience ? officer1 : officer2
+    return officer1.attributes.experience > officer2.attributes.experience ? officer1 : officer2
   }
 
   private promote (officer: Officer): Officer {

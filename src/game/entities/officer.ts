@@ -5,12 +5,14 @@ import { Trait, traitsService, TraitTypes } from './traits'
 import { Unit } from './unit'
 import { util } from './util'
 import { Operations } from './operations';
+import { Skills } from './skills'
+import { Attributes } from './attributes'
 
 export class Officer {
   id: number
   name: string
-  experience: number
   militancy: number
+  loyalty: number
   rank: Rank
   unit: Unit
   events: string[] = []
@@ -20,15 +22,19 @@ export class Officer {
   isPlayer: boolean
   operations: Operations
   hq: Headquarter
+  skills: Skills
+  attributes: Attributes
 
   constructor (rank: number, hq: Headquarter) {
     this.rank = new Rank(rank)
     this.hq = hq
-    this.experience = 100 * rank + util.random(100)
     this.militancy = 0
     this.chance = chance(Math.random)
     this.name = `${this.chance.first({ gender: 'male' })} ${this.chance.last()}`
     this.traits = traitsService.getInitialTraits()
+    this.skills = new Skills();
+    this.attributes = new Attributes();
+    this.attributes.experience = 100 * rank + util.random(100)
     // this.operations = new Operations(this)
   }
 
@@ -36,6 +42,7 @@ export class Officer {
     if (this.isRetired()) this.hq.staff.retire(this)
     // this.operations.tick()
     this.train()
+    if (this.isPlayer) console.log(this.attributes.martial);
   }
 
   fullName (): string {
@@ -44,7 +51,7 @@ export class Officer {
 
   isSenior (): boolean {
     if (!this.competitor()) return true
-    return this.experience > this.competitor().experience
+    return this.attributes.experience > this.competitor().attributes.experience
   }
 
   isPassedForPromotion (): boolean {
@@ -81,11 +88,11 @@ export class Officer {
   }
 
   private isRetired (): boolean {
-    return this.experience > this.rank.max && this.rank.tier > 3
+    return this.attributes.experience > this.rank.max && this.rank.tier > 3
   }
 
   private train () {
-    this.experience++
+    this.attributes.experience++
   }
 
   public superior (): Officer {
@@ -99,7 +106,7 @@ export class Officer {
   }
 
   private timeLeftInRank (): number {
-    return this.rank.max - this.experience
+    return this.rank.max - this.attributes.experience
   }
 
   private getSubordinates (): Officer[] {

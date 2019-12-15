@@ -21,7 +21,7 @@ export interface Names {
 export const names: Partial<Names> = {}
 
 names.army = [
-  'National Army Headquarters',
+  'National Army',
 ]
 
 names.corp = [

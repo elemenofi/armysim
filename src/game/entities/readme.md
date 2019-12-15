@@ -1,5 +1,59 @@
-Giving orders:
 
-At any point in the game you have a subordinate who reports directly to you and receives your orders.
+Troops
+loyalty
+skill
+readiness
+morale
+status
 
-Your job is to advance as soon as possible to the next rank, although the first promotions are a certainty, moving faster through the ranks gives more prestige.
+Cannon/Tank
+mantainance
+
+Unit
+commander
+troops
+cannons
+tanks
+signals
+logistics
+intelligence
+administration
+operations
+
+Commander
+unit
+martial
+signals
+logistics
+intelligence
+
+Squad
+25 troops
+
+Battalion
+10 troops
+10 tanks/cannons
+
+Company
+2 squads
+1 battalion
+signals
+
+Regiment
+2 companies
+logistics
+
+Brigade
+2 regiments
+intelligence
+
+Division
+2 brigades
+administration
+
+Corp
+2 divisions
+operations
+
+Army
+2 corps
