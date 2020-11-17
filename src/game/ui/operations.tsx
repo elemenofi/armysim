@@ -39,7 +39,7 @@ export class UIOperations extends React.Component {
 
     const actions = <ul className='actions operations'>
       {current}
-      <li><button onClick={(e) => this.select(OperationTypes.combat, e)}>Combat</button></li>
+      <li><button onClick={(e) => this.select(OperationTypes.field, e)}>Field</button></li>
       <li><button onClick={(e) => this.select(OperationTypes.intelligence, e)}>Intelligence</button></li>
     </ul>
 

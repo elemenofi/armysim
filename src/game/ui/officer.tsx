@@ -60,7 +60,11 @@ export class UIOfficer extends React.Component {
         ---
         <li>Militancy: {o.militancy}</li>
         <li>Experience: {Math.round(o.experience / 365)} years</li>
-        <li>Skill: {o.skill}</li>
+        <li>Prestige: {o.prestige}</li>
+        <li>Field: {o.getTotalSkillValue('field')}</li>
+        <li>Intelligence: {o.getTotalSkillValue('intelligence')}</li>
+        <li>Alignment: {o.align}</li>
+        <li>Unaligned: {o.unaligned()}</li>
         ---
         {/* <li>Operations: {o.getTotalTraitValue('operations')}</li>
         <li>Combat: {o.getTotalTraitValue('combat')}</li>

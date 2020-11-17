@@ -1,7 +1,7 @@
 import { Officer } from "./officer";
 
 export enum OperationTypes {
-  combat = 'combat',
+  field = 'field',
   intelligence = 'intelligence'
 }
 
@@ -21,12 +21,13 @@ export class Operation {
   progress: number
   maxTurns: number
   
-  constructor (officer: Officer, target: Officer) {
+  constructor (officer: Officer, target: Officer, type: OperationTypes) {
     this.progress = 0
     this.maxTurns = 100
     this.officer = officer
     this.target = target
     this.status = OperationStatus.planning
+    this.type = type
    }
 
   tick () {
@@ -38,13 +39,14 @@ export class Operation {
       return
     }
 
-    if (this.officer.inReserve) {
-      this.abort()
-    }
+    // if (this.officer.inReserve) {
+    //   this.abort()
+    // }
 
-    this.progress++
+    // this.progress++
     
-    if (this.progress === this.maxTurns) this.execute()
+    // if (this.progress === this.maxTurns) this.execute()
+    this.execute()
   }
 
   abort () {
@@ -53,14 +55,18 @@ export class Operation {
 
   execute () {
     const log = this.officer.hq.staff.log
-    if (this.officer.roll() - 4 > this.target.roll()) {
+
+    if (this.officer.roll(this.type) - 8 > this.target.roll(this.type)) {
       this.officer.hq.staff.retire(this.target, this.officer)
       this.officer.events.push(log.retired(this.target))
       this.status = OperationStatus.executed
-      this.officer.skill++
+      this.officer.prestige++
+      console.log('won')
     } else {
       this.target.events.push(log.resisted(this.officer))
       this.officer.events.push(log.attempted(this.target))
+      this.target.prestige++
+      this.officer.prestige--
       this.status = OperationStatus.failed
     }
   }
@@ -80,8 +86,17 @@ export class Operations {
   }
 
   start (target: Officer) {
-    if (!this.attempts(target))
-    this.current.push(new Operation(this.officer, target))
+    let type
+    
+    if (this.officer.getTotalSkillValue(OperationTypes.intelligence) > this.officer.getTotalSkillValue(OperationTypes.field)) {
+      type = OperationTypes.intelligence
+    }  else {
+      type = OperationTypes.field
+    }
+
+    if (!this.attempts(target)) {
+      this.current.push(new Operation(this.officer, target, type))
+    }
   }
 
   attempts(target: Officer): Operation {

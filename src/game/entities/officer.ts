@@ -12,7 +12,8 @@ export class Officer {
   experience: number
   militancy: number
   prestige: number
-  skill: number
+  field: number
+  intelligence: number
   align: number
   rank: Rank
   unit: Unit
@@ -31,7 +32,8 @@ export class Officer {
     this.prestige = 1
     this.militancy = 0
     this.align = util.random(100)
-    this.skill = util.random(10)
+    this.field = util.random(10)
+    this.intelligence = util.random(10)
     this.chance = chance(Math.random)
     this.name = `${this.chance.first({ gender: 'male' })} ${this.chance.last()}`
     this.traits = traitsService.getInitialTraits()
@@ -49,9 +51,14 @@ export class Officer {
     if (this.militancy > 1000) {
       this.operations.start(this.superior())
       this.militancy = 0
-    } else if (this.isPassedForPromotion()) {
+    } else if (this.isPassedForPromotion() || this.unaligned() > 30) {
       this.militancy++
     }
+  }
+
+  unaligned () {
+    if (!this.superior()) return 0
+    return Math.abs(this.align - this.superior().align)
   }
 
   fullName (): string {
@@ -68,19 +75,12 @@ export class Officer {
     return this.timeLeftInRank() < this.superior().timeLeftInRank()
   }
 
-  getTotalTraitValue (type: string): number {
-    return this.traitTypeValue(type)
+  getTotalSkillValue (type: string): number {
+    return this.traitTypeValue(type) + this[type]
   }
 
-  getTotalTraitsValue (): number {
-    return this.traitTypeValue('intelligence') +
-      this.traitTypeValue('operations') +
-      this.traitTypeValue('combat')
-  }
-
-  roll (): number {
-    // console.log(this.getTotalTraitsValue())
-    return util.random(10) + this.rank.tier
+  roll (type: string): number {
+    return util.random(10) + this.rank.tier + this.prestige + this.getTotalSkillValue(type)
   }
 
   getNewTrait (): void {
