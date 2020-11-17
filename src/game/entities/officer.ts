@@ -25,6 +25,7 @@ export class Officer {
     this.rank = new Rank(rank)
     this.hq = hq
     this.experience = 100 * rank + util.random(100)
+    this.prestige = 0
     this.militancy = 0
     this.chance = chance(Math.random)
     this.name = `${this.chance.first({ gender: 'male' })} ${this.chance.last()}`
