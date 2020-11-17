@@ -31,7 +31,7 @@ export class UIActions extends React.Component {
 
   plot(target: 'superior' | 'competitor', e) {
     e.preventDefault()
-    this.props.hq.player.operations.plot(this.getRelatedOfficer(target))
+    this.props.hq.player.operations.start(this.getRelatedOfficer(target))
   }
 
   render() {

@@ -59,6 +59,10 @@ p {
   background-color: red;
 }
 
+.isMilitant {
+  background-color: purple;
+}
+
 .operationList {
   height: 240px;
 }

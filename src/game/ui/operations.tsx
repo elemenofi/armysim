@@ -19,7 +19,6 @@ export class UIOperations extends React.Component {
 
   select(operationType: OperationTypes, e) {
     e.preventDefault()
-    this.props.hq.player.operations.planning = operationType
     this.props.game.advance()
   }
 
@@ -28,7 +27,7 @@ export class UIOperations extends React.Component {
 
     if (!o || !this.props.officer.isPlayer) return <div></div>
 
-    const current = <div className='operationsCurrent'>{o.operations.planning}</div>
+    const current = <div className='operationsCurrent'>{o.operations}</div>
 
     let currentOperations = []
     let currentOperationList = <ul>

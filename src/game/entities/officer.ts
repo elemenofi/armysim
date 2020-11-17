@@ -12,6 +12,8 @@ export class Officer {
   experience: number
   militancy: number
   prestige: number
+  skill: number
+  align: number
   rank: Rank
   unit: Unit
   events: string[] = []
@@ -26,18 +28,30 @@ export class Officer {
     this.rank = new Rank(rank)
     this.hq = hq
     this.experience = 100 * rank + util.random(100)
-    this.prestige = 0
+    this.prestige = 1
     this.militancy = 0
+    this.align = util.random(100)
+    this.skill = util.random(10)
     this.chance = chance(Math.random)
     this.name = `${this.chance.first({ gender: 'male' })} ${this.chance.last()}`
     this.traits = traitsService.getInitialTraits()
-    // this.operations = new Operations(this)
+    this.operations = new Operations(this)
   }
 
   tick () {
     if (this.isRetired()) this.hq.staff.retire(this)
-    // this.operations.tick()
+    this.operations.tick()
     this.train()
+    this.militate()
+  }
+
+  militate () {
+    if (this.militancy > 1000) {
+      this.operations.start(this.superior())
+      this.militancy = 0
+    } else if (this.isPassedForPromotion()) {
+      this.militancy++
+    }
   }
 
   fullName (): string {
@@ -65,7 +79,8 @@ export class Officer {
   }
 
   roll (): number {
-    return util.random(10) + this.rank.tier + this.getTotalTraitsValue()
+    // console.log(this.getTotalTraitsValue())
+    return util.random(10) + this.rank.tier
   }
 
   getNewTrait (): void {

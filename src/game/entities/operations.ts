@@ -20,12 +20,12 @@ export class Operation {
   updated: Date
   progress: number
   maxTurns: number
-  constructor (officer, target) {
+  
+  constructor (officer: Officer, target: Officer) {
     this.progress = 0
     this.maxTurns = 100
     this.officer = officer
     this.target = target
-    this.type = this.officer.operations.planning
     this.status = OperationStatus.planning
    }
 
@@ -48,17 +48,19 @@ export class Operation {
   }
 
   abort () {
-    alert('You have retired, operation aborted')
     this.status = OperationStatus.aborted
   }
 
   execute () {
-    if (this.officer.roll() > this.target.roll()) {
-      this.officer.hq.staff.retire(this.target)
-      alert('You have forced ' + this.target.fullName() + ' to retire.')
+    const log = this.officer.hq.staff.log
+    if (this.officer.roll() - 4 > this.target.roll()) {
+      this.officer.hq.staff.retire(this.target, this.officer)
+      this.officer.events.push(log.retired(this.target))
       this.status = OperationStatus.executed
+      this.officer.skill++
     } else {
-      alert('You failed to force ' + this.target.fullName() + ' to retire.')
+      this.target.events.push(log.resisted(this.officer))
+      this.officer.events.push(log.attempted(this.target))
       this.status = OperationStatus.failed
     }
   }
@@ -66,7 +68,6 @@ export class Operation {
 
 export class Operations {
   officer: Officer
-  private currentPlanning: OperationTypes
   current: Operation[]
 
   constructor(officer: Officer) {
@@ -78,15 +79,12 @@ export class Operations {
     this.current.forEach(o => o.tick())
   }
 
-  set planning (planning: OperationTypes) {
-    this.currentPlanning = planning
+  start (target: Officer) {
+    if (!this.attempts(target))
+    this.current.push(new Operation(this.officer, target))
   }
 
-  get planning (): OperationTypes {
-    return this.currentPlanning
-  }
-
-  plot (target: Officer) {
-    this.current.push(new Operation(this, target))
+  attempts(target: Officer): Operation {
+    return this.current.find(operation => operation.target.name === target.name)
   }
 }

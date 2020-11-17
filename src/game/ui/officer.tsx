@@ -30,7 +30,7 @@ export class UIOfficer extends React.Component {
   }
 
   plot(which: 'superior' | 'competitor') {
-    this.props.hq.player.operations.plot(this.getRelatedOfficer(which))
+    this.props.hq.player.operations.start(this.getRelatedOfficer(which))
   }
 
   render() {
@@ -60,6 +60,7 @@ export class UIOfficer extends React.Component {
         ---
         <li>Militancy: {o.militancy}</li>
         <li>Experience: {Math.round(o.experience / 365)} years</li>
+        <li>Skill: {o.skill}</li>
         ---
         {/* <li>Operations: {o.getTotalTraitValue('operations')}</li>
         <li>Combat: {o.getTotalTraitValue('combat')}</li>

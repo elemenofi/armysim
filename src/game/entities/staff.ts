@@ -37,14 +37,14 @@ export class Staff {
     this.inspected = officer
   }
 
-  retire (officer: Officer): Officer {
+  retire (officer: Officer, responsible?: Officer): Officer {
     officer.inReserve = true
     this.reserve.push(officer)
     this.active = this.active.filter((o) => officer.id !== o.id)
 
     this.replace(officer)
 
-    officer.events.push(this.log.retire())
+    officer.events.push(this.log.retire(responsible))
 
     return officer
   }
@@ -107,6 +107,7 @@ export class Staff {
   private promote (officer: Officer): Officer {
     officer.rank = new Rank(officer.rank.tier + 1)
     officer.events.push(this.log.promote(officer.rank.name()))
+    officer.militancy = 0
     // officer.getNewTrait()
     return officer
   }

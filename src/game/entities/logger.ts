@@ -1,5 +1,6 @@
 import { Game } from './game'
 import { Headquarter } from './army';
+import { Officer } from './officer';
 
 export interface Window {
   game: Game
@@ -19,10 +20,26 @@ export class Logger {
   }
 
   promote (newRank: string): string {
-    return this.day() + ' promoted to ' + newRank
+    return this.day() + ' promoted to ' + newRank + '.'
   }
 
-  retire (): string {
-    return this.day() + ' retired'
+  retire (responsible?: Officer): string {
+    let log = this.day() + ' retired'
+    if (responsible) {
+      log = this.day() + ' forced to retire by ' + responsible.fullName()
+    }
+    return log
+  }
+
+  retired (target: Officer): string {
+    return this.day() + ' forced ' + target.fullName() + ' to retire.'
+  }
+
+  resisted (officer: Officer): string {
+    return this.day() + ' resisted ' + officer.fullName() + '.'
+  }
+
+  attempted (target: Officer): string {
+    return this.day() + ' attempted against ' + target.fullName() + '.'
   }
 }

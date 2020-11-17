@@ -57,7 +57,9 @@ export class UIUnit extends React.Component {
     const isPlayer = (this.props.unit.officer.id === this.props.hq.player.id)
       ? 'isPlayer' : ''
 
-    return <div onClick={this.inspect} className={selected + ' ' + isPlayer}>
+    const isMilitant = (this.props.unit.officer.militancy > 900) ? 'isMilitant' : ''
+
+    return <div onClick={this.inspect} className={selected + ' ' + isPlayer + ' ' + isMilitant}>
       {this.label(u.tier).label}
       {subunits}
     </div>
