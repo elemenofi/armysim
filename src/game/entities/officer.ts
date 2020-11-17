@@ -11,6 +11,7 @@ export class Officer {
   name: string
   experience: number
   militancy: number
+  prestige: number
   rank: Rank
   unit: Unit
   events: string[] = []
