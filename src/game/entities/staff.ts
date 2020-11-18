@@ -108,6 +108,7 @@ export class Staff {
     officer.rank = new Rank(officer.rank.tier + 1)
     officer.events.push(this.log.promote(officer.rank.name()))
     officer.militancy = 0
+    officer.operations.stop()
     // officer.getNewTrait()
     return officer
   }

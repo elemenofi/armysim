@@ -23,7 +23,7 @@ export class Operation {
   
   constructor (officer: Officer, target: Officer, type: OperationTypes) {
     this.progress = 0
-    this.maxTurns = 100
+    this.maxTurns = 1000
     this.officer = officer
     this.target = target
     this.status = OperationStatus.planning
@@ -39,14 +39,13 @@ export class Operation {
       return
     }
 
-    // if (this.officer.inReserve) {
-    //   this.abort()
-    // }
+    if (this.officer.inReserve) {
+      this.abort()
+    }
 
-    // this.progress++
+    this.progress++
     
-    // if (this.progress === this.maxTurns) this.execute()
-    this.execute()
+    if (this.progress === this.maxTurns) this.execute()
   }
 
   abort () {
@@ -56,7 +55,7 @@ export class Operation {
   execute () {
     const log = this.officer.hq.staff.log
 
-    if (this.officer.roll(this.type) - 8 > this.target.roll(this.type)) {
+    if (this.officer.roll(this.type) - this.target.rank.tier > this.target.roll(this.type)) {
       this.officer.hq.staff.retire(this.target, this.officer)
       this.officer.events.push(log.retired(this.target))
       this.status = OperationStatus.executed
@@ -101,5 +100,9 @@ export class Operations {
 
   attempts(target: Officer): Operation {
     return this.current.find(operation => operation.target.name === target.name)
+  }
+
+  stop () {
+    this.current.forEach(operation => operation.status = OperationStatus.aborted)
   }
 }

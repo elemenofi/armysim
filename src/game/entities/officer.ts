@@ -80,7 +80,7 @@ export class Officer {
   }
 
   roll (type: string): number {
-    return util.random(10) + this.rank.tier + this.prestige + this.getTotalSkillValue(type)
+    return util.random(10) + this.prestige + this.getTotalSkillValue(type)
   }
 
   getNewTrait (): void {
