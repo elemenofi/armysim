@@ -30,7 +30,7 @@ export class UIOfficer extends React.Component {
   }
 
   plot(which: 'superior' | 'competitor') {
-    this.props.hq.player.operations.plot(this.getRelatedOfficer(which))
+    this.props.hq.player.operations.start(this.getRelatedOfficer(which))
   }
 
   render() {
@@ -57,14 +57,16 @@ export class UIOfficer extends React.Component {
         <li>{o.fullName()}</li>
         <li>Senior: {o.isSenior() ? 'Yes' : 'No'}</li>
         <li>Passed: {o.isPassedForPromotion() ? 'Yes' : 'No'}</li>
+        <li>Superior: {o.superior() ? o.superior().fullName() : '' }</li>
         ---
-        <li>Militancy: {o.politics.militancy}</li>
-        <li>Loyalty: {o.politics.loyalty}</li>
-        <li>Experience: {Math.round(o.attributes.experience / 365)} years</li>
+        <li>Militancy: {o.militancy}</li>
+        <li>Experience: {Math.round(o.experience / 365)} years</li>
+        <li>Prestige: {o.prestige}</li>
+        <li>Field: {o.getTotalSkillValue('field')}</li>
+        <li>Intelligence: {o.getTotalSkillValue('intelligence')}</li>
+        <li>Alignment: {o.align}</li>
+        <li>Unaligned: {o.unaligned()}</li>
         ---
-        {/* <li>Operations: {o.getTotalTraitValue('operations')}</li>
-        <li>Combat: {o.getTotalTraitValue('combat')}</li>
-        <li>Intelligence: {o.getTotalTraitValue('intelligence')}</li> */}
 
         <li>-</li>
         <li>{events}</li>

@@ -13,6 +13,12 @@ export class Officer {
   id: number
   chance: any
   name: string
+  experience: number
+  militancy: number
+  prestige: number
+  field: number
+  intelligence: number
+  align: number
   rank: Rank
   unit: Unit
   events: string[] = []
@@ -26,23 +32,41 @@ export class Officer {
   politics: Politics
 
   constructor (rank: number, hq: Headquarter) {
+    this.rank = new Rank(rank)
+    this.hq = hq
+    this.experience = 100 * rank + util.random(100)
+    this.prestige = 0
+    this.militancy = 0
+    this.align = util.random(100)
+    this.field = util.random(10)
+    this.intelligence = util.random(10)
     this.chance = chance(Math.random)
     this.name = `${this.chance.first({ gender: 'male' })} ${this.chance.last()}`
     this.rank = new Rank(rank)
     this.hq = hq
     this.traits = traitsService.getInitialTraits()
     this.operations = new Operations(this)
-    this.skills = new Skills();
-    this.politics = new Politics();
-    this.attributes = new Attributes();
-    this.attributes.experience = 100 * rank + util.random(100)
   }
 
   tick () {
     if (this.isRetired()) this.hq.staff.retire(this)
     this.operations.tick()
     this.train()
-    if (this.isPlayer) console.log(this.attributes.martial);
+    this.militate()
+  }
+
+  militate () {
+    if (this.militancy > 1000) {
+      this.operations.start(this.superior())
+      this.militancy = 0
+    } else if (this.isPassedForPromotion() || this.unaligned() > 30) {
+      this.militancy++
+    }
+  }
+
+  unaligned () {
+    if (!this.superior()) return 0
+    return Math.abs(this.align - this.superior().align)
   }
 
   fullName (): string {
@@ -59,18 +83,12 @@ export class Officer {
     return this.timeLeftInRank() < this.superior().timeLeftInRank()
   }
 
-  getTotalTraitValue (type: string): number {
-    return this.traitTypeValue(type)
+  getTotalSkillValue (type: string): number {
+    return this.traitTypeValue(type) + this[type]
   }
 
-  getTotalTraitsValue (): number {
-    return this.traitTypeValue('intelligence') +
-      this.traitTypeValue('operations') +
-      this.traitTypeValue('combat')
-  }
-
-  roll (): number {
-    return util.random(10) + this.rank.tier + this.getTotalTraitsValue()
+  roll (type: string): number {
+    return util.random(10) + this.prestige + this.getTotalSkillValue(type)
   }
 
   getNewTrait (): void {

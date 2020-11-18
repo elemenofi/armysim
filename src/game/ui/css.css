@@ -53,7 +53,15 @@ p {
 
 .selected {
   background-color: #e0e0e0;
-} 
+}
+
+.isPlayer {
+  background-color: red;
+}
+
+.isMilitant {
+  background-color: purple;
+}
 
 .operationList {
   height: 240px;

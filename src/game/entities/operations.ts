@@ -1,7 +1,7 @@
 import { Officer } from "./officer";
 
 export enum OperationTypes {
-  combat = 'combat',
+  field = 'field',
   intelligence = 'intelligence'
 }
 
@@ -20,13 +20,14 @@ export class Operation {
   updated: Date
   progress: number
   maxTurns: number
-  constructor (officer, target) {
+  
+  constructor (officer: Officer, target: Officer, type: OperationTypes) {
     this.progress = 0
     this.maxTurns = 100
     this.officer = officer
     this.target = target
-    this.type = this.officer.operations.planning
     this.status = OperationStatus.planning
+    this.type = type
    }
 
   tick () {
@@ -42,23 +43,33 @@ export class Operation {
       this.abort()
     }
 
-    this.progress++
+    if (this.target.id !== this.officer.superior().id) {
+      this.abort()
+    }
+
+    if (this.officer.roll(this.type) + this.target.roll(this.type)) this.progress++
     
     if (this.progress === this.maxTurns) this.execute()
   }
 
   abort () {
-    alert('You have retired, operation aborted')
     this.status = OperationStatus.aborted
   }
 
   execute () {
-    if (this.officer.roll() > this.target.roll()) {
-      this.officer.hq.staff.retire(this.target)
-      alert('You have forced ' + this.target.fullName() + ' to retire.')
+    const log = this.officer.hq.staff.log
+
+    if (this.officer.roll(this.type) - this.target.rank.tier > this.target.roll(this.type)) {
+      this.officer.hq.staff.retire(this.target, this.officer)
+      this.officer.events.push(log.retired(this.target))
       this.status = OperationStatus.executed
+      this.officer.prestige++
+      console.log('won')
     } else {
-      alert('You failed to force ' + this.target.fullName() + ' to retire.')
+      this.target.events.push(log.resisted(this.officer))
+      this.officer.events.push(log.failed(this.target))
+      this.target.prestige++
+      this.officer.prestige--
       this.status = OperationStatus.failed
     }
   }
@@ -66,7 +77,6 @@ export class Operation {
 
 export class Operations {
   officer: Officer
-  private currentPlanning: OperationTypes
   current: Operation[]
 
   constructor(officer: Officer) {
@@ -78,15 +88,27 @@ export class Operations {
     this.current.forEach(o => o.tick())
   }
 
-  set planning (planning: OperationTypes) {
-    this.currentPlanning = planning
+  start (target: Officer) {
+    let type
+    
+    if (this.officer.getTotalSkillValue(OperationTypes.intelligence) > this.officer.getTotalSkillValue(OperationTypes.field)) {
+      type = OperationTypes.intelligence
+    }  else {
+      type = OperationTypes.field
+    }
+
+    if (!this.attempts(target)) {
+      const operation = new Operation(this.officer, target, type)
+      this.current.push(operation)
+      this.officer.hq.log.started(operation);
+    }
   }
 
-  get planning (): OperationTypes {
-    return this.currentPlanning
+  attempts(target: Officer): Operation {
+    return this.current.find(operation => operation.target.name === target.name)
   }
 
-  plot (target: Officer) {
-    this.current.push(new Operation(this, target))
+  stop () {
+    this.current.forEach(operation => operation.status = OperationStatus.aborted)
   }
 }
