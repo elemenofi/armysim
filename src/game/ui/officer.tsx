@@ -57,6 +57,7 @@ export class UIOfficer extends React.Component {
         <li>{o.fullName()}</li>
         <li>Senior: {o.isSenior() ? 'Yes' : 'No'}</li>
         <li>Passed: {o.isPassedForPromotion() ? 'Yes' : 'No'}</li>
+        <li>Superior: {o.superior() ? o.superior().fullName() : '' }</li>
         ---
         <li>Militancy: {o.militancy}</li>
         <li>Experience: {Math.round(o.experience / 365)} years</li>
@@ -66,9 +67,6 @@ export class UIOfficer extends React.Component {
         <li>Alignment: {o.align}</li>
         <li>Unaligned: {o.unaligned()}</li>
         ---
-        {/* <li>Operations: {o.getTotalTraitValue('operations')}</li>
-        <li>Combat: {o.getTotalTraitValue('combat')}</li>
-        <li>Intelligence: {o.getTotalTraitValue('intelligence')}</li> */}
 
         <li>-</li>
         <li>{events}</li>

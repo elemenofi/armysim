@@ -23,7 +23,7 @@ export class Operation {
   
   constructor (officer: Officer, target: Officer, type: OperationTypes) {
     this.progress = 0
-    this.maxTurns = 1000
+    this.maxTurns = 100
     this.officer = officer
     this.target = target
     this.status = OperationStatus.planning
@@ -43,7 +43,11 @@ export class Operation {
       this.abort()
     }
 
-    this.progress++
+    if (this.target.id !== this.officer.superior().id) {
+      this.abort()
+    }
+
+    if (this.officer.roll(this.type) + this.target.roll(this.type)) this.progress++
     
     if (this.progress === this.maxTurns) this.execute()
   }
@@ -63,7 +67,7 @@ export class Operation {
       console.log('won')
     } else {
       this.target.events.push(log.resisted(this.officer))
-      this.officer.events.push(log.attempted(this.target))
+      this.officer.events.push(log.failed(this.target))
       this.target.prestige++
       this.officer.prestige--
       this.status = OperationStatus.failed
@@ -94,7 +98,9 @@ export class Operations {
     }
 
     if (!this.attempts(target)) {
-      this.current.push(new Operation(this.officer, target, type))
+      const operation = new Operation(this.officer, target, type)
+      this.current.push(operation)
+      this.officer.hq.log.started(operation);
     }
   }
 

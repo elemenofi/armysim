@@ -29,7 +29,7 @@ export class Officer {
     this.rank = new Rank(rank)
     this.hq = hq
     this.experience = 100 * rank + util.random(100)
-    this.prestige = 1
+    this.prestige = 0
     this.militancy = 0
     this.align = util.random(100)
     this.field = util.random(10)

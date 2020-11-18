@@ -1,6 +1,7 @@
 import { Game } from './game'
 import { Headquarter } from './army';
 import { Officer } from './officer';
+import { Operation } from './operations';
 
 export interface Window {
   game: Game
@@ -35,11 +36,15 @@ export class Logger {
     return this.day() + ' forced ' + target.fullName() + ' to retire.'
   }
 
+  started (operation: Operation): string {
+    return this.day() + ' started plotting against ' + operation.target.fullName()
+  }
+
   resisted (officer: Officer): string {
     return this.day() + ' resisted ' + officer.fullName() + '.'
   }
 
-  attempted (target: Officer): string {
-    return this.day() + ' attempted against ' + target.fullName() + '.'
+  failed (target: Officer): string {
+    return this.day() + ' failed against ' + target.fullName() + '.'
   }
 }
